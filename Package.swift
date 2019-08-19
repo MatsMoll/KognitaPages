@@ -15,7 +15,7 @@ dependencies.append(
 )
 #else
 dependencies.append(
-    .package(url: "https://MatsKognita:dyjdov-bupgev-goffY8@bitbucket.org/MatsEikelandMollestad/kognita-core.git", .branch("master"))
+    .package(url: "https://MatsKognita:dyjdov-bupgev-goffY8@bitbucket.org/MatsEikelandMollestad/kognita-core.git", from: "1.0.0")
 )
 #endif
 

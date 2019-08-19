@@ -12,9 +12,6 @@ final class KognitaViewsTests: XCTestCase {
     }()
 
     func testLandingPage() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
         let page = try renderer.renderRaw(StarterPage.self, with: .init())
 
         XCTAssert(page.contains("href='/signup'"), "The landing page is missing a link to the signup page")
