@@ -14,8 +14,6 @@ test: &test
             - swift package resolve
             - swift package clean
             - swift test
-        services:
-            - postgres
 
 pipelines:
     default:
@@ -30,8 +28,3 @@ pipelines:
                 script:
                     - chmod +x ./CI/release-version.sh
                     - ./CI/release-version.sh
-
-definitions: 
-    services:
-        postgres:
-            image: postgres
