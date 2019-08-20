@@ -40,8 +40,8 @@ public class CreateFlashCardTaskTemplate: LocalizedTemplate {
         return embed(
             ContentBaseTemplate(
                 body:
-                div.class("modal-content").child(
-                    div.class("modal-header").child(
+                div.class("card mt-5").child(
+                    div.class("modal-header text-white bg-" + variable(\.subject.colorClass.rawValue)).child(
                         h4.class("modal-title").id("create-modal-label").child(
                             variable(\.subject.name), " | Lag innskrivningsoppgave"
                         )
@@ -55,7 +55,9 @@ public class CreateFlashCardTaskTemplate: LocalizedTemplate {
                                     "Tema"
                                 ),
                                 select.id("card-topic-id").class("select2 form-control select2").dataToggle("select2").dataPlaceholder("Velg ...").required.child(
-
+                                    option.child(
+                                        "Velg ..."
+                                    ),
                                     forEach(
                                         in:     \.topics,
                                         render: TopicSelect()

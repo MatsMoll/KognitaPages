@@ -95,18 +95,30 @@ public struct SubjectListTemplate: LocalizedTemplate {
                     )
                 ),
 
-                renderIf(
-                    \.revisitTasks.count > 0,
+                h3.child(
+                    localize(.repeatTitle)
+                ),
 
-                    h3.child(
-                        localize(.repeatTitle)
-                    ),
-
-                    div.class("row").child(
-
-                        forEach(
-                            in: \.revisitTasks,
-                            render: RevisitCard()
+                div.class("row").child(
+                    renderIf(
+                        \.revisitTasks.count > 0,
+                            forEach(
+                                in: \.revisitTasks,
+                                render: RevisitCard()
+                            )
+                    ).else(
+                        div.class("col-12").child(
+                            div.class("card d-block").child(
+                                div.class("card-body").child(
+                                    h4.child("Hva kommer her?"),
+                                    p.child(
+                                        "Her vil det komme opp temaer som vi anbefaler å prioritere først. Dette skal hjelpe deg med å øve mer effektivt og dermed få mer ut av øvingene dine."
+                                    ),
+                                    p.child(
+                                        "Disse anbefalingnene vil først komme når du har gjørt noen oppgaver"
+                                    )
+                                )
+                            )
                         )
                     )
                 ),
@@ -155,7 +167,7 @@ public struct SubjectListTemplate: LocalizedTemplate {
                         div.class("card d-block").child(
 
                             // Thumbnail
-                            div.class("card-header text-white bg-" + variable(\.colorClass)).child(
+                            div.class("card-header text-white bg-" + variable(\.colorClass.rawValue)).child(
                                 h3.child(
                                     variable(\.name)
                                 ),
@@ -170,7 +182,7 @@ public struct SubjectListTemplate: LocalizedTemplate {
                                 ),
 
                                 // Details
-                                button.class("btn btn-" + variable(\.colorClass) + " btn-rounded").child(
+                                button.class("btn btn-" + variable(\.colorClass.rawValue) + " btn-rounded").child(
                                     localize(.button)
                                 )
                             )

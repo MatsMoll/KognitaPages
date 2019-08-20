@@ -47,6 +47,17 @@ public struct CreatorDashboard: LocalizedTemplate {
     }
 
     public func build() -> CompiledTemplate {
+
+        let createMultipleTaskUrl: [CompiledTemplate] = [
+            "create-task-select-subject?taskType=multiple"
+        ]
+        let createInputTaskUrl: [CompiledTemplate] = [
+            "create-task-select-subject?taskType=input"
+        ]
+        let createFlashCardTaskUrl: [CompiledTemplate] = [
+            "create-task-select-subject?taskType=flash-card"
+        ]
+
         return embed(
             ContentBaseTemplate(
                 body:
@@ -57,73 +68,73 @@ public struct CreatorDashboard: LocalizedTemplate {
                             div.class("page-title-right").child(
                                 ol.class("breadcrumb m-0").child(
                                     li.class("breadcrumb-item active").child(
-                                        "Dashboard"
+                                        "Lag innhold"
                                     )
                                 )
                             ),
                             h4.class("page-title").child(
-                                "Dashboard"
+                                "Lag innhold"
                             )
                         )
                     )
                 ),
 
-                div.class("row").child(
-                    div.class("col-sm-12").child(
-                        div.class("card bg-primary").child(
-                            div.class("card-body profile-user-box").child(
-                                div.class("row").child(
-                                    div.class("col-sm-8").child(
-                                        div.class("media").child(
-                                            span.class("float-left m-2 mr-4").child(
-                                                img.src("/assets/images/users/avatar-2.jpg").style("height: 100px;").alt("").class("rounded-circle img-thumbnail")
-                                            ),
-                                            div.class("media-body").child(
-                                                h4.class("mt-1 mb-1 text-white").child(
-                                                    variable(\.base.user.name)
-                                                ),
-                                                p.class("font-13 text-white-50").child(
-                                                    renderIf(
-                                                        \.base.user.isCreator,
-                                                        "Innholdskaper"
-                                                        ).else(
-                                                            "Elev"
-                                                    )
-                                                ),
-                                                ul.class("mb-0 list-inline text-light").child(
-                                                    li.class("list-inline-item mr-3").child(
-                                                        h5.class("mb-1").child(
-                                                            "$ 25,184"
-                                                        ),
-                                                        p.class("mb-0 font-13 text-white-50").child(
-                                                            "Noe info"
-                                                        )
-                                                    ),
-                                                    li.class("list-inline-item").child(
-                                                        h5.class("mb-1").child(
-                                                            "5482"
-                                                        ),
-                                                        p.class("mb-0 font-13 text-white-50").child(
-                                                            "Hvor mange oppgaver registrert?"
-                                                        )
-                                                    )
-                                                )
-                                            )
-                                        )
-                                    ),
-
-                                    div.class("col-sm-4").child(
-                                        div.class("text-center mt-sm-0 mt-3 text-sm-right").child(
-                                            button.type("button").class("btn btn-light").child(
-                                                "Rediger Profil"
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                ),
+//                div.class("row").child(
+//                    div.class("col-sm-12").child(
+//                        div.class("card bg-primary").child(
+//                            div.class("card-body profile-user-box").child(
+//                                div.class("row").child(
+//                                    div.class("col-sm-8").child(
+//                                        div.class("media").child(
+//                                            span.class("float-left m-2 mr-4").child(
+//                                                img.src("/assets/images/users/avatar-2.jpg").style("height: 100px;").alt("").class("rounded-circle img-thumbnail")
+//                                            ),
+//                                            div.class("media-body").child(
+//                                                h4.class("mt-1 mb-1 text-white").child(
+//                                                    variable(\.base.user.name)
+//                                                ),
+//                                                p.class("font-13 text-white-50").child(
+//                                                    renderIf(
+//                                                        \.base.user.isCreator,
+//                                                        "Innholdskaper"
+//                                                        ).else(
+//                                                            "Elev"
+//                                                    )
+//                                                ),
+//                                                ul.class("mb-0 list-inline text-light").child(
+//                                                    li.class("list-inline-item mr-3").child(
+//                                                        h5.class("mb-1").child(
+//                                                            "$ 25,184"
+//                                                        ),
+//                                                        p.class("mb-0 font-13 text-white-50").child(
+//                                                            "Noe info"
+//                                                        )
+//                                                    ),
+//                                                    li.class("list-inline-item").child(
+//                                                        h5.class("mb-1").child(
+//                                                            "5482"
+//                                                        ),
+//                                                        p.class("mb-0 font-13 text-white-50").child(
+//                                                            "Hvor mange oppgaver registrert?"
+//                                                        )
+//                                                    )
+//                                                )
+//                                            )
+//                                        )
+//                                    ),
+//
+//                                    div.class("col-sm-4").child(
+//                                        div.class("text-center mt-sm-0 mt-3 text-sm-right").child(
+//                                            button.type("button").class("btn btn-light").child(
+//                                                "Rediger Profil"
+//                                            )
+//                                        )
+//                                    )
+//                                )
+//                            )
+//                        )
+//                    )
+//                ),
 
                 // Table
                 div.class("row").child(
@@ -153,6 +164,33 @@ public struct CreatorDashboard: LocalizedTemplate {
                                 a.href("/subjects/create").child(
                                     button.class("btn btn-primary").child(
                                         "Lag et fag"
+                                    )
+                                ),
+
+                                a.href("create-topic-select-subject").child(
+                                    button.class("btn btn-primary ml-2").child(
+                                        "Lag et tema"
+                                    )
+                                ),
+
+                                // Create Multiple Choise Task
+                                a.href(createMultipleTaskUrl).child(
+                                    button.type("button").class("btn btn-success ml-2").child(
+                                        "Lag flervalgsoppgave"
+                                    )
+                                ),
+
+                                // Create Number Input Task
+                                a.href(createInputTaskUrl).child(
+                                    button.type("button").class("btn btn-success ml-2").child(
+                                        "Lag innskrivningsoppgave"
+                                    )
+                                ),
+
+                                // Create Flash Card
+                                a.href(createFlashCardTaskUrl).child(
+                                    button.type("button").class("btn btn-success ml-2").child(
+                                        "Lag ordkort"
                                     )
                                 ),
 
@@ -281,8 +319,14 @@ public struct CreatorDashboard: LocalizedTemplate {
                     ),
                     td.child(
                         variable(\.status),
-                        span.class("badge badge-success").child(
-                            "Godkjent"
+                        span.class("badge")
+                            .if(\.deletedAt != nil, add: .class("badge-danger"))
+                            .if(\.deletedAt == nil, add: .class("badge-success")).child(
+                                renderIf(isNil: \.deletedAt,
+                                    "Godkjent"
+                                ).else(
+                                    "Inaktiv"
+                                )
                         )
                     ),
                     td.class("table-action").child(
