@@ -48,24 +48,13 @@ public struct CreateSubjectPage: LocalizedTemplate {
                         div.class("modal-body").child(
                             div.class("p-2").child(
                                 form.novalidate.child(
-                                    div.class("form-row").child(
-                                        div.class("form-group col-md-6").child(
-                                            label.for("create-subject-name").class("col-form-label").child(
-                                                "Navn"
-                                            ),
-                                            input.type("text").class("form-control").id("create-subject-name").placeholder("R2 Matte").required.value(variable(\.subjectInfo?.name)),
-                                            small.child(
-                                                "Bare lov vanlig bokstaver og mellomrom"
-                                            )
+                                    div.class("form-group").child(
+                                        label.for("create-subject-name").class("col-form-label").child(
+                                            "Navn"
                                         ),
-                                        div.class("form-group col-md-6").child(
-                                            label.for("create-subject-code").class("col-form-label").child(
-                                                "Fagkode"
-                                            ),
-                                            input.type("text").class("form-control").id("create-subject-code").placeholder("REA2013").required.value(variable(\.subjectInfo?.code)),
-                                            small.child(
-                                                "Skriv på formatet: 3-5 Store bokstaver + 4-6 tall"
-                                            )
+                                        input.type("text").class("form-control").id("create-subject-name").placeholder("R2 Matte").required.value(variable(\.subjectInfo?.name)),
+                                        small.child(
+                                            "Bare lov vanlig bokstaver og mellomrom"
                                         )
                                     ),
                                     div.class("form-group").child(
@@ -77,13 +66,16 @@ public struct CreateSubjectPage: LocalizedTemplate {
                                         )
                                     ),
                                     div.class("form-group").child(
-                                        label.for("create-subject-image").class("col-form-label").child(
-                                            "Bilde URL"
+                                        label.for("create-subject-category").class("col-form-label").child(
+                                            "Kategori"
                                         ),
-                                        input.type("url").class("form-control").id("create-subject-image").placeholder("https://et-eksempel.no/url.png").required.value(variable(\.subjectInfo?.imageURL)),
-                                        small.child(
-                                            "Støtter png og jpg format"
-                                        )
+                                        input.type("text").class("form-control").id("create-subject-category").placeholder("Teknologi").value(variable(\.subjectInfo?.category)).required
+                                    ),
+                                    div.class("form-group").child(
+                                        label.for("create-subject-color-class").class("col-form-label").child(
+                                            "Fargekode"
+                                        ),
+                                        input.type("text").class("form-control").id("create-subject-color-class").placeholder("primary").value(variable(\.subjectInfo?.colorClass)).required
                                     ),
                                     button.type("button").onclick("createSubject()").class("btn btn-success btn-rounded mb-3").child(
                                         " Lagre"

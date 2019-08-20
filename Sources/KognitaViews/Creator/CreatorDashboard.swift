@@ -8,6 +8,7 @@
 
 import HTMLKit
 import KognitaCore
+import Foundation
 
 public protocol CreatorTaskContent {
     var creatorName: String? { get }
@@ -18,7 +19,7 @@ public protocol CreatorTaskContent {
     var taskID: Int { get }
     var question: String { get }
     var status: String { get }
-    var isOutdated: Bool { get }
+    var deletedAt: Date? { get }
     var taskTypePath: String { get }
 }
 
@@ -104,19 +105,6 @@ public struct CreatorDashboard: LocalizedTemplate {
                                                         ),
                                                         p.class("mb-0 font-13 text-white-50").child(
                                                             "Hvor mange oppgaver registrert?"
-                                                        )
-                                                    ),
-
-                                                    renderIf(
-                                                        isNotNil: \.base.user.activationToken,
-
-                                                        li.class("list-inline-item").child(
-                                                            h5.class("mb-1").child(
-                                                                variable(\.base.user.activationToken)
-                                                            ),
-                                                            p.class("mb-0 font-13 text-white-50").child(
-                                                                "Rekrutterer kode"
-                                                            )
                                                         )
                                                     )
                                                 )
@@ -293,15 +281,8 @@ public struct CreatorDashboard: LocalizedTemplate {
                     ),
                     td.child(
                         variable(\.status),
-                        span.class("badge")
-                            .if(\.isOutdated == true, add: .class("badge-danger"))
-                            .if(\.isOutdated == false, add: .class("badge-success")).child(
-                                renderIf(
-                                    \.isOutdated,
-                                    "Inaktiv"
-                                ).else(
-                                    "Godkjent"
-                                )
+                        span.class("badge badge-success").child(
+                            "Godkjent"
                         )
                     ),
                     td.class("table-action").child(

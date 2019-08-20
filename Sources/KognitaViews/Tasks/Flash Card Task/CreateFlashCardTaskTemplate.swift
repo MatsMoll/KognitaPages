@@ -66,7 +66,7 @@ public class CreateFlashCardTaskTemplate: LocalizedTemplate {
                                     isNotNil: \.taskInfo,
 
                                     renderIf(
-                                        \.taskInfo?.isOutdated == true,
+                                        \.taskInfo?.deletedAt != nil,
 
                                         div.class("badge badge-danger").child(
                                             "Inaktiv"

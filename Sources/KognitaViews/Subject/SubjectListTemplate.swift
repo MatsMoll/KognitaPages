@@ -155,16 +155,22 @@ public struct SubjectListTemplate: LocalizedTemplate {
                         div.class("card d-block").child(
 
                             // Thumbnail
-                            img.class("card-img-top").src(variable(\.imageURL)).alt("project image cap"),
+                            div.class("card-header text-white bg-" + variable(\.colorClass)).child(
+                                h3.child(
+                                    variable(\.name)
+                                ),
+                                small.class("badge badge-light").child(
+                                    variable(\.category)
+                                )
+                            ),
                             div.class("card-body position-relative").child(
 
-                                // Title
-                                h3.class("mt-0").child(
-                                    variable(\.name)
+                                p.child(
+                                    variable(\.description, escaping: .unsafeNone)
                                 ),
 
                                 // Details
-                                button.class("btn btn-primary btn-rounded").child(
+                                button.class("btn btn-" + variable(\.colorClass) + " btn-rounded").child(
                                     localize(.button)
                                 )
                             )

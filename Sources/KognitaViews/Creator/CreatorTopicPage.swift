@@ -234,7 +234,7 @@ public struct CreatorTopicPage: LocalizedTemplate {
                     ),
                     td.child(
                         renderIf(
-                            \.isOutdated,
+                            \.deletedAt != nil,
 
                             div.class("badge badge-danger").child(
                                 "Inaktiv"

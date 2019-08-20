@@ -55,8 +55,8 @@ public struct CreateTopicPage: LocalizedTemplate {
             ContentBaseTemplate(
                 body:
 
-                div.class("modal-content").child(
-                    div.class("modal-header").child(
+                div.class("modal-content mt-5").child(
+                    div.class("modal-header text-white bg-" + variable(\.subject.colorClass)).child(
                         h4.class("modal-title").id("create-modal-label").child(
                             variable(\.subject.name),
                             renderIf(isNil: \.topicInfo, " | Lag nytt tema").else(" | Rediger tema")
@@ -74,24 +74,13 @@ public struct CreateTopicPage: LocalizedTemplate {
                                         "Bare lov vanlig bokstaver og mellomrom"
                                     )
                                 ),
-                                div.class("form-row").child(
-                                    div.class("form-group col-md-6").child(
-                                        label.for("create-topic-name").class("col-form-label").child(
-                                            "Kapittel"
-                                        ),
-                                        input.type("number").class("form-control").id("create-topic-chapter").placeholder("1").required.value(variable(\.topicInfo?.chapter)),
-                                        small.child(
-                                            "Kan ikke ha samme verdi som noen andre kapittler"
-                                        )
+                                div.class("form-group").child(
+                                    label.for("create-topic-name").class("col-form-label").child(
+                                        "Kapittel"
                                     ),
-                                    div.class("form-group col-md-6").child(
-                                        label.for("create-topic-code").class("col-form-label").child(
-                                            "Viktighet"
-                                        ),
-                                        input.type("number").class("form-control").id("create-topic-importance").placeholder("1-10").required.value(variable(\.topicInfo?.importance)),
-                                        small.child(
-                                            "Number 1-10"
-                                        )
+                                    input.type("number").class("form-control").id("create-topic-chapter").placeholder("1").required.value(variable(\.topicInfo?.chapter)),
+                                    small.child(
+                                        "Kan ikke ha samme verdi som noen andre kapittler"
                                     )
                                 ),
                                 div.class("form-group").child(
@@ -110,7 +99,8 @@ public struct CreateTopicPage: LocalizedTemplate {
                                         "Ingen"
                                     ),
                                     forEach(in:     \.topics,
-                                            render: PreTopicOption())
+                                            render: PreTopicOption()
+                                    )
                                 ),
 
                                 // CTA Buttons
