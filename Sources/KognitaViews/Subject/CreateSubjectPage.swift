@@ -25,6 +25,7 @@ public struct CreateSubjectPage: LocalizedTemplate {
         let base: ContentBaseTemplate.Context
 
         let subjectInfo: Subject?
+        let colorOptions = Subject.ColorClass.allCases
 
         public init(user: User, subjectInfo: Subject? = nil) {
             self.base = .init(user: user, title: "Lag et fag")
@@ -40,16 +41,16 @@ public struct CreateSubjectPage: LocalizedTemplate {
 
                 div.class("row").child(
                     div.class("col-12").child(
-                        div.class("modal-header").child(
-                            h4.class("modal-title").id("create-modal-label").child(
-                                "Lag et nytt fag"
-                            )
-                        ),
-                        div.class("modal-body").child(
-                            div.class("p-2").child(
-                                form.novalidate.child(
-                                    div.class("form-row").child(
-                                        div.class("form-group col-md-6").child(
+                        div.class("card mt-5").child(
+                            div.class("modal-header bg-primary text-white").child(
+                                h4.class("modal-title").id("create-modal-label").child(
+                                    "Lag et nytt fag"
+                                )
+                            ),
+                            div.class("modal-body").child(
+                                div.class("p-2").child(
+                                    form.novalidate.child(
+                                        div.class("form-group").child(
                                             label.for("create-subject-name").class("col-form-label").child(
                                                 "Navn"
                                             ),
@@ -58,35 +59,34 @@ public struct CreateSubjectPage: LocalizedTemplate {
                                                 "Bare lov vanlig bokstaver og mellomrom"
                                             )
                                         ),
-                                        div.class("form-group col-md-6").child(
-                                            label.for("create-subject-code").class("col-form-label").child(
-                                                "Fagkode"
+                                        div.class("form-group").child(
+                                            label.for("create-subject-description").class("col-form-label").child(
+                                                "Beskrivelse"
                                             ),
-                                            input.type("text").class("form-control").id("create-subject-code").placeholder("REA2013").required.value(variable(\.subjectInfo?.code)),
-                                            small.child(
-                                                "Skriv på formatet: 3-5 Store bokstaver + 4-6 tall"
+                                            div.id("create-subject-description").child(
+                                                variable(\.subjectInfo?.description)
                                             )
-                                        )
-                                    ),
-                                    div.class("form-group").child(
-                                        label.for("create-subject-description").class("col-form-label").child(
-                                            "Beskrivelse"
                                         ),
-                                        div.id("create-subject-description").child(
-                                            variable(\.subjectInfo?.description)
-                                        )
-                                    ),
-                                    div.class("form-group").child(
-                                        label.for("create-subject-image").class("col-form-label").child(
-                                            "Bilde URL"
+                                        div.class("form-group").child(
+                                            label.for("create-subject-category").class("col-form-label").child(
+                                                "Kategori"
+                                            ),
+                                            input.type("text").class("form-control").id("create-subject-category").placeholder("Teknologi").value(variable(\.subjectInfo?.category)).required
                                         ),
-                                        input.type("url").class("form-control").id("create-subject-image").placeholder("https://et-eksempel.no/url.png").required.value(variable(\.subjectInfo?.imageURL)),
-                                        small.child(
-                                            "Støtter png og jpg format"
+                                        div.class("form-group").child(
+                                            label.for("create-subject-color-class").class("col-form-label").child(
+                                                "Fargekode"
+                                            ),
+                                            div.class("mt-1").child(
+                                                forEach(
+                                                    in:     \.colorOptions,
+                                                    render: ColorClassOption()
+                                                )
+                                            ), input.type("text").class("form-control").id("create-subject-color-class").placeholder("primary").value(variable(\.subjectInfo?.colorClass.rawValue)).required
+                                        ),
+                                        button.type("button").onclick("createSubject()").class("btn btn-success btn-rounded mb-3").child(
+                                            " Lagre"
                                         )
-                                    ),
-                                    button.type("button").onclick("createSubject()").class("btn btn-success btn-rounded mb-3").child(
-                                        " Lagre"
                                     )
                                 )
                             )
@@ -103,5 +103,24 @@ public struct CreateSubjectPage: LocalizedTemplate {
                 ]
             ),
             withPath: \.base)
+    }
+
+
+    struct ColorClassOption: ContextualTemplate {
+
+        typealias Context = Subject.ColorClass
+
+        func build() -> CompiledTemplate {
+            return div.class("custom-control custom-radio").child(
+                input.type("radio").id(variable(\.rawValue)).class("custom-contol-input mr-2").name("color-class"),
+                label.for(variable(\.rawValue)).child(
+                    h4.child(
+                        div.class("badge badge-" + variable(\.rawValue)).child(
+                            variable(\.rawValue)
+                        )
+                    )
+                )
+            )
+        }
     }
 }

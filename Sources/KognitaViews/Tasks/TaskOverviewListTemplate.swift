@@ -122,6 +122,17 @@ public struct TaskOverviewListTemplate: LocalizedTemplate {
 
     // MARK - Subviews
 
+    struct TaskCard: ContextualTemplate {
+
+        typealias Context = TaskResultOverview
+
+        func build() -> CompiledTemplate {
+            return div.class("card").child(
+                ""
+            )
+        }
+    }
+
     struct TaskRow: ContextualTemplate {
 
         typealias Context = TaskResultOverview

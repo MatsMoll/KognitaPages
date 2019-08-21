@@ -21,16 +21,16 @@ public struct CreateTopicPage: LocalizedTemplate {
     public struct Context {
         let locale = "nb"
         let base: ContentBaseTemplate.Context
-        let topics: [PreTopicOption.Context]
+//        let topics: [PreTopicOption.Context]
         let subject: Subject
 
         /// The topic to edit
         let topicInfo: Topic?
 
-        public init(user: User, subject: Subject, topics: [Topic], topicInfo: Topic? = nil) {
+        public init(user: User, subject: Subject, topicInfo: Topic? = nil) {
             self.base = .init(user: user, title: "Lag temaer")
             self.subject = subject
-            self.topics = topics.map { .init(topic: $0, isSelected: $0.id == topicInfo?.preTopicId) }
+//            self.topics = topics.map { .init(topic: $0, isSelected: false) }
             self.topicInfo = topicInfo
         }
     }
@@ -55,8 +55,8 @@ public struct CreateTopicPage: LocalizedTemplate {
             ContentBaseTemplate(
                 body:
 
-                div.class("modal-content").child(
-                    div.class("modal-header").child(
+                div.class("card mt-5").child(
+                    div.class("modal-header text-white bg-" + variable(\.subject.colorClass.rawValue)).child(
                         h4.class("modal-title").id("create-modal-label").child(
                             variable(\.subject.name),
                             renderIf(isNil: \.topicInfo, " | Lag nytt tema").else(" | Rediger tema")
@@ -74,24 +74,13 @@ public struct CreateTopicPage: LocalizedTemplate {
                                         "Bare lov vanlig bokstaver og mellomrom"
                                     )
                                 ),
-                                div.class("form-row").child(
-                                    div.class("form-group col-md-6").child(
-                                        label.for("create-topic-name").class("col-form-label").child(
-                                            "Kapittel"
-                                        ),
-                                        input.type("number").class("form-control").id("create-topic-chapter").placeholder("1").required.value(variable(\.topicInfo?.chapter)),
-                                        small.child(
-                                            "Kan ikke ha samme verdi som noen andre kapittler"
-                                        )
+                                div.class("form-group").child(
+                                    label.for("create-topic-name").class("col-form-label").child(
+                                        "Kapittel"
                                     ),
-                                    div.class("form-group col-md-6").child(
-                                        label.for("create-topic-code").class("col-form-label").child(
-                                            "Viktighet"
-                                        ),
-                                        input.type("number").class("form-control").id("create-topic-importance").placeholder("1-10").required.value(variable(\.topicInfo?.importance)),
-                                        small.child(
-                                            "Number 1-10"
-                                        )
+                                    input.type("number").class("form-control").id("create-topic-chapter").placeholder("1").required.value(variable(\.topicInfo?.chapter)),
+                                    small.child(
+                                        "Kan ikke ha samme verdi som noen andre kapittler"
                                     )
                                 ),
                                 div.class("form-group").child(
@@ -102,16 +91,17 @@ public struct CreateTopicPage: LocalizedTemplate {
                                         variable(\.topicInfo?.description, escaping: .unsafeNone)
                                     )
                                 ),
-                                label.for("create-topic-preTopicId").class("col-form-label").child(
-                                    "Baseres på"
-                                ),
-                                select.id("create-topic-preTopicId").class("select2 form-control select2").dataToggle("select2").dataPlaceholder("Velg ...").child(
-                                    option.selected.child(
-                                        "Ingen"
-                                    ),
-                                    forEach(in:     \.topics,
-                                            render: PreTopicOption())
-                                ),
+//                                label.for("create-topic-preTopicId").class("col-form-label").child(
+//                                    "Baseres på"
+//                                ),
+//                                select.id("create-topic-preTopicId").class("select2 form-control select2").dataToggle("select2").dataPlaceholder("Velg ...").child(
+//                                    option.selected.child(
+//                                        "Ingen"
+//                                    ),
+//                                    forEach(in:     \.topics,
+//                                            render: PreTopicOption()
+//                                    )
+//                                ),
 
                                 // CTA Buttons
                                 renderIf(
@@ -148,17 +138,17 @@ public struct CreateTopicPage: LocalizedTemplate {
 
     // MARK: - Subviews
     
-    struct PreTopicOption: ContextualTemplate {
-        struct Context {
-            let topic: Topic
-            let isSelected: Bool
-        }
-
-        func build() -> CompiledTemplate {
-            return option.value(variable(\.topic.id))
-                .if(\.isSelected, add: .selected).child(
-                    variable(\.topic.name)
-            )
-        }
-    }
+//    struct PreTopicOption: ContextualTemplate {
+//        struct Context {
+//            let topic: Topic
+//            let isSelected: Bool
+//        }
+//
+//        func build() -> CompiledTemplate {
+//            return option.value(variable(\.topic.id))
+//                .if(\.isSelected, add: .selected).child(
+//                    variable(\.topic.name)
+//            )
+//        }
+//    }
 }
