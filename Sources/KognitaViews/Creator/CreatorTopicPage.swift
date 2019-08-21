@@ -108,32 +108,32 @@ public struct CreatorTopicPage: LocalizedTemplate {
                         div.class("card").child(
                             div.class("card-body").child(
 
+                                // Create Multiple Choise Task
+                                a.href(createMultipleTaskUrl).child(
+                                    button.type("button").class("btn btn-success mb-2 mr-1").child(
+                                        i.class("mdi mdi-trophy"),
+                                        " Flervalgsoppgave"
+                                    )
+                                ),
+
+                                // Create Number Input Task
+                                a.href(createInputTaskUrl).child(
+                                    button.type("button").class("btn btn-success mb-2 mr-1").child(
+                                        i.class("mdi mdi-trophy"),
+                                        " Innskrivningsoppgave"
+                                    )
+                                ),
+
+                                // Create Flash Card
+                                a.href(createFlashCardTaskUrl).child(
+                                    button.type("button").class("btn btn-success mb-2 mr-1").child(
+                                        i.class("mdi mdi-trophy"),
+                                        " Ordkort"
+                                    )
+                                ),
+
                                 renderIf(
                                     \.tasks.count > 0,
-
-                                    // Create Multiple Choise Task
-                                    a.href(createMultipleTaskUrl).child(
-                                        button.type("button").class("btn btn-success mb-2 mr-1").child(
-                                            i.class("mdi mdi-trophy"),
-                                            " Flervalgsoppgave"
-                                        )
-                                    ),
-
-                                    // Create Number Input Task
-                                    a.href(createInputTaskUrl).child(
-                                        button.type("button").class("btn btn-success mb-2 mr-1").child(
-                                            i.class("mdi mdi-trophy"),
-                                            " Innskrivningsoppgave"
-                                        )
-                                    ),
-
-                                    // Create Flash Card
-                                    a.href(createFlashCardTaskUrl).child(
-                                        button.type("button").class("btn btn-success mb-2 mr-1").child(
-                                            i.class("mdi mdi-trophy"),
-                                            " Ordkort"
-                                        )
-                                    ),
 
                                     // Existing Tasks Table
                                     div.class("table-responsive").child(
@@ -163,36 +163,8 @@ public struct CreatorTopicPage: LocalizedTemplate {
                                         )
                                     )
                                 ).else(
-                                    div.class("col-12").child(
-                                        h3.child("text-center").child(
-                                            "Det er ingen oppgaver enda."
-                                        ),
-                                        div.class("offset-md-4 col-md-4").child(
-
-                                            // Create Multiple Choise Task
-                                            a.href(createMultipleTaskUrl).child(
-                                                button.type("button").class("btn btn-success mb-2 mr-1").child(
-                                                    i.class("mdi mdi-trophy"),
-                                                    " Flervalgsoppgave"
-                                                )
-                                            ),
-
-                                            // Create Number Input Task
-                                            a.href(createInputTaskUrl).child(
-                                                button.type("button").class("btn btn-success mb-2 mr-1").child(
-                                                    i.class("mdi mdi-trophy"),
-                                                    " Innskrivningsoppgave"
-                                                )
-                                            ),
-
-                                            // Create Flash Card
-                                            a.href(createFlashCardTaskUrl).child(
-                                                button.type("button").class("btn btn-success mb-2 mr-1").child(
-                                                    i.class("mdi mdi-trophy"),
-                                                    " Ordkort"
-                                                )
-                                            )
-                                        )
+                                    h3.child("text-center").child(
+                                        "Det er ingen oppgaver enda."
                                     )
                                 )
                             )
@@ -234,7 +206,7 @@ public struct CreatorTopicPage: LocalizedTemplate {
                     ),
                     td.child(
                         renderIf(
-                            \.isOutdated,
+                            \.deletedAt != nil,
 
                             div.class("badge badge-danger").child(
                                 "Inaktiv"

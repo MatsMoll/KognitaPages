@@ -95,18 +95,30 @@ public struct SubjectListTemplate: LocalizedTemplate {
                     )
                 ),
 
-                renderIf(
-                    \.revisitTasks.count > 0,
+                h3.child(
+                    localize(.repeatTitle)
+                ),
 
-                    h3.child(
-                        localize(.repeatTitle)
-                    ),
-
-                    div.class("row").child(
-
-                        forEach(
-                            in: \.revisitTasks,
-                            render: RevisitCard()
+                div.class("row").child(
+                    renderIf(
+                        \.revisitTasks.count > 0,
+                            forEach(
+                                in: \.revisitTasks,
+                                render: RevisitCard()
+                            )
+                    ).else(
+                        div.class("col-12").child(
+                            div.class("card d-block").child(
+                                div.class("card-body").child(
+                                    h4.child("Hva kommer her?"),
+                                    p.child(
+                                        "Her vil det komme opp temaer som vi anbefaler å prioritere først. Dette skal hjelpe deg med å øve mer effektivt og dermed få mer ut av øvingene dine."
+                                    ),
+                                    p.child(
+                                        "Disse anbefalingnene vil først komme når du har gjørt noen oppgaver"
+                                    )
+                                )
+                            )
                         )
                     )
                 ),
@@ -155,16 +167,22 @@ public struct SubjectListTemplate: LocalizedTemplate {
                         div.class("card d-block").child(
 
                             // Thumbnail
-                            img.class("card-img-top").src(variable(\.imageURL)).alt("project image cap"),
+                            div.class("card-header text-white bg-" + variable(\.colorClass.rawValue)).child(
+                                h3.child(
+                                    variable(\.name)
+                                ),
+                                small.class("badge badge-light").child(
+                                    variable(\.category)
+                                )
+                            ),
                             div.class("card-body position-relative").child(
 
-                                // Title
-                                h3.class("mt-0").child(
-                                    variable(\.name)
+                                p.child(
+                                    variable(\.description, escaping: .unsafeNone)
                                 ),
 
                                 // Details
-                                button.class("btn btn-primary btn-rounded").child(
+                                button.class("btn btn-" + variable(\.colorClass.rawValue) + " btn-rounded").child(
                                     localize(.button)
                                 )
                             )

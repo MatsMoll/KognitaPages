@@ -151,17 +151,6 @@ public struct SignupPage: LocalizedTemplate {
                                                     .required
                                             ),
                                             div.class("form-group").child(
-                                                label.for("activationKey").child(
-                                                    "Rekruterings kode"
-                                                ),
-                                                input.class("form-control")
-                                                    .type("name")
-                                                    .name("activationKey")
-                                                    .id("activationKey")
-                                                    .placeholder("ABC-DD1")
-                                                    .required
-                                            ),
-                                            div.class("form-group").child(
                                                 div.class("custom-control custom-checkbox").child(
 
                                                     input.type("checkbox")
