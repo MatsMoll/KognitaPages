@@ -40,8 +40,11 @@ public struct CreateSubjectPage: LocalizedTemplate {
                 body:
 
                 div.class("row").child(
-                    div.class("col-12").child(
-                        div.class("card mt-5").child(
+                    div.class("col-12 pt-5").child(
+
+                        DismissableError(),
+
+                        div.class("card").child(
                             div.class("modal-header bg-primary text-white").child(
                                 h4.class("modal-title").id("create-modal-label").child(
                                     "Lag et nytt fag"
@@ -49,6 +52,7 @@ public struct CreateSubjectPage: LocalizedTemplate {
                             ),
                             div.class("modal-body").child(
                                 div.class("p-2").child(
+
                                     form.novalidate.child(
                                         div.class("form-group").child(
                                             label.for("create-subject-name").class("col-form-label").child(
@@ -82,7 +86,7 @@ public struct CreateSubjectPage: LocalizedTemplate {
                                                     in:     \.colorOptions,
                                                     render: ColorClassOption()
                                                 )
-                                            ), input.type("text").class("form-control").id("create-subject-color-class").placeholder("primary").value(variable(\.subjectInfo?.colorClass.rawValue)).required
+                                            ) 
                                         ),
                                         button.type("button").onclick("createSubject()").class("btn btn-success btn-rounded mb-3").child(
                                             " Lagre"

@@ -138,17 +138,7 @@ public struct TaskPreviewTemplate: LocalizedTemplate {
                     // The answer card
                     actionCard,
 
-                    div.id("error-div").class("alert alert-secondary alert-dismissible bg-danger text-white border-0 fade show d-none").child(
-                        button.type("button").class("close").onclick("$(\"#error-div\").fadeOut()").ariaLabel("Close").child(
-                            span.ariaHidden("true").child(
-                                "×"
-                            )
-                        ),
-                        strong.child(
-                            localize(.errorMessage)
-                        ),
-                        span.id("error-massage")
-                    ),
+                    DismissableError(),
 
                     // Hint
                     //                div.class("card").id("hint-card").style("display: none;").child(

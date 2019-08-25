@@ -31,7 +31,9 @@ public class CreateFlashCardTaskTemplate: LocalizedTemplate {
             self.base = .init(user: user, title: "Lag Oppgave")
             self.subject = subject
             let sortSelectedTopicId = selectedTopicId ?? content?.topicId
-            self.topics = topics.map { .init(topic: $0, isSelected: sortSelectedTopicId == $0.id) }.sorted(by: { (first, _) in first.isSelected })
+            self.topics = ([Topic.unselected] + topics)
+                .map { .init(topic: $0, isSelected: sortSelectedTopicId == $0.id) }
+                .sorted(by: { (first, _) in first.isSelected })
             self.taskInfo = content
         }
     }
@@ -40,115 +42,123 @@ public class CreateFlashCardTaskTemplate: LocalizedTemplate {
         return embed(
             ContentBaseTemplate(
                 body:
-                div.class("card mt-5").child(
-                    div.class("modal-header text-white bg-" + variable(\.subject.colorClass.rawValue)).child(
-                        h4.class("modal-title").id("create-modal-label").child(
-                            variable(\.subject.name), " | Lag innskrivningsoppgave"
-                        )
-                    ),
-                    div.class("modal-body").child(
-                        div.class("p-2").child(
-                            form.class("needs-validation").novalidate.child(
 
-                                // Topic
-                                label.for("card-topic-id").class("col-form-label").child(
-                                    "Tema"
-                                ),
-                                select.id("card-topic-id").class("select2 form-control select2").dataToggle("select2").dataPlaceholder("Velg ...").required.child(
-                                    option.child(
-                                        "Velg ..."
+                div.class("pt-5").child(
+
+                    div.class("card").child(
+                        div.class("modal-header text-white bg-" + variable(\.subject.colorClass.rawValue)).child(
+                            h4.class("modal-title").id("create-modal-label").child(
+                                variable(\.subject.name), " | Lag innskrivningsoppgave"
+                            )
+                        ),
+                        div.class("modal-body").child(
+                            div.class("p-2").child(
+                                form.class("needs-validation").novalidate.child(
+
+                                    // Topic
+                                    label.for("card-topic-id").class("col-form-label").child(
+                                        "Tema"
                                     ),
-                                    forEach(
-                                        in:     \.topics,
-                                        render: TopicSelect()
-                                    )
-                                ),
+                                    select.id("card-topic-id").class("select2 form-control select2").dataToggle("select2").dataPlaceholder("Velg ...").required.child(
 
-                                renderIf(
-                                    isNotNil: \.taskInfo,
+                                        forEach(
+                                            in:     \.topics,
+                                            render: TopicSelect()
+                                        )
+                                    ),
 
                                     renderIf(
-                                        \.taskInfo?.deletedAt != nil,
+                                        isNotNil: \.taskInfo,
 
-                                        div.class("badge badge-danger").child(
-                                            "Inaktiv"
+                                        renderIf(
+                                            \.taskInfo?.deletedAt != nil,
+
+                                            div.class("badge badge-danger").child(
+                                                "Inaktiv"
+                                            )
+                                        ).else(
+                                            div.class("badge badge-success").child(
+                                                "Godkjent"
+                                            )
                                         )
-                                    ).else(
-                                        div.class("badge badge-success").child(
-                                            "Godkjent"
+                                    ),
+
+                                    // Exam Paper
+                                    div.class("form-row").child(
+                                        div.class("form-group col-md-6").child(
+                                            label.for("card-exam-semester").class("col-form-label").child(
+                                                "Eksamensett semester"
+                                            ),
+
+                                            select.id("card-exam-semester").class("select2 form-control select2").dataToggle("select2").dataPlaceholder("Velg ...").required.child(
+                                                renderIf(
+                                                    isNotNil: \Context.taskInfo?.examPaperSemester,
+
+                                                    option.value(variable(\.taskInfo?.examPaperSemester?.rawValue)).selected.child(
+                                                        variable(\.taskInfo?.examPaperSemester?.rawValue)
+                                                    )
+                                                ),
+                                                option.value("").child(
+                                                    "Ikke eksamensoppgave"
+                                                ),
+                                                option.value("fall").child(
+                                                    "Høst"
+                                                ),
+                                                option.value("spring").child(
+                                                    "Vår"
+                                                )
+                                            )
+                                        ),
+
+                                        div.class("form-group col-md-6").child(
+                                            label.for("card-exam-year").class("col-form-label").child(
+                                                "År"
+                                            ),
+                                            input.type("number").class("form-control").id("card-exam-year").placeholder("2019").value(variable(\.taskInfo?.examPaperYear)).required
                                         )
-                                    )
-                                ),
-
-                                // Description
-                                div.class("form-group").child(
-                                    label.for("card-description").class("col-form-label").child(
-                                        "Oppgavetekst"
                                     ),
-                                    div.id("card-description").child(
-                                        variable(\.taskInfo?.description, escaping: .unsafeNone)
-                                    )
-                                ),
 
-                                // Question
-                                div.class("form-group").child(
-                                    label.for("card-question").class("col-form-label").child(
-                                        "Spørsmål"
+                                    // Description
+                                    div.class("form-group").child(
+                                        label.for("card-description").class("col-form-label").child(
+                                            "Oppgavetekst"
+                                        ),
+                                        div.id("card-description").child(
+                                            variable(\.taskInfo?.description, escaping: .unsafeNone)
+                                        )
                                     ),
-                                    textarea.class("form-control").id("card-question").rows(1).placeholder("Noe å svare på her").required.child(
-                                        variable(\.taskInfo?.question)
+
+                                    // Question
+                                    div.class("form-group").child(
+                                        label.for("card-question").class("col-form-label").child(
+                                            "Spørsmål"
+                                        ),
+                                        textarea.class("form-control").id("card-question").rows(1).placeholder("Noe å svare på her").required.child(
+                                            variable(\.taskInfo?.question)
+                                        ),
+                                        div.class("invalid-feedback").child(
+                                            "Bare lov med store og små bokstaver, tall, mellomrom + (. , : ; !, ?)"
+                                        )
                                     ),
-                                    div.class("invalid-feedback").child(
-                                        "Bare lov med store og små bokstaver, tall, mellomrom + (. , : ; !, ?)"
-                                    )
-                                ),
 
-                                // Solution
-                                div.class("form-group").child(
-                                    label.for("card-solution").class("col-form-label").child(
-                                        "Løsning"
+                                    // Solution
+                                    div.class("form-group").child(
+                                        label.for("card-solution").class("col-form-label").child(
+                                            "Løsning"
+                                        ),
+                                        div.id("card-solution").child(
+                                            variable(\.taskInfo?.solution, escaping: .unsafeNone)
+                                        )
                                     ),
-                                    div.id("card-solution").child(
-                                        variable(\.taskInfo?.solution, escaping: .unsafeNone)
+
+                                    DismissableError(),
+
+                                    button.type("button").onclick(
+                                        renderIf(isNil: \.taskInfo, "createFlashCard();").else("editFlashCard();")
+                                        ).class("btn btn-success mb-3 mt-3").child(
+                                            i.class("mdi mdi-save"),
+                                            " Lagre"
                                     )
-                                ),
-
-//                                div.class("form-row").child(
-//
-//                                    p.child(
-//                                        "Disse skal bli automatisk basert på bruker resultater, men greit med et estemat i starten"
-//                                    ),
-//
-//                                    // Difficulty
-//                                    div.class("form-group col-md-6").child(
-//                                        label.for("card-difficulty").class("col-form-label").child(
-//                                            "Vansklighet"
-//                                        ),
-//                                        input.type("number").class("form-control").id("card-difficulty").placeholder("50").required.value(variable(\.taskInfo?.difficulty)),
-//                                        small.child(
-//                                            "Verdi fra 1-100, hvor 100 er det vanskligste (Kan ses på som prosentvis andel som ",
-//                                            i.child("ikke"),
-//                                            " klarer oppgaven)"
-//                                        )
-//                                    ),
-//
-//                                    // Estimate time
-//                                    div.class("form-group col-md-6").child(
-//                                        label.for("card-estimated-time").class("col-form-label").child(
-//                                            "Estimert tid"
-//                                        ),
-//                                        input.type("number").class("form-control").id("card-estimated-time").placeholder("60").required.value(variable(\.taskInfo?.estimatedTime)),
-//                                        small.child(
-//                                            "Verdi i sekunder"
-//                                        )
-//                                    )
-//                                ),
-
-                                button.type("button").onclick(
-                                    renderIf(isNil: \.taskInfo, "createFlashCard();").else("editFlashCard();")
-                                    ).class("btn btn-success mb-3 mt-3").child(
-                                        i.class("mdi mdi-save"),
-                                        " Lagre"
                                 )
                             )
                         )
@@ -164,6 +174,8 @@ public class CreateFlashCardTaskTemplate: LocalizedTemplate {
                     script.src("/assets/js/vendor/summernote-bs4.min.js"),
                     script.src("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"),
                     script.src("/assets/js/vendor/summernote-math.js"),
+                    script.src("/assets/js/dismissable-error.js"),
+                    script.src("/assets/js/flash-card/json-data.js"),
 
                     renderIf(
                         isNil: \Context.taskInfo,
