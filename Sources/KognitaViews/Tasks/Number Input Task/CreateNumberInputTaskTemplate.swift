@@ -8,6 +8,10 @@
 import HTMLKit
 import KognitaCore
 
+extension Topic {
+    static let unselected = try! Topic(name: "Velg ...", description: "", chapter: 0, subjectId: 0, creatorId: 0)
+}
+
 
 public class CreateNumberInputTaskTemplate: LocalizedTemplate {
 
@@ -33,7 +37,9 @@ public class CreateNumberInputTaskTemplate: LocalizedTemplate {
             self.base = .init(user: user, title: "Lag Oppgave")
             self.subject = subject
             let sortSelectedTopicId = selectedTopicId ?? content?.task.topicId
-            self.topics = topics.map { .init(topic: $0, isSelected: sortSelectedTopicId == $0.id) }.sorted(by: { (first, _) in first.isSelected })
+            self.topics = ([Topic.unselected] + topics)
+                .map { .init(topic: $0, isSelected: sortSelectedTopicId == $0.id) }
+                .sorted(by: { (first, _) in first.isSelected })
             self.taskInfo = content?.task
             self.inputTask = content?.input
         }
@@ -42,7 +48,9 @@ public class CreateNumberInputTaskTemplate: LocalizedTemplate {
             self.base = .init(user: user, title: "Lag Oppgave")
             self.subject = preview.subject
             let sortSelectedTopicId = preview.task.topicId
-            self.topics = topics.map { .init(topic: $0, isSelected: sortSelectedTopicId == $0.id) }.sorted(by: { (first, _) in first.isSelected })
+            self.topics = ([Topic.unselected] + topics)
+                .map { .init(topic: $0, isSelected: sortSelectedTopicId == $0.id) }
+                .sorted(by: { (first, _) in first.isSelected })
             self.taskInfo = preview.task
             self.inputTask = content
         }
@@ -52,184 +60,155 @@ public class CreateNumberInputTaskTemplate: LocalizedTemplate {
         return embed(
             ContentBaseTemplate(
                 body:
-                div.class("card mt-5").child(
-                    div.class("modal-header text-white bg-" + variable(\.subject.colorClass.rawValue)).child(
-                        h4.class("modal-title").id("create-modal-label").child(
-                            variable(\.subject.name), " | Lag innskrivningsoppgave"
-                        )
-                    ),
-                    div.class("modal-body").child(
-                        div.class("p-2").child(
-                            form.class("needs-validation").novalidate.child(
+                div.class("pt-5").child(
 
-                                // Topic
-                                label.for("create-input-topic-id").class("col-form-label").child(
-                                    "Tema"
-                                ),
-                                select.id("create-input-topic-id").class("select2 form-control select2").dataToggle("select2").dataPlaceholder("Velg ...").required.child(
+                    div.class("card").child(
+                        div.class("modal-header text-white bg-" + variable(\.subject.colorClass.rawValue)).child(
+                            h4.class("modal-title").id("create-modal-label").child(
+                                variable(\.subject.name), " | Lag innskrivningsoppgave"
+                            )
+                        ),
+                        div.class("modal-body").child(
+                            div.class("p-2").child(
+                                form.class("needs-validation").novalidate.child(
 
-                                    option.child(
-                                        "Velg ..."
+                                    // Topic
+                                    label.for("create-input-topic-id").class("col-form-label").child(
+                                        "Tema"
                                     ),
-                                    forEach(
-                                        in:     \.topics,
-                                        render: TopicSelect()
-                                    )
-                                ),
+                                    select.id("create-input-topic-id").class("select2 form-control select2").dataToggle("select2").dataPlaceholder("Velg ...").required.child(
 
-                                renderIf(
-                                    isNotNil: \.taskInfo,
+                                        forEach(
+                                            in:     \.topics,
+                                            render: TopicSelect()
+                                        )
+                                    ),
 
                                     renderIf(
-                                        \.taskInfo?.deletedAt != nil,
+                                        isNotNil: \.taskInfo,
 
-                                        div.class("badge badge-danger").child(
-                                            "Inaktiv"
-                                        )
-                                    ).else(
-                                        div.class("badge badge-success").child(
-                                            "Godkjent"
-                                        )
-                                    )
-                                ),
+                                        renderIf(
+                                            \.taskInfo?.deletedAt != nil,
 
-                                // Exam Paper
-                                div.class("form-row").child(
-                                    div.class("form-group col-md-6").child(
-                                        label.for("create-input-exam-semester").class("col-form-label").child(
-                                            "Eksamensett semester"
-                                        ),
-
-                                        select.id("create-input-exam-semester").class("select2 form-control select2").dataToggle("select2").dataPlaceholder("Velg ...").required.child(
-                                            renderIf(
-                                                isNotNil: \Context.taskInfo?.examPaperSemester,
-
-                                                option.value(variable(\.taskInfo?.examPaperSemester?.rawValue)).selected.child(
-                                                    variable(\.taskInfo?.examPaperSemester?.rawValue)
-                                                )
-                                            ),
-                                            option.value("").child(
-                                                "Ikke eksamensoppgave"
-                                            ),
-                                            option.value("fall").child(
-                                                "Høst"
-                                            ),
-                                            option.value("spring").child(
-                                                "Vår"
+                                            div.class("badge badge-danger").child(
+                                                "Inaktiv"
+                                            )
+                                        ).else(
+                                            div.class("badge badge-success").child(
+                                                "Godkjent"
                                             )
                                         )
                                     ),
 
-                                    div.class("form-group col-md-6").child(
-                                        label.for("create-input-exam-year").class("col-form-label").child(
-                                            "År"
+                                    // Exam Paper
+                                    div.class("form-row").child(
+                                        div.class("form-group col-md-6").child(
+                                            label.for("create-input-exam-semester").class("col-form-label").child(
+                                                "Eksamensett semester"
+                                            ),
+
+                                            select.id("create-input-exam-semester").class("select2 form-control select2").dataToggle("select2").dataPlaceholder("Velg ...").required.child(
+                                                renderIf(
+                                                    isNotNil: \Context.taskInfo?.examPaperSemester,
+
+                                                    option.value(variable(\.taskInfo?.examPaperSemester?.rawValue)).selected.child(
+                                                        variable(\.taskInfo?.examPaperSemester?.rawValue)
+                                                    )
+                                                ),
+                                                option.value("").child(
+                                                    "Ikke eksamensoppgave"
+                                                ),
+                                                option.value("fall").child(
+                                                    "Høst"
+                                                ),
+                                                option.value("spring").child(
+                                                    "Vår"
+                                                )
+                                            )
                                         ),
-                                        input.type("number").class("form-control").id("create-input-exam-year").placeholder("2019").value(variable(\.taskInfo?.examPaperYear)).required
-                                    )
-                                ),
 
-                                // Is Examinable
-                                div.class("custom-control custom-checkbox mt-3").child(
-                                    input.type("checkbox").class("custom-control-input").id("create-input-examinable").checked,
-                                    label.for("create-input-examinable").class("custom-control-label").child(
-                                        "Bruk på prøver"
-                                    )
-                                ),
-
-                                // Description
-                                div.class("form-group").child(
-                                    label.for("create-input-description").class("col-form-label").child(
-                                        "Oppgavetekst"
-                                    ),
-                                    div.id("create-input-description").child(
-                                        variable(\.taskInfo?.description, escaping: .unsafeNone)
-                                    )
-                                ),
-
-                                // Question
-                                div.class("form-group").child(
-                                    label.for("create-input-question").class("col-form-label").child(
-                                        "Spørsmål"
-                                    ),
-                                    textarea.class("form-control").id("create-input-question").rows(1).placeholder("Noe å svare på her").required.child(
-                                        variable(\.taskInfo?.question)
-                                    ),
-                                    div.class("invalid-feedback").child(
-                                        "Bare lov med store og små bokstaver, tall, mellomrom + (. , : ; !, ?)"
-                                    )
-                                ),
-
-                                div.class("form-row").child(
-
-                                    // Correct Answer
-                                    div.class("form-group col-md-9").child(
-                                        label.for("create-input-answer").class("col-form-label").child(
-                                            "Riktig svar"
-                                        ),
-                                        input.type("number").class("form-control").id("create-input-answer").placeholder("50").value(variable(\.inputTask?.correctAnswer)).required,
-
-                                        small.child(
-                                            "Skal du skrive desimaltall må det brukes \",\" eks. 2,5. Punktum og mellomrom vil bli ignorert. Altså 10.000 og 10 000 vil bli tolka som 10000"
+                                        div.class("form-group col-md-6").child(
+                                            label.for("create-input-exam-year").class("col-form-label").child(
+                                                "År"
+                                            ),
+                                            input.type("number").class("form-control").id("create-input-exam-year").placeholder("2019").value(variable(\.taskInfo?.examPaperYear)).required
                                         )
                                     ),
 
-                                    // Unit
-                                    div.class("form-group col-md-3").child(
-                                        label.for("create-input-answer").class("col-form-label").child(
-                                            "Enhet"
-                                        ),
-                                        textarea.class("form-control").id("create-input-unit").rows(1).placeholder("cm").child(
-                                            variable(\.inputTask?.unit)
+                                    // Is Examinable
+                                    div.class("custom-control custom-checkbox mt-3").child(
+                                        input.type("checkbox").class("custom-control-input").id("create-input-examinable").checked,
+                                        label.for("create-input-examinable").class("custom-control-label").child(
+                                            "Bruk på prøver"
                                         )
-                                    )
-                                ),
-
-                                // Solution
-                                div.class("form-group").child(
-                                    label.for("create-input-solution").class("col-form-label").child(
-                                        "Løsning"
                                     ),
-                                    div.id("create-input-solution").child(
-                                        variable(\.taskInfo?.solution, escaping: .unsafeNone)
+
+                                    // Description
+                                    div.class("form-group").child(
+                                        label.for("create-input-description").class("col-form-label").child(
+                                            "Oppgavetekst"
+                                        ),
+                                        div.id("create-input-description").child(
+                                            variable(\.taskInfo?.description, escaping: .unsafeNone)
+                                        )
+                                    ),
+
+                                    // Question
+                                    div.class("form-group").child(
+                                        label.for("create-input-question").class("col-form-label").child(
+                                            "Spørsmål"
+                                        ),
+                                        textarea.class("form-control").id("create-input-question").rows(1).placeholder("Noe å svare på her").required.child(
+                                            variable(\.taskInfo?.question)
+                                        ),
+                                        div.class("invalid-feedback").child(
+                                            "Bare lov med store og små bokstaver, tall, mellomrom + (. , : ; !, ?)"
+                                        )
+                                    ),
+
+                                    div.class("form-row").child(
+
+                                        // Correct Answer
+                                        div.class("form-group col-md-9").child(
+                                            label.for("create-input-answer").class("col-form-label").child(
+                                                "Riktig svar"
+                                            ),
+                                            input.type("number").class("form-control").id("create-input-answer").placeholder("50").value(variable(\.inputTask?.correctAnswer)).required,
+
+                                            small.child(
+                                                "Skal du skrive desimaltall må det brukes \",\" eks. 2,5. Punktum og mellomrom vil bli ignorert. Altså 10.000 og 10 000 vil bli tolka som 10000"
+                                            )
+                                        ),
+
+                                        // Unit
+                                        div.class("form-group col-md-3").child(
+                                            label.for("create-input-answer").class("col-form-label").child(
+                                                "Enhet"
+                                            ),
+                                            textarea.class("form-control").id("create-input-unit").rows(1).placeholder("cm").child(
+                                                variable(\.inputTask?.unit)
+                                            )
+                                        )
+                                    ),
+
+                                    // Solution
+                                    div.class("form-group").child(
+                                        label.for("create-input-solution").class("col-form-label").child(
+                                            "Løsning"
+                                        ),
+                                        div.id("create-input-solution").child(
+                                            variable(\.taskInfo?.solution, escaping: .unsafeNone)
+                                        )
+                                    ),
+
+                                    DismissableError(),
+
+                                    button.type("button").onclick(
+                                        renderIf(isNil: \Context.taskInfo, "createInputChoise();").else("editInputChoise();")
+                                        ).class("btn btn-success mb-3 mt-3").child(
+                                            i.class("mdi mdi-save"),
+                                            " Lagre"
                                     )
-                                ),
-
-//                                div.class("form-row").child(
-//
-//                                    p.child(
-//                                        "Disse skal bli automatisk basert på bruker resultater, men greit med et estemat i starten"
-//                                    ),
-//
-//                                    // Difficulty
-//                                    div.class("form-group col-md-6").child(
-//                                        label.for("create-input-difficulty").class("col-form-label").child(
-//                                            "Vansklighet"
-//                                        ),
-//                                        input.type("number").class("form-control").id("create-input-difficulty").placeholder("50").required.value(variable(\.taskInfo?.difficulty)),
-//                                        small.child(
-//                                            "Verdi fra 1-100, hvor 100 er det vanskligste (Kan ses på som prosentvis andel som ",
-//                                            i.child("ikke"),
-//                                            " klarer oppgaven)"
-//                                        )
-//                                    ),
-//
-//                                    // Estimate time
-//                                    div.class("form-group col-md-6").child(
-//                                        label.for("create-input-estimated-time").class("col-form-label").child(
-//                                            "Estimert tid"
-//                                        ),
-//                                        input.type("number").class("form-control").id("create-input-estimated-time").placeholder("60").required.value(variable(\.taskInfo?.estimatedTime)),
-//                                        small.child(
-//                                            "Verdi i sekunder"
-//                                        )
-//                                    )
-//                                ),
-
-                                button.type("button").onclick(
-                                    renderIf(isNil: \Context.taskInfo, "createInputChoise();").else("editInputChoise();")
-                                    ).class("btn btn-success mb-3 mt-3").child(
-                                        i.class("mdi mdi-save"),
-                                        " Lagre"
                                 )
                             )
                         )
@@ -245,6 +224,8 @@ public class CreateNumberInputTaskTemplate: LocalizedTemplate {
                     script.src("/assets/js/vendor/summernote-bs4.min.js"),
                     script.src("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"),
                     script.src("/assets/js/vendor/summernote-math.js"),
+                    script.src("/assets/js/dismissable-error.js"),
+                    script.src("/assets/js/input/json-data.js"),
 
                     renderIf(
                         isNil: \Context.taskInfo,
