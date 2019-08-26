@@ -173,6 +173,12 @@ public struct CreatorDashboard: LocalizedTemplate {
                                     )
                                 ),
 
+                                a.href("subtopic-select-subject").child(
+                                    button.class("btn btn-primary ml-2").child(
+                                        "Lag et undertema"
+                                    )
+                                ),
+
                                 // Create Multiple Choise Task
                                 a.href(createMultipleTaskUrl).child(
                                     button.type("button").class("btn btn-success ml-2").child(

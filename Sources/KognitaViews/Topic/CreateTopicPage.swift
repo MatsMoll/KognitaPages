@@ -21,7 +21,6 @@ public struct CreateTopicPage: LocalizedTemplate {
     public struct Context {
         let locale = "nb"
         let base: ContentBaseTemplate.Context
-//        let topics: [PreTopicOption.Context]
         let subject: Subject
 
         /// The topic to edit
