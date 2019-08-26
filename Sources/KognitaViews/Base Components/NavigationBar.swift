@@ -8,6 +8,21 @@
 
 import HTMLKit
 
+struct BetaHeader : StaticView {
+
+    func build() -> CompiledTemplate {
+        return div.class("container text-light text-center pt-2").child(
+            p.class("d-inline").child(
+                "🚧👷‍♂️ Dette er en beta versjon av Kognita. Det er bare å prøve den, men vi vil veldig gjerne høre hva du tenker. Du kan kontakte oss via "
+            ),
+            a.class("d-inline text-white").href("mailto: mats@kognita.no").child(
+                "Email"
+            ),
+            p.class("d-inline").child(".")
+        )
+    }
+}
+
 extension AttributableNode {
 
     func ariaLabelledby(_ values: CompiledTemplate...) -> Self {
@@ -29,6 +44,7 @@ struct NavigationBar: LocalizedTemplate {
     func build() -> CompiledTemplate {
         return
             div.class("topnav").child(
+                BetaHeader(),
                 div.class("container").child(
                     nav.class("navbar navbar-dark navbar-expand-lg topnav-menu").child(
                         // Logo
