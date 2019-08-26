@@ -55,7 +55,7 @@ struct SubtopicPicker : ContextualTemplate {
         }
 
         func build() -> CompiledTemplate {
-            optgroup.label(variable(\.topicResponse.topic.name)).child(
+            return optgroup.label(variable(\.topicResponse.topic.name)).child(
                 forEach(
                     in: \.subtopicSelect,
                     render: SubtopicSelect()
