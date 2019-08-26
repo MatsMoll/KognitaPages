@@ -8,10 +8,6 @@
 import HTMLKit
 import KognitaCore
 
-extension Topic {
-    static let unselected = try! Topic(name: "Velg ...", description: "", chapter: 0, subjectId: 0, creatorId: 0)
-}
-
 
 public class CreateNumberInputTaskTemplate: LocalizedTemplate {
 
@@ -27,30 +23,26 @@ public class CreateNumberInputTaskTemplate: LocalizedTemplate {
         let locale = "nb"
         let base: ContentBaseTemplate.Context
         let subject: Subject
-        let topics: [TopicSelect.Context]
+        let topics: SubtopicPicker.Context
 
         // Used to edit a task
         let taskInfo: Task?
         let inputTask: NumberInputTask?
 
-        public init(user: User, subject: Subject, topics: [Topic], content: NumberInputTaskContent? = nil, selectedTopicId: Int? = nil) {
+        public init(user: User, subject: Subject, topics: [Topic.Response], content: NumberInputTaskContent? = nil, selectedTopicId: Int? = nil) {
             self.base = .init(user: user, title: "Lag Oppgave")
             self.subject = subject
-            let sortSelectedTopicId = selectedTopicId ?? content?.task.topicId
-            self.topics = ([Topic.unselected] + topics)
-                .map { .init(topic: $0, isSelected: sortSelectedTopicId == $0.id) }
-                .sorted(by: { (first, _) in first.isSelected })
+            let sortSelectedTopicId = selectedTopicId ?? content?.task.editedTaskID
+            self.topics = .init(topics: topics, selectedSubtopicId: sortSelectedTopicId)
             self.taskInfo = content?.task
             self.inputTask = content?.input
         }
 
-        public init(user: User, topics: [Topic], preview: TaskPreviewContent, content: NumberInputTask, selectedTopicId: Int? = nil) {
+        public init(user: User, topics: [Topic.Response], preview: TaskPreviewContent, content: NumberInputTask, selectedTopicId: Int? = nil) {
             self.base = .init(user: user, title: "Lag Oppgave")
             self.subject = preview.subject
-            let sortSelectedTopicId = preview.task.topicId
-            self.topics = ([Topic.unselected] + topics)
-                .map { .init(topic: $0, isSelected: sortSelectedTopicId == $0.id) }
-                .sorted(by: { (first, _) in first.isSelected })
+            let sortSelectedTopicId = preview.task.subtopicId
+            self.topics = .init(topics: topics, selectedSubtopicId: sortSelectedTopicId)
             self.taskInfo = preview.task
             self.inputTask = content
         }
@@ -73,15 +65,9 @@ public class CreateNumberInputTaskTemplate: LocalizedTemplate {
                                 form.class("needs-validation").novalidate.child(
 
                                     // Topic
-                                    label.for("create-input-topic-id").class("col-form-label").child(
-                                        "Tema"
-                                    ),
-                                    select.id("create-input-topic-id").class("select2 form-control select2").dataToggle("select2").dataPlaceholder("Velg ...").required.child(
-
-                                        forEach(
-                                            in:     \.topics,
-                                            render: TopicSelect()
-                                        )
+                                    embed(
+                                        SubtopicPicker(idPrefix: "create-input-"),
+                                        withPath: \.topics
                                     ),
 
                                     renderIf(
@@ -244,13 +230,13 @@ public class CreateNumberInputTaskTemplate: LocalizedTemplate {
     struct TopicSelect: ContextualTemplate {
 
         struct Context {
-            let topic: Topic
+            let topicResponse: Topic.Response
             let isSelected: Bool
         }
 
         func build() -> CompiledTemplate {
-            return option.if(\.isSelected, add: .selected).value(variable(\.topic.id)).child(
-                variable(\.topic.name)
+            return option.if(\.isSelected, add: .selected).value(variable(\.topicResponse.topic.id)).child(
+                variable(\.topicResponse.topic.name)
             )
         }
     }

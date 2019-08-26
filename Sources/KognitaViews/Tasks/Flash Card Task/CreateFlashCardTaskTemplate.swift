@@ -22,18 +22,16 @@ public class CreateFlashCardTaskTemplate: LocalizedTemplate {
         let locale = "nb"
         let base: ContentBaseTemplate.Context
         let subject: Subject
-        let topics: [TopicSelect.Context]
+        let topics: SubtopicPicker.Context
 
         // Used to edit a task
         let taskInfo: Task?
 
-        public init(user: User, subject: Subject, topics: [Topic], content: Task? = nil, selectedTopicId: Int? = nil) {
+        public init(user: User, subject: Subject, topics: [Topic.Response], content: Task? = nil, selectedTopicId: Int? = nil) {
             self.base = .init(user: user, title: "Lag Oppgave")
             self.subject = subject
-            let sortSelectedTopicId = selectedTopicId ?? content?.topicId
-            self.topics = ([Topic.unselected] + topics)
-                .map { .init(topic: $0, isSelected: sortSelectedTopicId == $0.id) }
-                .sorted(by: { (first, _) in first.isSelected })
+            let sortSelectedTopicId = selectedTopicId ?? content?.subtopicId
+            self.topics = .init(topics: topics, selectedSubtopicId: sortSelectedTopicId)
             self.taskInfo = content
         }
     }
@@ -56,15 +54,9 @@ public class CreateFlashCardTaskTemplate: LocalizedTemplate {
                                 form.class("needs-validation").novalidate.child(
 
                                     // Topic
-                                    label.for("card-topic-id").class("col-form-label").child(
-                                        "Tema"
-                                    ),
-                                    select.id("card-topic-id").class("select2 form-control select2").dataToggle("select2").dataPlaceholder("Velg ...").required.child(
-
-                                        forEach(
-                                            in:     \.topics,
-                                            render: TopicSelect()
-                                        )
+                                    embed(
+                                        SubtopicPicker(idPrefix: "card-"),
+                                        withPath: \.topics
                                     ),
 
                                     renderIf(
@@ -187,20 +179,5 @@ public class CreateFlashCardTaskTemplate: LocalizedTemplate {
                 ]
             ),
             withPath: \Context.base)
-    }
-
-
-    struct TopicSelect: ContextualTemplate {
-
-        struct Context {
-            let topic: Topic
-            let isSelected: Bool
-        }
-
-        func build() -> CompiledTemplate {
-            return option.if(\.isSelected, add: .selected).value(variable(\.topic.id)).child(
-                variable(\.topic.name)
-            )
-        }
     }
 }

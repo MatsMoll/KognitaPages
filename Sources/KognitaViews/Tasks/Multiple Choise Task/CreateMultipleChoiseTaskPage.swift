@@ -37,19 +37,17 @@ public struct CreateMultipleChoiseTaskPage: LocalizedTemplate {
         let locale = "nb"
         let base: ContentBaseTemplate.Context
         let subject: Subject
-        let topics: [TopicSelect.Context]
+        let topics: SubtopicPicker.Context
 
         // Used to edit a task
         let taskInfo: Task?
         let multipleTaskInfo: MultipleChoiseTaskContent?
 
-        public init(user: User, subject: Subject, topics: [Topic], taskInfo: Task? = nil, multipleTaskInfo: MultipleChoiseTaskContent? = nil, selectedTopicId: Int? = nil) {
+        public init(user: User, subject: Subject, topics: [Topic.Response], taskInfo: Task? = nil, multipleTaskInfo: MultipleChoiseTaskContent? = nil, selectedTopicId: Int? = nil) {
             self.base = .init(user: user, title: "Lag oppgave")
             self.subject = subject
-            let sortSelectedTopicId = selectedTopicId ?? taskInfo?.topicId
-            self.topics = ([Topic.unselected] + topics)
-                .map { TopicSelect.Context(topic: $0, isSelected: sortSelectedTopicId == $0.id) }
-                .sorted(by: { (first, _) in first.isSelected })
+            let sortSelectedTopicId = selectedTopicId ?? taskInfo?.subtopicId
+            self.topics = .init(topics: topics, selectedSubtopicId: sortSelectedTopicId)
             self.taskInfo = taskInfo
             self.multipleTaskInfo = multipleTaskInfo
         }
@@ -71,15 +69,9 @@ public struct CreateMultipleChoiseTaskPage: LocalizedTemplate {
                                 form.class("needs-validation").novalidate.child(
 
                                     // Topic
-                                    label.for("create-multiple-topic-id").class("col-form-label").child(
-                                        "Tema"
-                                    ),
-                                    select.id("create-multiple-topic-id").class("select2 form-control select2").dataToggle("select2").dataPlaceholder("Velg ...").required.child(
-
-                                        forEach(
-                                            in:     \.topics,
-                                            render: TopicSelect()
-                                        )
+                                    embed(
+                                        SubtopicPicker(idPrefix: "create-multiple-"),
+                                        withPath: \.topics
                                     ),
 
                                     renderIf(
