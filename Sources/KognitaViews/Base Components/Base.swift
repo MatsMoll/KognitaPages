@@ -100,6 +100,7 @@ struct ContentBaseTemplate: LocalizedTemplate {
 
                     // Topbar
                     div.class("topnav").child(
+                        BetaHeader(),
                         div.class("container").child(
                             nav.class("navbar navbar-dark navbar-expand-lg topnav-navbar").child(
 
