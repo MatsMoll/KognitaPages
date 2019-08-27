@@ -13,13 +13,20 @@ public struct SubjectMappingTestModal: LocalizedTemplate {
 
     public init() {}
 
-    public static var localePath: KeyPath<[Topic], String>?
+    public static var localePath: KeyPath<Context, String>?
 
     public enum LocalizationKeys: String {
         case none
     }
 
-    public typealias Context = [Topic]
+    public struct Context {
+
+        let topics: [ModalSelectOption.Context]
+
+        init(topics: [Topic.Response]) {
+            self.topics = topics.map { .init(topic: $0.topic, subtopics: $0.subtopics) }
+        }
+    }
 
     public func build() -> CompiledTemplate {
         return
@@ -51,7 +58,10 @@ public struct SubjectMappingTestModal: LocalizedTemplate {
                                     // Selector
                                     select.id("mapping-topic-selector").class("select2 form-control select2-multiple").dataToggle("select2").multiple.dataPlaceholder("Choose ...").child(
                                         optgroup.label("Hele temaer").child(
-                                            forEach(render: ModalSelectOption())
+                                            forEach(
+                                                in: \.topics,
+                                                render: ModalSelectOption()
+                                            )
                                         )
                                     )
                                 ),
@@ -71,11 +81,36 @@ public struct SubjectMappingTestModal: LocalizedTemplate {
 
     struct ModalSelectOption: ContextualTemplate {
 
-        typealias Context = Topic
+        struct Context {
+            let topic: Topic
+            let subtopics: [SubtopicOption.Context]
+
+            init(topic: Topic, subtopics: [Subtopic]) {
+                self.topic = topic
+                self.subtopics = subtopics.map { .init(topic: topic, subtopic: $0) }
+            }
+        }
 
         func build() -> CompiledTemplate {
-            return option.selected.value(variable(\.id)).child(
-                variable(\.name)
+            return optgroup.label(variable(\.topic.name)).child(
+                forEach(
+                    in: \.subtopics,
+                    render: SubtopicOption()
+                )
+            )
+        }
+    }
+
+    struct SubtopicOption: ContextualTemplate {
+
+        struct Context {
+            let topic: Topic
+            let subtopic: Subtopic
+        }
+
+        func build() -> CompiledTemplate {
+            return option.selected.value(variable(\.subtopic.id)).child(
+                variable(\.subtopic.name) + " - " + variable(\.topic.name)
             )
         }
     }

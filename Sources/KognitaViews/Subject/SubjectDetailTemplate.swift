@@ -42,15 +42,15 @@ public struct SubjectDetailTemplate: LocalizedTemplate {
         let base: ContentBaseTemplate.Context
         let subjectContext: SubjectDetailCard.Context
         var subject: Subject { return subjectContext.subject }
-        let topics: [Topic]
+        let topics: SubjectPracticeModal.Context
         let topicsLevels: [TopicCard.Context]
 
-        public init(user: User, subject: Subject, topics: [Topic], levels: [UserLevel], subjectLevel: UserSubjectLevel) {
+        public init(user: User, subject: Subject, topics: [Topic.Response], levels: [UserLevel], subjectLevel: UserSubjectLevel) {
             self.base = .init(user: user, title: subject.name)
             self.subjectContext = .init(subject: subject, level: subjectLevel)
-            self.topics = topics
-            self.topicsLevels = topics.map { topic in
-                return .init(topic: topic, level: levels.first(where: { $0.topicID == topic.id }))
+            self.topics = .init(topics: topics)
+            self.topicsLevels = topics.map { response in
+                return .init(topic: response.topic, level: levels.first(where: { $0.topicID == response.topic.id }))
             }
         }
     }
@@ -125,7 +125,7 @@ public struct SubjectDetailTemplate: LocalizedTemplate {
                 // Topic List information
                 div.class("row").child(
                     renderIf(
-                        \.topics.count > 0,
+                        \.topics.topics.count > 0,
 
                         forEach(
                             in:     \.topicsLevels,
