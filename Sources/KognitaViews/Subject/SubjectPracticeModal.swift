@@ -20,7 +20,7 @@ public struct SubjectPracticeModal: LocalizedTemplate {
 
     public init() {}
 
-    public static var localePath: KeyPath<[Topic], String>?
+    public static var localePath: KeyPath<Context, String>?
 
     public enum LocalizationKeys: String {
         case startText = "subject.session.start"
@@ -31,7 +31,14 @@ public struct SubjectPracticeModal: LocalizedTemplate {
         case topicsSelect = "subject.session.topics.select"
     }
 
-    public typealias Context = [Topic]
+    public struct Context {
+
+        let topics: [SubjectMappingTestModal.ModalSelectOption.Context]
+
+        init(topics: [Topic.Response]) {
+            self.topics = topics.map { .init(topic: $0.topic, subtopics: $0.subtopics) }
+        }
+    }
 
     public func build() -> CompiledTemplate {
         return
@@ -71,7 +78,10 @@ public struct SubjectPracticeModal: LocalizedTemplate {
                                     // Select
                                     select.id("practice-topic-selector").class("select2 form-control select2-multiple").dataToggle("select2").multiple.dataPlaceholder(localize(.topicsSelect)).child(
                                         optgroup.label("Hele temaer").child(
-                                            forEach(render: SubjectMappingTestModal.ModalSelectOption())
+                                            forEach(
+                                                in: \.topics,
+                                                render: SubjectMappingTestModal.ModalSelectOption()
+                                            )
                                         )
                                     )
                                 ),
