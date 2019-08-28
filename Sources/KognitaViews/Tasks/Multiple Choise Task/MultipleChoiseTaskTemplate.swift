@@ -37,7 +37,7 @@ public struct MultipleChoiseTaskTemplate: LocalizedTemplate {
         let locale = "nb"
         let previewContext: TaskPreviewTemplate.Context
         let choises: [SingleChoiseOption.Context]
-        let multipleChoiseTask: MultipleChoiseTaskContent
+        let multipleChoiseTask: MultipleChoiseTask.Data
 
         let nextTaskPath: String?
         let isResult: Bool
@@ -46,7 +46,7 @@ public struct MultipleChoiseTaskTemplate: LocalizedTemplate {
         var session: PracticeSession? { return previewContext.session }
 
         public init(
-            multiple: MultipleChoiseTaskContent,
+            multiple: MultipleChoiseTask.Data,
             taskContent: TaskPreviewContent,
             user: User,
             selectedChoises: [MultipleChoiseTaskChoiseResult] = [],
