@@ -41,9 +41,9 @@ public struct CreateMultipleChoiseTaskPage: LocalizedTemplate {
 
         // Used to edit a task
         let taskInfo: Task?
-        let multipleTaskInfo: MultipleChoiseTaskContent?
+        let multipleTaskInfo: MultipleChoiseTask.Data?
 
-        public init(user: User, subject: Subject, topics: [Topic.Response], taskInfo: Task? = nil, multipleTaskInfo: MultipleChoiseTaskContent? = nil, selectedTopicId: Int? = nil) {
+        public init(user: User, subject: Subject, topics: [Topic.Response], taskInfo: Task? = nil, multipleTaskInfo: MultipleChoiseTask.Data? = nil, selectedTopicId: Int? = nil) {
             self.base = .init(user: user, title: "Lag oppgave")
             self.subject = subject
             let sortSelectedTopicId = selectedTopicId ?? taskInfo?.subtopicId
