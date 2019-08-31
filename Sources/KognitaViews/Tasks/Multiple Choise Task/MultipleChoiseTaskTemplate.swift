@@ -49,7 +49,7 @@ public struct MultipleChoiseTaskTemplate: LocalizedTemplate {
             multiple: MultipleChoiseTask.Data,
             taskContent: TaskPreviewContent,
             user: User,
-            selectedChoises: [MultipleChoiseTaskChoiseResult] = [],
+            selectedChoises: [MultipleChoiseTaskChoise.Result] = [],
             nextTaskPath: String? = nil,
             session: PracticeSession? = nil,
             practiceProsess: Int? = nil,
@@ -164,7 +164,7 @@ public struct MultipleChoiseTaskTemplate: LocalizedTemplate {
             let isCorrect: Bool
             let choise: MultipleChoiseTaskChoise
 
-            init(choise: MultipleChoiseTaskChoise, selectedChoises: [MultipleChoiseTaskChoiseResult] = []) {
+            init(choise: MultipleChoiseTaskChoise, selectedChoises: [MultipleChoiseTaskChoise.Result] = []) {
                 let selectedIndex = selectedChoises.firstIndex(where: { $0.id == choise.id })
                 if let selectedIndex = selectedIndex {
                     self.isCorrect = selectedChoises[selectedIndex].isCorrect

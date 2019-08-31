@@ -45,7 +45,7 @@ public struct SubjectDetailTemplate: LocalizedTemplate {
         let topics: SubjectPracticeModal.Context
         let topicsLevels: [TopicCard.Context]
 
-        public init(user: User, subject: Subject, topics: [Topic.Response], levels: [UserLevel], subjectLevel: UserSubjectLevel) {
+        public init(user: User, subject: Subject, topics: [Topic.Response], levels: [User.TopicLevel], subjectLevel: User.SubjectLevel) {
             self.base = .init(user: user, title: subject.name)
             self.subjectContext = .init(subject: subject, level: subjectLevel)
             self.topics = .init(topics: topics)
@@ -159,7 +159,7 @@ public struct SubjectDetailTemplate: LocalizedTemplate {
 
         struct Context {
             let subject: Subject
-            let level: UserSubjectLevel
+            let level: User.SubjectLevel
         }
 
         func build() -> CompiledTemplate {
@@ -215,7 +215,7 @@ public struct SubjectDetailTemplate: LocalizedTemplate {
 
         struct Context {
             let topic: Topic
-            let level: UserLevel?
+            let level: User.TopicLevel?
         }
 
         func build() -> CompiledTemplate {
