@@ -131,7 +131,9 @@ public class FlashCardTaskTemplate: LocalizedTemplate {
                             //                        i.class("mdi mdi-help mr-1"),
                             //                        "Trenger du et hint?"
                             //                    ),
-                        )
+                        ),
+                        
+                        AchievementPopup()
                     )
                 ),
                 withPath: \.taskPreview
