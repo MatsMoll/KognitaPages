@@ -21,7 +21,7 @@ struct AchievementPopup : StaticView {
                                 "Bra Jobba!"
                             ) +
                             p.class("mt-3").child(
-                                "Du klarte måle ditt med x oppgaver! Gratulerer ✅"
+                                "Du oppnådd arbeidsmålet ditt! Gratulerer 🥳"
                             ) +
                             button.type("button").class("btn btn-light my-2").dataDismiss("modal").child(
                                 "Fortsett"
