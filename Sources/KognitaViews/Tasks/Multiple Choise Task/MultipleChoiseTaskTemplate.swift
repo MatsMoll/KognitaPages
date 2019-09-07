@@ -37,7 +37,7 @@ public struct MultipleChoiseTaskTemplate: LocalizedTemplate {
         let locale = "nb"
         let previewContext: TaskPreviewTemplate.Context
         let choises: [SingleChoiseOption.Context]
-        let multipleChoiseTask: MultipleChoiseTaskContent
+        let multipleChoiseTask: MultipleChoiseTask.Data
 
         let nextTaskPath: String?
         let isResult: Bool
@@ -46,15 +46,15 @@ public struct MultipleChoiseTaskTemplate: LocalizedTemplate {
         var session: PracticeSession? { return previewContext.session }
 
         public init(
-            multiple: MultipleChoiseTaskContent,
+            multiple: MultipleChoiseTask.Data,
             taskContent: TaskPreviewContent,
             user: User,
-            selectedChoises: [MultipleChoiseTaskChoiseResult] = [],
+            selectedChoises: [MultipleChoiseTaskChoise.Result] = [],
             nextTaskPath: String? = nil,
             session: PracticeSession? = nil,
             practiceProsess: Int? = nil,
-            lastResult: TaskResultContent? = nil,
-            numberOfTasks: Int
+            lastResult: TaskResultContent? = nil
+//            numberOfTasks: Int
         ) {
             self.previewContext = .init(
                 task: taskContent,
@@ -62,8 +62,8 @@ public struct MultipleChoiseTaskTemplate: LocalizedTemplate {
                 practiceProgress: practiceProsess,
                 session: session,
                 lastResult: lastResult,
-                taskPath: "multiple-choise",
-                numberOfTasks: numberOfTasks
+                taskPath: "multiple-choise"
+//                numberOfTasks: numberOfTasks
             )
             self.multipleChoiseTask = multiple
             self.isResult = !selectedChoises.isEmpty
@@ -142,7 +142,9 @@ public struct MultipleChoiseTaskTemplate: LocalizedTemplate {
                                     "Neste"
                                 )
                             )
-                        )
+                        ),
+                        
+                        AchievementPopup()
                     )
                 ),
 
@@ -164,7 +166,7 @@ public struct MultipleChoiseTaskTemplate: LocalizedTemplate {
             let isCorrect: Bool
             let choise: MultipleChoiseTaskChoise
 
-            init(choise: MultipleChoiseTaskChoise, selectedChoises: [MultipleChoiseTaskChoiseResult] = []) {
+            init(choise: MultipleChoiseTaskChoise, selectedChoises: [MultipleChoiseTaskChoise.Result] = []) {
                 let selectedIndex = selectedChoises.firstIndex(where: { $0.id == choise.id })
                 if let selectedIndex = selectedIndex {
                     self.isCorrect = selectedChoises[selectedIndex].isCorrect

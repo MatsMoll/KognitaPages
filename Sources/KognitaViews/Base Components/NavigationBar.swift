@@ -41,6 +41,12 @@ struct NavigationBar: LocalizedTemplate {
 
     typealias Context = NoContext
 
+    let rootUrl: String
+
+    init(rootUrl: String = "") {
+        self.rootUrl = rootUrl
+    }
+
     func build() -> CompiledTemplate {
         return
             div.class("topnav").child(
@@ -48,24 +54,24 @@ struct NavigationBar: LocalizedTemplate {
                 div.class("container").child(
                     nav.class("navbar navbar-dark navbar-expand-lg topnav-menu").child(
                         // Logo
-                        a.href("/").class("logo text-center").child(
+                        a.href(rootUrl + "/").class("logo text-center").child(
                             span.class("logo-lg").child(
-                                img.src("/assets/images/logo.png").alt("").height(30)
+                                img.src(rootUrl + "/assets/images/logo.png").alt("").height(30)
                             ),
                             span.class("logo-sm").child(
-                                img.src("/assets/images/logo.png").alt("").height(30)
+                                img.src(rootUrl + "/assets/images/logo.png").alt("").height(30)
                             )
                         ),
 
                         div.class("collapse navbar-collapse").id("navbarResponsive").child(
                             ul.class("navbar-nav ml-auto").child(
                                 li.class("nav-item").child(
-                                    a.class("nav-link").href("/signup").child(
+                                    a.class("nav-link").href(rootUrl + "/signup").child(
                                         localize(.register)
                                     )
                                 ),
                                 li.class("nav-item").child(
-                                    a.class("nav-link").href("/login").child(
+                                    a.class("nav-link").href(rootUrl + "/login").child(
                                         localize(.login)
                                     )
                                 )

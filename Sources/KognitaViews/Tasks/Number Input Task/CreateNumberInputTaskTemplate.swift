@@ -29,7 +29,7 @@ public class CreateNumberInputTaskTemplate: LocalizedTemplate {
         let taskInfo: Task?
         let inputTask: NumberInputTask?
 
-        public init(user: User, subject: Subject, topics: [Topic.Response], content: NumberInputTaskContent? = nil, selectedTopicId: Int? = nil) {
+        public init(user: User, subject: Subject, topics: [Topic.Response], content: NumberInputTask.Data? = nil, selectedTopicId: Int? = nil) {
             self.base = .init(user: user, title: "Lag Oppgave")
             self.subject = subject
             let sortSelectedTopicId = selectedTopicId ?? content?.task.editedTaskID
