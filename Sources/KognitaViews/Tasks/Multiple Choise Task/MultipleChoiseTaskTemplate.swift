@@ -53,8 +53,8 @@ public struct MultipleChoiseTaskTemplate: LocalizedTemplate {
             nextTaskPath: String? = nil,
             session: PracticeSession? = nil,
             practiceProsess: Int? = nil,
-            lastResult: TaskResultContent? = nil,
-            numberOfTasks: Int
+            lastResult: TaskResultContent? = nil
+//            numberOfTasks: Int
         ) {
             self.previewContext = .init(
                 task: taskContent,
@@ -62,8 +62,8 @@ public struct MultipleChoiseTaskTemplate: LocalizedTemplate {
                 practiceProgress: practiceProsess,
                 session: session,
                 lastResult: lastResult,
-                taskPath: "multiple-choise",
-                numberOfTasks: numberOfTasks
+                taskPath: "multiple-choise"
+//                numberOfTasks: numberOfTasks
             )
             self.multipleChoiseTask = multiple
             self.isResult = !selectedChoises.isEmpty

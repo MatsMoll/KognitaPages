@@ -38,8 +38,8 @@ public struct NumberInputTaskTemplate: LocalizedTemplate {
             nextTaskPath: String?,
             session: PracticeSession? = nil,
             practiceProgress: Int? = nil,
-            lastResult: TaskResultContent? = nil,
-            numberOfTasks: Int
+            lastResult: TaskResultContent? = nil
+//            numberOfTasks: Int
         ) {
             self.taskPreview = .init(
                 task: taskPreview,
@@ -47,8 +47,8 @@ public struct NumberInputTaskTemplate: LocalizedTemplate {
                 practiceProgress: practiceProgress,
                 session: session,
                 lastResult: lastResult,
-                taskPath: "input",
-                numberOfTasks: numberOfTasks
+                taskPath: "input"
+//                numberOfTasks: numberOfTasks
             )
             self.nextTaskPath = nextTaskPath
             self.numberTask = numberTask

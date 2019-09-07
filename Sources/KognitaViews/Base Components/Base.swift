@@ -23,10 +23,12 @@ struct BaseTemplate: ContextualTemplate {
 
     let body: CompiledTemplate
     let customHeader: CompiledTemplate
+    let rootUrl: String
 
-    init(body: CompiledTemplate..., customHeader: CompiledTemplate = "") {
+    init(body: CompiledTemplate..., customHeader: CompiledTemplate = "", rootUrl: String = "") {
         self.body = body
         self.customHeader = customHeader
+        self.rootUrl = rootUrl
     }
 
     func build() -> CompiledTemplate {
@@ -45,10 +47,15 @@ struct BaseTemplate: ContextualTemplate {
                     ),
                     meta.name("author").content("MEM"),
 
-                    link.rel("shortcut icon").href("/assets/images/favicon.ico"),
+                    link.rel("shortcut icon")
+                        .href(rootUrl + "/assets/images/favicon.ico"),
 
-                    link.href("/assets/css/icons.min.css").rel("stylesheet").type("text/css"),
-                    link.href("/assets/css/app.min.css").rel("stylesheet").type("text/css"),
+                    link.href(rootUrl + "/assets/css/icons.min.css")
+                        .rel("stylesheet")
+                        .type("text/css"),
+                    link.href(rootUrl + "/assets/css/app.min.css")
+                        .rel("stylesheet")
+                        .type("text/css"),
 
                     customHeader
                 ),

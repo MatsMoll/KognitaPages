@@ -45,8 +45,8 @@ public class FlashCardTaskTemplate: LocalizedTemplate {
                 practiceProgress: practiceProgress,
                 session: session,
                 lastResult: lastResult,
-                taskPath: "flash-card",
-                numberOfTasks: numberOfTasks
+                taskPath: "flash-card"
+//                numberOfTasks: numberOfTasks
             )
             self.nextTaskPath = nextTaskPath
 

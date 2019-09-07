@@ -117,7 +117,7 @@ public class LoginPage: LocalizedTemplate {
 
                                             // Password
                                             div.class("form-group").child(
-                                                a.href("#").class("text-muted float-right").child(
+                                                a.href("/start-reset-password").class("text-muted float-right").child(
                                                     small.child(
                                                         localize(.forgottenPassword)
                                                     )
@@ -132,16 +132,6 @@ public class LoginPage: LocalizedTemplate {
                                                     .placeholder(localize(.passwordPlaceholder))
                                                     .required
                                             ),
-
-                                            // Remember me
-//                                            div.class("form-group mb-3").child(
-//                                                div.class("custom-control custom-checkbox").child(
-//                                                    input.type("checkbox").class("custom-control-input").id("checkbox-signin").checked,
-//                                                    label.class("custom-control-label").for("checkbox-signin").child(
-//                                                        "Remember me"
-//                                                    )
-//                                                )
-//                                            ),
 
                                             // Login button
                                             div.class("form-group mb-0 text-center").child(

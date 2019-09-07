@@ -42,7 +42,7 @@ public struct TaskPreviewTemplate: LocalizedTemplate {
         let lastResult: TaskResultContent?
         let user: User
         let taskPath: String
-        let numberOfTasks: Int
+//        let numberOfTasks: Int
 
         var subject: Subject { return taskContent.subject }
         var topic: Topic { return taskContent.topic }
@@ -54,8 +54,8 @@ public struct TaskPreviewTemplate: LocalizedTemplate {
             practiceProgress: Int?,
             session: PracticeSession?,
             lastResult: TaskResultContent?,
-            taskPath: String,
-            numberOfTasks: Int
+            taskPath: String
+//            numberOfTasks: Int
             )
         {
             self.base = .init(title: "Oppgave", description: "Lær ved å øve")
@@ -65,7 +65,7 @@ public struct TaskPreviewTemplate: LocalizedTemplate {
             self.lastResult = lastResult
             self.user = user
             self.taskPath = taskPath
-            self.numberOfTasks = numberOfTasks
+//            self.numberOfTasks = numberOfTasks
         }
     }
 
@@ -88,9 +88,9 @@ public struct TaskPreviewTemplate: LocalizedTemplate {
                     div.class("row").child(
                         div.class("col-12").child(
                             div.class("page-title-box").child(
-                                small.class("float-right mt-4").child(
-                                    "Antall oppgaver i øvingsettet: " + variable(\.numberOfTasks)
-                                ),
+//                                small.class("float-right mt-4").child(
+//                                    "Antall oppgaver i øvingsettet: " + variable(\.numberOfTasks)
+//                                ),
                                 h4.class("page-title").child(
                                     variable(\.topic.name)
                                 )
