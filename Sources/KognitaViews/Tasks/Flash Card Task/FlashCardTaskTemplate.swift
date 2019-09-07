@@ -45,8 +45,8 @@ public class FlashCardTaskTemplate: LocalizedTemplate {
                 practiceProgress: practiceProgress,
                 session: session,
                 lastResult: lastResult,
-                taskPath: "flash-card",
-                numberOfTasks: numberOfTasks
+                taskPath: "flash-card"
+//                numberOfTasks: numberOfTasks
             )
             self.nextTaskPath = nextTaskPath
 
@@ -131,7 +131,9 @@ public class FlashCardTaskTemplate: LocalizedTemplate {
                             //                        i.class("mdi mdi-help mr-1"),
                             //                        "Trenger du et hint?"
                             //                    ),
-                        )
+                        ),
+                        
+                        AchievementPopup()
                     )
                 ),
                 withPath: \.taskPreview
