@@ -18,7 +18,13 @@ struct AuthenticationBaseTemplate : ContextualTemplate {
 
     let cardBody: CompiledTemplate
     let otherActions: CompiledTemplate
-    var rootUrl: String = ""
+    let rootUrl: String
+
+    init(cardBody: CompiledTemplate, otherActions: CompiledTemplate, rootUrl: String = "") {
+        self.cardBody = cardBody
+        self.otherActions = otherActions
+        self.rootUrl = rootUrl
+    }
 
     func build() -> CompiledTemplate {
 
