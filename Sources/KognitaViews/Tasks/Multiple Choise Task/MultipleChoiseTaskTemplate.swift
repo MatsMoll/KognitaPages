@@ -142,7 +142,9 @@ public struct MultipleChoiseTaskTemplate: LocalizedTemplate {
                                     "Neste"
                                 )
                             )
-                        )
+                        ),
+                        
+                        AchievementPopup()
                     )
                 ),
 

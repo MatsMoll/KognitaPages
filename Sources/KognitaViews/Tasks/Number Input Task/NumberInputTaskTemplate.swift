@@ -125,7 +125,9 @@ public struct NumberInputTaskTemplate: LocalizedTemplate {
                                     )
                                 )
                             )
-                        )
+                        ),
+                        
+                        AchievementPopup()
                     ),
 
                     customScripts: [
