@@ -25,7 +25,8 @@ public struct NumberInputTaskTemplate: LocalizedTemplate {
         let locale = "nb"
         let taskPreview: TaskPreviewTemplate.Context
         let numberTask: NumberInputTask
-        let nextTaskPath: String?
+        var nextTaskIndex: Int?
+        var prevTaskIndex: Int?
 
         var session: PracticeSession? { return taskPreview.session }
         var task: Task { return taskPreview.task }
@@ -35,7 +36,7 @@ public struct NumberInputTaskTemplate: LocalizedTemplate {
             numberTask: NumberInputTask,
             taskPreview: TaskPreviewContent,
             user: User,
-            nextTaskPath: String?,
+            currentTaskIndex: Int?,
             session: PracticeSession? = nil,
             practiceProgress: Int? = nil,
             lastResult: TaskResultContent? = nil
@@ -50,9 +51,14 @@ public struct NumberInputTaskTemplate: LocalizedTemplate {
                 taskPath: "input"
 //                numberOfTasks: numberOfTasks
             )
-            self.nextTaskPath = nextTaskPath
-            self.numberTask = numberTask
 
+            if let currentTaskIndex = currentTaskIndex {
+                if currentTaskIndex > 1 {
+                    self.prevTaskIndex = currentTaskIndex - 1
+                }
+                self.nextTaskIndex = currentTaskIndex + 1
+            }
+            self.numberTask = numberTask
         }
     }
 
@@ -81,8 +87,6 @@ public struct NumberInputTaskTemplate: LocalizedTemplate {
                                 "Skal du skrive desimaltall må det brukes \",\" eks. 2,5. Punktum og mellomrom vil bli ignorert. Altså 10.000 og 10 000 vil bli tolka som 10000"
                             ),
                             br,
-
-                            div.id("correct-answer").class("d-none mb-1"),
 
                             // Submit button
                             button.type("button").onclick("submitAnswer();").class("btn btn-success mr-1").id("submitButton").child(
@@ -114,11 +118,23 @@ public struct NumberInputTaskTemplate: LocalizedTemplate {
                             //                        "Trenger du et hint?"
                             //                    ),
 
+                            // Prev button
+                            renderIf(
+                                isNotNil: \.prevTaskIndex,
+
+                                a.id("prevButton").href(variable(\.prevTaskIndex)).class("float-right d-none").child(
+                                    button.type("button").class("btn btn-secondary").child(
+                                        i.class("mdi mdi-play mr-1"),
+                                        localize(.nextButton)
+                                    )
+                                )
+                            ),
+
                             // Next button
                             renderIf(
-                                isNotNil: \.nextTaskPath,
+                                isNotNil: \.nextTaskIndex,
 
-                                a.id("nextButton").href(variable(\.nextTaskPath)).class("float-right d-none").child(
+                                a.id("nextButton").href(variable(\.nextTaskIndex)).class("float-right d-none").child(
                                     button.type("button").class("btn btn-primary").child(
                                         i.class("mdi mdi-play mr-1"),
                                         localize(.nextButton)

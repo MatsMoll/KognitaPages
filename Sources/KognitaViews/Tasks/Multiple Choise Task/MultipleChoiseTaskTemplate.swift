@@ -39,7 +39,8 @@ public struct MultipleChoiseTaskTemplate: LocalizedTemplate {
         let choises: [SingleChoiseOption.Context]
         let multipleChoiseTask: MultipleChoiseTask.Data
 
-        let nextTaskPath: String?
+        var nextTaskIndex: Int?
+        var prevTaskIndex: Int?
         let isResult: Bool
 
         var task: Task { return previewContext.task }
@@ -50,7 +51,7 @@ public struct MultipleChoiseTaskTemplate: LocalizedTemplate {
             taskContent: TaskPreviewContent,
             user: User,
             selectedChoises: [MultipleChoiseTaskChoise.Result] = [],
-            nextTaskPath: String? = nil,
+            currentTaskIndex: Int? = nil,
             session: PracticeSession? = nil,
             practiceProsess: Int? = nil,
             lastResult: TaskResultContent? = nil
@@ -68,7 +69,12 @@ public struct MultipleChoiseTaskTemplate: LocalizedTemplate {
             self.multipleChoiseTask = multiple
             self.isResult = !selectedChoises.isEmpty
             self.choises = multiple.choises.map { .init(choise: $0, selectedChoises: selectedChoises) }
-            self.nextTaskPath = nextTaskPath
+            if let currentTaskIndex = currentTaskIndex {
+                if currentTaskIndex > 1 {
+                    self.prevTaskIndex = currentTaskIndex - 1
+                }
+                self.nextTaskIndex = currentTaskIndex + 1
+            }
         }
     }
 
@@ -132,11 +138,23 @@ public struct MultipleChoiseTaskTemplate: LocalizedTemplate {
                         //                        "Trenger du et hint?"
                         //                    ),
 
+                        // Prev button
+                        renderIf(
+                            isNotNil: \.prevTaskIndex,
+
+                            a.id("prevButton").href(variable(\.prevTaskIndex)).class("float-right d-none").child(
+                                button.type("button").class("btn btn-secondary").child(
+                                    i.class("mdi mdi-play mr-1"),
+                                    "Neste"
+                                )
+                            )
+                        ),
+
                         // Next button
                         renderIf(
-                            isNotNil: \.nextTaskPath,
+                            isNotNil: \.nextTaskIndex,
 
-                            a.id("nextButton").href(variable(\.nextTaskPath)).class("float-right d-none").child(
+                            a.id("nextButton").href(variable(\.nextTaskIndex)).class("float-right d-none").child(
                                 button.type("button").class("btn btn-primary").child(
                                     i.class("mdi mdi-play mr-1"),
                                     "Neste"

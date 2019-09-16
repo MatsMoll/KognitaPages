@@ -24,16 +24,18 @@ public class FlashCardTaskTemplate: LocalizedTemplate {
     public struct Context {
         let locale = "nb"
         let taskPreview: TaskPreviewTemplate.Context
-        let nextTaskPath: String?
+        var nextTaskIndex: Int?
+        var prevTaskIndex: Int?
 
         var session: PracticeSession? { return taskPreview.session }
         var task: Task { return taskPreview.task }
         var topic: Topic { return taskPreview.topic }
+        var hasBeenCompleted: Bool { return taskPreview.lastResult?.sessionId == session?.id }
 
         public init(
             taskPreview: TaskPreviewContent,
             user: User,
-            nextTaskPath: String? = nil,
+            currentTaskIndex: Int? = nil,
             practiceProgress: Int? = nil,
             session: PracticeSession? = nil,
             lastResult: TaskResultContent? = nil,
@@ -48,8 +50,12 @@ public class FlashCardTaskTemplate: LocalizedTemplate {
                 taskPath: "flash-card"
 //                numberOfTasks: numberOfTasks
             )
-            self.nextTaskPath = nextTaskPath
-
+            if let currentTaskIndex = currentTaskIndex {
+                if currentTaskIndex > 1 {
+                    self.prevTaskIndex = currentTaskIndex - 1
+                }
+                self.nextTaskIndex = currentTaskIndex + 1
+            }
         }
     }
 
@@ -83,20 +89,39 @@ public class FlashCardTaskTemplate: LocalizedTemplate {
 
                     customScripts: [
                         script.src("/assets/js/flash-card/submit-performance.js"),
-                        script.src("/assets/js/practice-session-end.js")
+                        script.src("/assets/js/practice-session-end.js"),
+                        renderIf(
+                            \.hasBeenCompleted,
+
+                            script.child(
+                                "window.onload = presentControlls;"
+                            )
+                        )
                     ],
 
                     underSolutionCard:
                     div.class("card d-none").id("knowledge-card").child(
                         div.class("card-body").child(
+
                             // Next button
                             renderIf(
-                                isNotNil: \.nextTaskPath,
+                                isNotNil: \.nextTaskIndex,
 
-                                input.id("next-task").type("hidden").value(variable(\.nextTaskPath)),
+                                input.id("next-task").type("hidden").value(variable(\.nextTaskIndex)),
                                 button.class("btn btn-primary float-right").onclick("nextTask();").child(
                                     i.class("mdi mdi-play mr-1"),
                                     localize(.nextButton)
+                                )
+                            ),
+
+                            // Prev button
+                            renderIf(
+                                isNotNil: \.prevTaskIndex,
+                                a.href(variable(\.prevTaskIndex)).child(
+                                    button.class("btn btn-secondary float-right mr-2").child(
+                                        i.class("mdi mdi-play mr-1"),
+                                        localize(.nextButton)
+                                    )
                                 )
                             ),
 
