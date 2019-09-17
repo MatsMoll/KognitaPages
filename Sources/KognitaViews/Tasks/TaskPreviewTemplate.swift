@@ -249,15 +249,18 @@ public struct TaskPreviewTemplate: LocalizedTemplate {
                         div.class("card d-block").child(
                             div.class("card-body").child(
 
-                                p.class("text-secondary mb-2").child(
+                                small.class("text-secondary").child(
+                                    variable(\.actionDescription)
+                                ),
 
-                                    renderIf(
-                                        \.task.description != nil,
+                                renderIf(
+                                    \.task.description != nil,
+                                    p.class("text-secondary mb-2 mt-3").child(
                                         variable(\.task.description, escaping: .unsafeNone)
                                     )
                                 ),
-                                h5.child(
-                                    br,
+
+                                h5.addDynamic(.class("mt-3"), with: \.task.description == nil).child(
                                     variable(\.task.question)
                                 )
                             )

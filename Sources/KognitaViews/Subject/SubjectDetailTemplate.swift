@@ -229,18 +229,19 @@ public struct SubjectDetailTemplate: LocalizedTemplate {
 
                             // Title
                             h3.class("mt-0").child(
-                                a.href("/topics/" + variable(\.topic.id)).class("text-dark").child(
-                                    variable(\.topic.chapter) + ". " + variable(\.topic.name)
-                                )
-                            ),
-
-                            a.href("/topics/" + variable(\.topic.id)).child(
-
-                                button.type("button").class("btn btn-light btn-rounded mb-3").child(
-                                    i.class("mdi mdi-book-open-variant"),
-                                    " " + localize(.button)
-                                )
+                                variable(\.topic.chapter) + ". " + variable(\.topic.name)
+//                                a.href("/topics/" + variable(\.topic.id)).class("text-dark").child(
+//                                    variable(\.topic.chapter) + ". " + variable(\.topic.name)
+//                                )
                             )
+
+//                            a.href("/topics/" + variable(\.topic.id)).child(
+//
+//                                button.type("button").class("btn btn-light btn-rounded mb-3").child(
+//                                    i.class("mdi mdi-book-open-variant"),
+//                                    " " + localize(.button)
+//                                )
+//                            )
                         ),
 
                         renderIf(

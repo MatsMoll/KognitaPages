@@ -86,9 +86,6 @@ public struct MultipleChoiseTaskTemplate: LocalizedTemplate {
 
                 div.class("card").child(
                     div.class("card-body").child(
-                        h4.class("mt-0 mb-3").child(
-                            localize(.answerTitle)
-                        ),
 
                         // Choises
                         renderIf(
@@ -138,26 +135,26 @@ public struct MultipleChoiseTaskTemplate: LocalizedTemplate {
                         //                        "Trenger du et hint?"
                         //                    ),
 
-                        // Prev button
-                        renderIf(
-                            isNotNil: \.prevTaskIndex,
-
-                            a.id("prevButton").href(variable(\.prevTaskIndex)).class("float-right d-none").child(
-                                button.type("button").class("btn btn-secondary").child(
-                                    i.class("mdi mdi-play mr-1"),
-                                    "Neste"
-                                )
-                            )
-                        ),
-
                         // Next button
                         renderIf(
                             isNotNil: \.nextTaskIndex,
 
-                            a.id("nextButton").href(variable(\.nextTaskIndex)).class("float-right d-none").child(
+                            a.id("nextButton").href(variable(\.nextTaskIndex)).class("float-right ml-1 d-none").child(
                                 button.type("button").class("btn btn-primary").child(
-                                    i.class("mdi mdi-play mr-1"),
-                                    "Neste"
+                                    "Neste",
+                                    i.class("mdi mdi-arrow-right ml-1")
+                                )
+                            )
+                        ),
+
+                        // Prev button
+                        renderIf(
+                            isNotNil: \.prevTaskIndex,
+
+                            a.id("prevButton").href(variable(\.prevTaskIndex)).class("float-right").child(
+                                button.type("button").class("btn btn-light").child(
+                                    i.class("mdi mdi-arrow-left mr-1"),
+                                    "Forrige"
                                 )
                             )
                         ),

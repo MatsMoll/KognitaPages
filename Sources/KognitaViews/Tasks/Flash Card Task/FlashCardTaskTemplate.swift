@@ -31,6 +31,13 @@ public class FlashCardTaskTemplate: LocalizedTemplate {
         var task: Task { return taskPreview.task }
         var topic: Topic { return taskPreview.topic }
         var hasBeenCompleted: Bool { return taskPreview.lastResult?.sessionId == session?.id }
+        var score: Double? {
+            if let score = taskPreview.lastResult?.result.resultScore {
+                return score * 4
+            } else {
+                return nil
+            }
+        }
 
         public init(
             taskPreview: TaskPreviewContent,
@@ -66,9 +73,6 @@ public class FlashCardTaskTemplate: LocalizedTemplate {
                     actionCard:
                     div.class("card").child(
                         div.class("card-body").child(
-                            h4.class("mt-0 mb-3").child(
-                                "Tenk på svaret og sjekk om du har riktig"
-                            ),
 
                             // Submit button
                             button.type("button").onclick("revealSolution();").class("btn btn-success mr-1").id("submitButton").child(
@@ -109,8 +113,8 @@ public class FlashCardTaskTemplate: LocalizedTemplate {
 
                                 input.id("next-task").type("hidden").value(variable(\.nextTaskIndex)),
                                 button.class("btn btn-primary float-right").onclick("nextTask();").child(
-                                    i.class("mdi mdi-play mr-1"),
-                                    localize(.nextButton)
+                                    localize(.nextButton),
+                                    i.class("mdi mdi-arrow-right ml-1")
                                 )
                             ),
 
@@ -118,9 +122,9 @@ public class FlashCardTaskTemplate: LocalizedTemplate {
                             renderIf(
                                 isNotNil: \.prevTaskIndex,
                                 a.href(variable(\.prevTaskIndex)).child(
-                                    button.class("btn btn-secondary float-right mr-2").child(
-                                        i.class("mdi mdi-play mr-1"),
-                                        localize(.nextButton)
+                                    button.class("btn btn-light float-right mr-2").child(
+                                        i.class("mdi mdi-arrow-left mr-1"),
+                                        "Forrige"
                                     )
                                 )
                             ),
@@ -149,7 +153,12 @@ public class FlashCardTaskTemplate: LocalizedTemplate {
                                 .name("range")
                                 .min(0)
                                 .max(4)
-                                .value(2)
+                                .value(
+                                    renderIf(
+                                        isNotNil: \.score,
+                                        variable(\.score)
+                                    ).else(2)
+                            ).addDynamic(.disable, with: \.score != nil)
 
 
                             //                    button.type("button").onclick("presentHint();").class("btn btn-info mr-1").child(

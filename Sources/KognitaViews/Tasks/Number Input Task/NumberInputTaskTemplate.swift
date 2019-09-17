@@ -118,26 +118,26 @@ public struct NumberInputTaskTemplate: LocalizedTemplate {
                             //                        "Trenger du et hint?"
                             //                    ),
 
-                            // Prev button
-                            renderIf(
-                                isNotNil: \.prevTaskIndex,
-
-                                a.id("prevButton").href(variable(\.prevTaskIndex)).class("float-right d-none").child(
-                                    button.type("button").class("btn btn-secondary").child(
-                                        i.class("mdi mdi-play mr-1"),
-                                        localize(.nextButton)
-                                    )
-                                )
-                            ),
-
                             // Next button
                             renderIf(
                                 isNotNil: \.nextTaskIndex,
 
-                                a.id("nextButton").href(variable(\.nextTaskIndex)).class("float-right d-none").child(
+                                a.id("nextButton").href(variable(\.nextTaskIndex)).class("float-right d-none ml-1").child(
                                     button.type("button").class("btn btn-primary").child(
-                                        i.class("mdi mdi-play mr-1"),
-                                        localize(.nextButton)
+                                        localize(.nextButton),
+                                        i.class("mdi mdi-arrow-right ml-1")
+                                    )
+                                )
+                            ),
+
+                            // Prev button
+                            renderIf(
+                                isNotNil: \.prevTaskIndex,
+
+                                a.id("prevButton").href(variable(\.prevTaskIndex)).class("float-right").child(
+                                    button.type("button").class("btn btn-light").child(
+                                        i.class("mdi mdi-arrow-left mr-1"),
+                                        "Forrige"
                                     )
                                 )
                             )
