@@ -7,43 +7,74 @@
 // swiftlint:disable line_length nesting
 
 import HTMLKit
+import BootstrapKit
 
-class Footer: LocalizedTemplate {
+struct CopyrightFooter: StaticView {
 
-    static var localePath: KeyPath<NoContext, String>?
-
-    enum LocalizationKeys: String {
-        case copyright = "footer.copyright"
-        case aboutUs = "footer.about.us"
-        case help = "footer.help"
-        case contact = "footer.contact"
-    }
-
-    typealias Context = NoContext
-
-    func build() -> CompiledTemplate {
-        return
-            footer.class("footer").child(
-                div.class("container-fluid").child(
-                    div.class("row").child(
-                        div.class("col-md-6").child(
-                            localize(.copyright)
-                        ),
-                        div.class("col-md-6").child(
-                            div.class("text-md-right footer-links d-none d-md-block").child(
-                                a.href("javascript:%20void(0);").child(
-                                    localize(.aboutUs)
-                                ),
-                                a.href("javascript:%20void(0);").child(
-                                    localize(.help)
-                                ),
-                                a.href("javascript:%20void(0);").child(
-                                    localize(.contact)
-                                )
-                            )
-                        )
-                    )
-                )
-        )
+    var body: View {
+        Footer {
+            Container(mode: .fluid) {
+                Row {
+                    Div {
+                        "Copyright"
+                    }.columnWidth(6, for: .medium)
+                    Div {
+                        Div {
+                            Anchor {
+                                "Om oss"
+                            }.href("#")
+                            Anchor {
+                                "Help"
+                            }.href("#")
+                            Anchor {
+                                "Kontakt oss"
+                            }.href("#")
+                        }
+                        .text(alignment: .right)
+                        .class("footer-links d-none d-md-block")
+                    }.columnWidth(6, for: .medium)
+                }
+            }
+        }.class("footer")
     }
 }
+
+//class Footer: LocalizedTemplate {
+//
+//    static var localePath: KeyPath<NoContext, String>?
+//
+//    enum LocalizationKeys: String {
+//        case copyright = "footer.copyright"
+//        case aboutUs = "footer.about.us"
+//        case help = "footer.help"
+//        case contact = "footer.contact"
+//    }
+//
+//    typealias Context = NoContext
+//
+//    func build() -> CompiledTemplate {
+//        return
+//            footer.class("footer").child(
+//                div.class("container-fluid").child(
+//                    div.class("row").child(
+//                        div.class("col-md-6").child(
+//                            localize(.copyright)
+//                        ),
+//                        div.class("col-md-6").child(
+//                            div.class("text-md-right footer-links d-none d-md-block").child(
+//                                a.href("javascript:%20void(0);").child(
+//                                    localize(.aboutUs)
+//                                ),
+//                                a.href("javascript:%20void(0);").child(
+//                                    localize(.help)
+//                                ),
+//                                a.href("javascript:%20void(0);").child(
+//                                    localize(.contact)
+//                                )
+//                            )
+//                        )
+//                    )
+//                )
+//        )
+//    }
+//}

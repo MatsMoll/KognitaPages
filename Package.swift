@@ -5,7 +5,8 @@ import PackageDescription
 
 var dependencies: [Package.Dependency] = [
     // Fast and type-safe templating
-    .package(url: "https://github.com/vapor-community/HTMLKit.git", from: "1.3.0")
+    .package(path: "../../BootstrapKit"),
+//    .package(url: "https://github.com/vapor-community/HTMLKit.git", from: "1.3.0")
 ]
 
 // Kognita Core
@@ -33,7 +34,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "KognitaViews",
-            dependencies: ["HTMLKit", "KognitaCore"]),
+            dependencies: ["BootstrapKit", "KognitaCore"]),
         .testTarget(
             name: "KognitaViewsTests",
             dependencies: ["KognitaViews"]),

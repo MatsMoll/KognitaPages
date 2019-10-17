@@ -7,242 +7,207 @@
 // swiftlint:disable line_length nesting
 
 import Foundation
-import HTMLKit
+import BootstrapKit
 import KognitaCore
 
-public struct SubjectListTemplate: LocalizedTemplate {
+extension Subject {
+    public struct Templates {}
+}
 
-    public init() {}
+extension Subject.Templates {
+    public struct ListOverview: TemplateView {
 
-    // Static so it can be referanceed in the base template
-    static let title = "Tema liste"
+        public struct Context {
+            let user: User
+            let cards: [Subject]
+            let revisitTasks: [TopicResultContent]
+            let ongoingSessionPath: String?
 
-    public static var localePath: KeyPath<SubjectListTemplate.Context, String>? = \.locale
-
-    public enum LocalizationKeys: String {
-        case repeatTitle = "subjects.repeat.title"
-
-        case title = "subjects.title"
-        case listTitle = "subjects.list.title"
-        case noContent = "subjects.no.content"
-
-    }
-
-    public struct Context {
-        let locale = "nb"
-        let base: ContentBaseTemplate.Context
-        let cards: [Subject]
-        let revisitTasks: [TopicResultContent]
-        let ongoingSessionPath: String?
-
-        public init(user: User, cards: [Subject], revisitTasks: [TopicResultContent], ongoingSessionPath: String?) {
-            self.base = .init(user: user, title: SubjectListTemplate.title)
-            self.cards = cards
-            self.revisitTasks = revisitTasks
-            self.ongoingSessionPath = ongoingSessionPath
+            public init(user: User, cards: [Subject], revisitTasks: [TopicResultContent], ongoingSessionPath: String?) {
+                self.user = user
+                self.cards = cards
+                self.revisitTasks = revisitTasks
+                self.ongoingSessionPath = ongoingSessionPath
+            }
         }
-    }
 
-    public func build() -> CompiledTemplate {
-        return embed(
+        public init() {}
+
+        public let context: RootValue<Context> = .root()
+
+        public var body: View {
             ContentBaseTemplate(
-                body:
+                userContext: context.user,
+                baseContext: .constant(.init(title: "Tema liste", description: "Tema liste")),
+                content:
+                Div {
+                    Div {
+                        Div {
+                            Div {
+                                OrderdList {
+                                    ListItem {
+                                        "localize(.title)"
+                                    }.class("breadcrumb-item active")
+                                }.class("breadcrumb m-0")
+                            }.class("page-title-right")
+                        }.class("page-title-box")
+                    }.class("col-12")
+                }.class("row") +
 
-                div.class("row").child(
-                    div.class("col-12").child(
-                        div.class("page-title-box").child(
-                            div.class("page-title-right").child(
-                                ol.class("breadcrumb m-0").child(
-                                    li.class("breadcrumb-item active").child(
-                                        localize(.title)
-                                    )
-                                )
-                            )
-                        )
-                    )
-                ),
-
-                renderIf(
-                    isNotNil: \.ongoingSessionPath,
-
-                    h3.child(
+                IF(context.ongoingSessionPath.isDefined) {
+                    H3 {
                         "Fortsett"
-                    ),
-
-                    div.class("row").child(
-                        div.class("col-md-6 col-xl-6").child(
-                            div.class("card d-block").child(
-                                div.class("card-body").child(
-
-                                    // Title
-                                    h3.class("mt-0").child(
+                    }
+                    Div {
+                        Div {
+                            Div {
+                                Div {
+                                    H3 {
                                         "Fullfør treningssesjonen"
-                                    ),
-
-                                    p.child(
+                                    }.class("mt-0")
+                                    P {
                                         "Du har en treningssesjon som ikke er fullført. Sett av litt tid og fullfør."
-                                    ),
-
-                                    a.href(variable(\.ongoingSessionPath)).class("text-dark").child(
-                                        button.type("button").class("btn btn-primary btn-rounded mb-1").child(
-                                            i.class("mdi mdi-book-open-variant"),
+                                    }
+                                    Anchor {
+                                        Button {
+                                            Italic().class("mdi mdi-book-open-variant")
                                             " Fortsett"
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                ),
-
-                h3.child(
-                    localize(.repeatTitle)
-                ),
-
-                div.class("row").child(
-                    renderIf(
-                        \.revisitTasks.count > 0,
-                            forEach(
-                                in: \.revisitTasks,
-                                render: RevisitCard()
-                            )
-                    ).else(
-                        div.class("col-12").child(
-                            div.class("card d-block").child(
-                                div.class("card-body").child(
-                                    h4.child("Hva kommer her?"),
-                                    p.child(
+                                        }.type("button").class("btn btn-primary btn-rounded mb-1")
+                                    }.href(context.ongoingSessionPath).class("text-dark")
+                                }.class("card-body")
+                            }.class("card d-block")
+                        }.class("col-md-6 col-xl-6")
+                    }.class("row")
+                } +
+                H3 { "localize(.repeatTitle)" } +
+                Row {
+                    IF(context.revisitTasks.isEmpty) {
+                        Div {
+                            Div {
+                                Div {
+                                    H4 {
+                                        "Hva kommer her?"
+                                    }
+                                    P {
                                         "Her vil det komme opp temaer som vi anbefaler å prioritere først. Dette skal hjelpe deg med å øve mer effektivt og dermed få mer ut av øvingene dine."
-                                    ),
-                                    p.child(
+                                    }
+                                    P {
                                         "Disse anbefalingnene vil først komme når du har gjørt noen oppgaver"
-                                    )
-                                )
-                            )
-                        )
-                    )
-                ),
+                                    }
+                                }.class("card-body")
+                            }.class("card d-block")
+                        }.class("col-12")
+                    }.else {
+                        ForEach(in: context.revisitTasks) { revisit in
+                            RevisitCard(context: revisit)
+                        }
+                    }
+                } +
 
-                h3.child(
-                    localize(.listTitle)
-                ),
+                H3 {
+                    "localize(.listTitle)"
+                } +
+                IF(context.cards.isEmpty) {
+                    Div {
+                        H1 {
+                            "localize(.noContent)"
+                        }
+                    }.class("row")
+                }.else {
+                    ForEach(in: context.cards) { subject in
+                        SubjectCard(subject: subject)
+                    }
+                },
 
-                div.class("row").child(
-                    renderIf(
-                        \.cards.count > 0,
-
-                        forEach(
-                            in:     \.cards,
-                            render: Card()
-                        )
-                    ).else(
-                        h1.child(
-                            localize(.noContent)
-                        )
-                    )
-                ),
-
-                scripts:
-                script.src("/assets/js/practice-session-create.js")
-            ),
-            withPath: \.base)
-    }
-
-    // MARK: - Subview
-
-    struct Card: LocalizedTemplate {
-
-        static var localePath: KeyPath<Subject, String>?
-
-        enum LocalizationKeys: String {
-            case button = "subjects.subject.card.button"
-        }
-
-        typealias Context = Subject
-
-        func build() -> CompiledTemplate {
-            return
-                div.class("col-md-6 col-xl-6").child(
-                    a.href("subjects/", variable(\.id)).class("text-dark").child(
-                        div.class("card d-block").child(
-
-                            // Thumbnail
-                            div.class("card-header text-white bg-" + variable(\.colorClass.rawValue)).child(
-                                h3.child(
-                                    variable(\.name)
-                                ),
-                                small.class("badge badge-light").child(
-                                    variable(\.category)
-                                )
-                            ),
-                            div.class("card-body position-relative").child(
-
-                                p.child(
-                                    variable(\.description, escaping: .unsafeNone)
-                                ),
-
-                                // Details
-                                button.class("btn btn-" + variable(\.colorClass.rawValue) + " btn-rounded").child(
-                                    localize(.button)
-                                )
-                            )
-                        )
-                    )
+                scripts: [
+                    Script().source("/assets/js/practice-session-create.js")
+                ]
             )
         }
-    }
 
-    struct RevisitCard: LocalizedTemplate {
+        struct RevisitCard<T>: StaticView {
 
-        static var localePath: KeyPath<TopicResultContent, String>?
+            let context: TemplateValue<T, TopicResultContent>
 
-        enum LocalizationKeys: String {
-            case repeatDescription = "subjects.repeat.description"
-            case start = "subjects.repeat.button"
-            case days = "result.repeat.days"
+            var practiceFunction: View { "startPracticeSession(" + context.topic.id + ", " + context.subject.id + ");" }
+
+            var body: View {
+                Div {
+                    Card {
+                        Div {
+                            "localize(.days)"
+                        }
+                        .class("badge float-right")
+                        H3 {
+                            Anchor {
+                                context.topic.name
+                            }
+                            .on(click: practiceFunction)
+                            .href("#")
+                            .text(color: .dark)
+                        }
+                        .class("mt-0")
+                        P {
+                            "localize(.repeatDescription)"
+                        }
+                        .class("text-muted font-13 mb-3")
+                        Anchor {
+                            Button {
+                                Italic().class("mdi mdi-book-open-variant")
+                                " " + "localize(.start)"
+                            }
+                            .type(.button)
+                            .class("btn btn-primary btn-rounded mb-1")
+                        }
+                        .on(click: practiceFunction)
+                        .href("#")
+                        .text(color: .dark)
+                    }
+                    .display(.block)
+                }
+                .class("col-md-6 col-lg-4")
+            }
         }
 
-        typealias Context = TopicResultContent
+        struct SubjectCard<T>: StaticView {
 
-        func build() -> CompiledTemplate {
-            return
-                div.class("col-md-6 col-lg-4").child(
-                    div.class("card d-block").child(
-                        div.class("card-body").child(
+            let subject: TemplateValue<T, Subject>
 
-                            div.class("badge float-right")
-                                .if(\.daysUntilRevisit < 3, add: .class("badge-danger"))
-                                .if(\.daysUntilRevisit < 11, add: .class("badge-warning"))
-                                .if(\.daysUntilRevisit > 10, add: .class("badge-success")).child(
-                                    localizeWithContext(.days)
-                            ),
-
-                            // Title
-                            h3.class("mt-0").child(
-                                a.onclick("startPracticeSession(", variable(\.topic.id), ", ", variable(\.subject.id), ");").href("#").class("text-dark").child(
-                                    variable(\.topic.name)
-                                )
-                            ),
-
-                            p.class("text-muted font-13 mb-3").child(
-                                localize(.repeatDescription, with: [
-                                    "revisitDate" :
-                                        b.child(
-                                            date(\.revisitDate, dateStyle: .short, timeStyle: .short)
-                                    )]
-                                )
-                            ),
-
-                            a.onclick("startPracticeSession(", variable(\.topic.id), ", ", variable(\.subject.id), ");").href("#").class("text-dark").child(
-
-                                button.type("button").class("btn btn-primary btn-rounded mb-1").child(
-                                    i.class("mdi mdi-book-open-variant"),
-                                    " " + localize(.start)
-                                )
-                            )
-                        )
-                    )
-            )
+            var body: View {
+                Div {
+                    Anchor {
+                        Div {
+                            Div {
+                                H3 {
+                                    subject.name
+                                }
+                                Badge {
+                                    subject.category
+                                }
+                                .background(color: .light)
+                            }
+                            .class("card-header bg-" + subject.colorClass.rawValue)
+                            .text(color: .white)
+                            Div {
+                                P {
+                                    subject.description
+                                        .escaping(.unsafeNone)
+                                }
+                                Button {
+                                    "localize(.button)"
+                                }
+                                .class("btn btn-" + subject.colorClass.rawValue + " btn-rounded")
+                            }
+                            .class("card-body position-relative")
+                        }
+                        .class("card")
+                        .display(.block)
+                    }
+                    .href("subjects/" + subject.id)
+                    .text(color: .dark)
+                }
+                .class("col-md-6 col-xl-6")
+            }
         }
     }
 }

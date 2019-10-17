@@ -5,212 +5,185 @@
 //  Created by Mats Mollestad on 9/4/19.
 //
 
-import HTMLKit
+import BootstrapKit
 import KognitaCore
 
-struct AuthenticationBaseTemplate : ContextualTemplate {
-
-    struct Context {
-        let base: BaseTemplate.Context
-        let message: String?
-        let colorClass: String?
-    }
-
-    let cardBody: CompiledTemplate
-    let otherActions: CompiledTemplate
-    let rootUrl: String
-
-    init(cardBody: CompiledTemplate, otherActions: CompiledTemplate, rootUrl: String = "") {
-        self.cardBody = cardBody
-        self.otherActions = otherActions
-        self.rootUrl = rootUrl
-    }
-
-    func build() -> CompiledTemplate {
-
-        return embed(
-            BaseTemplate(
-                body:
-
-                NavigationBar(rootUrl: rootUrl),
-                div.class("account-pages mt-5 mb-5").child(
-                    div.class("container").child(
-                        div.class("row justify-content-center").child(
-                            div.class("col-lg-5").child(
-
-                                // Error Message
-                                renderIf(
-                                    isNotNil: \.message,
-
-                                    div.class("alert alert-secondary alert-dismissible bg-" + variable(\.colorClass) + " text-white border-0 fade show").role("alert").child(
-                                        button.type("button").class("close").dataDismiss("alert").ariaLabel("Close").child(
-                                            span.ariaHidden("true").child(
-                                                "×"
-                                            )
-                                        ),
-                                        strong.child(
-                                            ""
-                                        ),
-                                        variable(\.message)
-                                    )
-                                ),
-
-
-                                // Card
-                                div.class("card").child(
-
-                                    // Logo
-                                    div.class("card-header pt-4 pb-4 text-center bg-primary").child(
-                                        a.href("index.html").child(
-                                            span.child(
-                                                img.src(rootUrl + "/assets/images/logo.png").alt("").height(30)
-                                            )
-                                        )
-                                    ),
-                                    div.class("card-body p-4").child(
-                                        cardBody
-                                    )
-                                ),
-
-                                otherActions
-                            )
-                        )
-                    )
-                )
-            ),
-            withPath: \.base
-        )
-    }
-}
-
-extension User.ResetPassword {
+extension User {
     public struct Templates {}
 }
 
-extension User.ResetPassword.Templates {
-    
-    public class Start: LocalizedTemplate {
+extension User.Templates {
 
-        public static var localePath: KeyPath<Start.Context, String>? = \.locale
+    struct AuthenticateBaseContext {
+        let base: BaseTemplateContent
+        let errorMessage: String?
 
-        public enum LocalizationKeys: String {
-
-            case errorMessage = "error.message"
-            case menuRegister = "menu.register"
-
-            case title = "login.title"
-            case subtitle = "login.subtitle"
-
-            case mailTitle = "login.mail.title"
-            case mailPlaceholder = "login.mail.placeholder"
-
-            case noUserTitle = "login.no.user.title"
-            case noUserLink = "login.no.user.link"
+        init(title: String, description: String, errorMessage: String?) {
+            self.base = .init(title: title, description: description)
+            self.errorMessage = errorMessage
         }
+    }
+
+    struct AuthenticateBase<T>: StaticView {
+
+        let context: TemplateValue<T, AuthenticateBaseContext>
+        var rootUrl: String = ""
+        let cardBody: View
+        var otherActions: View = ""
+
+        var body: View {
+            BaseTemplate(
+                context: context.base,
+                content:
+                KognitaNavigationBar(rootUrl: rootUrl) +
+                    Div {
+                        Container {
+                            Row {
+                                Div {
+                                    IF(context.errorMessage != nil) {
+                                        Alert {
+                                            context.errorMessage
+                                        }
+                                        .background(color: .danger)
+                                        .text(color: .white)
+                                        .isDismissable(true)
+                                    }
+                                    Div {
+                                        Div {
+                                            Anchor {
+                                                Span {
+                                                    Img().source(rootUrl + "/assets/images/logo.png").alt("").height(30)
+                                                }
+                                            }
+                                            .href("/")
+                                        }
+                                        .class("card-header")
+                                        .padding(.four, for: .top)
+                                        .padding(.four, for: .bottom)
+                                        .text(alignment: .center)
+                                        .background(color: .primary)
+
+                                        Div {
+                                            cardBody
+                                        }
+                                        .class("card-body")
+                                        .padding(.four)
+                                    }
+                                    .class("card")
+
+                                    otherActions
+                                }
+                                .column(width: .five, for: .large)
+                            }
+                            .class("justify-content-center")
+                        }
+                    }
+                    .margin(.five, for: .top)
+                    .margin(.five, for: .bottom)
+                    .class("account-pages")
+
+            )
+        }
+    }
+}
+
+extension User.Templates {
+    public struct ResetPassword {}
+}
+
+extension User.Templates.ResetPassword {
+    public struct Start: TemplateView {
 
         public struct Context {
-            let locale = "nb"
-            let base: AuthenticationBaseTemplate.Context
+            let base: User.Templates.AuthenticateBaseContext
 
-            public init(alertMessage: (message: String, colorClass: String)? = nil) {
-                self.base = .init(
-                    base: .init(
-                        title: "Gjenopprett Passord",
-                        description: "Gjenopprett passord"),
-                    message: alertMessage?.message,
-                    colorClass: alertMessage?.colorClass
+            public init(errorMessage: String?) {
+                base = .init(
+                    title: "Gjenopprett Passord",
+                    description: "Gjenopprett Passord",
+                    errorMessage: errorMessage
                 )
             }
         }
 
         public init() {}
 
-        public func build() -> CompiledTemplate {
+        public let context: RootValue<Context> = .root()
 
-            return embed(
-                AuthenticationBaseTemplate(
-                    cardBody:
-                    // Description
-                    div.class("text-center w-75 m-auto").child(
-                        h4.class("text-dark-50 text-center mt-0 font-weight-bold").child(
-                            localize(.title)
-                        ),
-                        p.class("text-muted mb-4").child(
-                            localize(.subtitle)
-                        )
-                    ) +
-                    // Form
-                    form.action("/start-reset-password").method(.post).child(
+        public var body: View {
+            User.Templates.AuthenticateBase(
+                context: context.base,
+                cardBody:
 
-                        // Email
-                        div.class("form-group").child(
-                            label.for("email").child(
-                                localize(.mailTitle)
-                            ),
-                            input.class("form-control")
-                                .type("email")
-                                .name("email")
-                                .id("email")
-                                .placeholder(localize(.mailPlaceholder))
-                                .required
-                        ),
+                Div {
+                    Text {
+                        "localize(.title)"
+                    }
+                    .class("text-dark-50")
+                    .text(alignment: .center)
+                    .margin(.zero, for: .top)
+                    .font(style: .bold)
+                    .style(.heading4)
 
-                        // Login button
-                        div.class("form-group mb-0 text-center").child(
-                            button.id("submit-button").class("btn btn-primary").type("submit").child(
-                                "Gjenopprett passord"
-                            )
-                        )
-                    ),
+                    Text {
+                        "localize(.subtitle)"
+                    }
+                    .text(color: .muted)
+                    .margin(.four, for: .bottom)
+                    .style(.paragraph)
+                }
+                .class("w-75")
+                .text(alignment: .center)
+                .margin(.auto) +
 
-                    otherActions:
-                    // Actions
-                    div.class("row mt-3").child(
-                        div.class("col-12 text-center").child(
-                            p.class("text-muted").child(
+                Form {
+                    FormGroup(label: "localize(.mailTitle)") {
+                        Input()
+                            .id("email")
+                            .type(.email)
+                            .placeholder("localize(.mailPlaceholder)")
+                    }
+                    Div {
+                        Button {
+                            "Gjenopprett passord"
+                        }
+                        .id("submit-button")
+                        .button(style: .primary)
+                        .type(.submit)
+                    }
+                    .class("form-group")
+                    .text(alignment: .center)
+                    .margin(.zero, for: .bottom)
+                }
+                .action("/start-reset-password")
+                .method(.post),
 
-                                "Tilbake til ",
-
-                                // Sign up
-                                a.href("/login").class("text-dark ml-1").child(
-                                    b.child(
-                                        "logg inn"
-                                    )
-                                )
-                            )
-                        )
-                    )
-                ),
-                withPath: \.base
+                otherActions:
+                Row {
+                    Div {
+                        Text {
+                            "Tilbake til "
+                            Anchor {
+                                Bold { "logg inn" }
+                            }
+                            .href("/login")
+                            .text(color: .dark)
+                            .margin(.one, for: .left)
+                        }
+                        .text(color: .muted)
+                        .style(.paragraph)
+                    }
+                    .text(alignment: .center)
+                    .column(width: .twelve)
+                }
+                .margin(.three, for: .top)
             )
         }
     }
 
-    public class Mail: LocalizedTemplate {
-
-        public static var localePath: KeyPath<Mail.Context, String>? = \.locale
-
-        public enum LocalizationKeys: String {
-
-            case errorMessage = "error.message"
-            case menuRegister = "menu.register"
-
-            case title = "login.title"
-            case subtitle = "login.subtitle"
-
-            case mailTitle = "login.mail.title"
-            case mailPlaceholder = "login.mail.placeholder"
-
-            case noUserTitle = "login.no.user.title"
-            case noUserLink = "login.no.user.link"
-        }
+    public struct Mail: TemplateView {
 
         public struct Context {
-            let locale = "nb"
-            let base: AuthenticationBaseTemplate.Context = .init(
-                base: .init(title: "", description: ""),
-                message: nil, colorClass: nil
-            )
             let user: User
             let changeUrl: String
 
@@ -222,139 +195,118 @@ extension User.ResetPassword.Templates {
 
         public init() {}
 
-        public func build() -> CompiledTemplate {
+        public let context: RootValue<Context> = .root()
+        let rootUrl = "uni.kognita.no"
 
-            let rootUrl = "uni.kognita.no"
-
-            return embed(
-                AuthenticationBaseTemplate(
-                    cardBody:
-                    // Description
-                    div.class("text-center w-75 m-auto").child(
-                        h4.class("text-dark-50 text-center mt-0 font-weight-bold").child(
-                            "Endre passord"
-                        ),
-                        p.class("text-muted mb-4").child(
-                            "Noen har spurt om å få endre passordet ditt ",
-                            variable(\.user.name)
-                        )
-                    ) +
-                    a.href(rootUrl + variable(\.changeUrl)).child(
-                        button.class("btn btn-primary").child(
-                            "Trykk her for å endre"
-                        )
-                    ),
-
-                    otherActions: "",
-
-                    rootUrl: rootUrl
+        public var body: View {
+            User.Templates.AuthenticateBase(
+                context: RootValue<User.Templates.AuthenticateBaseContext>.constant(
+                    .init(
+                        title: "Gjenopprett Passord",
+                        description: "Gjenopprett Passord",
+                        errorMessage: nil
+                    )
                 ),
-                withPath: \.base
+                rootUrl: rootUrl,
+                cardBody:
+                Div {
+                    Text {
+                        "Endre passord"
+                    }
+                    .class("text-dark-50")
+                    .text(alignment: .center)
+                    .margin(.zero, for: .top)
+                    .style(.heading4)
+                    .font(style: .bold)
+
+                    Text {
+                        "Noen har spurt om å få endre passordet ditt "
+                        context.user.name
+                    }
+                    .style(.paragraph)
+                    .text(color: .muted)
+                    .margin(.four, for: .bottom)
+                }
+                .class("w-75 m-auto")
+                .text(alignment: .center) +
+
+                Anchor {
+                    Button {
+                        "Trykk her for å endre"
+                    }
+                    .button(style: .primary)
+                }
+                .href(rootUrl + context.changeUrl)
             )
         }
     }
 
-    public struct Reset : LocalizedTemplate {
+    public struct Reset: TemplateView {
 
-        public static var localePath: KeyPath<Reset.Context, String>? = \.locale
-
-        public enum LocalizationKeys: String {
-
-            case errorMessage = "error.message"
-            case menuRegister = "menu.register"
-
-            case title = "login.title"
-            case subtitle = "login.subtitle"
-
-            case passwordTitle = "register.password.title"
-            case passwordPlaceholder = "register.password.placeholder"
-
-            case confirmPasswordTitle = "register.password.confirmation.title"
-            case confirmPasswordPlaceholder = "register.password.confirmation.placeholder"
-
-            case noUserTitle = "login.no.user.title"
-            case noUserLink = "login.no.user.link"
-        }
-
-        public struct Context {
-            let locale = "nb"
-            let base: AuthenticationBaseTemplate.Context
+        public struct Content {
             let token: String
 
             public init(token: String, alertMessage: (message: String, colorClass: String)? = nil) {
-                self.base = .init(
-                    base: .init(
-                        title: "Gjenopprett Passord",
-                        description: "Gjenopprett passord"),
-                    message: alertMessage?.message,
-                    colorClass: alertMessage?.colorClass
-                )
                 self.token = token
             }
         }
 
         public init() {}
 
-        public func build() -> CompiledTemplate {
+        public var context: RootValue<Content> = .root()
 
-            return embed(
-                AuthenticationBaseTemplate(
-                    cardBody:
-                    // Description
-                    div.class("text-center w-75 m-auto").child(
-                        h4.class("text-dark-50 text-center mt-0 font-weight-bold").child(
-                            localize(.title)
-                        ),
-                        p.class("text-muted mb-4").child(
-                            localize(.subtitle)
-                        )
-                    ) +
-                    // Form
-                    form.action("/reset-password").method(.post).child(
-
-                        // Token
-                        input.type("hidden")
-                            .name("token")
-                            .value(variable(\.token)),
-
-                        // Password
-                        div.class("form-group").child(
-                            label.for("password").child(
-                                localize(.passwordTitle)
-                            ),
-                            input.class("form-control")
-                                .type("password")
-                                .name("password")
-                                .id("password")
-                                .placeholder(localize(.passwordPlaceholder))
-                                .required
-                        ),
-
-                        // Verify Password
-                        div.class("form-group").child(
-                            label.for("verifyPassword").child(
-                                localize(.confirmPasswordTitle)
-                            ),
-                            input.class("form-control")
-                                .type("password")
-                                .name("verifyPassword")
-                                .id("verifyPassword")
-                                .placeholder(localize(.confirmPasswordPlaceholder))
-                                .required
-                        ),
-
-                        // Login button
-                        div.class("form-group mb-0 text-center").child(
-                            button.id("submit-button").class("btn btn-primary").type("submit").child(
-                                "Gjenopprett passord"
-                            )
-                        )
+        public var body: View {
+            User.Templates.AuthenticateBase(
+                context: RootValue<User.Templates.AuthenticateBaseContext>.constant(
+                    .init(
+                        title: "Gjenopprett Passord",
+                        description: "Gjenopprett Passord",
+                        errorMessage: nil
                     )
-
-                    ,
-                    otherActions: ""
                 ),
-                withPath: \.base
+                cardBody:
+
+                Div {
+                    Text {
+                        "localize(.title)"
+                    }
+                    .class("text-dark-50")
+                    .text(alignment: .center)
+                    .margin(.zero, for: .top)
+                    .font(style: .bold)
+                    .style(.heading4)
+
+                    Text {
+                        "localize(.subtitle)"
+                    }
+                    .text(color: .muted)
+                    .margin(.four, for: .bottom)
+                    .style(.paragraph)
+                }
+                .margin(.auto)
+                .width(portion: .threeQuarter)
+                .text(alignment: .center) +
+
+                Form {
+                    Input()
+                        .type(.hidden)
+                        .name("token")
+                        .value(context.token)
+                    FormGroup(label: "localize(.passwordTitle)") {
+                        Input()
+                            .type(.password)
+                            .id("password")
+                            .placeholder("localize(.passwordPlaceholder)")
+                    }
+                    FormGroup(label: "localize(.passwordTitle)") {
+                        Input()
+                            .type(.password)
+                            .id("verifyPassword")
+                            .placeholder("localize(.confirmPasswordPlaceholder)")
+                    }
+                }
+                .action("/reset-password")
+                .method(.post)
             )
         }
     }

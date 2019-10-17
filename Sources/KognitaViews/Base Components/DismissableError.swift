@@ -6,20 +6,33 @@
 //
 
 import HTMLKit
+import BootstrapKit
 
 struct DismissableError: StaticView {
-    
-    func build() -> CompiledTemplate {
-        return div.id("error-div").class("alert alert-secondary alert-dismissible bg-danger text-white border-0 fade show d-none").child(
-            button.type("button").class("close").onclick("$(\"#error-div\").fadeOut()").ariaLabel("Close").child(
-                span.ariaHidden("true").child(
-                    "×"
-                )
-            ),
-            strong.child(
-                "En Feil Oppstod - "
-            ),
-            span.id("error-massage")
-        )
+
+    var body: View {
+        Alert {
+            Bold { "En Feil Oppstod - " }
+            Span().id("error-message")
+        }
+        .isDismissable(true)
+        .background(color: .danger)
+        .display(.none)
     }
 }
+//struct DismissableError: StaticView {
+//
+//    func build() -> CompiledTemplate {
+//        return div.id("error-div").class("alert alert-secondary alert-dismissible bg-danger text-white border-0 fade show d-none").child(
+//            button.type("button").class("close").onclick("$(\"#error-div\").fadeOut()").ariaLabel("Close").child(
+//                span.ariaHidden("true").child(
+//                    "×"
+//                )
+//            ),
+//            strong.child(
+//                "En Feil Oppstod - "
+//            ),
+//            span.id("error-massage")
+//        )
+//    }
+//}

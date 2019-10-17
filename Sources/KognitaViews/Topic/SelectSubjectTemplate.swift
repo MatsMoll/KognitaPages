@@ -7,123 +7,107 @@
 // swiftlint:disable line_length nesting
 
 import Foundation
-import HTMLKit
+import BootstrapKit
 import KognitaCore
 
-public class SelectSubjectTemplate: LocalizedTemplate {
+extension Subject.Templates {
+    public struct SelectRedirect: TemplateView {
 
-    public init() {}
-
-    // Static so it can be referanceed in the base template
-    static let title = "Tema liste"
-
-    public static var localePath: KeyPath<SelectSubjectTemplate.Context, String>? = \.locale
-
-    public enum LocalizationKeys: String {
-        case repeatTitle = "subjects.repeat.title"
-
-        case title = "subjects.title"
-        case listTitle = "subjects.list.title"
-        case noContent = "subjects.no.content"
-
-    }
-
-    public struct Context {
-        let locale = "nb"
-        let base: ContentBaseTemplate.Context
-        let cards: [Card.Context]
-
-        public init(user: User, subjects: [Subject], redirectPathStart: String, redirectPathEnd: String) {
-            self.base = .init(user: user, title: SubjectListTemplate.title)
-            self.cards = subjects.map { .init(subject: $0, startPath: redirectPathStart, endPath: redirectPathEnd) }
-        }
-    }
-
-    public func build() -> CompiledTemplate {
-        return embed(
-            ContentBaseTemplate(
-                body:
-
-                div.class("row").child(
-                    div.class("col-12").child(
-                        div.class("page-title-box").child(
-                            div.class("page-title-right").child(
-                                ol.class("breadcrumb m-0").child(
-                                    li.class("breadcrumb-item active").child(
-                                        localize(.title)
-                                    )
-                                )
-                            )
-                        )
-                    )
-                ),
-
-                h3.child(
-                    "Velg tema"
-                ),
-
-                div.class("row").child(
-                    renderIf(
-                        \.cards.count > 0,
-
-                        forEach(
-                            in:     \.cards,
-                            render: Card()
-                        )
-                    ).else(
-                        h1.child(
-                            localize(.noContent)
-                        )
-                    )
-                )
-            ),
-            withPath: \.base)
-    }
-
-    // MARK: - Subview
-
-    struct Card: LocalizedTemplate {
-        static var localePath: KeyPath<SelectSubjectTemplate.Card.Context, String>?
-
-        enum LocalizationKeys: String {
-            case button = "subjects.subject.card.button"
-        }
-
-        struct Context {
-            let subject: Subject
+        public struct Context {
+            let user: User
+            let subjects: [Subject]
             let startPath: String
             let endPath: String
+
+            public init(user: User, subjects: [Subject], redirectPathStart: String, redirectPathEnd: String) {
+                self.user = user
+                self.subjects = subjects
+                self.startPath = redirectPathStart
+                self.endPath = redirectPathEnd
+            }
         }
 
-        func build() -> CompiledTemplate {
-            return
-                div.class("col-md-6 col-xl-6").child(
-                    a.href(variable(\.startPath) + variable(\.subject.id) + variable(\.endPath)).class("text-dark").child(
-                        div.class("card d-block").child(
+        public init() {}
 
-                            // Thumbnail
-                            div.class("card-header text-white bg-" + variable(\.subject.colorClass.rawValue)).child(
-                                h3.child(
-                                    variable(\.subject.name)
-                                ),
-                                small.class("badge badge-light").child(
-                                    variable(\.subject.category)
-                                )
-                            ),
-                            div.class("card-body position-relative").child(
+        public let context: RootValue<Context> = .root()
 
-                                p.child(
-                                    variable(\.subject.description, escaping: .unsafeNone)
-                                ),
-
-                                // Details
-                                button.class("btn btn-" + variable(\.subject.colorClass.rawValue) + " btn-rounded").child(
-                                    "Lag tema"
-                                )
-                            )
+        public var body: View {
+            ContentBaseTemplate(
+                userContext: context.user,
+                baseContext: .constant(.init(title: "Velg Fag", description: "Velg Fag")),
+                content:
+                Row {
+                    Div {
+                        Div {
+                            Div {
+                                OrderdList {
+                                    ListItem {
+                                        "localize(.title)"
+                                    }
+                                    .class("breadcrumb-item active")
+                                }
+                                .class("breadcrumb m-0")
+                            }
+                            .class("page-title-right")
+                        }
+                        .class("page-title-box")
+                    }
+                    .class("col-12")
+                } +
+                H3 {
+                    "Velg tema"
+                } +
+                Row {
+                    ForEach(in: context.subjects) { subject in
+                        SelectCard(
+                            subject: subject,
+                            startPath: context.startPath,
+                            endPath: context.endPath
                         )
-                    )
+                    }
+                }
             )
+        }
+
+        struct SelectCard<A, B>: StaticView {
+
+            let subject: TemplateValue<A, Subject>
+            let startPath: TemplateValue<B, String>
+            let endPath: TemplateValue<B, String>
+
+            var body: View {
+                Div {
+                    Anchor {
+                        Div {
+                            Div {
+                                H3 {
+                                    subject.name
+                                }
+                                Small {
+                                    subject.category
+                                }
+                                .class("badge badge-light")
+                            }
+                            .class("card-header text-white bg-" + subject.colorClass.rawValue)
+
+                            Div {
+                                P {
+                                    subject.description
+                                        .escaping(.unsafeNone)
+                                }
+                                Button {
+                                    "Lag tema"
+                                }
+                                .class("btn btn-" + subject.colorClass.rawValue + " btn-rounded")
+                            }
+                            .class("card-body position-relative")
+                        }
+                        .class("card d-block")
+                    }
+                    .href(startPath + subject.id + endPath).class("text-dark")
+                }
+                .class("col-md-6 col-xl-6")
+            }
         }
     }
 }
