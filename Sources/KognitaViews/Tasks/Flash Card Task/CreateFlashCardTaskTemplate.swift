@@ -57,7 +57,7 @@ extension FlashCardTask.Templates {
                                 Form {
 
                                     IF(context.taskInfo.isDefined) {
-                                        IF(context.taskInfo.unsafelyUnwrapped.deletedAt.isDefined) {
+                                        IF(context.value(at: \.taskInfo?.deletedAt).isDefined) {
                                             Badge { "Inaktiv" }
                                                 .background(color: .danger)
                                         }.else {
@@ -67,6 +67,7 @@ extension FlashCardTask.Templates {
                                     }
 
                                     SubtopicPicker(
+                                        label: "Undertema",
                                         idPrefix: "card-",
                                         topics: context.topics
                                     )
@@ -74,7 +75,7 @@ extension FlashCardTask.Templates {
                                     FormRow {
                                         FormGroup(label: "Eksamensett semester") {
                                             Select {
-                                                IF(context.taskInfo.unsafelyUnwrapped.examPaperSemester.isDefined) {
+                                                IF(context.value(at: \.taskInfo?.examPaperSemester).isDefined) {
                                                     Option { context.value(at: \.taskInfo?.examPaperSemester?.rawValue) }
                                                         .value(context.value(at: \.taskInfo?.examPaperSemester?.rawValue))
 //                                                    .selected()

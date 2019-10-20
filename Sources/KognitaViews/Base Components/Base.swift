@@ -26,6 +26,7 @@ struct BaseTemplate<T>: StaticView {
     let content: View
     var customHeader: View = ""
     var rootUrl: String = ""
+    var scripts: View = ""
 
     var body: View {
         "<!DOCTYPE html>" +
@@ -46,7 +47,8 @@ struct BaseTemplate<T>: StaticView {
             Body {
                 content
             }
-            Script().source("/assets/js/app.min.js").type(RootValue<String>.constant("text/javascript"))
+            Script().source("/assets/js/app.min.js").type("text/javascript")
+            scripts
         }
     }
 }
@@ -141,13 +143,12 @@ struct ContentBaseTemplate<T>: StaticView {
                 }.class("content")
             }.class("wrapper") +
 
-            modals +
-            scripts,
+            modals,
 
             customHeader:
             headerLinks.reduce("", +),
 
-            rootUrl: ""
+            scripts: scripts
         )
     }
 }

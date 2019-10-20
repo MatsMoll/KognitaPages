@@ -77,6 +77,9 @@ public struct TaskPreviewTemplate<T>: StaticView {
                     }
                     .column(width: .twelve)
                 }
+
+                ProgressCard(context: context)
+
                 Row {
                     Div {
                         Div {
@@ -113,7 +116,6 @@ public struct TaskPreviewTemplate<T>: StaticView {
                 QuestionCard(context: context.taskContent)
                 actionCard
                 DismissableError()
-                ProgressCard(context: context)
                 IF(context.task.solution.isDefined) {
                     SolutionCard(context: context)
                 }
@@ -155,7 +157,7 @@ public struct TaskPreviewTemplate<T>: StaticView {
                             context.task.question
                         }
                         .style(.heading5)
-                        .modify(if: context.task.description.isDefined == false) {
+                        .modify(if: context.task.description.isNotDefined) {
                             $0.margin(.three, for: .top)
                         }
                     }

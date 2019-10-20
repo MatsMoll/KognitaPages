@@ -170,31 +170,41 @@ extension MultipleChoiseTask.Templates {
                     Div {
                         Div {
                             Input()
-                                .type(.radio)
                                 .name("choiseInput")
                                 .class("custom-control-input")
                                 .id(choise.choise.id)
-                                .modify(if: canSelectMultiple) { (multipleInput: Input) in
-                                    multipleInput
-                                        .type(.checkbox)
-                                        .modify(if: choise.isSelected) { (isSelected: Input) in
-                                            isSelected
-                                                .text(color: .white)
+                                .modify(if: canSelectMultiple) {
+                                    $0.type(.checkbox)
+                                }
+                                .modify(if: !canSelectMultiple) {
+                                        $0.type(.radio)
+                                }
+                                .modify(if: choise.isSelected) { (isSelected: Input) in
+                                    isSelected
+                                        .text(color: .white)
+                                        .modify(if: choise.isCorrect) { (isCorrect: Input) in
+                                            isCorrect
+                                                .background(color: .success)
+                                        }
+                                        .modify(if: !choise.isCorrect) { (isIncorrect: Input) in
+                                            isIncorrect
                                                 .background(color: .danger)
-                                            .modify(if: choise.isCorrect) { (isCorrect: Input) in
-                                                isCorrect
-                                                    .background(color: .success)
-                                            }
                                     }
+                                }
+                            Label {
+                                choise.choise.choise
+                                    .escaping(.unsafeNone)
                             }
+                            .class("custom-control-label")
+                            .for(choise.choise.id)
                         }
-                        .class("custom-control custom-radio")
-                        Label {
-                            choise.choise.choise
-                                .escaping(.unsafeNone)
+                        .class("custom-control")
+                        .modify(if: canSelectMultiple) {
+                            $0.class("custom-checkbox")
                         }
-                        .class("custom-control-label")
-                        .for(choise.choise.id)
+                        .modify(if: !canSelectMultiple) {
+                            $0.class("custom-radio")
+                        }
                     }
                     .class("p-2 text-secondary")
                     .id(choise.choise.id + "-div")

@@ -10,12 +10,13 @@ import KognitaCore
 
 struct SubtopicPicker<T>: StaticView {
 
+    let label: String
     let idPrefix: View
     let topics: TemplateValue<T, [Topic.Response]>
 
     var body: View {
-        FormGroup(label: idPrefix + "topic-id") {
-            Select(topics) { topic in
+        FormGroup(label: label) {
+            Select(custom: topics) { topic in
                 OptionGroup {
                     ForEach(in: topic.subtopics) { subtopic in
                         Option {

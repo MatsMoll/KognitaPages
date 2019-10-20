@@ -40,19 +40,8 @@ extension Subject.Templates {
                 userContext: context.user,
                 baseContext: .constant(.init(title: "Tema liste", description: "Tema liste")),
                 content:
-                Div {
-                    Div {
-                        Div {
-                            Div {
-                                OrderdList {
-                                    ListItem {
-                                        "localize(.title)"
-                                    }.class("breadcrumb-item active")
-                                }.class("breadcrumb m-0")
-                            }.class("page-title-right")
-                        }.class("page-title-box")
-                    }.class("col-12")
-                }.class("row") +
+
+                PageTitle(title: "localize(.title)") +
 
                 IF(context.ongoingSessionPath.isDefined) {
                     H3 {

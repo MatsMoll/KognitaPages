@@ -63,6 +63,7 @@ extension NumberInputTask.Templates {
                             Div {
                                 Form {
                                     SubtopicPicker(
+                                        label: "Undertema",
                                         idPrefix: "create-input-",
                                         topics: context.topics
                                     )

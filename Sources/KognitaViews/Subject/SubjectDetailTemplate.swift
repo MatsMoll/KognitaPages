@@ -40,41 +40,20 @@ extension Subject.Templates {
 
         public let context: RootValue<Context> = .root()
 
+        let breadcrumbs: [BreadcrumbItem] = [
+            BreadcrumbItem(link: "../subjects", title: "localize(.subjectsTitle)")
+        ]
+
         public var body: View {
             ContentBaseTemplate(
                 userContext: context.user,
                 baseContext: context.base,
                 content:
-                Row {
-                    Div {
-                        Div {
-                            Div {
-                                OrderdList {
-                                    ListItem {
-                                        Anchor {
-                                            "localize(.subjectsTitle)"
-                                        }
-                                        .href("../subjects")
-                                    }
-                                    .class("breadcrumb-item")
-                                    ListItem {
-                                        context.subject.name
-                                    }
-                                    .class("breadcrumb-item active")
-                                }
-                                .class("breadcrumb")
-                                .margin(.zero)
-                            }
-                            .class("page-title-right")
-                            H4 {
-                                context.subject.name
-                            }
-                            .class("page-title")
-                        }
-                        .class("page-title-box")
-                    }
-                    .class("col-12")
-                } +
+
+                PageTitle(
+                    title: context.subject.name,
+                    breadcrumbs: breadcrumbs
+                ) +
                 Row {
                     Div {
                         Anchor {

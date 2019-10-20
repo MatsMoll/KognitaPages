@@ -38,6 +38,29 @@ public protocol TaskResultable {
     var revisitDate: Date? { get }
 }
 
+struct ViewWrapper: View {
+    let view: View
+
+    func render<T>(with manager: HTMLRenderer.ContextManager<T>) throws -> String {
+        try view.render(with: manager)
+    }
+
+    func prerender<T>(_ formula: HTMLRenderer.Formula<T>) throws {
+        try view.prerender(formula)
+    }
+}
+
+struct BreadcrumbItem {
+    let link: String?
+    let title: ViewWrapper
+}
+
+extension ViewWrapper: ExpressibleByStringLiteral {
+    init(stringLiteral value: String) {
+        self.view = value
+    }
+}
+
 extension PracticeSession.Templates {
     public struct Result: TemplateView {
 
@@ -78,34 +101,18 @@ extension PracticeSession.Templates {
 
         public let context: RootValue<Context> = .root()
 
+        let breadcrumbItems: [BreadcrumbItem] = [.init(link: "../history", title: "localize(.historyTitle)")]
+
         public var body: View {
             ContentBaseTemplate(
                 userContext: context.user,
                 baseContext: .constant(.init(title: "Resultat | Øving ", description: "Resultat | Øving ")),
                 content:
-                Row {
-                    Div {
-                        Div {
-                            Div {
-                                OrderdList {
-                                    ListItem {
-                                        Anchor {
-                                            "localize(.historyTitle)"
-                                        }.href("../history")
-                                    }.class("breadcrumb-item")
-                                    ListItem {
-                                        "Øving " + context.value(at: \.tasks.first?.date)
-                                            .style(dateStyle: .short, timeStyle: .short)
-                                    }.class("breadcrumb-item active")
-                                }.class("breadcrumb m-0")
-                            }.class("page-title-right")
-                            H4 {
-                                context.value(at: \.tasks.first?.date)
-                                    .style(dateStyle: .short, timeStyle: .short)
-                            }.class("page-title")
-                        }.class("page-title-box")
-                    }.class("col-12")
-                } +
+                
+                PageTitle(
+                    title: "Øving " + context.goalProgress,
+                    breadcrumbs: breadcrumbItems
+                ) +
                 Row {
                     Div {
                         Card {
@@ -173,7 +180,6 @@ extension PracticeSession.Templates {
                                                 }
                                             }.class("thead-light")
                                             TableBody {
-                                                "TaskRows"
                                                 ForEach(in: context.tasks) { result in
                                                     TableRow {
                                                         TableCell {

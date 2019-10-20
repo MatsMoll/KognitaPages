@@ -38,19 +38,9 @@ extension PracticeSession.Templates {
                 userContext: context.user,
                 baseContext: .constant(.init(title: "Øving's historikk", description: "Øving's historikk")),
                 content:
-                Row {
-                    Div {
-                        Div {
-                            Div {
-                                OrderdList {
-                                    ListItem {
-                                        "localize(.title)"
-                                    }.class("breadcrumb-item")
-                                }.class("breadcrumb m-0")
-                            }.class("page-title-right")
-                        }.class("page-title-box")
-                    }.class("col-12")
-                } +
+
+                PageTitle(title: "localize(.title)") +
+                    
                 Row {
                     Div {
                         Card {

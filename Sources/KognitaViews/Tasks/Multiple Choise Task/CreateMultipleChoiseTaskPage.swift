@@ -36,7 +36,8 @@ extension MultipleChoiseTask.Templates {
         public let context: RootValue<Context> = .root()
 
         public var body: View {
-            ContentBaseTemplate(
+
+            return ContentBaseTemplate(
                 userContext: context.user,
                 baseContext: .constant(.init(title: "Lag oppgave", description: "Lag oppgave")),
                 content:
@@ -53,6 +54,7 @@ extension MultipleChoiseTask.Templates {
                             Div {
                                 Form {
                                     SubtopicPicker(
+                                        label: "Undertema",
                                         idPrefix: "create-multiple-",
                                         topics: context.topics
                                     )
@@ -63,13 +65,14 @@ extension MultipleChoiseTask.Templates {
                                                 "Eksamensett semester"
                                             }.for("create-multiple-exam-semester").class("col-form-label")
                                             Select {
-                                                IF(context.value(at: \.taskInfo?.examPaperSemester).isDefined) {
-                                                    Option {
-                                                        context.value(at: \.taskInfo?.examPaperSemester?.rawValue)
-                                                    }
-                                                    .value(context.value(at: \.taskInfo?.examPaperSemester?.rawValue))
-                                                    .isSelected(true)
-                                                }
+                                                ""
+//                                                IF(context.value(at: \.taskInfo?.examPaperSemester).isDefined) {
+//                                                    Option {
+//                                                        context.value(at: \.taskInfo?.examPaperSemester?.rawValue)
+//                                                    }
+//                                                    .value(context.value(at: \.taskInfo?.examPaperSemester?.rawValue))
+//                                                    .isSelected(true)
+//                                                }
                                                 Option {
                                                     "Ikke eksamensoppgave"
                                                 }
@@ -209,10 +212,8 @@ extension MultipleChoiseTask.Templates {
                                                 }
                                             }
                                             TableBody {
-                                                IF(context.multipleTaskInfo.isDefined) {
-                                                    ForEach(in: context.multipleTaskInfo.unsafelyUnwrapped.choises) { choise in
-                                                        ChoiseRow(choise: choise)
-                                                    }
+                                                ForEach(in: context.value(at: \.multipleTaskInfo?.choises)) { choise in
+                                                    ChoiseRow(choise: choise)
                                                 }
                                             }
                                             .id("create-multiple-choises")
