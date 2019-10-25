@@ -7,13 +7,26 @@
 
 import BootstrapKit
 
-struct PageTitle: StaticView {
+struct PageTitle: StaticView, LocalizableNode {
 
     let title: View
     var breadcrumbs: [BreadcrumbItem] = []
 
     var breadcrumbItems: [BreadcrumbItem] {
         breadcrumbs + [BreadcrumbItem(link: nil, title: .init(view: title))]
+    }
+
+    init(_ localizedKey: String) {
+        title = Localized(key: localizedKey)
+    }
+
+    init<A, B>(_ localizedKey: String, with context: TemplateValue<A, B>) where B : Encodable {
+        title = Localized(key: localizedKey, context: context)
+    }
+
+    init(title: View, breadcrumbs: [BreadcrumbItem] = []) {
+        self.title = title
+        self.breadcrumbs = breadcrumbs
     }
 
     var body: View {
@@ -33,9 +46,10 @@ struct PageTitle: StaticView {
                         .margin(.zero)
                     }
                     .class("page-title-right")
-                    H4 {
+                    Text {
                         title
                     }
+                    .style(.heading4)
                     .class("page-title")
                 }
                 .class("page-title-box")

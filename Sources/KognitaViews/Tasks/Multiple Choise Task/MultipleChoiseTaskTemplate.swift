@@ -23,6 +23,7 @@ extension MultipleChoiseTask.Templates {
             var nextTaskIndex: Int?
             var prevTaskIndex: Int?
             let isResult: Bool
+            var hasBeenCompleted: Bool { return previewContext.lastResult?.sessionId == session?.id }
 
             var task: Task { return previewContext.task }
             var session: PracticeSession? { return previewContext.session }
@@ -84,19 +85,17 @@ extension MultipleChoiseTask.Templates {
                         .margin(.one, for: .right)
                         .id("submitButton")
                     }
-                    IF(context.task.solution.isDefined) {
-                        Anchor {
-                            Button {
-                                "localize(.solutionButton)"
-                            }
-                            .type("button")
-                            .button(style: .success)
-                            .margin(.one, for: .right)
+                    Anchor {
+                        Button {
+                            "localize(.solutionButton)"
                         }
-                        .id("solution-button")
-                        .display(.none)
-                        .href("#solution")
+                        .type(.button)
+                        .button(style: .success)
+                        .margin(.one, for: .right)
                     }
+                    .id("solution-button")
+                    .display(.none)
+                    .href("#solution")
                     IF(context.session.isDefined) {
                         Button {
                             "localize(.stopSessionButton)"
@@ -120,6 +119,7 @@ extension MultipleChoiseTask.Templates {
                         .display(.none)
                         .float(.right)
                         .margin(.one, for: .left)
+                        .relationship(.next)
                     }
                     IF(context.prevTaskIndex.isDefined) {
                         Anchor {
@@ -133,12 +133,18 @@ extension MultipleChoiseTask.Templates {
                         .id("prevButton")
                         .href(context.prevTaskIndex)
                         .float(.right)
+                        .relationship(.prev)
                     }
                 },
                 
                 customScripts: [
-                    Script().source("/assets/js/task-submit.js"),
-                    Script().source("/assets/js/practice-session-end.js")
+                    Script().source("/assets/js/multiple-choise/task-submit.js"),
+                    Script().source("/assets/js/practice-session-end.js"),
+                    IF(context.hasBeenCompleted) {
+                        Script {
+                            "window.onload = presentControlls;"
+                        }
+                    }
                 ]
             )
         }

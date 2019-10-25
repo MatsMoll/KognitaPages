@@ -32,57 +32,54 @@ extension User.Templates {
         var otherActions: View = ""
 
         var body: View {
-            BaseTemplate(
-                context: context.base,
-                content:
-                KognitaNavigationBar(rootUrl: rootUrl) +
-                    Div {
-                        Container {
-                            Row {
-                                Div {
-                                    IF(context.errorMessage != nil) {
-                                        Alert {
-                                            context.errorMessage
-                                        }
-                                        .background(color: .danger)
-                                        .text(color: .white)
-                                        .isDismissable(true)
+            BaseTemplate(context: context.base) {
+                KognitaNavigationBar(rootUrl: rootUrl)
+                Div {
+                    Container {
+                        Row {
+                            Div {
+                                IF(context.errorMessage != nil) {
+                                    Alert {
+                                        context.errorMessage
                                     }
-                                    Div {
-                                        Div {
-                                            Anchor {
-                                                Span {
-                                                    Img().source(rootUrl + "/assets/images/logo.png").alt("").height(30)
-                                                }
-                                            }
-                                            .href("/")
-                                        }
-                                        .class("card-header")
-                                        .padding(.four, for: .top)
-                                        .padding(.four, for: .bottom)
-                                        .text(alignment: .center)
-                                        .background(color: .primary)
-
-                                        Div {
-                                            cardBody
-                                        }
-                                        .class("card-body")
-                                        .padding(.four)
-                                    }
-                                    .class("card")
-
-                                    otherActions
+                                    .background(color: .danger)
+                                    .text(color: .white)
+                                    .isDismissable(true)
                                 }
-                                .column(width: .five, for: .large)
-                            }
-                            .class("justify-content-center")
-                        }
-                    }
-                    .margin(.five, for: .top)
-                    .margin(.five, for: .bottom)
-                    .class("account-pages")
+                                Div {
+                                    Div {
+                                        Anchor {
+                                            Span {
+                                                Img().source(rootUrl + "/assets/images/logo.png").alt("").height(30)
+                                            }
+                                        }
+                                        .href("/")
+                                    }
+                                    .class("card-header")
+                                    .padding(.four, for: .top)
+                                    .padding(.four, for: .bottom)
+                                    .text(alignment: .center)
+                                    .background(color: .primary)
 
-            )
+                                    Div {
+                                        cardBody
+                                    }
+                                    .class("card-body")
+                                    .padding(.four)
+                                }
+                                .class("card")
+
+                                otherActions
+                            }
+                            .column(width: .five, for: .large)
+                        }
+                        .class("justify-content-center")
+                    }
+                }
+                .margin(.five, for: .top)
+                .margin(.five, for: .bottom)
+                .class("account-pages")
+            }
         }
     }
 }

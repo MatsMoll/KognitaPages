@@ -48,177 +48,175 @@ extension NumberInputTask.Templates {
         public var body: View {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Lag oppgave", description: "Lag oppgave")),
-                content:
+                baseContext: .constant(.init(title: "Lag oppgave", description: "Lag oppgave"))
+            ) {
 
-                Div {
                     Div {
                         Div {
-                            H4 {
-                                context.subject.name
-                                " | Lag innskrivningsoppgave"
-                            }.class("modal-title").id("create-modal-label")
-                        }.class("modal-header text-white bg-" + context.subject.colorClass.rawValue)
-                        Div {
                             Div {
-                                Form {
-                                    SubtopicPicker(
-                                        label: "Undertema",
-                                        idPrefix: "create-input-",
-                                        topics: context.topics
-                                    )
+                                H4 {
+                                    context.subject.name
+                                    " | Lag innskrivningsoppgave"
+                                }.class("modal-title").id("create-modal-label")
+                            }.class("modal-header text-white bg-" + context.subject.colorClass.rawValue)
+                            Div {
+                                Div {
+                                    Form {
+                                        SubtopicPicker(
+                                            label: "Undertema",
+                                            idPrefix: "create-input-",
+                                            topics: context.topics
+                                        )
 
-                                    Div {
                                         Div {
-                                            Label {
-                                                "Eksamensett semester"
-                                            }.for("create-input-exam-semester").class("col-form-label")
-                                            Select {
-                                                IF(context.value(at: \.taskInfo?.examPaperSemester).isDefined) {
-                                                    Option {
-                                                        context.value(at: \.taskInfo?.examPaperSemester?.rawValue)
+                                            Div {
+                                                Label {
+                                                    "Eksamensett semester"
+                                                }.for("create-input-exam-semester").class("col-form-label")
+                                                Select {
+                                                    IF(context.value(at: \.taskInfo?.examPaperSemester).isDefined) {
+                                                        Option {
+                                                            context.value(at: \.taskInfo?.examPaperSemester?.rawValue)
+                                                        }
+                                                        .value(context.value(at: \.taskInfo?.examPaperSemester?.rawValue))
+                                                        .isSelected(true)
                                                     }
-                                                    .value(context.value(at: \.taskInfo?.examPaperSemester?.rawValue))
-                                                    .isSelected(true)
+                                                    Option {
+                                                        "Ikke eksamensoppgave"
+                                                    }
+                                                    .value("")
+                                                    Option {
+                                                        "Høst"
+                                                    }
+                                                    .value("fall")
+                                                    Option {
+                                                        "Vår"
+                                                    }
+                                                    .value("spring")
                                                 }
-                                                Option {
-                                                    "Ikke eksamensoppgave"
-                                                }
-                                                .value("")
-                                                Option {
-                                                    "Høst"
-                                                }
-                                                .value("fall")
-                                                Option {
-                                                    "Vår"
-                                                }
-                                                .value("spring")
-                                            }
-                                            .id("create-input-exam-semester")
-                                            .class("select2 form-control select2")
-                                            .data(for: "toggle", value: "select2")
-                                            .data(for: "placeholder", value: "Velg ...")
-//                                            .required()
-                                        }.class("form-group col-md-6")
+                                                .id("create-input-exam-semester")
+                                                .class("select2 form-control select2")
+                                                .data(for: "toggle", value: "select2")
+                                                .data(for: "placeholder", value: "Velg ...")
+    //                                            .required()
+                                            }.class("form-group col-md-6")
 
-                                        Div {
-                                            Label {
-                                                "År"
+                                            Div {
+                                                Label {
+                                                    "År"
+                                                }
+                                                .for("create-input-exam-year")
+                                                .class("col-form-label")
+                                                Input()
+                                                    .type(.number)
+                                                    .class("form-control")
+                                                    .id("create-input-exam-year")
+                                                    .placeholder("2019")
+                                                    .value(context.value(at: \.taskInfo?.examPaperYear))
+                                                    .required()
                                             }
-                                            .for("create-input-exam-year")
-                                            .class("col-form-label")
+                                            .class("form-group col-md-6")
+                                        }
+                                        .class("form-row")
+                                        Div {
                                             Input()
-                                                .type(.number)
-                                                .class("form-control")
-                                                .id("create-input-exam-year")
-                                                .placeholder("2019")
-                                                .value(context.value(at: \.taskInfo?.examPaperYear))
-                                                .required()
-                                        }
-                                        .class("form-group col-md-6")
-                                    }
-                                    .class("form-row")
-                                    Div {
-                                        Input()
-                                            .type(.checkbox)
-                                            .class("custom-control-input")
-                                            .id("create-input-examinable")
-                                            .isChecked(true)
-                                        Label {
-                                            "Bruk på prøver"
-                                        }.for("create-input-examinable").class("custom-control-label")
-                                    }.class("custom-control custom-checkbox mt-3")
-                                    Div {
-                                        Label {
-                                            "Oppgavetekst"
-                                        }.for("create-input-description").class("col-form-label")
-                                        Div {
-                                            context.value(at: \.taskInfo?.description).escaping(.unsafeNone)
-                                        }.id("create-input-description")
-                                    }.class("form-group")
-                                    Div {
-                                        Label {
-                                            "Spørsmål"
-                                        }.for("create-input-question").class("col-form-label")
-                                        TextArea {
-                                            context.value(at: \.taskInfo?.question)
-                                        }
-                                        .class("form-control")
-                                        .id("create-input-question")
-//                                        .rows(1)
-                                        .placeholder("Noe å svare på her")
-                                        .required()
-                                        Div {
-                                            "Bare lov med store og små bokstaver, tall, mellomrom + (. , : ; !, ?)"
-                                        }.class("invalid-feedback")
-                                    }.class("form-group")
-
-                                    Div {
+                                                .type(.checkbox)
+                                                .class("custom-control-input")
+                                                .id("create-input-examinable")
+                                                .isChecked(true)
+                                            Label {
+                                                "Bruk på prøver"
+                                            }.for("create-input-examinable").class("custom-control-label")
+                                        }.class("custom-control custom-checkbox mt-3")
                                         Div {
                                             Label {
-                                                "Riktig svar"
-                                            }.for("create-input-answer").class("col-form-label")
-                                            Input().type("number").class("form-control").id("create-input-answer").placeholder("50").value(context.value(at: \.inputTask?.correctAnswer)).required()
-                                            Small {
-                                                "Skal du skrive desimaltall må det brukes "
-                                                " eks. 2,5. Punktum og mellomrom vil bli ignorert. Altså 10.000 og 10 000 vil bli tolka som 10000"
-                                            }
-                                        }.class("form-group col-md-9")
+                                                "Oppgavetekst"
+                                            }.for("create-input-description").class("col-form-label")
+                                            Div {
+                                                context.value(at: \.taskInfo?.description).escaping(.unsafeNone)
+                                            }.id("create-input-description")
+                                        }.class("form-group")
                                         Div {
                                             Label {
-                                                "Enhet"
-                                            }.for("create-input-answer").class("col-form-label")
+                                                "Spørsmål"
+                                            }.for("create-input-question").class("col-form-label")
                                             TextArea {
-                                                context.value(at: \.inputTask?.unit)
+                                                context.value(at: \.taskInfo?.question)
                                             }
                                             .class("form-control")
-                                            .id("create-input-unit")
-//                                            .rows(1)
-                                            .placeholder("cm")
-                                        }.class("form-group col-md-3")
-                                    }.class("form-row")
+                                            .id("create-input-question")
+    //                                        .rows(1)
+                                            .placeholder("Noe å svare på her")
+                                            .required()
+                                            Div {
+                                                "Bare lov med store og små bokstaver, tall, mellomrom + (. , : ; !, ?)"
+                                            }.class("invalid-feedback")
+                                        }.class("form-group")
+
+                                        Div {
+                                            Div {
+                                                Label {
+                                                    "Riktig svar"
+                                                }.for("create-input-answer").class("col-form-label")
+                                                Input().type("number").class("form-control").id("create-input-answer").placeholder("50").value(context.value(at: \.inputTask?.correctAnswer)).required()
+                                                Small {
+                                                    "Skal du skrive desimaltall må det brukes "
+                                                    " eks. 2,5. Punktum og mellomrom vil bli ignorert. Altså 10.000 og 10 000 vil bli tolka som 10000"
+                                                }
+                                            }.class("form-group col-md-9")
+                                            Div {
+                                                Label {
+                                                    "Enhet"
+                                                }.for("create-input-answer").class("col-form-label")
+                                                TextArea {
+                                                    context.value(at: \.inputTask?.unit)
+                                                }
+                                                .class("form-control")
+                                                .id("create-input-unit")
+    //                                            .rows(1)
+                                                .placeholder("cm")
+                                            }.class("form-group col-md-3")
+                                        }.class("form-row")
 
 
-                                    DismissableError()
+                                        DismissableError()
 
-                                    Button {
-                                        Italic().class("mdi mdi-save")
-                                        " Lagre"
+                                        Button {
+                                            Italic().class("mdi mdi-save")
+                                            " Lagre"
+                                        }
+                                        .type(.button)
+                                        .on(click: IF(context.taskInfo.isDefined) { "editInputChoise();" }.else { "createInputChoise();" })
+                                        .class("btn btn-success mb-3 mt-3")
                                     }
-                                    .type(.button)
-                                    .on(click: IF(context.taskInfo.isDefined) { "editInputChoise();" }.else { "createInputChoise();" })
-                                    .class("btn btn-success mb-3 mt-3")
+                                    .class("needs-validation")
+    //                                .novalidate()
                                 }
-                                .class("needs-validation")
-//                                .novalidate()
+                                .class("p-2")
                             }
-                            .class("p-2")
+                            .class("modal-body")
                         }
-                        .class("modal-body")
+                        .class("card")
                     }
-                    .class("card")
+                    .class("pt-5")
+            }
+            .header {
+                Link().href("/assets/css/vendor/summernote-bs4.css").relationship(.stylesheet).type("text/css")
+                Link().href("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css").relationship(.stylesheet)
+            }
+            .scripts {
+                Script().source("/assets/js/vendor/summernote-bs4.min.js")
+                Script().source("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js")
+                Script().source("/assets/js/vendor/summernote-math.js")
+                Script().source("/assets/js/dismissable-error.js")
+                Script().source("/assets/js/input/json-data.js")
+
+                IF(context.taskInfo.isDefined) {
+                    Script().source("/assets/js/input/edit.js")
+                }.else {
+                    Script().source("/assets/js/input/create.js")
                 }
-                .class("pt-5"),
-
-                headerLinks: [
-                    Link().href("/assets/css/vendor/summernote-bs4.css").relationship("stylesheet").type("text/css"),
-                    Link().href("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css").relationship("stylesheet")
-                ],
-
-                scripts: [
-                    Script().source("/assets/js/vendor/summernote-bs4.min.js"),
-                    Script().source("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"),
-                    Script().source("/assets/js/vendor/summernote-math.js"),
-                    Script().source("/assets/js/dismissable-error.js"),
-                    Script().source("/assets/js/input/json-data.js"),
-
-                    IF(context.taskInfo.isDefined) {
-                        Script().source("/assets/js/input/edit.js")
-                    }.else {
-                        Script().source("/assets/js/input/create.js")
-                    }
-                ]
-            )
+            }
         }
     }
 }

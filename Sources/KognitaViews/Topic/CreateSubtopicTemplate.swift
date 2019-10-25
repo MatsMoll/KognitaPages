@@ -42,8 +42,8 @@ extension Subtopic.Templates {
         public var body: View {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Lag undertema", description: "Lag undertema")),
-                content:
+                baseContext: .constant(.init(title: "Lag undertema", description: "Lag undertema"))
+            ) {
                 Div {
                     Div {
                         H4 {
@@ -124,28 +124,25 @@ extension Subtopic.Templates {
                     }
                     .class("modal-body")
                 }
-                .class("card mt-5"),
-
-                headerLinks: [
-                    Link().href("/assets/css/vendor/summernote-bs4.css").relationship("stylesheet").type("text/css"),
-                    Link().href("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css").relationship("stylesheet")
-                ],
-
-                scripts: [
-                    Script().source("/assets/js/vendor/summernote-bs4.min.js"),
-                    Script().source("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"),
-                    Script().source("/assets/js/vendor/summernote-math.js"),
-                    Script().source("/assets/js/dismissable-error.js"),
-                    Script().source("/assets/js/subtopic/json-data.js"),
+                .class("card mt-5")
+            }
+            .header {
+                    Link().href("/assets/css/vendor/summernote-bs4.css").relationship(.stylesheet).type("text/css")
+                    Link().href("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css").relationship(.stylesheet)
+            }
+            .scripts {
+                    Script().source("/assets/js/vendor/summernote-bs4.min.js")
+                    Script().source("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js")
+                    Script().source("/assets/js/vendor/summernote-math.js")
+                    Script().source("/assets/js/dismissable-error.js")
+                    Script().source("/assets/js/subtopic/json-data.js")
                     IF(context.subtopicInfo.isDefined) {
                         Script().source("/assets/js/subtopic/edit.js")
                         Script().source("/assets/js/subtopic/delete.js")
                     }.else {
                         Script().source("/assets/js/subtopic/create.js")
                     }
-
-                ]
-            )
+            }
         }
     }
 }

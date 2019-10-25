@@ -101,30 +101,28 @@ extension PracticeSession.Templates {
 
         public let context: RootValue<Context> = .root()
 
-        let breadcrumbItems: [BreadcrumbItem] = [.init(link: "../history", title: "localize(.historyTitle)")]
+        let breadcrumbItems: [BreadcrumbItem] = [.init(link: "../history", title: .init(view: Localized(key: LocalizationKeys.historyTitle)))]
 
         public var body: View {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Resultat | Øving ", description: "Resultat | Øving ")),
-                content:
-                
+                baseContext: .constant(.init(title: "Resultat | Øving ", description: "Resultat | Øving "))
+            ) {
                 PageTitle(
                     title: "Øving " + context.goalProgress,
                     breadcrumbs: breadcrumbItems
-                ) +
+                )
                 Row {
                     Div {
                         Card {
-                            H4 {
-                                "localize(.histogramTitle)"
-                            }.class("header-title mb-4")
+                            H4(LocalizationKeys.histogramTitle)
+                                .class("header-title mb-4")
                             Div {
                                 Canvas().id("practice-time-histogram")
                             }.class("mt-3 chartjs-chart")
                         }
                     }.class("col-12")
-                } +
+                }
                 Row {
                     Div {
                         Div {
@@ -133,29 +131,29 @@ extension PracticeSession.Templates {
                                     StatsView(
                                         stats: context.numberOfTasks,
                                         icon: "graph-pie",
-                                        description: "localize(.numberOfTasks)"
+                                        description: LocalizationKeys.resultSummaryNumberOfTasks
                                     )
                                     StatsView(
                                         stats: context.goalProgress,
                                         icon: "graph-bar",
-                                        description: "localize(.goal)"
+                                        description: LocalizationKeys.resultSummaryGoal
                                     )
                                     StatsView(
                                         stats: context.timeUsed,
                                         icon: "preview",
-                                        description: "localize(.duration)"
+                                        description: LocalizationKeys.resultSummaryDuration
                                     )
                                     StatsView(
                                         stats: context.accuracy,
                                         icon: "checkmark",
-                                        description: "localize(.accuracy)"
+                                        description: LocalizationKeys.resultSummaryAccuracy
                                     )
                                 }
                                 .noGutters()
                             }.class("card-body p-0")
                         }.class("card widget-inline")
                     }.class("col-12")
-                } +
+                }
                 Row {
                     Div {
                         Div {
@@ -165,18 +163,10 @@ extension PracticeSession.Templates {
                                         Table {
                                             TableHead {
                                                 TableRow {
-                                                    TableHeader {
-                                                        "localize(.topicColumn)"
-                                                    }
-                                                    TableHeader {
-                                                        "localize(.questionColumn)"
-                                                    }
-                                                    TableHeader {
-                                                        "localize(.resultColumn)"
-                                                    }
-                                                    TableHeader {
-                                                        "localize(.resultColumn)"
-                                                    }
+                                                    TableHeader(LocalizationKeys.resultSummaryTopicColumn)
+                                                    TableHeader(LocalizationKeys.resultSummaryQuestionColumn)
+                                                    TableHeader(LocalizationKeys.resultSummaryResultColumn)
+                                                    TableHeader(LocalizationKeys.resultSummaryRepeatColumn)
                                                 }
                                             }.class("thead-light")
                                             TableBody {
@@ -221,13 +211,12 @@ extension PracticeSession.Templates {
                             }.class("card-body p-0")
                         }.class("card widget-inline")
                     }.class("col-12")
-                },
-
-                scripts: [
-                    Script().source("/assets/js/vendor/Chart.bundle.min.js"),
-                    Script().source("/assets/js/practice-session-histogram.js")
-                ]
-            )
+                }
+            }
+            .scripts {
+                Script().source("/assets/js/vendor/Chart.bundle.min.js")
+                Script().source("/assets/js/practice-session-histogram.js")
+            }
         }
 
         struct StatsView<T>: StaticView {
@@ -248,10 +237,8 @@ extension PracticeSession.Templates {
                                     stats
                                 }
                             }
-                            P {
-                                description
-                            }
-                            .class("text-muted font-15 mb-0")
+                            Text(description)
+                                .class("text-muted font-15 mb-0")
                         }
                         .class("card-body text-center")
                     }

@@ -16,23 +16,21 @@ struct CopyrightFooter: StaticView {
             Container(mode: .fluid) {
                 Row {
                     Div {
-                        "Copyright"
-                    }.columnWidth(6, for: .medium)
+                        P(LocalizationKeys.copyright)
+                    }
+                    .columnWidth(6, for: .medium)
                     Div {
                         Div {
-                            Anchor {
-                                "Om oss"
-                            }.href("#")
-                            Anchor {
-                                "Help"
-                            }.href("#")
-                            Anchor {
-                                "Kontakt oss"
-                            }.href("#")
+                            Anchor(LocalizationKeys.footerAboutUs).href("#")
+                            Anchor(LocalizationKeys.footerHelp).href("#")
+                            Anchor(LocalizationKeys.footerContact).href("#")
                         }
                         .text(alignment: .right)
-                        .class("footer-links d-none d-md-block")
-                    }.columnWidth(6, for: .medium)
+                        .class("footer-links")
+                        .display(.none)
+                        .display(.block, breakpoint: .medium)
+                    }
+                    .columnWidth(6, for: .medium)
                 }
             }
         }.class("footer")

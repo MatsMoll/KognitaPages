@@ -26,10 +26,8 @@ public struct LoginPage: TemplateView {
     public let context: RootValue<Context> = .root()
 
     public var body: View {
-        BaseTemplate(
-            context: context.base,
-            content:
-            KognitaNavigationBar(rootUrl: "") +
+        BaseTemplate(context: context.base) {
+            KognitaNavigationBar(rootUrl: "")
             Div {
                 Div {
                     Div {
@@ -41,9 +39,7 @@ public struct LoginPage: TemplateView {
                                             "×"
                                         }.aria(for: "hidden", value: "true")
                                     }.type(.button).class("close").data(for: "dismiss", value: "alert").aria(for: "label", value: "Close")
-                                    Bold {
-                                        "localize(.errorMessage)"
-                                    }
+                                    Bold(LocalizationKeys.errorMessage)
                                     context.errorMessage
                                 }.class("alert alert-secondary alert-dismissible bg-danger text-white border-0 fade show").role("alert")
                             }
@@ -57,56 +53,67 @@ public struct LoginPage: TemplateView {
                                 }.class("card-header pt-4 pb-4 text-center bg-primary")
                                 Div {
                                     Div {
-                                        H4 {
-                                            "localize(.title)"
-                                        }.class("text-dark-50 text-center mt-0 font-weight-bold")
-                                        P {
-                                            "localize(.subtitle)"
-                                        }.class("text-muted mb-4")
+                                        H4(LocalizationKeys.loginTitle)
+                                            .class("text-dark-50 text-center mt-0 font-weight-bold")
+                                        P(LocalizationKeys.loginSubtitle)
+                                            .class("text-muted mb-4")
                                     }.class("text-center w-75 m-auto")
                                     Form {
                                         Div {
-                                            Label {
-                                                "localize(.mailTitle)"
-                                            }.for("emailaddress")
-                                            Input().class("form-control").type(.email).name("email").id("email").placeholder("localize(.mailPlaceholder)")
+                                            Label(LocalizationKeys.mailTitle)
+                                                .for("emailaddress")
+                                            Input()
+                                                .class("form-control")
+                                                .type(.email)
+                                                .name("email")
+                                                .id("email")
+                                                .placeholder(localized: LocalizationKeys.mailPlaceholder)
                                         }.class("form-group")
                                         Div {
                                             Anchor {
-                                                Small {
-                                                    "localize(.forgottenPassword)"
-                                                }
-                                            }.href("/start-reset-password").class("text-muted float-right")
-                                            Label {
-                                                "localize(.passwordTitle)"
-                                            }.for("password")
-                                            Input().class("form-control").type(.password).name("password").id("password").placeholder("localize(.passwordPlaceholder)")
+                                                Small(LocalizationKeys.forgottenPassword)
+                                            }
+                                            .href("/start-reset-password")
+                                            .float(.right)
+                                            .text(color: .muted)
+
+                                            Label(LocalizationKeys.passwordTitle)
+                                                .for("password")
+                                            Input()
+                                                .class("form-control")
+                                                .type(.password)
+                                                .name("password")
+                                                .id("password")
+                                                .placeholder(localized: LocalizationKeys.passwordPlaceholder)
                                         }.class("form-group")
                                         Div {
-                                            Button {
-                                                "localize(.loginButton)"
-                                            }.id("submit-button").class("btn btn-primary").type(.submit)
+                                            Button(LocalizationKeys.loginButton)
+                                                .id("submit-button")
+                                                .class("btn btn-primary")
+                                                .type(.submit)
                                         }.class("form-group mb-0 text-center")
                                     }.action("/login").method(.post)
                                 }.class("card-body p-4")
                             }.class("card")
                             Div {
                                 Div {
-                                    P {
-                                        "localize(.noUserTitle)" + " "
-                                        Anchor {
-                                            Bold {
-                                                "localize(.noUserLink)"
-                                            }
-                                        }.href("/signup").class("text-dark ml-1")
-                                    }.class("text-muted")
-                                }.class("col-12 text-center")
+                                    P(LocalizationKeys.loginNoUserTitle)
+                                        .text(color: .muted)
+                                        .display(.inline)
+                                    Anchor {
+                                        Bold(LocalizationKeys.loginNoUserLink)
+                                    }
+                                    .href("/signup")
+                                    .class("ml-1")
+                                    .text(color: .dark)
+                                }
+                                .class("col-12 text-center")
                             }.class("row mt-3")
                         }.class("col-lg-5")
                     }.class("row justify-content-center")
                 }.class("container")
             }.class("account-pages mt-5 mb-5")
-        )
+        }
     }
 }
 

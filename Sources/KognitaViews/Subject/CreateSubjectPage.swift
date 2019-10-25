@@ -29,8 +29,8 @@ extension Subject.Templates {
         public var body: View {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Lag et fag", description: "Lag et fag")),
-                content:
+                baseContext: .constant(.init(title: "Lag et fag", description: "Lag et fag"))
+            ) {
                 Row {
                     Div {
                         DismissableError()
@@ -129,8 +129,7 @@ extension Subject.Templates {
                     }
                     .class("col-12 pt-5")
                 }
-
-            )
+            }
         }
     }
 }

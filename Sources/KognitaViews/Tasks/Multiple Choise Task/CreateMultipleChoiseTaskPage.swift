@@ -39,9 +39,8 @@ extension MultipleChoiseTask.Templates {
 
             return ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Lag oppgave", description: "Lag oppgave")),
-                content:
-
+                baseContext: .constant(.init(title: "Lag oppgave", description: "Lag oppgave"))
+            ) {
                 Div {
                     Div {
                         Div {
@@ -241,27 +240,24 @@ extension MultipleChoiseTask.Templates {
                     }
                     .class("card")
                 }
-                .class("pt-5"),
+                .class("pt-5")
+            }
+            .header {
+                Link().href("/assets/css/vendor/summernote-bs4.css").relationship(.stylesheet).type("text/css")
+                Link().href("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css").relationship(.stylesheet)
+            }.scripts {
+                Script().source("/assets/js/vendor/summernote-bs4.min.js")
+                Script().source("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js")
+                Script().source("/assets/js/vendor/summernote-math.js")
+                Script().source("/assets/js/dismissable-error.js")
+                Script().source("/assets/js/multiple-choise/json-data.js")
 
-                headerLinks: [
-                    Link().href("/assets/css/vendor/summernote-bs4.css").relationship("stylesheet").type("text/css"),
-                    Link().href("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css").relationship("stylesheet")
-                ],
-
-                scripts: [
-                    Script().source("/assets/js/vendor/summernote-bs4.min.js"),
-                    Script().source("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"),
-                    Script().source("/assets/js/vendor/summernote-math.js"),
-                    Script().source("/assets/js/dismissable-error.js"),
-                    Script().source("/assets/js/multiple-choise/json-data.js"),
-
-                    IF(context.taskInfo.isDefined) {
-                        Script().source("/assets/js/multiple-choise/edit.js")
-                    }.else {
-                        Script().source("/assets/js/multiple-choise/create.js")
-                    }
-                ]
-            )
+                IF(context.taskInfo.isDefined) {
+                    Script().source("/assets/js/multiple-choise/edit.js")
+                }.else {
+                    Script().source("/assets/js/multiple-choise/create.js")
+                }
+            }
         }
 
         struct ChoiseRow<T>: StaticView {

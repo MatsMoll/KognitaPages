@@ -36,23 +36,23 @@ extension PracticeSession.Templates {
         public var body: View {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Øving's historikk", description: "Øving's historikk")),
-                content:
+                baseContext: .constant(.init(title: "Øving's historikk", description: "Øving's historikk"))
+            ) {
 
-                PageTitle(title: "localize(.title)") +
-                    
+                PageTitle(LocalizationKeys.historyTitle)
                 Row {
                     Div {
                         Card {
-                            H4 {
-                                "localize(.histogramTitle)"
-                            }.class("header-title mb-4")
+                            Text(LocalizationKeys.histogramTitle)
+                                .class("header-title mb-4")
                             Div {
                                 Canvas().id("practice-time-histogram")
-                            }.class("mt-3 chartjs-chart")
+                            }
+                            .class("mt-3 chartjs-chart")
                         }
-                    }.class("col-12")
-                } +
+                    }
+                    .class("col-12")
+                }
                 Row {
                     Div {
                         Div {
@@ -63,15 +63,9 @@ extension PracticeSession.Templates {
                                             Table {
                                                 TableHead {
                                                     TableRow {
-                                                        TableHeader {
-                                                            "localize(.dateColumn)"
-                                                        }
-                                                        TableHeader {
-                                                            "localize(.goalColumn)"
-                                                        }
-                                                        TableHeader {
-                                                            "localize(.durationColumn)"
-                                                        }
+                                                        TableHeader(LocalizationKeys.historyDateColumn)
+                                                        TableHeader(LocalizationKeys.historyGoalColumn)
+                                                        TableHeader(LocalizationKeys.historyDurationColumn)
                                                     }
                                                 }
                                                 .class("thead-light")
@@ -121,22 +115,22 @@ extension PracticeSession.Templates {
                                     .noGutters()
                                 }.else {
                                     Div {
-                                        H3 {
-                                            "localize(.noSessions)"
-                                        }
+                                        Text(LocalizationKeys.historyNoSessions)
+                                            .style(.heading3)
                                     }
                                     .column(width: .twelve)
                                 }
                             }.class("card-body p-0")
                         }.class("card widget-inline")
                     }.class("col-12")
-                },
-
-                scripts: [
-                    Script().source("/assets/js/vendor/Chart.bundle.min.js"),
-                    Script().source("/assets/js/practice-session-histogram.js")
-                ]
-            )
+                }
+                .enviroment(locale: "nb")
+            }
+            .scripts {
+                Script().source("/assets/js/vendor/Chart.bundle.min.js")
+                Script().source("/assets/js/practice-session-histogram.js")
+            }
+            .active(path: "/practice-sessions/history")
         }
     }
 }

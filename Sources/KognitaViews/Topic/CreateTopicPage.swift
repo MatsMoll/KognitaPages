@@ -37,9 +37,8 @@ extension Topic.Templates {
         public var body: View {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Lag temaer", description: "Lag temaer")),
-                content:
-
+                baseContext: .constant(.init(title: "Lag temaer", description: "Lag temaer"))
+            ) {
                 Div {
                     Div {
                         Div {
@@ -108,25 +107,23 @@ extension Topic.Templates {
                             }
                         }.class("p-2")
                     }.class("modal-body")
-                }.class("card mt-5"),
-
-                headerLinks: [
-                    Link().href("/assets/css/vendor/summernote-bs4.css").relationship("stylesheet").type("text/css"),
-                    Link().href("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css").relationship("stylesheet")
-                ],
-
-                scripts: [
-                    Script().source("/assets/js/vendor/summernote-bs4.min.js"),
-                    Script().source("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"),
-                    Script().source("/assets/js/vendor/summernote-math.js"),
-                    IF(context.topicInfo.isDefined) {
-                        Script().source("/assets/js/topic/edit.js")
-                        Script().source("/assets/js/topic/delete.js")
-                    }.else {
-                        Script().source("/assets/js/topic/create.js")
-                    }
-                ]
-            )
+                }.class("card mt-5")
+            }
+            .header {
+                Link().href("/assets/css/vendor/summernote-bs4.css").relationship(.stylesheet).type("text/css")
+                Link().href("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css").relationship(.stylesheet)
+            }
+            .scripts {
+                Script().source("/assets/js/vendor/summernote-bs4.min.js")
+                Script().source("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js")
+                Script().source("/assets/js/vendor/summernote-math.js")
+                IF(context.topicInfo.isDefined) {
+                    Script().source("/assets/js/topic/edit.js")
+                    Script().source("/assets/js/topic/delete.js")
+                }.else {
+                    Script().source("/assets/js/topic/create.js")
+                }
+            }
         }
     }
 }

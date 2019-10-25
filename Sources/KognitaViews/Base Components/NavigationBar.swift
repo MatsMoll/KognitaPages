@@ -130,15 +130,17 @@ struct KognitaNavigationBar: StaticView {
                     Div {
                         UnorderdList {
                             ListItem {
-                                Anchor {
-                                    "localize(.register)"
-                                }.class("nav-link").href(rootUrl + "/signup")
-                            }.class("nav-item")
+                                Anchor(LocalizationKeys.menuRegister)
+                                    .class("nav-link")
+                                    .href(rootUrl + "/signup")
+                            }
+                            .class("nav-item")
                             ListItem {
-                                Anchor {
-                                    "localize(.login)"
-                                }.class("nav-link").href(rootUrl + "/login")
-                            }.class("nav-item")
+                                Anchor(LocalizationKeys.menuLogin)
+                                    .class("nav-link")
+                                    .href(rootUrl + "/login")
+                            }
+                            .class("nav-item")
                         }.class("navbar-nav ml-auto")
                     }.class("collapse navbar-collapse").id("navbarResponsive")
                 }.class("navbar navbar-dark navbar-expand-lg topnav-menu")

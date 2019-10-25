@@ -56,14 +56,10 @@ public struct TaskPreviewTemplate<T>: StaticView {
     var customScripts: View = ""
 
     public var body: View {
-        BaseTemplate(
-            context: RootValue<BaseTemplateContent>.constant(
-                .init(
-                    title: "Oppgave",
-                    description: "Lær ved å øve"
-                )
-            ),
-            content:
+        BaseTemplate(context: .init(
+            title: "Oppgave",
+            description: "Lær ved å øve"
+        )) {
             Container {
                 Row {
                     Div {
@@ -86,12 +82,10 @@ public struct TaskPreviewTemplate<T>: StaticView {
                             Span { "00:00" }.id("timer")
                         }
                         .float(.right)
-                        
-                        Text {
-                            "localize(.mainTitle)"
-                        }
-                        .margin(.zero, for: .top)
-                        .style(.heading3)
+
+                        Text(LocalizationKeys.exerciseMainTitle)
+                            .margin(.zero, for: .top)
+                            .style(.heading3)
 
                         IF(context.task.examPaperSemester.isDefined) {
                             Badge {
@@ -116,18 +110,21 @@ public struct TaskPreviewTemplate<T>: StaticView {
                 QuestionCard(context: context.taskContent)
                 actionCard
                 DismissableError()
-                IF(context.task.solution.isDefined) {
-                    SolutionCard(context: context)
-                }
+                Div()
+                    .id("solution")
+                    .display(.none)
+//                IF(context.task.solution.isDefined) {
+//                    SolutionCard(context: context)
+//                }
                 underSolutionCard
 
                 Script().source("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js")
                 customScripts
-            },
-
-            customHeader:
-            Link().href("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css").relationship("stylesheet")
-        )
+            }
+        }
+        .header {
+            Link().href("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css").relationship(.stylesheet)
+        }
     }
 
     struct QuestionCard<T>: StaticView {
@@ -176,7 +173,7 @@ public struct TaskPreviewTemplate<T>: StaticView {
             IF(context.practiceProgress.isDefined) {
                 Card {
                     Text {
-                        "localize(.sessionProgressTitle)"
+                        Localized(key: LocalizationKeys.exerciseSessionProgressTitle)
                         Span {
                             Span {
                                 context.practiceProgress + "% "
@@ -187,8 +184,9 @@ public struct TaskPreviewTemplate<T>: StaticView {
                                 Span {
                                     context.value(at: \.session?.numberOfTaskGoal)
                                 }
-                                .id("goal-value") +
-                                    " localize(.sessionProgressGoal)"
+                                .id("goal-value")
+                                " "
+                                Localized(key: LocalizationKeys.exerciseSessionProgressGoal)
                             }
                             .text(color: .muted)
                         }
@@ -204,6 +202,9 @@ public struct TaskPreviewTemplate<T>: StaticView {
                     )
                         .bar(size: .medium)
                         .bar(id: "goal-progress-bar")
+                        .modify(if: context.practiceProgress >= 100) {
+                            $0.bar(style: .success)
+                    }
 //                        Div {
 //                            ProgressBar(
 //                                currentValue: context.practiceProgress.unsafelyUnwrapped,
@@ -225,42 +226,89 @@ public struct TaskPreviewTemplate<T>: StaticView {
 
         }
     }
+}
+
+public struct TaskSolutionsTemplate: TemplateView {
+
+    public init() {}
+
+    public let context: RootValue<[TaskSolution.Response]> = .root()
+
+    public var body: View {
+        Accordions(values: context, title: { (solution, index) in
+            Text {
+                Localized(key: LocalizationKeys.exerciseProposedSolutionTitle)
+                Span {
+                    Italic().class("mdi mdi-chevron-down accordion-arrow")
+                }
+                .float(.right)
+            }
+            .style(.heading4)
+
+            IF(solution.creatorName.isDefined) {
+                "Lagd av: " + solution.creatorName
+            }
+            IF(solution.approvedBy.isDefined) {
+                Badge {
+                    "Verifisert av: " + solution.approvedBy
+                }
+                .background(color: .success)
+                .margin(.two, for: .left)
+            }.else {
+                Badge {
+                    "Ikke verifisert enda"
+                }
+                .background(color: .warning)
+                .margin(.two, for: .left)
+            }
+        }) { (solution, index) in
+            solution.solution
+                .escaping(.unsafeNone)
+        }
+//        ForEach(in: context) { solution in
+//            SolutionCard(context: solution)
+//        }
+    }
 
     struct SolutionCard<T>: StaticView {
 
-        let context: TemplateValue<T, TaskPreviewTemplateContext>
+            let context: TemplateValue<T, TaskSolution.Response>
 
-        var body: View {
-            Card {
-                IF(context.user.isCreator) {
-                    Anchor {
-                        Button {
-                            "Rediger"
+            var body: View {
+                Card {
+                    Div {
+                        Div {
+                            Text(LocalizationKeys.exerciseProposedSolutionTitle)
+                                .style(.heading4)
                         }
-                        .type(.button)
-                        .button(style: .danger)
-                        .float(.right)
+                        .class("page-title")
+                        Div {
+                            IF(context.creatorName.isDefined) {
+                                "Lagd av: " + context.creatorName
+                            }
+                            IF(context.approvedBy.isDefined) {
+                                Badge {
+                                    "Verifisert av: " + context.approvedBy
+                                }
+                                .background(color: .success)
+                                .margin(.two, for: .left)
+                            }.else {
+                                Badge {
+                                    "Ikke verifisert enda"
+                                }
+                                .background(color: .warning)
+                                .margin(.two, for: .left)
+                            }
+                        }
                     }
-                    .href("/creator/tasks/" + context.taskPath + "/" + context.task.id + "/edit")
-//                        .target("_blank")
-                }
-                Div {
-                    Text {
-                        "localize(.solutionTitle)"
-                    }
-                    .class("page-title")
-                    .style(.heading4)
-                }
-                .class("page-title-box")
-                .margin(.two, for: .bottom)
+                    .class("page-title-box")
+                    .margin(.two, for: .bottom)
 
-                context.task.solution.escaping(.unsafeNone)
+                    context.solution.escaping(.unsafeNone)
+    //                context.task.solution.escaping(.unsafeNone)
+                }
             }
-            .id("solution")
-            .display(.none)
-
         }
-    }
 }
 
 //public struct TaskPreviewTemplate: LocalizedTemplate {
@@ -519,3 +567,59 @@ public struct TaskPreviewTemplate<T>: StaticView {
 //    }
 //}
 
+struct Accordions<A, B>: StaticView {
+
+    let values: TemplateValue<A, [B]>
+    let title: ((RootValue<B>, RootValue<Int>)) -> View
+    let content: ((RootValue<B>, RootValue<Int>)) -> View
+    var id: String = "accordion"
+
+    public init(values: TemplateValue<A, [B]>, @HTMLBuilder title: @escaping ((RootValue<B>, RootValue<Int>)) -> View, @HTMLBuilder content: @escaping ((RootValue<B>, RootValue<Int>)) -> View) {
+        self.values = values
+        self.title = title
+        self.content = content
+    }
+
+    var body: View {
+        Div {
+            ForEach(enumerated: values) { value in
+                Div {
+                    Div {
+                        Anchor {
+                            title(value)
+                        }
+                            .text(color: .secondary)
+                            .display(.block)
+                            .padding(.two, for: .vertical)
+                            .data(for: "toggle", value: "collapse")
+                            .data(for: "target", value: "#" + bodyId(value.index))
+                            .aria(for: "controls", value: bodyId(value.index))
+                    }
+                    .class("card-header")
+                    .id(headingId(value.index))
+                    Div {
+                        Div {
+                            content(value)
+                        }
+                        .class("card-body")
+                    }
+                    .class("collapse" + IF(value.index == 0) { " show" })
+                    .aria(for: "labelledby", value: headingId(value.index))
+                    .data(for: "parent", value: "#\(id)")
+                    .id(bodyId(value.index))
+                }
+                .class("card")
+            }
+        }
+        .class("custom-accordion mb-4")
+        .id(id)
+    }
+
+    func bodyId(_ index: RootValue<Int>) -> View {
+        "\(id)-body" + index
+    }
+
+    func headingId(_ index: RootValue<Int>) -> View {
+        "\(id)-heading" + index
+    }
+}

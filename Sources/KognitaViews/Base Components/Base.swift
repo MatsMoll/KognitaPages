@@ -28,28 +28,61 @@ struct BaseTemplate<T>: StaticView {
     var rootUrl: String = ""
     var scripts: View = ""
 
+    init(context: TemplateValue<T, BaseTemplateContent>, @HTMLBuilder content: () -> View) {
+        self.context = context
+        self.content = content()
+    }
+
+    init(context: TemplateValue<T, BaseTemplateContent>, content: View, customHeader: View, rootUrl: String, scripts: View) {
+        self.content = content
+        self.context = context
+        self.customHeader = customHeader
+        self.rootUrl = rootUrl
+        self.scripts = scripts
+    }
+
+    func scripts(@HTMLBuilder scripts: () -> View) -> BaseTemplate {
+        BaseTemplate(context: context, content: content, customHeader: customHeader, rootUrl: rootUrl, scripts: scripts())
+    }
+
+    func header(@HTMLBuilder header: () -> View) -> BaseTemplate {
+        BaseTemplate(context: context, content: content, customHeader: header(), rootUrl: rootUrl, scripts: scripts)
+    }
+
+    func rootUrl(_ url: String) -> BaseTemplate {
+        BaseTemplate(context: context, content: content, customHeader: customHeader, rootUrl: url, scripts: scripts)
+    }
+
     var body: View {
-        "<!DOCTYPE html>" +
-        HTMLNode {
-            Head {
-                Title { context.title + " | Kognita" }
+        Document(type: .html5) {
+            HTMLNode {
+                Head {
+                    Title { context.title + " | Kognita" }
 
-                Meta().name("viewport").content("width=device-width, initial-scale=1.0")
-                Meta().name("description").content(context.description)
-                Meta().name("author").content("MEM")
+                    Meta().name(.viewport).content("width=device-width, initial-scale=1.0")
+                    Meta().name(.description).content(context.description)
+                    Meta().name(.author).content("MEM")
 
-                Link().relationship("shortcut icon").href(rootUrl + "/assets/images/favicon.ico")
-                Link().relationship("stylesheet").href(rootUrl + "/assets/css/icons.min.css").type("text/css")
-                Link().relationship("stylesheet").href(rootUrl + "/assets/css/app.min.css").type("text/css")
+                    Link().relationship(.shortcutIcon).href(rootUrl + "/assets/images/favicon.ico")
+                    Link().relationship(.stylesheet).href(rootUrl + "/assets/css/icons.min.css").type("text/css")
+                    Link().relationship(.stylesheet).href(rootUrl + "/assets/css/app.min.css").type("text/css")
 
-                customHeader
+                    customHeader
+                }
+                Body {
+                    content
+                }
+                Script().source("/assets/js/app.min.js").type("text/javascript")
+                scripts
             }
-            Body {
-                content
-            }
-            Script().source("/assets/js/app.min.js").type("text/javascript")
-            scripts
         }
+    }
+}
+
+extension BaseTemplate where T == BaseTemplateContent {
+    init(context: BaseTemplateContent, @HTMLBuilder content: () -> View) {
+        self.context = .constant(context)
+        self.content = content()
     }
 }
 
@@ -71,22 +104,58 @@ struct ContentBaseTemplate<T>: StaticView {
         let title: String
     }
 
+    let activePath: TemplateValue<T, String>
     let userContext: TemplateValue<T, User>
     let baseContext: TemplateValue<T, BaseTemplateContent>
 
     let content: View
-    var headerLinks: [Link] = []
-    var scripts: [View] = []
-    var modals: View = ""
+    let header: View
+    let scripts: View
+    let modals: View
+
+    init(userContext: TemplateValue<T, User>, baseContext: TemplateValue<T, BaseTemplateContent>, @HTMLBuilder content: () -> View) {
+        self.userContext = userContext
+        self.baseContext = baseContext
+        self.content = content()
+        self.activePath = ""
+        self.header = ""
+        self.scripts = ""
+        self.modals = ""
+    }
+
+    init(base: ContentBaseTemplate, activePath: TemplateValue<T, String>, header: View, scripts: View, modals: View) {
+        self.userContext = base.userContext
+        self.baseContext = base.baseContext
+        self.content = base.content
+        self.activePath = activePath
+        self.header = header
+        self.scripts = scripts
+        self.modals = modals
+    }
+
+    func active(path: TemplateValue<T, String>) -> ContentBaseTemplate {
+        ContentBaseTemplate(base: self, activePath: path, header: header, scripts: scripts, modals: modals)
+    }
+
+    func header(@HTMLBuilder _ header: () -> View) -> ContentBaseTemplate {
+        ContentBaseTemplate(base: self, activePath: activePath, header: header(), scripts: scripts, modals: modals)
+    }
+
+    func scripts(@HTMLBuilder _ scripts: () -> View) -> ContentBaseTemplate {
+        ContentBaseTemplate(base: self, activePath: activePath, header: header, scripts: scripts(), modals: modals)
+    }
+
+    func modals(@HTMLBuilder _ modals: () -> View) -> ContentBaseTemplate {
+        ContentBaseTemplate(base: self, activePath: activePath, header: header, scripts: scripts, modals: modals())
+    }
+
     private let tabs: RootValue<[TabContent]> = .constant([
         .init(link: "/subjects", iconClass: "dripicons-view-list", title: "Oversikt over fag"),
         .init(link: "/practice-sessions/history", iconClass: "dripicons-view-list", title: "Øvinger"),
     ])
 
     var body: View {
-        BaseTemplate(
-            context: baseContext,
-            content:
+        BaseTemplate(context: baseContext) {
             Div {
                 Div {
                     BetaHeader()
@@ -102,7 +171,15 @@ struct ContentBaseTemplate<T>: StaticView {
                             }
                             .class("logo")
 
-                            NavigationBar.Collapse {
+                            NavigationBar.Collapse(button:
+                                Anchor {
+                                    Div {
+                                        Span()
+                                        Span()
+                                        Span()
+                                    }.class("lines")
+                                }.class("navbar-toggle")
+                            ) {
                                 ForEach(in: tabs) { tab in
                                     ListItem {
                                         Anchor {
@@ -116,6 +193,9 @@ struct ContentBaseTemplate<T>: StaticView {
                                         .class("nav-link")
                                     }
                                     .class("nav-item")
+                                    .modify(if: tab.link == activePath) {
+                                        $0.class("active")
+                                    }
                                 }
                                 IF(userContext.isCreator) {
                                     ListItem {
@@ -126,7 +206,11 @@ struct ContentBaseTemplate<T>: StaticView {
                                                 "Lag innhold"
                                             }
                                         }.href("/creator/dashboard").class("nav-link")
-                                    }.class("nav-item")
+                                    }
+                                    .class("nav-item")
+                                    .modify(if: activePath == "/creator/dashboard") {
+                                        $0.class("active")
+                                    }
                                 }
                             }
                         }
@@ -141,15 +225,16 @@ struct ContentBaseTemplate<T>: StaticView {
                     }
                     CopyrightFooter()
                 }.class("content")
-            }.class("wrapper") +
+            }.class("wrapper")
 
-            modals,
-
-            customHeader:
-            headerLinks.reduce("", +),
-
-            scripts: scripts
-        )
+            modals
+        }
+        .header {
+            header
+        }
+        .scripts {
+            scripts
+        }
     }
 }
 

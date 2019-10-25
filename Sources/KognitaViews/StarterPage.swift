@@ -21,14 +21,10 @@ extension Pages {
         public init() {}
 
         public var body: View {
-            BaseTemplate(
-                context: RootValue<BaseTemplateContent>.constant(
-                    .init(
-                        title: "Kognita",
-                        description: "Kognita"
-                    )
-                ),
-                content:
+            BaseTemplate(context: .init(
+                title: "Kognita",
+                description: "Kognita"
+            )) {
                 Nav {
                     Container {
                         Anchor {
@@ -53,19 +49,15 @@ extension Pages {
                         Div {
                             UnorderdList {
                                 ListItem {
-                                    Anchor {
-                                        "localize(.registerMenu)"
-                                    }
-                                    .class("nav-link")
-                                    .href("/signup")
+                                    Anchor(LocalizationKeys.menuRegister)
+                                        .class("nav-link")
+                                        .href("/signup")
                                 }
                                 .class("nav-item")
                                 ListItem {
-                                    Anchor {
-                                        "localize(.loginMenu)"
-                                    }
-                                    .class("nav-link")
-                                    .href("/login")
+                                    Anchor(LocalizationKeys.menuLogin)
+                                        .class("nav-link")
+                                        .href("/login")
                                 }
                                 .class("nav-item")
                             }
@@ -76,32 +68,28 @@ extension Pages {
                         .id("navbarResponsive")
                     }
                 }
-                .class("navbar navbar-expand-lg navbar-dark navbar-custom fixed-top") +
+                .class("navbar navbar-expand-lg navbar-dark navbar-custom fixed-top")
                 Header {
                     Div {
                         Container {
-                            Text {
-                                "localize(.starterPageDescription)"
-                            }
-                            .class("masthead-heading")
-                            .margin(.zero, for: .bottom)
-                            .style(.heading1)
+                            Text(LocalizationKeys.starterPageDescription)
+                                .class("masthead-heading")
+                                .margin(.zero, for: .bottom)
+                                .style(.heading1)
 
-                            Anchor {
-                                "localize(.starterPageMoreButton)"
-                            }
-                            .href("/signup")
-                            .class("rounded-pill")
-                            .button(style: .primary)
-                            .button(size: .extraLarge)
-                            .margin(.five, for: .top)
+                            Anchor(LocalizationKeys.starterPageMoreButton)
+                                .href("/signup")
+                                .class("rounded-pill")
+                                .button(style: .primary)
+                                .button(size: .extraLarge)
+                                .margin(.five, for: .top)
                         }
                     }
                     .class("masthead-content")
                 }
                 .class("masthead")
                 .text(alignment: .center)
-                .text(color: .white) +
+                .text(color: .white)
 
                 Section {
                     Container(mode: .fluid) {
@@ -124,7 +112,7 @@ extension Pages {
                         }
                         .alignment(.itemsCenter)
                     }
-                } +
+                }
                 Section {
                     Container(mode: .fluid) {
                         Row {
@@ -164,7 +152,7 @@ extension Pages {
                     .text(color: .white)
                     .background(color: .primary)
                     .margin(.five, for: .bottom)
-                } +
+                }
                 Section {
                     Container(mode: .fluid) {
                         Row {
@@ -192,26 +180,24 @@ extension Pages {
                             .column(width: .three, for: .large)
                         }
                     }
-                } +
+                }
                 Footer{
                     Container {
-                        Text {
-                            "localize(.copyright)"
-                        }
-                        .class("small")
-                        .margin(.zero)
-                        .text(color: .white)
-                        .text(alignment: .center)
-                        .style(.paragraph)
+                        Text(LocalizationKeys.copyright)
+                            .class("small")
+                            .margin(.zero)
+                            .text(color: .white)
+                            .text(alignment: .center)
+                            .style(.paragraph)
                     }
                 }
                 .padding(.five, for: .vertical)
-                .background(color: .dark),
-
-                customHeader:
-                Link().href("assets/css/landing-page.css").relationship("stylesheet").type("text/css") +
-                Link().href("assets/fonts/font-awesome.min.css").relationship("stylesheet").type("text/css")
-            )
+                .background(color: .dark)
+            }
+            .header {
+                Link().href("assets/css/landing-page.css").relationship(.stylesheet).type("text/css")
+                Link().href("assets/fonts/font-awesome.min.css").relationship(.stylesheet).type("text/css")
+            }
         }
     }
 

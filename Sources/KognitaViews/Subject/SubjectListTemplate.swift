@@ -38,80 +38,82 @@ extension Subject.Templates {
         public var body: View {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Tema liste", description: "Tema liste")),
-                content:
+                baseContext: .constant(.init(title: "Tema liste", description: "Tema liste"))
+            ) {
 
-                PageTitle(title: "localize(.title)") +
+                PageTitle(title: Localized(key: LocalizationKeys.subjectsTitle))
 
                 IF(context.ongoingSessionPath.isDefined) {
-                    H3 {
+                    Text {
                         "Fortsett"
                     }
-                    Div {
+                    .style(.heading3)
+                    Row {
                         Div {
-                            Div {
-                                Div {
-                                    H3 {
-                                        "Fullfør treningssesjonen"
-                                    }.class("mt-0")
-                                    P {
-                                        "Du har en treningssesjon som ikke er fullført. Sett av litt tid og fullfør."
+                            Card {
+                                Text {
+                                    "Fullfør treningssesjonen"
+                                }
+                                .style(.heading3)
+                                .class("mt-0")
+                                Text { "Du har en treningssesjon som ikke er fullført. Sett av litt tid og fullfør." }
+                                Anchor {
+                                    Button {
+                                        Italic().class("mdi mdi-book-open-variant")
+                                        " Fortsett"
                                     }
-                                    Anchor {
-                                        Button {
-                                            Italic().class("mdi mdi-book-open-variant")
-                                            " Fortsett"
-                                        }.type("button").class("btn btn-primary btn-rounded mb-1")
-                                    }.href(context.ongoingSessionPath).class("text-dark")
-                                }.class("card-body")
-                            }.class("card d-block")
-                        }.class("col-md-6 col-xl-6")
-                    }.class("row")
-                } +
-                H3 { "localize(.repeatTitle)" } +
+                                    .type(.button)
+                                    .class("btn-rounded mb-1")
+                                    .button(style: .primary)
+                                }
+                                .href(context.ongoingSessionPath)
+                                .text(color: .dark)
+                            }
+                            .display(.block)
+                        }
+                        .class("col-md-6 col-xl-6")
+                    }
+                }
+                H3(LocalizationKeys.repeatTitle)
                 Row {
                     IF(context.revisitTasks.isEmpty) {
                         Div {
-                            Div {
-                                Div {
-                                    H4 {
-                                        "Hva kommer her?"
-                                    }
-                                    P {
-                                        "Her vil det komme opp temaer som vi anbefaler å prioritere først. Dette skal hjelpe deg med å øve mer effektivt og dermed få mer ut av øvingene dine."
-                                    }
-                                    P {
-                                        "Disse anbefalingnene vil først komme når du har gjørt noen oppgaver"
-                                    }
-                                }.class("card-body")
-                            }.class("card d-block")
-                        }.class("col-12")
+                            Card {
+                                Text { "Hva kommer her?" }
+                                    .style(.heading4)
+                                Text {
+                                    "Her vil det komme opp temaer som vi anbefaler å prioritere først. Dette skal hjelpe deg med å øve mer effektivt og dermed få mer ut av øvingene dine."
+                                }
+                                Text {
+                                    "Disse anbefalingnene vil først komme når du har gjørt noen oppgaver"
+                                }
+                            }
+                            .display(.block)
+                        }
+                        .column(width: .twelve)
                     }.else {
                         ForEach(in: context.revisitTasks) { revisit in
                             RevisitCard(context: revisit)
                         }
                     }
-                } +
-
-                H3 {
-                    "localize(.listTitle)"
-                } +
-                IF(context.cards.isEmpty) {
-                    Div {
-                        H1 {
-                            "localize(.noContent)"
+                }
+                Text(LocalizationKeys.subjectsListTitle)
+                    .style(.heading3)
+                Row {
+                    IF(context.cards.isEmpty) {
+                        Text(LocalizationKeys.subjectsNoContent)
+                            .style(.heading1)
+                    }.else {
+                        ForEach(in: context.cards) { subject in
+                            SubjectCard(subject: subject)
                         }
-                    }.class("row")
-                }.else {
-                    ForEach(in: context.cards) { subject in
-                        SubjectCard(subject: subject)
                     }
-                },
-
-                scripts: [
-                    Script().source("/assets/js/practice-session-create.js")
-                ]
-            )
+                }
+            }
+            .scripts {
+                Script().source("/assets/js/practice-session-create.js")
+            }
+            .active(path: "/subjects")
         }
 
         struct RevisitCard<T>: StaticView {
@@ -123,11 +125,16 @@ extension Subject.Templates {
             var body: View {
                 Div {
                     Card {
-                        Div {
-                            "localize(.days)"
+                        Badge {
+                            Localized(
+                                key: LocalizationKeys.subjectRepeatDays,
+                                context: context
+                            )
                         }
-                        .class("badge float-right")
-                        H3 {
+                        .float(.right)
+                        .background(color: .warning)
+
+                        Text {
                             Anchor {
                                 context.topic.name
                             }
@@ -135,18 +142,22 @@ extension Subject.Templates {
                             .href("#")
                             .text(color: .dark)
                         }
+                        .style(.heading4)
                         .class("mt-0")
-                        P {
-                            "localize(.repeatDescription)"
-                        }
-                        .class("text-muted font-13 mb-3")
+
+                        Text(LocalizationKeys.subjectRepeatDescription, with: context)
+                            .text(color: .muted)
+                            .class("font-13 mb-3")
+
                         Anchor {
                             Button {
                                 Italic().class("mdi mdi-book-open-variant")
-                                " " + "localize(.start)"
+                                " " +
+                                Localized(key: LocalizationKeys.subjectRepeatStart)
                             }
                             .type(.button)
-                            .class("btn btn-primary btn-rounded mb-1")
+                            .button(style: .primary)
+                            .class("btn-rounded mb-1")
                         }
                         .on(click: practiceFunction)
                         .href("#")
@@ -182,10 +193,8 @@ extension Subject.Templates {
                                     subject.description
                                         .escaping(.unsafeNone)
                                 }
-                                Button {
-                                    "localize(.button)"
-                                }
-                                .class("btn btn-" + subject.colorClass.rawValue + " btn-rounded")
+                                Button(LocalizationKeys.subjectExploreButton)
+                                    .class("btn btn-" + subject.colorClass.rawValue + " btn-rounded")
                             }
                             .class("card-body position-relative")
                         }

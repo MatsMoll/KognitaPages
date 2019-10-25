@@ -15,13 +15,13 @@ extension Subject.Templates {
         public struct Context {
             let base: BaseTemplateContent
             let user: User
-//            let subjectContext: SubjectCardContext
-//            var subject: Subject { return subjectContext.subject }
             let subject: Subject
             let subjectLevel: User.SubjectLevel
             let topics: [Topic.Response]
             let topicLevels: [TopicCardContext]
-//            let leaderboard: [(rank: WorkPoints.LeaderboardRank, isBold: Bool)]
+            var topicIDsJSList: String {
+                "[\(topics.compactMap { $0.topic.id }.reduce("") { $0 + "\($1), " }.dropLast(2))]"
+            }
 
             public init(user: User, subject: Subject, topics: [Topic.Response], levels: [User.TopicLevel], subjectLevel: User.SubjectLevel, leaderboard: [WorkPoints.LeaderboardRank]) {
                 self.user = user
@@ -32,7 +32,6 @@ extension Subject.Templates {
                 self.topicLevels = topics.map { response in
                     return .init(topic: response.topic, level: levels.first(where: { $0.topicID == response.topic.id }))
                 }
-//                self.leaderboard = leaderboard.map { ($0, $0.userID == user.id) }
             }
         }
 
@@ -41,65 +40,40 @@ extension Subject.Templates {
         public let context: RootValue<Context> = .root()
 
         let breadcrumbs: [BreadcrumbItem] = [
-            BreadcrumbItem(link: "../subjects", title: "localize(.subjectsTitle)")
+            BreadcrumbItem(link: "../subjects", title: .init(view: Localized(key: LocalizationKeys.subjectTitle)))
         ]
 
         public var body: View {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: context.base,
-                content:
-
+                baseContext: context.base
+            ) {
                 PageTitle(
                     title: context.subject.name,
                     breadcrumbs: breadcrumbs
-                ) +
-                Row {
-                    Div {
-                        Anchor {
-                            Button {
-                                Italic().class("mdi mdi-book-open-variant")
-                                " localize(.startSession)"
-                            }
-                            .type(.button)
-                            .class("btn-rounded")
-                            .button(style: .primary)
-                            .margin(.three, for: .bottom)
-                        }
-                        .data(for: "toggle", value: "modal")
-                        .data(for: "target", value: "#start-practice-session")
-                    }
-                    .class("col-sm-6")
-                }
-                .class("mb-2") +
-                Row {
-                    Div {
-                        SubjectCard(
-                            subject: context.subject,
-                            userLevel: context.subjectLevel
-                        )
-                    }
-                    .class("col-md-12")
-                } +
+                )
+                SubjectCard(
+                    subject: context.subject,
+                    userLevel: context.subjectLevel,
+                    topicIDsJSList: context.topicIDsJSList
+                )
                 Row {
                     Div {
                         Div {
-                            H4 {
-                                "localize(.topicListTitle)"
-                            }
-                            .class("page-title")
+                            Text(LocalizationKeys.subjectTopicListTitle)
+                                .class("page-title")
+                                .style(.heading4)
                         }
                         .class("page-title-box")
                     }
                     .class("col-12")
-                } +
+                }
                 Row {
                     IF(context.topics.isEmpty) {
                         Div {
-                            H3 {
-                                "localize(.noTopics)"
-                            }
-                            .class("page-title")
+                            Text(LocalizationKeys.subjectsNoTopics)
+                                .class("page-title")
+                                .style(.heading3)
                         }
                         .class("page-title-box")
                     }.else {
@@ -107,15 +81,11 @@ extension Subject.Templates {
                             TopicCard(topic: topic)
                         }
                     }
-                },
-
-                scripts: [
-                    Script().source("/assets/js/practice-session-create.js")
-                ],
-                
-                modals:
-                PracticeModal(topics: context.topics)
-            )
+                }
+            }
+            .scripts {
+                Script().source("/assets/js/practice-session-create.js")
+            }
         }
 
         struct TopicCardContext {
@@ -129,49 +99,38 @@ extension Subject.Templates {
 
             var body: View {
                 Div {
-                    Div {
-                        Div {
-                            Text {
-                                topic.topic.chapter + ". " + topic.topic.name
-                            }
-                            .class("mt-0")
-                            .margin(.zero, for: .top)
-                            .style(.heading3)
+                    Card {
+                        Text {
+                            topic.topic.chapter + ". " + topic.topic.name
                         }
-                        .class("card-body")
+                        .margin(.zero, for: .top)
+                        .style(.heading3)
 
+                        Button {
+                            Italic().class("mdi mdi-book-open-variant")
+                            " "
+                            Localized(key: LocalizationKeys.subjectStartSession)
+                        }
+                        .type(.button)
+                        .class("btn-rounded")
+                        .button(style: .light)
+                        .margin(.three, for: .bottom)
+                        .on(click: "startPracticeSession([" + topic.topic.id + "], " + topic.topic.subjectId + ")")
+                    }
+                    .sub {
                         IF(topic.level.isDefined) {
                             UnorderdList {
                                 ListItem {
-                                    H5 {
-                                        "localize(.progressTitle)"
-                                    }
-                                    .class("card-title")
-                                    .margin(.three, for: .bottom)
-                                    P {
-                                        topic.level.unsafelyUnwrapped.correctScoreInteger
-                                        Span {
-                                            topic.level.unsafelyUnwrapped.correctProsentage + "%"
-                                        }
-                                        .float(.right)
+                                    Text {
+                                        topic.level.unsafelyUnwrapped.correctProsentage + "%"
+                                        Small { topic.level.unsafelyUnwrapped.correctScoreInteger + " riktig" }
+                                            .margin(.one, for: .left)
+
                                     }
                                     .font(style: .bold)
                                     .margin(.two, for: .bottom)
 
-                                    ProgressBar(
-                                        currentValue: topic.level.unsafelyUnwrapped.correctProsentage,
-                                        valueRange: 0...100
-                                    )
-                                        .bar(size: .medium)
-                                    .modify(if: 0.0..<50.0 ~= topic.level.unsafelyUnwrapped.correctProsentage) {
-                                        $0.bar(style: .danger)
-                                    }
-                                    .modify(if: 50.0..<75.0 ~= topic.level.unsafelyUnwrapped.correctProsentage) {
-                                        $0.bar(style: .warning)
-                                    }
-                                    .modify(if: 75.0...100.0 ~= topic.level.unsafelyUnwrapped.correctProsentage) {
-                                        $0.bar(style: .success)
-                                    }
+                                    KognitaProgressBar(value: topic.level.unsafelyUnwrapped.correctProsentage)
                                 }
                                 .class("list-group-item")
                                 .padding(.three)
@@ -179,7 +138,6 @@ extension Subject.Templates {
                             .class("list-group list-group-flush")
                         }
                     }
-                    .class("card")
                     .display(.block)
                 }
                 .class("col-md-6 col-lg-4")
@@ -195,70 +153,78 @@ extension Subject.Templates {
 
             let subject: TemplateValue<T, Subject>
             let userLevel: TemplateValue<T, User.SubjectLevel>
+            let topicIDsJSList: TemplateValue<T, String>
 
             var body: View {
-                Div {
-                    Div {
-                        Text {
-                            subject.name
-                        }
+                Card {
+                    Text { subject.name }
                         .text(color: .dark)
                         .margin(.zero, for: .top)
                         .style(.heading2)
 
-                        Text {
-                            subject.description
-                                .escaping(.unsafeNone)
-                        }
-                        .class("font-13")
-                        .text(color: .muted)
-                        .margin(.three, for: .bottom)
-                        .style(.paragraph)
+                    Button {
+                        Italic().class("mdi mdi-book-open-variant")
+                        " "
+                        Localized(key: LocalizationKeys.subjectStartSession)
                     }
-                    .class("card-body")
+                    .type(.button)
+                    .class("btn-rounded")
+                    .button(style: .primary)
+                    .margin(.three, for: .bottom)
+                    .on(click: "startPracticeSession(" + topicIDsJSList + ", " + subject.id + ")")
 
+                    Text {
+                        subject.description
+                            .escaping(.unsafeNone)
+                    }
+                    .class("font-13")
+                    .text(color: .muted)
+                    .margin(.three, for: .bottom)
+                    .style(.paragraph)
+                }
+                .sub {
                     UnorderdList {
                         ListItem {
                             Text {
-                                "Totalt fullførte oppgaver"
-                            }
-                            .class("card-title")
-                            .margin(.three, for: .bottom)
-                            .style(.heading5)
-                            Text {
-                                userLevel.correctScoreInteger
-                                Span {
-                                    userLevel.correctProsentage + "%"
-                                }
-                                .float(.right)
+                                userLevel.correctProsentage + "%"
+                                Small { userLevel.correctScoreInteger }
+                                    .margin(.one, for: .left)
                             }
                             .style(.paragraph)
                             .font(style: .bold)
                             .margin(.two, for: .bottom)
 
-                            ProgressBar(
-                                currentValue: userLevel.correctProsentage,
-                                valueRange: 0...100
-                            )
-                                .bar(size: .medium)
-                            .modify(if: 0.0..<50.0 ~= userLevel.correctProsentage) {
-                                $0.bar(style: .danger)
-                            }
-                            .modify(if: 50.0..<75.0 ~= userLevel.correctProsentage) {
-                                $0.bar(style: .warning)
-                            }
-                            .modify(if: 75.0...100.0 ~= userLevel.correctProsentage) {
-                                $0.bar(style: .success)
-                            }
+                            KognitaProgressBar(value: userLevel.correctProsentage)
                         }
                         .class("list-group-item")
                         .padding(.three)
                     }
                     .class("list-group list-group-flush")
                 }
-                .class("card")
                 .display(.block)
             }
+        }
+    }
+}
+
+struct KognitaProgressBar<T>: StaticView {
+
+    let value: TemplateValue<T, Double>
+
+    var body: View {
+        ProgressBar(
+            currentValue: value,
+            valueRange: 0...100
+        )
+            .bar(size: .medium)
+        .modify(if: 0.0..<50.0 ~= value) {
+            $0.bar(style: .danger)
+        }
+        .modify(if: 50.0..<75.0 ~= value) {
+            $0.bar(style: .warning)
+        }
+        .modify(if: 75.0...100.0 ~= value) {
+            $0.bar(style: .success)
         }
     }
 }

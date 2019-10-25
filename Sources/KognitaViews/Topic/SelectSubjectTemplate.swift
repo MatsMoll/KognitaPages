@@ -34,8 +34,8 @@ extension Subject.Templates {
         public var body: View {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Velg Fag", description: "Velg Fag")),
-                content:
+                baseContext: .constant(.init(title: "Velg Fag", description: "Velg Fag"))
+            ) {
                 Row {
                     Div {
                         Div {
@@ -53,10 +53,10 @@ extension Subject.Templates {
                         .class("page-title-box")
                     }
                     .class("col-12")
-                } +
+                }
                 H3 {
                     "Velg tema"
-                } +
+                }
                 Row {
                     ForEach(in: context.subjects) { subject in
                         SelectCard(
@@ -66,7 +66,7 @@ extension Subject.Templates {
                         )
                     }
                 }
-            )
+            }
         }
 
         struct SelectCard<A, B>: StaticView {

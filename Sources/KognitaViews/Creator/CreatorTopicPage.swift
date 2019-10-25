@@ -44,8 +44,8 @@ extension CreatorTemplates {
         public var body: View {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: context.base,
-                content:
+                baseContext: context.base
+            ) {
                 Row {
                     Div {
                         Div {
@@ -61,7 +61,7 @@ extension CreatorTemplates {
                             }.class("page-title")
                         }.class("page-title-box")
                     }.class("col-12")
-                } +
+                }
                 Row {
                     Div {
                         Div {
@@ -84,7 +84,7 @@ extension CreatorTemplates {
                             }.class("card-body")
                         }.class("card d-block")
                     }.class("col-12")
-                } +
+                }
                 Row {
                     Div {
                         H3 {
@@ -149,12 +149,11 @@ extension CreatorTemplates {
                             }.class("card-body")
                         }.class("card")
                     }.class("col-12")
-                },
-
-                scripts: [
-                    Script().source("/assets/js/delete-task.js")
-                ]
-            )
+                }
+            }
+            .scripts {
+                Script().source("/assets/js/delete-task.js")
+            }
         }
     }
 }

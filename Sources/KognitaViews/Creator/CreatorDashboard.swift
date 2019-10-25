@@ -50,8 +50,8 @@ public struct CreatorTemplates {
         public var body: View {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Hjemmeside", description: "Hjemmeside")),
-                content:
+                baseContext: .constant(.init(title: "Hjemmeside", description: "Hjemmeside"))
+            ) {
                 Row {
                     Div {
                         Div {
@@ -67,7 +67,7 @@ public struct CreatorTemplates {
                             }.class("page-title")
                         }.class("page-title-box")
                     }.class("col-12")
-                } +
+                }
                 Row {
                     IF(context.timelyTopics.count > 0) {
                         Div {
@@ -179,12 +179,12 @@ public struct CreatorTemplates {
                         }
                     }
                     .class("col-12")
-                },
-
-                scripts: [
-                    Script().source("/assets/js/delete-task.js")
-                ]
-            )
+                }
+            }
+            .scripts {
+                Script().source("/assets/js/delete-task.js")
+            }
+            .active(path: "/creator/dashboard")
         }
     }
 

@@ -36,8 +36,8 @@ extension FlashCardTask.Templates {
         public var body: View {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Lag Oppgave", description: "Lag Oppgave")),
-                content:
+                baseContext: .constant(.init(title: "Lag Oppgave", description: "Lag Oppgave"))
+            ) {
                 Div {
                     Div {
                         Div {
@@ -161,26 +161,24 @@ extension FlashCardTask.Templates {
                     }
                     .class("card")
                 }
-                .padding(.five, for: .top),
-
-                headerLinks: [
-                    Link().href("/assets/css/vendor/summernote-bs4.css").relationship("stylesheet").type("text/css"),
-                    Link().href("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css").relationship("stylesheet")
-                ],
-
-                scripts: [
-                    Script().source("/assets/js/vendor/summernote-bs4.min.js"),
-                    Script().source("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"),
-                    Script().source("/assets/js/vendor/summernote-math.js"),
-                    Script().source("/assets/js/dismissable-error.js"),
-                    Script().source("/assets/js/flash-card/json-data.js"),
-                    IF(context.taskInfo.isDefined) {
-                        Script().source("/assets/js/flash-card/edit.js")
-                    }.else {
-                        Script().source("/assets/js/flash-card/create.js")
-                    }
-                ]
-            )
+                .padding(.five, for: .top)
+            }
+            .header {
+                Link().href("/assets/css/vendor/summernote-bs4.css").relationship(.stylesheet).type("text/css")
+                Link().href("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css").relationship(.stylesheet)
+            }
+            .scripts {
+                Script().source("/assets/js/vendor/summernote-bs4.min.js")
+                Script().source("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js")
+                Script().source("/assets/js/vendor/summernote-math.js")
+                Script().source("/assets/js/dismissable-error.js")
+                Script().source("/assets/js/flash-card/json-data.js")
+                IF(context.taskInfo.isDefined) {
+                    Script().source("/assets/js/flash-card/edit.js")
+                }.else {
+                    Script().source("/assets/js/flash-card/create.js")
+                }
+            }
         }
     }
 }
