@@ -55,6 +55,28 @@ public struct TaskPreviewTemplate<T>: StaticView {
     var underSolutionCard: View = ""
     var customScripts: View = ""
 
+    init(context: TemplateValue<T, TaskPreviewTemplateContext>, @HTMLBuilder actionCard: () -> View) {
+        self.context = context
+        self.actionCard = actionCard()
+        self.underSolutionCard = ""
+        self.customScripts = ""
+    }
+
+    init(context: TemplateValue<T, TaskPreviewTemplateContext>, actionCard: View, underSolutionCard: View, customScripts: View) {
+        self.context = context
+        self.actionCard = actionCard
+        self.underSolutionCard = underSolutionCard
+        self.customScripts = customScripts
+    }
+
+    func underSolutionCard(@HTMLBuilder _ card: () -> View) -> TaskPreviewTemplate {
+        TaskPreviewTemplate(context: context, actionCard: actionCard, underSolutionCard: card(), customScripts: customScripts)
+    }
+
+    func scripts(@HTMLBuilder _ scripts: () -> View) -> TaskPreviewTemplate {
+        TaskPreviewTemplate(context: context, actionCard: actionCard, underSolutionCard: underSolutionCard, customScripts: scripts())
+    }
+
     public var body: View {
         BaseTemplate(context: .init(
             title: "Oppgave",
@@ -83,13 +105,14 @@ public struct TaskPreviewTemplate<T>: StaticView {
                         }
                         .float(.right)
 
-                        Text(LocalizationKeys.exerciseMainTitle)
+                        Text(Strings.exerciseMainTitle)
                             .margin(.zero, for: .top)
                             .style(.heading3)
 
                         IF(context.task.examPaperSemester.isDefined) {
                             Badge {
-                                "localize(.exam)" + ": " + context.task.value(at: \.examPaperSemester?.rawValue) + " " + context.task.examPaperYear
+                                Localized(key: Strings.exerciseExam)
+                                ": " + context.task.value(at: \.examPaperSemester?.rawValue) + " " + context.task.examPaperYear
                             }
                             .margin(.three, for: .bottom)
                             .background(color: .primary)
@@ -173,7 +196,7 @@ public struct TaskPreviewTemplate<T>: StaticView {
             IF(context.practiceProgress.isDefined) {
                 Card {
                     Text {
-                        Localized(key: LocalizationKeys.exerciseSessionProgressTitle)
+                        Localized(key: Strings.exerciseSessionProgressTitle)
                         Span {
                             Span {
                                 context.practiceProgress + "% "
@@ -186,7 +209,7 @@ public struct TaskPreviewTemplate<T>: StaticView {
                                 }
                                 .id("goal-value")
                                 " "
-                                Localized(key: LocalizationKeys.exerciseSessionProgressGoal)
+                                Localized(key: Strings.exerciseSessionProgressGoal)
                             }
                             .text(color: .muted)
                         }
@@ -237,7 +260,7 @@ public struct TaskSolutionsTemplate: TemplateView {
     public var body: View {
         Accordions(values: context, title: { (solution, index) in
             Text {
-                Localized(key: LocalizationKeys.exerciseProposedSolutionTitle)
+                Localized(key: Strings.exerciseProposedSolutionTitle)
                 Span {
                     Italic().class("mdi mdi-chevron-down accordion-arrow")
                 }
@@ -278,7 +301,7 @@ public struct TaskSolutionsTemplate: TemplateView {
                 Card {
                     Div {
                         Div {
-                            Text(LocalizationKeys.exerciseProposedSolutionTitle)
+                            Text(Strings.exerciseProposedSolutionTitle)
                                 .style(.heading4)
                         }
                         .class("page-title")

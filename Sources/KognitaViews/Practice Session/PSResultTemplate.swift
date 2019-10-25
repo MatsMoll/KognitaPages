@@ -101,7 +101,7 @@ extension PracticeSession.Templates {
 
         public let context: RootValue<Context> = .root()
 
-        let breadcrumbItems: [BreadcrumbItem] = [.init(link: "../history", title: .init(view: Localized(key: LocalizationKeys.historyTitle)))]
+        let breadcrumbItems: [BreadcrumbItem] = [.init(link: "../history", title: .init(view: Localized(key: Strings.historyTitle)))]
 
         public var body: View {
             ContentBaseTemplate(
@@ -115,7 +115,7 @@ extension PracticeSession.Templates {
                 Row {
                     Div {
                         Card {
-                            H4(LocalizationKeys.histogramTitle)
+                            H4(Strings.histogramTitle)
                                 .class("header-title mb-4")
                             Div {
                                 Canvas().id("practice-time-histogram")
@@ -131,22 +131,22 @@ extension PracticeSession.Templates {
                                     StatsView(
                                         stats: context.numberOfTasks,
                                         icon: "graph-pie",
-                                        description: LocalizationKeys.resultSummaryNumberOfTasks
+                                        description: Strings.resultSummaryNumberOfTasks
                                     )
                                     StatsView(
                                         stats: context.goalProgress,
                                         icon: "graph-bar",
-                                        description: LocalizationKeys.resultSummaryGoal
+                                        description: Strings.resultSummaryGoal
                                     )
                                     StatsView(
                                         stats: context.timeUsed,
                                         icon: "preview",
-                                        description: LocalizationKeys.resultSummaryDuration
+                                        description: Strings.resultSummaryDuration
                                     )
                                     StatsView(
                                         stats: context.accuracy,
                                         icon: "checkmark",
-                                        description: LocalizationKeys.resultSummaryAccuracy
+                                        description: Strings.resultSummaryAccuracy
                                     )
                                 }
                                 .noGutters()
@@ -163,10 +163,10 @@ extension PracticeSession.Templates {
                                         Table {
                                             TableHead {
                                                 TableRow {
-                                                    TableHeader(LocalizationKeys.resultSummaryTopicColumn)
-                                                    TableHeader(LocalizationKeys.resultSummaryQuestionColumn)
-                                                    TableHeader(LocalizationKeys.resultSummaryResultColumn)
-                                                    TableHeader(LocalizationKeys.resultSummaryRepeatColumn)
+                                                    TableHeader(Strings.resultSummaryTopicColumn)
+                                                    TableHeader(Strings.resultSummaryQuestionColumn)
+                                                    TableHeader(Strings.resultSummaryResultColumn)
+                                                    TableHeader(Strings.resultSummaryRepeatColumn)
                                                 }
                                             }.class("thead-light")
                                             TableBody {

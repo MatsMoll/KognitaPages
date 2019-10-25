@@ -39,11 +39,11 @@ extension PracticeSession.Templates {
                 baseContext: .constant(.init(title: "Øving's historikk", description: "Øving's historikk"))
             ) {
 
-                PageTitle(LocalizationKeys.historyTitle)
+                PageTitle(Strings.historyTitle)
                 Row {
                     Div {
                         Card {
-                            Text(LocalizationKeys.histogramTitle)
+                            Text(Strings.histogramTitle)
                                 .class("header-title mb-4")
                             Div {
                                 Canvas().id("practice-time-histogram")
@@ -63,9 +63,9 @@ extension PracticeSession.Templates {
                                             Table {
                                                 TableHead {
                                                     TableRow {
-                                                        TableHeader(LocalizationKeys.historyDateColumn)
-                                                        TableHeader(LocalizationKeys.historyGoalColumn)
-                                                        TableHeader(LocalizationKeys.historyDurationColumn)
+                                                        TableHeader(Strings.historyDateColumn)
+                                                        TableHeader(Strings.historyGoalColumn)
+                                                        TableHeader(Strings.historyDurationColumn)
                                                     }
                                                 }
                                                 .class("thead-light")
@@ -115,7 +115,7 @@ extension PracticeSession.Templates {
                                     .noGutters()
                                 }.else {
                                     Div {
-                                        Text(LocalizationKeys.historyNoSessions)
+                                        Text(Strings.historyNoSessions)
                                             .style(.heading3)
                                     }
                                     .column(width: .twelve)

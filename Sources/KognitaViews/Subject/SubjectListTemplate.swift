@@ -41,7 +41,7 @@ extension Subject.Templates {
                 baseContext: .constant(.init(title: "Tema liste", description: "Tema liste"))
             ) {
 
-                PageTitle(title: Localized(key: LocalizationKeys.subjectsTitle))
+                PageTitle(title: Localized(key: Strings.subjectsTitle))
 
                 IF(context.ongoingSessionPath.isDefined) {
                     Text {
@@ -74,7 +74,7 @@ extension Subject.Templates {
                         .class("col-md-6 col-xl-6")
                     }
                 }
-                H3(LocalizationKeys.repeatTitle)
+                H3(Strings.repeatTitle)
                 Row {
                     IF(context.revisitTasks.isEmpty) {
                         Div {
@@ -97,11 +97,11 @@ extension Subject.Templates {
                         }
                     }
                 }
-                Text(LocalizationKeys.subjectsListTitle)
+                Text(Strings.subjectsListTitle)
                     .style(.heading3)
                 Row {
                     IF(context.cards.isEmpty) {
-                        Text(LocalizationKeys.subjectsNoContent)
+                        Text(Strings.subjectsNoContent)
                             .style(.heading1)
                     }.else {
                         ForEach(in: context.cards) { subject in
@@ -127,7 +127,7 @@ extension Subject.Templates {
                     Card {
                         Badge {
                             Localized(
-                                key: LocalizationKeys.subjectRepeatDays,
+                                key: Strings.subjectRepeatDays,
                                 context: context
                             )
                         }
@@ -145,7 +145,7 @@ extension Subject.Templates {
                         .style(.heading4)
                         .class("mt-0")
 
-                        Text(LocalizationKeys.subjectRepeatDescription, with: context)
+                        Text(Strings.subjectRepeatDescription, with: context)
                             .text(color: .muted)
                             .class("font-13 mb-3")
 
@@ -153,7 +153,7 @@ extension Subject.Templates {
                             Button {
                                 Italic().class("mdi mdi-book-open-variant")
                                 " " +
-                                Localized(key: LocalizationKeys.subjectRepeatStart)
+                                Localized(key: Strings.subjectRepeatStart)
                             }
                             .type(.button)
                             .button(style: .primary)
@@ -193,7 +193,7 @@ extension Subject.Templates {
                                     subject.description
                                         .escaping(.unsafeNone)
                                 }
-                                Button(LocalizationKeys.subjectExploreButton)
+                                Button(Strings.subjectExploreButton)
                                     .class("btn btn-" + subject.colorClass.rawValue + " btn-rounded")
                             }
                             .class("card-body position-relative")

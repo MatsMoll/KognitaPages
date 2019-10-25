@@ -130,13 +130,13 @@ struct KognitaNavigationBar: StaticView {
                     Div {
                         UnorderdList {
                             ListItem {
-                                Anchor(LocalizationKeys.menuRegister)
+                                Anchor(Strings.menuRegister)
                                     .class("nav-link")
                                     .href(rootUrl + "/signup")
                             }
                             .class("nav-item")
                             ListItem {
-                                Anchor(LocalizationKeys.menuLogin)
+                                Anchor(Strings.menuLogin)
                                     .class("nav-link")
                                     .href(rootUrl + "/login")
                             }

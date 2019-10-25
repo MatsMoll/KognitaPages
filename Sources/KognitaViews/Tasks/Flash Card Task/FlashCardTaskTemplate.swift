@@ -16,7 +16,6 @@ extension FlashCardTask.Templates {
     public struct Execute: TemplateView {
 
         public struct Context {
-            let locale = "nb"
             let taskPreview: TaskPreviewTemplateContext
             var nextTaskIndex: Int?
             var prevTaskIndex: Int?
@@ -65,14 +64,26 @@ extension FlashCardTask.Templates {
         public let context: RootValue<Context> = .root()
 
         public var body: View {
-            TaskPreviewTemplate(
-                context: context.taskPreview,
-                actionCard:
+            TaskPreviewTemplate(context: context.taskPreview) {
                 Card {
+                    Label {
+                        "Skriv svaret her"
+                    }
+                    InputGroup {
+                        TextArea()
+                            .id("flash-card-answer")
+                    }
+                    .invalidFeedback {
+                        "Du må fylle ut et svar"
+                    }
+                    .margin(.two, for: .bottom)
+
                     Button {
                         Italic().class("mdi mdi-send")
                             .margin(.one, for: .right)
-                        "localize(.answerButton)"
+
+                        Strings.exerciseAnswerButton
+                            .localized()
                     }
                     .type(.button)
                     .id("submitButton")
@@ -81,17 +92,15 @@ extension FlashCardTask.Templates {
                     .on(click: "revealSolution();")
 
                     IF(context.session.isDefined) {
-                        Button {
-                            "localize(.stopSessionButton)"
-                        }
-                        .float(.right)
-                        .button(style: .danger)
-                        .margin(.one, for: .left)
-                        .on(click: "submitAndEndSession();")
+                        Button(Strings.exerciseStopSessionButton)
+                            .float(.right)
+                            .button(style: .danger)
+                            .margin(.one, for: .left)
+                            .on(click: "submitAndEndSession();")
                     }
-                },
-
-                underSolutionCard:
+                }
+            }
+            .underSolutionCard {
                 Card {
                     IF(context.nextTaskIndex.isDefined) {
                         Input()
@@ -100,7 +109,9 @@ extension FlashCardTask.Templates {
                             .value(context.nextTaskIndex)
 
                         Button {
-                            "localize(.nextButton)"
+                            Strings.exerciseNextButton
+                                .localized()
+
                             Italic().class("mdi mdi-arrow-right")
                                 .margin(.one, for: .left)
                         }
@@ -162,20 +173,19 @@ extension FlashCardTask.Templates {
                                 2
                             }
                     )
-//                            .addDynamic(.disable, with: \.score != nil)
                 }
                 .display(.none)
-                .id("knowledge-card"),
-
-                customScripts:
-                Script().source("/assets/js/flash-card/submit-performance.js") +
-                Script().source("/assets/js/practice-session-end.js") +
+                .id("knowledge-card")
+            }
+            .scripts {
+                Script().source("/assets/js/flash-card/submit-performance.js")
+                Script().source("/assets/js/practice-session-end.js")
                 IF(context.hasBeenCompleted) {
                     Script {
                         "window.onload = presentControlls;"
                     }
                 }
-            )
+            }
         }
 
         struct LevelColumn: StaticView {

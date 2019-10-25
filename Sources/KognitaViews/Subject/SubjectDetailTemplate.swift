@@ -40,7 +40,7 @@ extension Subject.Templates {
         public let context: RootValue<Context> = .root()
 
         let breadcrumbs: [BreadcrumbItem] = [
-            BreadcrumbItem(link: "../subjects", title: .init(view: Localized(key: LocalizationKeys.subjectTitle)))
+            BreadcrumbItem(link: "../subjects", title: .init(view: Localized(key: Strings.subjectTitle)))
         ]
 
         public var body: View {
@@ -60,7 +60,7 @@ extension Subject.Templates {
                 Row {
                     Div {
                         Div {
-                            Text(LocalizationKeys.subjectTopicListTitle)
+                            Text(Strings.subjectTopicListTitle)
                                 .class("page-title")
                                 .style(.heading4)
                         }
@@ -71,7 +71,7 @@ extension Subject.Templates {
                 Row {
                     IF(context.topics.isEmpty) {
                         Div {
-                            Text(LocalizationKeys.subjectsNoTopics)
+                            Text(Strings.subjectsNoTopics)
                                 .class("page-title")
                                 .style(.heading3)
                         }
@@ -109,13 +109,12 @@ extension Subject.Templates {
                         Button {
                             Italic().class("mdi mdi-book-open-variant")
                             " "
-                            Localized(key: LocalizationKeys.subjectStartSession)
+                            Localized(key: Strings.subjectStartSession)
                         }
                         .type(.button)
                         .class("btn-rounded")
                         .button(style: .light)
-                        .margin(.three, for: .bottom)
-                        .on(click: "startPracticeSession([" + topic.topic.id + "], " + topic.topic.subjectId + ")")
+                        .margin(.one, for: .vertical)
                     }
                     .sub {
                         IF(topic.level.isDefined) {
@@ -141,6 +140,7 @@ extension Subject.Templates {
                     .display(.block)
                 }
                 .class("col-md-6 col-lg-4")
+                .on(click: "startPracticeSession([" + topic.topic.id + "], " + topic.topic.subjectId + ")")
             }
         }
 
@@ -157,6 +157,8 @@ extension Subject.Templates {
 
             var body: View {
                 Card {
+//                    KognitaProgressBadge(value: userLevel.correctProsentage)
+
                     Text { subject.name }
                         .text(color: .dark)
                         .margin(.zero, for: .top)
@@ -165,7 +167,7 @@ extension Subject.Templates {
                     Button {
                         Italic().class("mdi mdi-book-open-variant")
                         " "
-                        Localized(key: LocalizationKeys.subjectStartSession)
+                        Localized(key: Strings.subjectStartSession)
                     }
                     .type(.button)
                     .class("btn-rounded")
@@ -203,6 +205,27 @@ extension Subject.Templates {
                 }
                 .display(.block)
             }
+        }
+    }
+}
+
+struct KognitaProgressBadge<T>: StaticView {
+
+    let value: TemplateValue<T, Double>
+
+    var body: View {
+        Badge {
+            value + "%"
+        }
+        .float(.right)
+        .modify(if: 0.0..<50.0 ~= value) {
+            $0.background(color: .danger)
+        }
+        .modify(if: 50.0..<75.0 ~= value) {
+            $0.background(color: .warning)
+        }
+        .modify(if: 75.0...100.0 ~= value) {
+            $0.background(color: .success)
         }
     }
 }

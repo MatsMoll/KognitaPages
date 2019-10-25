@@ -49,13 +49,13 @@ extension Pages {
                         Div {
                             UnorderdList {
                                 ListItem {
-                                    Anchor(LocalizationKeys.menuRegister)
+                                    Anchor(Strings.menuRegister)
                                         .class("nav-link")
                                         .href("/signup")
                                 }
                                 .class("nav-item")
                                 ListItem {
-                                    Anchor(LocalizationKeys.menuLogin)
+                                    Anchor(Strings.menuLogin)
                                         .class("nav-link")
                                         .href("/login")
                                 }
@@ -72,12 +72,12 @@ extension Pages {
                 Header {
                     Div {
                         Container {
-                            Text(LocalizationKeys.starterPageDescription)
+                            Text(Strings.starterPageDescription)
                                 .class("masthead-heading")
                                 .margin(.zero, for: .bottom)
                                 .style(.heading1)
 
-                            Anchor(LocalizationKeys.starterPageMoreButton)
+                            Anchor(Strings.starterPageMoreButton)
                                 .href("/signup")
                                 .class("rounded-pill")
                                 .button(style: .primary)
@@ -183,7 +183,7 @@ extension Pages {
                 }
                 Footer{
                     Container {
-                        Text(LocalizationKeys.copyright)
+                        Text(Strings.copyright)
                             .class("small")
                             .margin(.zero)
                             .text(color: .white)

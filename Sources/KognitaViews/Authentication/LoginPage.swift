@@ -39,7 +39,7 @@ public struct LoginPage: TemplateView {
                                             "×"
                                         }.aria(for: "hidden", value: "true")
                                     }.type(.button).class("close").data(for: "dismiss", value: "alert").aria(for: "label", value: "Close")
-                                    Bold(LocalizationKeys.errorMessage)
+                                    Bold(Strings.errorMessage)
                                     context.errorMessage
                                 }.class("alert alert-secondary alert-dismissible bg-danger text-white border-0 fade show").role("alert")
                             }
@@ -53,41 +53,41 @@ public struct LoginPage: TemplateView {
                                 }.class("card-header pt-4 pb-4 text-center bg-primary")
                                 Div {
                                     Div {
-                                        H4(LocalizationKeys.loginTitle)
+                                        H4(Strings.loginTitle)
                                             .class("text-dark-50 text-center mt-0 font-weight-bold")
-                                        P(LocalizationKeys.loginSubtitle)
+                                        P(Strings.loginSubtitle)
                                             .class("text-muted mb-4")
                                     }.class("text-center w-75 m-auto")
                                     Form {
                                         Div {
-                                            Label(LocalizationKeys.mailTitle)
+                                            Label(Strings.mailTitle)
                                                 .for("emailaddress")
                                             Input()
                                                 .class("form-control")
                                                 .type(.email)
                                                 .name("email")
                                                 .id("email")
-                                                .placeholder(localized: LocalizationKeys.mailPlaceholder)
+                                                .placeholder(localized: Strings.mailPlaceholder)
                                         }.class("form-group")
                                         Div {
                                             Anchor {
-                                                Small(LocalizationKeys.forgottenPassword)
+                                                Small(Strings.forgottenPassword)
                                             }
                                             .href("/start-reset-password")
                                             .float(.right)
                                             .text(color: .muted)
 
-                                            Label(LocalizationKeys.passwordTitle)
+                                            Label(Strings.passwordTitle)
                                                 .for("password")
                                             Input()
                                                 .class("form-control")
                                                 .type(.password)
                                                 .name("password")
                                                 .id("password")
-                                                .placeholder(localized: LocalizationKeys.passwordPlaceholder)
+                                                .placeholder(localized: Strings.passwordPlaceholder)
                                         }.class("form-group")
                                         Div {
-                                            Button(LocalizationKeys.loginButton)
+                                            Button(Strings.loginButton)
                                                 .id("submit-button")
                                                 .class("btn btn-primary")
                                                 .type(.submit)
@@ -97,11 +97,11 @@ public struct LoginPage: TemplateView {
                             }.class("card")
                             Div {
                                 Div {
-                                    P(LocalizationKeys.loginNoUserTitle)
+                                    P(Strings.loginNoUserTitle)
                                         .text(color: .muted)
                                         .display(.inline)
                                     Anchor {
-                                        Bold(LocalizationKeys.loginNoUserLink)
+                                        Bold(Strings.loginNoUserLink)
                                     }
                                     .href("/signup")
                                     .class("ml-1")

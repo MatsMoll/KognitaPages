@@ -16,14 +16,14 @@ struct CopyrightFooter: StaticView {
             Container(mode: .fluid) {
                 Row {
                     Div {
-                        P(LocalizationKeys.copyright)
+                        P(Strings.copyright)
                     }
                     .columnWidth(6, for: .medium)
                     Div {
                         Div {
-                            Anchor(LocalizationKeys.footerAboutUs).href("#")
-                            Anchor(LocalizationKeys.footerHelp).href("#")
-                            Anchor(LocalizationKeys.footerContact).href("#")
+                            Anchor(Strings.footerAboutUs).href("#")
+                            Anchor(Strings.footerHelp).href("#")
+                            Anchor(Strings.footerContact).href("#")
                         }
                         .text(alignment: .right)
                         .class("footer-links")

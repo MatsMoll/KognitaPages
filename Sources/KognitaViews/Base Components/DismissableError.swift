@@ -13,11 +13,13 @@ struct DismissableError: StaticView {
     var body: View {
         Alert {
             Bold { "En Feil Oppstod - " }
-            Span().id("error-message")
+            Span().id("error-massage")
         }
         .isDismissable(true)
         .background(color: .danger)
+        .text(color: .white)
         .display(.none)
+        .id("error-div")
     }
 }
 //struct DismissableError: StaticView {

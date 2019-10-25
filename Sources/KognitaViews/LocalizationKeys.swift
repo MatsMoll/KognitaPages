@@ -7,7 +7,7 @@
 
 import HTMLKit
 
-public class LocalizationKeys {
+public class Strings {
 
     static let errorMessage = "error.message"
     static let menuRegister = "menu.register"
@@ -57,12 +57,15 @@ public class LocalizationKeys {
     static let subjectRepeatDays = "result.repeat.days"
 
     static let exerciseMainTitle = "exercise.main.title"
-
     static let exerciseSessionProgressTitle = "exercise.progress.title"
     static let exerciseSessionProgressGoal = "exercise.progress.goal"
-
     static let exerciseSolutionTitle = "exercise.solution.title"
     static let exerciseProposedSolutionTitle = "exercise.solution.proposed.title"
+    static let exerciseExam = "exercise.exam"
+    static let exerciseAnswerButton = "exercise.answer.button"
+    static let exerciseSolutionButton = "exercise.solution.button"
+    static let exerciseNextButton = "exercise.next.button"
+    static let exerciseStopSessionButton = "exercise.stop.button"
 
     static let historyTitle = "history.title"
     static let historyDateColumn = "history.summary.date"
@@ -81,4 +84,10 @@ public class LocalizationKeys {
     static let resultSummaryQuestionColumn = "result.summary.review.question"
     static let resultSummaryResultColumn = "result.summary.review.result"
     static let resultSummaryRepeatColumn = "result.summary.review.repeat"
+}
+
+extension String {
+    func localized() -> View {
+        Localized(key: self)
+    }
 }

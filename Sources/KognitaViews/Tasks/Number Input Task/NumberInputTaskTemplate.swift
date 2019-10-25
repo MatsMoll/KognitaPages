@@ -21,6 +21,7 @@ extension NumberInputTask.Templates {
             let numberTask: NumberInputTask
             var nextTaskIndex: Int?
             var prevTaskIndex: Int?
+            var hasBeenCompleted: Bool { return taskPreview.lastResult?.sessionId == session?.id }
 
             var session: PracticeSession? { return taskPreview.session }
             var task: Task { return taskPreview.task }
@@ -59,15 +60,13 @@ extension NumberInputTask.Templates {
         public let context: RootValue<Context> = .root()
 
         public var body: View {
-            TaskPreviewTemplate(
-                context: context.taskPreview,
-                actionCard:
+            TaskPreviewTemplate(context: context.taskPreview) {
                 Card {
                     H4 {
                         context.taskPreview.taskContent.actionDescription
                     }
                     .class("mt-0 mb-3")
-                    Div {
+                    FormRow {
                         Div {
                             Input()
                                 .type(.number)
@@ -78,10 +77,10 @@ extension NumberInputTask.Templates {
                         .class("form-group col-10")
 
                         Div {
-                            P { context.numberTask.unit }
+                            Text { context.numberTask.unit }
                         }
                         .class("form-group col-2")
-                    }.class("form-row")
+                    }
 
                     Small {
                         "Skal du skrive desimaltall må det brukes "
@@ -92,38 +91,40 @@ extension NumberInputTask.Templates {
 
                     Button {
                         Italic().class("mdi mdi-send mr-1")
-                        "localize(.answerButton)"
+                        Strings.exerciseAnswerButton
+                            .localized()
                     }
                     .type(.button)
                     .on(click: "submitAnswer();")
-                    .class("btn btn-success mr-1")
+                    .class("mr-1")
+                    .button(style: .success)
                     .id("submitButton")
 
                     IF(context.task.solution != nil) {
                         Anchor {
-                            Button {
-                                "localize(.solutionButton)"
-                            }
-                            .type(.button)
-                            .class("btn btn-success mr-1")
+                            Button(Strings.exerciseSolutionButton)
+                                .type(.button)
+                                .class("mr-1")
+                                .button(style: .success)
                         }
                         .id("solution-button")
-                        .class("d-none")
+                        .display(.none)
                         .href("#solution")
                     }
 
                     IF(context.session.isDefined) {
-                        Button {
-                            "localize(.stopSessionButton)"
-                        }
-                        .class("btn btn-danger float-right ml-1")
-                        .on(click: "endSession();")
+                        Button(Strings.exerciseStopSessionButton)
+                            .class("ml-1")
+                            .float(.right)
+                            .button(style: .danger)
+                            .on(click: "endSession();")
                     }
 
                     IF(context.nextTaskIndex.isDefined) {
                         Anchor {
                             Button {
-                                "localize(.nextButton)"
+                                Strings.exerciseNextButton
+                                    .localized()
                                 Italic().class("mdi mdi-arrow-right ml-1")
                             }
                             .type(.button)
@@ -131,7 +132,9 @@ extension NumberInputTask.Templates {
                         }
                         .id("nextButton")
                         .href(context.nextTaskIndex)
-                        .class("float-right d-none ml-1")
+                        .float(.right)
+                        .display(.none)
+                        .class("ml-1")
                     }
 
                     IF(context.prevTaskIndex.isDefined) {
@@ -141,18 +144,23 @@ extension NumberInputTask.Templates {
                                 "Forrige"
                             }
                             .type(.button)
-                            .class("btn btn-light")
+                            .button(style: .light)
                         }
                         .id("prevButton")
                         .href(context.prevTaskIndex)
                         .float(.right)
                     }
-                },
-                customScripts: [
-                    Script().source("/assets/js/input/submit-answer.js"),
-                    Script().source("/assets/js/practice-session-end.js")
-                ]
-            )
+                }
+            }
+            .scripts {
+                Script().source("/assets/js/input/submit-answer.js")
+                Script().source("/assets/js/practice-session-end.js")
+                IF(context.hasBeenCompleted) {
+                    Script {
+                        "window.onload = presentControlls;"
+                    }
+                }
+            }
         }
     }
 }

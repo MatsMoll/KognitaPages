@@ -63,9 +63,7 @@ extension MultipleChoiseTask.Templates {
         public let context: RootValue<Context> = .root()
 
         public var body: View {
-            TaskPreviewTemplate(
-                context: context.previewContext,
-                actionCard:
+            TaskPreviewTemplate(context: context.previewContext) {
                 Card {
                     ForEach(in: context.choises) { choise in
                         ChoiseOption(
@@ -77,7 +75,8 @@ extension MultipleChoiseTask.Templates {
                     IF(context.isResult == false) {
                         Button {
                             Italic().class("mdi mdi-send mr-1")
-                            "localize(.answerButton)"
+                            Strings.exerciseAnswerButton
+                                .localized()
                         }
                         .type(.button)
                         .on(click: "submitChoises();")
@@ -86,29 +85,26 @@ extension MultipleChoiseTask.Templates {
                         .id("submitButton")
                     }
                     Anchor {
-                        Button {
-                            "localize(.solutionButton)"
-                        }
-                        .type(.button)
-                        .button(style: .success)
-                        .margin(.one, for: .right)
+                        Button(Strings.exerciseSolutionButton)
+                            .type(.button)
+                            .button(style: .success)
+                            .margin(.one, for: .right)
                     }
                     .id("solution-button")
                     .display(.none)
                     .href("#solution")
                     IF(context.session.isDefined) {
-                        Button {
-                            "localize(.stopSessionButton)"
-                        }
-                        .button(style: .danger)
-                        .float(.right)
-                        .margin(.one, for: .left)
-                        .on(click: "endSession();")
+                        Button(Strings.exerciseStopSessionButton)
+                            .button(style: .danger)
+                            .float(.right)
+                            .margin(.one, for: .left)
+                            .on(click: "endSession();")
                     }
                     IF(context.nextTaskIndex.isDefined) {
                         Anchor {
                             Button {
-                                "Neste"
+                                Strings.exerciseNextButton
+                                    .localized()
                                 Italic().class("mdi mdi-arrow-right ml-1")
                             }
                             .type(.button)
@@ -135,18 +131,17 @@ extension MultipleChoiseTask.Templates {
                         .float(.right)
                         .relationship(.prev)
                     }
-                },
-                
-                customScripts: [
-                    Script().source("/assets/js/multiple-choise/task-submit.js"),
-                    Script().source("/assets/js/practice-session-end.js"),
-                    IF(context.hasBeenCompleted) {
-                        Script {
-                            "window.onload = presentControlls;"
-                        }
+                }
+            }
+            .scripts {
+                Script().source("/assets/js/multiple-choise/task-submit.js")
+                Script().source("/assets/js/practice-session-end.js")
+                IF(context.hasBeenCompleted) {
+                    Script {
+                        "window.onload = presentControlls;"
                     }
-                ]
-            )
+                }
+            }
         }
 
         struct ChoiseContext {
@@ -183,7 +178,7 @@ extension MultipleChoiseTask.Templates {
                                     $0.type(.checkbox)
                                 }
                                 .modify(if: !canSelectMultiple) {
-                                        $0.type(.radio)
+                                    $0.type(.radio)
                                 }
                                 .modify(if: choise.isSelected) { (isSelected: Input) in
                                     isSelected
