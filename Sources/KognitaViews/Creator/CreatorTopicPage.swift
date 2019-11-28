@@ -31,17 +31,17 @@ extension CreatorTemplates {
 
         public let context: RootValue<Context> = .root()
 
-        var createMultipleTaskUrl: View {
+        var createMultipleTaskUrl: HTML {
             "/creator/subjects/" + context.subject.id + "/task/multiple/create?topicId=" + context.topic.id
         }
-        var createInputTaskUrl: View {
+        var createInputTaskUrl: HTML {
             "/creator/subjects/" + context.subject.id + "/task/input/create?topicId=" + context.topic.id
         }
-        var createFlashCardTaskUrl: View {
+        var createFlashCardTaskUrl: HTML {
             "/creator/subjects/" + context.subject.id + "/task/flash-card/create?topicId=" + context.topic.id
         }
 
-        public var body: View {
+        public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
                 baseContext: context.base
@@ -64,25 +64,26 @@ extension CreatorTemplates {
                 }
                 Row {
                     Div {
-                        Div {
-                            Div {
-                                Anchor {
-                                    Button {
-                                        "Rediger"
-                                    }.class("btn btn-primary float-right")
-                                }.href("/creator/subjects/" + context.subject.id + "/topics/" + context.topic.id + "/edit")
-                                H3 {
-                                    context.topic.name
-                                }.class("mt-0")
-                                H5 {
-                                    "Tema beskrivelse:"
-                                }
-                                P {
-                                    context.topic.description
-                                        .escaping(.unsafeNone)
-                                }.class("text-muted mb-2")
-                            }.class("card-body")
-                        }.class("card d-block")
+                        Card {
+                            Anchor {
+                                Button {
+                                    "Rediger"
+                                }.class("btn btn-primary float-right")
+                            }.href("/creator/subjects/" + context.subject.id + "/topics/" + context.topic.id + "/edit")
+                            H3 {
+                                context.topic.name
+                            }.class("mt-0")
+                            H5 {
+                                "Tema beskrivelse:"
+                            }
+                            P {
+                                context.topic.description
+                                    .escaping(.unsafeNone)
+                            }
+                            .class("mb-2")
+                            .text(color: .muted)
+                        }
+                        .display(.block)
                     }.class("col-12")
                 }
                 Row {

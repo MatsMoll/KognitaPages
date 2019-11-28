@@ -35,7 +35,7 @@ extension MultipleChoiseTask.Templates {
 
         public let context: RootValue<Context> = .root()
 
-        public var body: View {
+        public var body: HTML {
 
             return ContentBaseTemplate(
                 userContext: context.user,
@@ -263,9 +263,9 @@ extension MultipleChoiseTask.Templates {
         struct ChoiseRow<T>: StaticView {
 
             let choise: TemplateValue<T, MultipleChoiseTaskChoise>
-            var switchId: View { "switch-" + choise.id }
+            var switchId: HTML { "switch-" + choise.id }
 
-            var body: View {
+            var body: HTML {
                 TableRow {
                     TableCell {
                         choise.choise.escaping(.unsafeNone)

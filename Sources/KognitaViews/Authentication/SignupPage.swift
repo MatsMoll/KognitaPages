@@ -10,9 +10,9 @@ import BootstrapKit
 import KognitaCore
 
 extension User.Templates {
-    public struct Signup: TemplateView {
+    public struct Signup: HTMLTemplate {
 
-        public struct Content {
+        public struct Context {
             let base: User.Templates.AuthenticateBaseContext
 
             public init(errorMessage: String? = nil) {
@@ -26,9 +26,7 @@ extension User.Templates {
 
         public init() {}
 
-        public let context: RootValue<Content> = .root()
-
-        public var body: View {
+        public var body: HTML {
             User.Templates.AuthenticateBase(
                 context: context.base,
                 cardBody:

@@ -11,7 +11,7 @@ import BootstrapKit
 
 struct BetaHeader: StaticView {
 
-    var body: View {
+    var body: HTML {
         Container {
             Text {
                 "🚧👷‍♂️ Dette er en beta versjon av Kognita. Det er bare å prøve den, men vi vil veldig gjerne høre hva du tenker. Du kan kontakte oss via "
@@ -110,11 +110,11 @@ struct BetaHeader: StaticView {
 //    }
 //}
 
-struct KognitaNavigationBar: StaticView {
+struct KognitaNavigationBar: HTMLComponent {
 
     var rootUrl: String = ""
 
-    var body: View {
+    var body: HTML {
         Div {
             BetaHeader()
             Container {

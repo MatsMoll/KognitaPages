@@ -8,7 +8,7 @@
 
 import BootstrapKit
 
-public struct LoginPage: TemplateView {
+public struct LoginPage: HTMLTemplate {
 
     public struct Context {
         let errorMessage: String?
@@ -25,23 +25,31 @@ public struct LoginPage: TemplateView {
 
     public let context: RootValue<Context> = .root()
 
-    public var body: View {
+    public var body: HTML {
         BaseTemplate(context: context.base) {
             KognitaNavigationBar(rootUrl: "")
             Div {
                 Div {
                     Div {
                         Div {
-                            IF(context.errorMessage != nil) {
+                            IF(context.errorMessage.isDefined) {
                                 Div {
                                     Button {
                                         Span {
                                             "×"
                                         }.aria(for: "hidden", value: "true")
-                                    }.type(.button).class("close").data(for: "dismiss", value: "alert").aria(for: "label", value: "Close")
+                                    }
+                                    .type(.button)
+                                    .class("close")
+                                    .data(for: "dismiss", value: "alert")
+                                    .aria(for: "label", value: "Close")
+
                                     Bold(Strings.errorMessage)
+
                                     context.errorMessage
-                                }.class("alert alert-secondary alert-dismissible bg-danger text-white border-0 fade show").role("alert")
+                                }
+                                .class("alert alert-secondary alert-dismissible bg-danger text-white border-0 fade show")
+                                .role("alert")
                             }
                             Div {
                                 Div {

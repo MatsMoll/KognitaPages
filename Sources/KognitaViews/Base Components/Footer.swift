@@ -9,9 +9,9 @@
 import HTMLKit
 import BootstrapKit
 
-struct CopyrightFooter: StaticView {
+struct CopyrightFooter: HTMLComponent {
 
-    var body: View {
+    var body: HTML {
         Footer {
             Container(mode: .fluid) {
                 Row {

@@ -48,36 +48,36 @@ struct TaskPreviewTemplateContext {
     }
 }
 
-public struct TaskPreviewTemplate<T>: StaticView {
+public struct TaskPreviewTemplate<T>: HTMLComponent {
 
     let context: TemplateValue<T, TaskPreviewTemplateContext>
-    let actionCard: View
-    var underSolutionCard: View = ""
-    var customScripts: View = ""
+    let actionCard: HTML
+    var underSolutionCard: HTML = ""
+    var customScripts: HTML = ""
 
-    init(context: TemplateValue<T, TaskPreviewTemplateContext>, @HTMLBuilder actionCard: () -> View) {
+    init(context: TemplateValue<T, TaskPreviewTemplateContext>, @HTMLBuilder actionCard: () -> HTML) {
         self.context = context
         self.actionCard = actionCard()
         self.underSolutionCard = ""
         self.customScripts = ""
     }
 
-    init(context: TemplateValue<T, TaskPreviewTemplateContext>, actionCard: View, underSolutionCard: View, customScripts: View) {
+    init(context: TemplateValue<T, TaskPreviewTemplateContext>, actionCard: HTML, underSolutionCard: HTML, customScripts: HTML) {
         self.context = context
         self.actionCard = actionCard
         self.underSolutionCard = underSolutionCard
         self.customScripts = customScripts
     }
 
-    func underSolutionCard(@HTMLBuilder _ card: () -> View) -> TaskPreviewTemplate {
+    func underSolutionCard(@HTMLBuilder _ card: () -> HTML) -> TaskPreviewTemplate {
         TaskPreviewTemplate(context: context, actionCard: actionCard, underSolutionCard: card(), customScripts: customScripts)
     }
 
-    func scripts(@HTMLBuilder _ scripts: () -> View) -> TaskPreviewTemplate {
+    func scripts(@HTMLBuilder _ scripts: () -> HTML) -> TaskPreviewTemplate {
         TaskPreviewTemplate(context: context, actionCard: actionCard, underSolutionCard: underSolutionCard, customScripts: scripts())
     }
 
-    public var body: View {
+    public var body: HTML {
         BaseTemplate(context: .init(
             title: "Oppgave",
             description: "Lær ved å øve"
@@ -150,11 +150,11 @@ public struct TaskPreviewTemplate<T>: StaticView {
         }
     }
 
-    struct QuestionCard<T>: StaticView {
+    struct QuestionCard<T>: HTMLComponent {
 
         let context: TemplateValue<T, TaskPreviewContent>
 
-        var body: View {
+        var body: HTML {
             Row {
                 Div {
                     Card {
@@ -192,7 +192,7 @@ public struct TaskPreviewTemplate<T>: StaticView {
 
         let context: TemplateValue<T, TaskPreviewTemplateContext>
 
-        var body: View {
+        var body: HTML {
             IF(context.practiceProgress.isDefined) {
                 Card {
                     Text {
@@ -251,13 +251,16 @@ public struct TaskPreviewTemplate<T>: StaticView {
     }
 }
 
-public struct TaskSolutionsTemplate: TemplateView {
+typealias StaticView = HTMLComponent
+typealias TemplateView = HTMLTemplate
+
+public struct TaskSolutionsTemplate: HTMLTemplate {
 
     public init() {}
 
     public let context: RootValue<[TaskSolution.Response]> = .root()
 
-    public var body: View {
+    public var body: HTML {
         Accordions(values: context, title: { (solution, index) in
             Text {
                 Localized(key: Strings.exerciseProposedSolutionTitle)
@@ -293,11 +296,11 @@ public struct TaskSolutionsTemplate: TemplateView {
 //        }
     }
 
-    struct SolutionCard<T>: StaticView {
+    struct SolutionCard<T>: HTMLComponent {
 
             let context: TemplateValue<T, TaskSolution.Response>
 
-            var body: View {
+            var body: HTML {
                 Card {
                     Div {
                         Div {
@@ -590,20 +593,20 @@ public struct TaskSolutionsTemplate: TemplateView {
 //    }
 //}
 
-struct Accordions<A, B>: StaticView {
+struct Accordions<A, B>: HTMLComponent {
 
     let values: TemplateValue<A, [B]>
-    let title: ((RootValue<B>, RootValue<Int>)) -> View
-    let content: ((RootValue<B>, RootValue<Int>)) -> View
+    let title: ((RootValue<B>, RootValue<Int>)) -> HTML
+    let content: ((RootValue<B>, RootValue<Int>)) -> HTML
     var id: String = "accordion"
 
-    public init(values: TemplateValue<A, [B]>, @HTMLBuilder title: @escaping ((RootValue<B>, RootValue<Int>)) -> View, @HTMLBuilder content: @escaping ((RootValue<B>, RootValue<Int>)) -> View) {
+    public init(values: TemplateValue<A, [B]>, @HTMLBuilder title: @escaping ((RootValue<B>, RootValue<Int>)) -> HTML, @HTMLBuilder content: @escaping ((RootValue<B>, RootValue<Int>)) -> HTML) {
         self.values = values
         self.title = title
         self.content = content
     }
 
-    var body: View {
+    var body: HTML {
         Div {
             ForEach(enumerated: values) { value in
                 Div {
@@ -638,11 +641,11 @@ struct Accordions<A, B>: StaticView {
         .id(id)
     }
 
-    func bodyId(_ index: RootValue<Int>) -> View {
+    func bodyId(_ index: RootValue<Int>) -> HTML {
         "\(id)-body" + index
     }
 
-    func headingId(_ index: RootValue<Int>) -> View {
+    func headingId(_ index: RootValue<Int>) -> HTML {
         "\(id)-heading" + index
     }
 }

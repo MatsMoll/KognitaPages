@@ -38,14 +38,14 @@ public protocol TaskResultable {
     var revisitDate: Date? { get }
 }
 
-struct ViewWrapper: View {
-    let view: View
+struct ViewWrapper: HTML {
+    let view: HTML
 
     func render<T>(with manager: HTMLRenderer.ContextManager<T>) throws -> String {
         try view.render(with: manager)
     }
 
-    func prerender<T>(_ formula: HTMLRenderer.Formula<T>) throws {
+    func prerender(_ formula: HTMLRenderer.Formula) throws {
         try view.prerender(formula)
     }
 }
@@ -103,7 +103,7 @@ extension PracticeSession.Templates {
 
         let breadcrumbItems: [BreadcrumbItem] = [.init(link: "../history", title: .init(view: Localized(key: Strings.historyTitle)))]
 
-        public var body: View {
+        public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
                 baseContext: .constant(.init(title: "Resultat | Øving ", description: "Resultat | Øving "))
@@ -225,7 +225,7 @@ extension PracticeSession.Templates {
             let icon: String
             let description: String
 
-            var body: View {
+            var body: HTML {
                 Div {
                     Div {
                         Div {

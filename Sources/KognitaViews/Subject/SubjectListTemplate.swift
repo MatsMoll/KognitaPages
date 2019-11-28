@@ -35,13 +35,13 @@ extension Subject.Templates {
 
         public let context: RootValue<Context> = .root()
 
-        public var body: View {
+        public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
                 baseContext: .constant(.init(title: "Tema liste", description: "Tema liste"))
             ) {
 
-                PageTitle(title: Localized(key: Strings.subjectsTitle))
+                PageTitle(title: Strings.subjectsTitle.localized())
 
                 IF(context.ongoingSessionPath.isDefined) {
                     Text {
@@ -120,9 +120,9 @@ extension Subject.Templates {
 
             let context: TemplateValue<T, TopicResultContent>
 
-            var practiceFunction: View { "startPracticeSession(" + context.topic.id + ", " + context.subject.id + ");" }
+            var practiceFunction: HTML { "startPracticeSession(" + context.topic.id + ", " + context.subject.id + ");" }
 
-            var body: View {
+            var body: HTML {
                 Div {
                     Card {
                         Badge {
@@ -173,7 +173,7 @@ extension Subject.Templates {
 
             let subject: TemplateValue<T, Subject>
 
-            var body: View {
+            var body: HTML {
                 Div {
                     Anchor {
                         Div {

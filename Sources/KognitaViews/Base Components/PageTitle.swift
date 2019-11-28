@@ -7,9 +7,9 @@
 
 import BootstrapKit
 
-struct PageTitle: StaticView, LocalizableNode {
+struct PageTitle: HTMLComponent, LocalizableNode {
 
-    let title: View
+    let title: HTML
     var breadcrumbs: [BreadcrumbItem] = []
 
     var breadcrumbItems: [BreadcrumbItem] {
@@ -24,12 +24,12 @@ struct PageTitle: StaticView, LocalizableNode {
         title = Localized(key: localizedKey, context: context)
     }
 
-    init(title: View, breadcrumbs: [BreadcrumbItem] = []) {
+    init(title: HTML, breadcrumbs: [BreadcrumbItem] = []) {
         self.title = title
         self.breadcrumbs = breadcrumbs
     }
 
-    var body: View {
+    var body: HTML {
         Row {
             Div {
                 Div {

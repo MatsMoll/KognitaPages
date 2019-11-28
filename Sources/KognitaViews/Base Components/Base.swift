@@ -20,20 +20,20 @@ struct BaseTemplateContent {
     }
 }
 
-struct BaseTemplate<T>: StaticView {
+struct BaseTemplate<T>: HTMLComponent {
 
     let context: TemplateValue<T, BaseTemplateContent>
-    let content: View
-    var customHeader: View = ""
+    let content: HTML
+    var customHeader: HTML = ""
     var rootUrl: String = ""
-    var scripts: View = ""
+    var scripts: HTML = ""
 
-    init(context: TemplateValue<T, BaseTemplateContent>, @HTMLBuilder content: () -> View) {
+    init(context: TemplateValue<T, BaseTemplateContent>, @HTMLBuilder content: () -> HTML) {
         self.context = context
         self.content = content()
     }
 
-    init(context: TemplateValue<T, BaseTemplateContent>, content: View, customHeader: View, rootUrl: String, scripts: View) {
+    init(context: TemplateValue<T, BaseTemplateContent>, content: HTML, customHeader: HTML, rootUrl: String, scripts: HTML) {
         self.content = content
         self.context = context
         self.customHeader = customHeader
@@ -41,11 +41,11 @@ struct BaseTemplate<T>: StaticView {
         self.scripts = scripts
     }
 
-    func scripts(@HTMLBuilder scripts: () -> View) -> BaseTemplate {
+    func scripts(@HTMLBuilder scripts: () -> HTML) -> BaseTemplate {
         BaseTemplate(context: context, content: content, customHeader: customHeader, rootUrl: rootUrl, scripts: scripts())
     }
 
-    func header(@HTMLBuilder header: () -> View) -> BaseTemplate {
+    func header(@HTMLBuilder header: () -> HTML) -> BaseTemplate {
         BaseTemplate(context: context, content: content, customHeader: header(), rootUrl: rootUrl, scripts: scripts)
     }
 
@@ -53,7 +53,7 @@ struct BaseTemplate<T>: StaticView {
         BaseTemplate(context: context, content: content, customHeader: customHeader, rootUrl: url, scripts: scripts)
     }
 
-    var body: View {
+    var body: HTML {
         Document(type: .html5) {
             HTMLNode {
                 Head {
@@ -80,7 +80,7 @@ struct BaseTemplate<T>: StaticView {
 }
 
 extension BaseTemplate where T == BaseTemplateContent {
-    init(context: BaseTemplateContent, @HTMLBuilder content: () -> View) {
+    init(context: BaseTemplateContent, @HTMLBuilder content: () -> HTML) {
         self.context = .constant(context)
         self.content = content()
     }
@@ -96,7 +96,7 @@ struct ContentBaseTemplateContent {
     }
 }
 
-struct ContentBaseTemplate<T>: StaticView {
+struct ContentBaseTemplate<T>: HTMLComponent {
 
     struct TabContent {
         let link: String
@@ -108,12 +108,12 @@ struct ContentBaseTemplate<T>: StaticView {
     let userContext: TemplateValue<T, User>
     let baseContext: TemplateValue<T, BaseTemplateContent>
 
-    let content: View
-    let header: View
-    let scripts: View
-    let modals: View
+    let content: HTML
+    let header: HTML
+    let scripts: HTML
+    let modals: HTML
 
-    init(userContext: TemplateValue<T, User>, baseContext: TemplateValue<T, BaseTemplateContent>, @HTMLBuilder content: () -> View) {
+    init(userContext: TemplateValue<T, User>, baseContext: TemplateValue<T, BaseTemplateContent>, @HTMLBuilder content: () -> HTML) {
         self.userContext = userContext
         self.baseContext = baseContext
         self.content = content()
@@ -123,7 +123,7 @@ struct ContentBaseTemplate<T>: StaticView {
         self.modals = ""
     }
 
-    init(base: ContentBaseTemplate, activePath: TemplateValue<T, String>, header: View, scripts: View, modals: View) {
+    init(base: ContentBaseTemplate, activePath: TemplateValue<T, String>, header: HTML, scripts: HTML, modals: HTML) {
         self.userContext = base.userContext
         self.baseContext = base.baseContext
         self.content = base.content
@@ -137,15 +137,15 @@ struct ContentBaseTemplate<T>: StaticView {
         ContentBaseTemplate(base: self, activePath: path, header: header, scripts: scripts, modals: modals)
     }
 
-    func header(@HTMLBuilder _ header: () -> View) -> ContentBaseTemplate {
+    func header(@HTMLBuilder _ header: () -> HTML) -> ContentBaseTemplate {
         ContentBaseTemplate(base: self, activePath: activePath, header: header(), scripts: scripts, modals: modals)
     }
 
-    func scripts(@HTMLBuilder _ scripts: () -> View) -> ContentBaseTemplate {
+    func scripts(@HTMLBuilder _ scripts: () -> HTML) -> ContentBaseTemplate {
         ContentBaseTemplate(base: self, activePath: activePath, header: header, scripts: scripts(), modals: modals)
     }
 
-    func modals(@HTMLBuilder _ modals: () -> View) -> ContentBaseTemplate {
+    func modals(@HTMLBuilder _ modals: () -> HTML) -> ContentBaseTemplate {
         ContentBaseTemplate(base: self, activePath: activePath, header: header, scripts: scripts, modals: modals())
     }
 
@@ -154,14 +154,14 @@ struct ContentBaseTemplate<T>: StaticView {
         .init(link: "/practice-sessions/history", iconClass: "dripicons-view-list", title: "Øvinger"),
     ])
 
-    var body: View {
+    var body: HTML {
         BaseTemplate(context: baseContext) {
             Div {
                 Div {
                     BetaHeader()
                     Container {
                         NavigationBar(expandOn: .large) {
-                            NavigationBar.Brand(link: "/") {
+                            NavigationBar.Brand(link: "/subjects") {
                                 Span {
                                     Img(source: "/assets/images/logo.png").height(30)
                                 }.class("logo-lg")

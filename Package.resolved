@@ -74,6 +74,15 @@
         }
       },
       {
+        "package": "HTMLKit",
+        "repositoryURL": "https://github.com/vapor-community/HTMLKit",
+        "state": {
+          "branch": null,
+          "revision": "87475894c831702a6c6829baf1237b9be34c2d56",
+          "version": "2.0.0-alpha.5"
+        }
+      },
+      {
         "package": "HTTP",
         "repositoryURL": "https://github.com/vapor/http.git",
         "state": {

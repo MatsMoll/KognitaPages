@@ -87,7 +87,7 @@ public class Strings {
 }
 
 extension String {
-    func localized() -> View {
+    func localized() -> HTML {
         Localized(key: self)
     }
 }

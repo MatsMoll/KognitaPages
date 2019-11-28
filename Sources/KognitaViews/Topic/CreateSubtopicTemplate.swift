@@ -39,7 +39,7 @@ extension Subtopic.Templates {
 
         public let context: RootValue<Context> = .root()
 
-        public var body: View {
+        public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
                 baseContext: .constant(.init(title: "Lag undertema", description: "Lag undertema"))

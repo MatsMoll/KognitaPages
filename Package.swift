@@ -5,19 +5,20 @@ import PackageDescription
 
 var dependencies: [Package.Dependency] = [
     // Fast and type-safe templating
-    .package(path: "../../BootstrapKit"),
 //    .package(url: "https://github.com/vapor-community/HTMLKit.git", from: "1.3.0")
 ]
 
 // Kognita Core
 #if os(macOS) // Local development
-dependencies.append(
-    .package(path: "../KognitaCore")
-)
+dependencies.append(contentsOf: [
+    .package(path: "../KognitaCore"),
+    .package(path: "../../BootstrapKit"),
+])
 #else
-dependencies.append(
-    .package(url: "https://MatsKognita:dyjdov-bupgev-goffY8@bitbucket.org/MatsEikelandMollestad/kognita-core.git", from: "1.0.0")
-)
+dependencies.append(contentsOf: [
+    .package(url: "https://Kognita:dyjdov-bupgev-goffY8@github.com/MatsMoll/KognitaCore", from: "1.0.0"),
+    .package(url: "https://github.com/MatsMoll/BootstrapKit.git", from: "1.0.0-alpha.1"),
+])
 #endif
 
 let package = Package(

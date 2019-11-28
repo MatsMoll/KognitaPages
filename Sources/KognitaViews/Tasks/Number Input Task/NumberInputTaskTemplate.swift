@@ -14,7 +14,7 @@ extension NumberInputTask {
 
 extension NumberInputTask.Templates {
 
-    public struct Execute: TemplateView {
+    public struct Execute: HTMLTemplate {
 
         public struct Context {
             let taskPreview: TaskPreviewTemplateContext
@@ -59,7 +59,7 @@ extension NumberInputTask.Templates {
 
         public let context: RootValue<Context> = .root()
 
-        public var body: View {
+        public var body: HTML {
             TaskPreviewTemplate(context: context.taskPreview) {
                 Card {
                     H4 {

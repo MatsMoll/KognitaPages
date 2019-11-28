@@ -24,14 +24,14 @@ extension User.Templates {
         }
     }
 
-    struct AuthenticateBase<T>: StaticView {
+    struct AuthenticateBase<T>: HTMLComponent {
 
         let context: TemplateValue<T, AuthenticateBaseContext>
         var rootUrl: String = ""
-        let cardBody: View
-        var otherActions: View = ""
+        let cardBody: HTML
+        var otherActions: HTML = ""
 
-        var body: View {
+        var body: HTML {
             BaseTemplate(context: context.base) {
                 KognitaNavigationBar(rootUrl: rootUrl)
                 Div {
@@ -89,7 +89,7 @@ extension User.Templates {
 }
 
 extension User.Templates.ResetPassword {
-    public struct Start: TemplateView {
+    public struct Start: HTMLTemplate {
 
         public struct Context {
             let base: User.Templates.AuthenticateBaseContext
@@ -107,7 +107,7 @@ extension User.Templates.ResetPassword {
 
         public let context: RootValue<Context> = .root()
 
-        public var body: View {
+        public var body: HTML {
             User.Templates.AuthenticateBase(
                 context: context.base,
                 cardBody:
@@ -178,7 +178,7 @@ extension User.Templates.ResetPassword {
         }
     }
 
-    public struct Mail: TemplateView {
+    public struct Mail: HTMLTemplate {
 
         public struct Context {
             let user: User
@@ -195,7 +195,7 @@ extension User.Templates.ResetPassword {
         public let context: RootValue<Context> = .root()
         let rootUrl = "uni.kognita.no"
 
-        public var body: View {
+        public var body: HTML {
             User.Templates.AuthenticateBase(
                 context: RootValue<User.Templates.AuthenticateBaseContext>.constant(
                     .init(
@@ -238,7 +238,7 @@ extension User.Templates.ResetPassword {
         }
     }
 
-    public struct Reset: TemplateView {
+    public struct Reset: HTMLTemplate {
 
         public struct Content {
             let token: String
@@ -252,7 +252,7 @@ extension User.Templates.ResetPassword {
 
         public var context: RootValue<Content> = .root()
 
-        public var body: View {
+        public var body: HTML {
             User.Templates.AuthenticateBase(
                 context: RootValue<User.Templates.AuthenticateBaseContext>.constant(
                     .init(

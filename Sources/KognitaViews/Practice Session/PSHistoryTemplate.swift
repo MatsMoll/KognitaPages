@@ -15,7 +15,7 @@ extension PracticeSession {
 }
 
 extension PracticeSession.Templates {
-    public struct History: TemplateView {
+    public struct History: HTMLTemplate {
 
         public struct Context {
             let locale = "nb"
@@ -33,7 +33,7 @@ extension PracticeSession.Templates {
 
         public let context: RootValue<Context> = .root()
 
-        public var body: View {
+        public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
                 baseContext: .constant(.init(title: "Øving's historikk", description: "Øving's historikk"))
@@ -53,77 +53,77 @@ extension PracticeSession.Templates {
                     }
                     .class("col-12")
                 }
-                Row {
-                    Div {
-                        Div {
-                            Div {
-                                IF(context.sessions.count > 0) {
-                                    Row {
-                                        Div {
-                                            Table {
-                                                TableHead {
-                                                    TableRow {
-                                                        TableHeader(Strings.historyDateColumn)
-                                                        TableHeader(Strings.historyGoalColumn)
-                                                        TableHeader(Strings.historyDurationColumn)
-                                                    }
-                                                }
-                                                .class("thead-light")
-
-                                                TableBody {
-                                                    ForEach(in: context.sessions) { (session: RootValue<PracticeSession>) in
-                                                        TableRow {
-                                                            TableCell {
-                                                                Anchor {
-                                                                    session.createdAt
-                                                                        .style(dateStyle: .medium, timeStyle: .short)
-                                                                }
-                                                                .href("/practice-sessions/" + session.id + "/result")
-                                                                .class("text-muted")
-                                                            }
-                                                            TableCell {
-                                                                Anchor {
-                                                                    session.numberOfTaskGoal
-                                                                    " oppgaver"
-                                                                }
-                                                                .href("/practice-sessions/" + session.id + "/result")
-                                                                .class("text-muted")
-                                                            }
-                                                            TableCell {
-                                                                Anchor {
-                                                                    IF(session.timeUsed.isDefined) {
-                                                                        session.timeUsed.unsafelyUnwrapped.timeString
-                                                                    }.else {
-                                                                        Badge {
-                                                                            "Ikke helt fullført"
-                                                                        }
-                                                                        .background(color: .danger)
-                                                                    }
-                                                                }
-                                                                .href("/practice-sessions/" + session.id + "/result")
-                                                                .class("text-muted")
-                                                            }
-                                                        }
-
-                                                    }
-                                                }
-                                            }
-                                            .class("table table-centered w-100 dt-responsive nowrap")
-                                        }
-                                        .class("table-responsive")
-                                    }
-                                    .noGutters()
-                                }.else {
-                                    Div {
-                                        Text(Strings.historyNoSessions)
-                                            .style(.heading3)
-                                    }
-                                    .column(width: .twelve)
-                                }
-                            }.class("card-body p-0")
-                        }.class("card widget-inline")
-                    }.class("col-12")
-                }
+//                Row {
+//                    Div {
+//                        Div {
+//                            Div {
+//                                IF(context.sessions.count > 0) {
+//                                    Row {
+//                                        Div {
+//                                            Table {
+//                                                TableHead {
+//                                                    TableRow {
+//                                                        TableHeader(Strings.historyDateColumn)
+//                                                        TableHeader(Strings.historyGoalColumn)
+//                                                        TableHeader(Strings.historyDurationColumn)
+//                                                    }
+//                                                }
+//                                                .class("thead-light")
+//
+//                                                TableBody {
+//                                                    ForEach(in: context.sessions) { (session: RootValue<PracticeSession>) in
+//                                                        TableRow {
+//                                                            TableCell {
+//                                                                Anchor {
+//                                                                    session.createdAt
+//                                                                        .style(dateStyle: .medium, timeStyle: .short)
+//                                                                }
+//                                                                .href("/practice-sessions/" + session.id + "/result")
+//                                                                .class("text-muted")
+//                                                            }
+//                                                            TableCell {
+//                                                                Anchor {
+//                                                                    session.numberOfTaskGoal
+//                                                                    " oppgaver"
+//                                                                }
+//                                                                .href("/practice-sessions/" + session.id + "/result")
+//                                                                .class("text-muted")
+//                                                            }
+//                                                            TableCell {
+//                                                                Anchor {
+//                                                                    IF(session.timeUsed.isDefined) {
+//                                                                        session.timeUsed.unsafelyUnwrapped.timeString
+//                                                                    }.else {
+//                                                                        Badge {
+//                                                                            "Ikke helt fullført"
+//                                                                        }
+//                                                                        .background(color: .danger)
+//                                                                    }
+//                                                                }
+//                                                                .href("/practice-sessions/" + session.id + "/result")
+//                                                                .class("text-muted")
+//                                                            }
+//                                                        }
+//
+//                                                    }
+//                                                }
+//                                            }
+//                                            .class("table table-centered w-100 dt-responsive nowrap")
+//                                        }
+//                                        .class("table-responsive")
+//                                    }
+//                                    .noGutters()
+//                                }.else {
+//                                    Div {
+//                                        Text(Strings.historyNoSessions)
+//                                            .style(.heading3)
+//                                    }
+//                                    .column(width: .twelve)
+//                                }
+//                            }.class("card-body p-0")
+//                        }.class("card widget-inline")
+//                    }.class("col-12")
+//                }
                 .enviroment(locale: "nb")
             }
             .scripts {

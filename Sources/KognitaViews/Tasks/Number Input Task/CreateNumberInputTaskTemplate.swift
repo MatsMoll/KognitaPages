@@ -45,7 +45,7 @@ extension NumberInputTask.Templates {
 
         public let context: RootValue<Context> = .root()
 
-        public var body: View {
+        public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
                 baseContext: .constant(.init(title: "Lag oppgave", description: "Lag oppgave"))

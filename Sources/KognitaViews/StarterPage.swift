@@ -20,7 +20,7 @@ extension Pages {
 
         public init() {}
 
-        public var body: View {
+        public var body: HTML {
             BaseTemplate(context: .init(
                 title: "Kognita",
                 description: "Kognita"
@@ -207,7 +207,7 @@ extension Pages {
         let title: RootValue<String>
         let description: RootValue<String>
 
-        var body: View {
+        var body: HTML {
             Div {
                 Div {
                     Italic()

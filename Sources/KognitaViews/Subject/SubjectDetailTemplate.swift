@@ -17,20 +17,21 @@ extension Subject.Templates {
             let user: User
             let subject: Subject
             let subjectLevel: User.SubjectLevel
-            let topics: [Topic.Response]
-            let topicLevels: [TopicCardContext]
+//            let topics: [Topic.Response]
+            let topicLevels: [[TopicCardContext]]
             var topicIDsJSList: String {
-                "[\(topics.compactMap { $0.topic.id }.reduce("") { $0 + "\($1), " }.dropLast(2))]"
+                "[\(topicLevels.flatMap { $0 }.compactMap { $0.topic.id }.reduce("") { $0 + "\($1), " }.dropLast(2))]"
             }
 
-            public init(user: User, subject: Subject, topics: [Topic.Response], levels: [User.TopicLevel], subjectLevel: User.SubjectLevel, leaderboard: [WorkPoints.LeaderboardRank]) {
+            public init(user: User, subject: Subject, topics: [[Topic]], levels: [User.TopicLevel], subjectLevel: User.SubjectLevel, leaderboard: [WorkPoints.LeaderboardRank]) {
                 self.user = user
                 self.base = .init(title: subject.name, description: subject.name)
                 self.subject = subject
                 self.subjectLevel = subjectLevel
-                self.topics = topics
-                self.topicLevels = topics.map { response in
-                    return .init(topic: response.topic, level: levels.first(where: { $0.topicID == response.topic.id }))
+                self.topicLevels = topics.map { topics in
+                    topics.map { topic in
+                        .init(topic: topic, level: levels.first(where: { $0.topicID == topic.id }))
+                    }
                 }
             }
         }
@@ -43,7 +44,7 @@ extension Subject.Templates {
             BreadcrumbItem(link: "../subjects", title: .init(view: Localized(key: Strings.subjectTitle)))
         ]
 
-        public var body: View {
+        public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
                 baseContext: context.base
@@ -58,18 +59,7 @@ extension Subject.Templates {
                     topicIDsJSList: context.topicIDsJSList
                 )
                 Row {
-                    Div {
-                        Div {
-                            Text(Strings.subjectTopicListTitle)
-                                .class("page-title")
-                                .style(.heading4)
-                        }
-                        .class("page-title-box")
-                    }
-                    .class("col-12")
-                }
-                Row {
-                    IF(context.topics.isEmpty) {
+                    IF(context.topicLevels.isEmpty) {
                         Div {
                             Text(Strings.subjectsNoTopics)
                                 .class("page-title")
@@ -77,8 +67,24 @@ extension Subject.Templates {
                         }
                         .class("page-title-box")
                     }.else {
-                        ForEach(in: context.topicLevels) { topic in
-                            TopicCard(topic: topic)
+                        ForEach(enumerated: context.topicLevels) { topics, index in
+                            Div {
+                                Div {
+                                    Text {
+                                        "Nivå "
+                                        index.map { $0 + 1 }
+                                    }
+                                    .class("page-title")
+                                    .style(.heading4)
+                                }
+                                .class("page-title-box")
+                            }
+                            .class("col-12")
+                            .margin(.three, for: .top)
+
+                            ForEach(in: topics) { topic in
+                                TopicCard(topic: topic)
+                            }
                         }
                     }
                 }
@@ -97,7 +103,7 @@ extension Subject.Templates {
 
             let topic: TemplateValue<T, TopicCardContext>
 
-            var body: View {
+            var body: HTML {
                 Div {
                     Card {
                         Text {
@@ -155,7 +161,7 @@ extension Subject.Templates {
             let userLevel: TemplateValue<T, User.SubjectLevel>
             let topicIDsJSList: TemplateValue<T, String>
 
-            var body: View {
+            var body: HTML {
                 Card {
 //                    KognitaProgressBadge(value: userLevel.correctProsentage)
 
@@ -213,7 +219,7 @@ struct KognitaProgressBadge<T>: StaticView {
 
     let value: TemplateValue<T, Double>
 
-    var body: View {
+    var body: HTML {
         Badge {
             value + "%"
         }
@@ -234,7 +240,7 @@ struct KognitaProgressBar<T>: StaticView {
 
     let value: TemplateValue<T, Double>
 
-    var body: View {
+    var body: HTML {
         ProgressBar(
             currentValue: value,
             valueRange: 0...100

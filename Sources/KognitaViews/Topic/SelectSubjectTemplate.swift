@@ -31,7 +31,7 @@ extension Subject.Templates {
 
         public let context: RootValue<Context> = .root()
 
-        public var body: View {
+        public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
                 baseContext: .constant(.init(title: "Velg Fag", description: "Velg Fag"))
@@ -75,7 +75,7 @@ extension Subject.Templates {
             let startPath: TemplateValue<B, String>
             let endPath: TemplateValue<B, String>
 
-            var body: View {
+            var body: HTML {
                 Div {
                     Anchor {
                         Div {

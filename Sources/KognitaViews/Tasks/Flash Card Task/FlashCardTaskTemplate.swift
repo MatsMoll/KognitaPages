@@ -13,7 +13,7 @@ extension FlashCardTask {
 }
 
 extension FlashCardTask.Templates {
-    public struct Execute: TemplateView {
+    public struct Execute: HTMLTemplate {
 
         public struct Context {
             let taskPreview: TaskPreviewTemplateContext
@@ -63,7 +63,7 @@ extension FlashCardTask.Templates {
 
         public let context: RootValue<Context> = .root()
 
-        public var body: View {
+        public var body: HTML {
             TaskPreviewTemplate(context: context.taskPreview) {
                 Card {
                     Label {
@@ -188,13 +188,13 @@ extension FlashCardTask.Templates {
             }
         }
 
-        struct LevelColumn: StaticView {
+        struct LevelColumn: HTMLComponent {
 
-            let icon: View
-            let description: View
+            let icon: HTML
+            let description: HTML
             let textAlignment: Text.Alignment
 
-            var body: View {
+            var body: HTML {
                 Text {
                     icon
                     Break()

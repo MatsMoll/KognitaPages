@@ -8,9 +8,9 @@
 import HTMLKit
 import BootstrapKit
 
-struct DismissableError: StaticView {
+struct DismissableError: HTMLComponent {
 
-    var body: View {
+    var body: HTML {
         Alert {
             Bold { "En Feil Oppstod - " }
             Span().id("error-massage")

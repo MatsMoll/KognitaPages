@@ -43,11 +43,11 @@ public struct CreatorTemplates {
 
         public let context: RootValue<Context> = .root()
 
-        let createMultipleTaskUrl: View = "create-task-select-subject?taskType=multiple"
-        let createInputTaskUrl: View = "create-task-select-subject?taskType=input"
-        let createFlashCardTaskUrl: View = "create-task-select-subject?taskType=flash-card"
+        let createMultipleTaskUrl: HTML = "create-task-select-subject?taskType=multiple"
+        let createInputTaskUrl: HTML = "create-task-select-subject?taskType=input"
+        let createFlashCardTaskUrl: HTML = "create-task-select-subject?taskType=flash-card"
 
-        public var body: View {
+        public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
                 baseContext: .constant(.init(title: "Hjemmeside", description: "Hjemmeside"))
@@ -192,9 +192,9 @@ public struct CreatorTemplates {
 
         let topic: TemplateValue<T, TimelyTopic>
 
-        var url: View { "/creator/overview/topics/" + topic.topicID }
+        var url: HTML { "/creator/overview/topics/" + topic.topicID }
 
-        var body: View {
+        var body: HTML {
             Div {
                 Anchor {
                     Card {
@@ -229,10 +229,10 @@ public struct CreatorTemplates {
 
         let task: TemplateValue<T, CreatorTaskContent>
 
-        var url: View { "/" + task.taskTypePath + "/" + task.taskID }
-        var editUrl: View { "/creator/" + task.taskTypePath + "/" + task.taskID + "/edit" }
+        var url: HTML { "/" + task.taskTypePath + "/" + task.taskID }
+        var editUrl: HTML { "/creator/" + task.taskTypePath + "/" + task.taskID + "/edit" }
 
-        var body: View {
+        var body: HTML {
             TableRow {
                 TableCell {
                     Div {

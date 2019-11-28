@@ -62,7 +62,7 @@ extension MultipleChoiseTask.Templates {
 
         public let context: RootValue<Context> = .root()
 
-        public var body: View {
+        public var body: HTML {
             TaskPreviewTemplate(context: context.previewContext) {
                 Card {
                     ForEach(in: context.choises) { choise in
@@ -161,12 +161,12 @@ extension MultipleChoiseTask.Templates {
             }
         }
 
-        struct ChoiseOption<T>: StaticView {
+        struct ChoiseOption<T>: HTMLComponent {
 
             let canSelectMultiple: Conditionable
             let choise: TemplateValue<T, ChoiseContext>
 
-            var body: View {
+            var body: HTML {
                 Div {
                     Div {
                         Div {

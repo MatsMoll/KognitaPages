@@ -17,11 +17,11 @@ import KognitaCore
 //}
 
 extension Subject.Templates {
-    struct PracticeModal<T>: StaticView {
+    struct PracticeModal<T>: HTMLComponent {
 
         let topics: TemplateValue<T, [Topic.Response]>
 
-        var body: View {
+        var body: HTML {
             Div {
                 Div {
                     Div {
