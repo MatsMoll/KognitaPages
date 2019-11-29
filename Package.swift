@@ -4,8 +4,8 @@
 import PackageDescription
 
 var dependencies: [Package.Dependency] = [
-    // Fast and type-safe templating
-//    .package(url: "https://github.com/vapor-community/HTMLKit.git", from: "1.3.0")
+    // 💧 A server-side Swift web framework.
+    .package(url: "https://github.com/vapor/vapor.git", from: "3.3.1")
 ]
 
 // Kognita Core
