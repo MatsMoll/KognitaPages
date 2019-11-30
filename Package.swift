@@ -4,20 +4,22 @@
 import PackageDescription
 
 var dependencies: [Package.Dependency] = [
-    // Fast and type-safe templating
-    .package(url: "https://github.com/vapor-community/HTMLKit.git", from: "1.3.0")
+    // 💧 A server-side Swift web framework.
+    .package(url: "https://github.com/vapor/vapor.git", from: "3.3.1")
 ]
 
 // Kognita Core
-#if os(macOS) // Local development
-dependencies.append(
-    .package(path: "../KognitaCore")
-)
-#else
-dependencies.append(
-    .package(url: "https://MatsKognita:dyjdov-bupgev-goffY8@bitbucket.org/MatsEikelandMollestad/kognita-core.git", .branch("master"))
-)
-#endif
+//#if os(macOS) // Local development
+//dependencies.append(contentsOf: [
+//    .package(path: "../KognitaCore"),
+//    .package(path: "../../BootstrapKit"),
+//])
+//#else
+dependencies.append(contentsOf: [
+    .package(url: "https://Kognita:dyjdov-bupgev-goffY8@github.com/MatsMoll/KognitaCore", from: "1.0.0"),
+    .package(url: "https://github.com/MatsMoll/BootstrapKit.git", from: "1.0.0-alpha.1"),
+])
+//#endif
 
 let package = Package(
     name: "KognitaViews",
@@ -33,7 +35,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "KognitaViews",
-            dependencies: ["HTMLKit", "KognitaCore"]),
+            dependencies: ["BootstrapKit", "KognitaCore"]),
         .testTarget(
             name: "KognitaViewsTests",
             dependencies: ["KognitaViews"]),

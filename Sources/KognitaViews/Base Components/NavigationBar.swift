@@ -7,56 +7,69 @@
 // swiftlint:disable line_length nesting
 
 import HTMLKit
+import BootstrapKit
 
-extension AttributableNode {
+struct BetaHeader: HTMLComponent {
 
-    func ariaLabelledby(_ values: CompiledTemplate...) -> Self {
-        return add(.init(attribute: "aria-labelledby", value: values))
+    var body: HTML {
+        Container {
+            Text {
+                "🚧👷‍♂️ Dette er en beta versjon av Kognita. Det er bare å prøve den, men vi vil veldig gjerne høre hva du tenker. Du kan kontakte oss via "
+            }
+            .display(.inline)
+            .style(.paragraph)
+            Anchor {
+                "Email"
+            }
+            .display(.inline)
+            .text(color: .white)
+            .href("mailto:mats@kognita.no")
+
+            Text { "." }
+                .display(.inline)
+                .style(.paragraph)
+        }
+        .text(color: .light)
+        .text(alignment: .center)
+        .padding(.two, for: .top)
     }
 }
 
-struct NavigationBar: LocalizedTemplate {
+struct KognitaNavigationBar: HTMLComponent {
 
-    static var localePath: KeyPath<NoContext, String>?
+    var rootUrl: String = ""
 
-    enum LocalizationKeys: String {
-        case login = "menu.login"
-        case register = "menu.register"
-    }
-
-    typealias Context = NoContext
-
-    func build() -> CompiledTemplate {
-        return
-            div.class("topnav").child(
-                div.class("container").child(
-                    nav.class("navbar navbar-dark navbar-expand-lg topnav-menu").child(
-                        // Logo
-                        a.href("/").class("logo text-center").child(
-                            span.class("logo-lg").child(
-                                img.src("/assets/images/logo.png").alt("").height(30)
-                            ),
-                            span.class("logo-sm").child(
-                                img.src("/assets/images/logo.png").alt("").height(30)
-                            )
-                        ),
-
-                        div.class("collapse navbar-collapse").id("navbarResponsive").child(
-                            ul.class("navbar-nav ml-auto").child(
-                                li.class("nav-item").child(
-                                    a.class("nav-link").href("/signup").child(
-                                        localize(.register)
-                                    )
-                                ),
-                                li.class("nav-item").child(
-                                    a.class("nav-link").href("/login").child(
-                                        localize(.login)
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-        )
+    var body: HTML {
+        Div {
+            BetaHeader()
+            Container {
+                Nav {
+                    Anchor {
+                        Span {
+                            Img().source(rootUrl + "/assets/images/logo.png").alt("Logo").height(30)
+                        }.class("logo-lg")
+                        Span {
+                            Img().source(rootUrl + "/assets/images/logo.png").alt("Logo").height(30)
+                        }.class("logo-sm")
+                    }.href(rootUrl + "/").class("logo text-center")
+                    Div {
+                        UnorderdList {
+                            ListItem {
+                                Anchor(Strings.menuRegister)
+                                    .class("nav-link")
+                                    .href(rootUrl + "/signup")
+                            }
+                            .class("nav-item")
+                            ListItem {
+                                Anchor(Strings.menuLogin)
+                                    .class("nav-link")
+                                    .href(rootUrl + "/login")
+                            }
+                            .class("nav-item")
+                        }.class("navbar-nav ml-auto")
+                    }.class("collapse navbar-collapse").id("navbarResponsive")
+                }.class("navbar navbar-dark navbar-expand-lg topnav-menu")
+            }
+        }.class("topnav")
     }
 }

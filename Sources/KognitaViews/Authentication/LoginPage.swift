@@ -6,174 +6,120 @@
 //
 // swiftlint:disable line_length nesting
 
-import HTMLKit
+import BootstrapKit
 
-
-public class LoginPage: LocalizedTemplate {
-
-    public init() {}
-
-    public static var localePath: KeyPath<LoginPage.Context, String>? = \.locale
-
-    public enum LocalizationKeys: String {
-
-        case errorMessage = "error.message"
-        case menuRegister = "menu.register"
-
-        case title = "login.title"
-        case subtitle = "login.subtitle"
-
-        case mailTitle = "login.mail.title"
-        case mailPlaceholder = "login.mail.placeholder"
-
-        case passwordTitle = "login.password.title"
-        case passwordPlaceholder = "login.password.placeholder"
-
-        case forgottenPassword = "login.forgotpw.link"
-
-        case loginButton = "login.button"
-
-        case noUserTitle = "login.no.user.title"
-        case noUserLink = "login.no.user.link"
-    }
+public struct LoginPage: HTMLTemplate {
 
     public struct Context {
-        let locale = "nb"
-        let base: BaseTemplate.Context
         let errorMessage: String?
+        let base: BaseTemplateContent
 
         public init(errorMessage: String? = nil) {
-            self.base = .init(title: "Logg inn", description: "Logg inn")
+            self.base = BaseTemplateContent(title: "Logg inn", description: "Logg inn")
             self.errorMessage = errorMessage
         }
     }
 
-    public func build() -> CompiledTemplate {
-        return embed(
-            BaseTemplate(
-                body:
+    public init() {}
 
-                NavigationBar(),
-                div.class("account-pages mt-5 mb-5").child(
-                    div.class("container").child(
-                        div.class("row justify-content-center").child(
-                            div.class("col-lg-5").child(
+    public let context: RootValue<Context> = .root()
 
-                                // Error Message
-                                renderIf(
-                                    isNotNil: \.errorMessage,
+    public var body: HTML {
+        BaseTemplate(context: context.base) {
+            KognitaNavigationBar(rootUrl: "")
+            Div {
+                Div {
+                    Div {
+                        Div {
+                            IF(context.errorMessage.isDefined) {
+                                Div {
+                                    Button {
+                                        Span {
+                                            "×"
+                                        }.aria(for: "hidden", value: "true")
+                                    }
+                                    .type(.button)
+                                    .class("close")
+                                    .data(for: "dismiss", value: "alert")
+                                    .aria(for: "label", value: "Close")
 
-                                    div.class("alert alert-secondary alert-dismissible bg-danger text-white border-0 fade show").role("alert").child(
-                                        button.type("button").class("close").dataDismiss("alert").ariaLabel("Close").child(
-                                            span.ariaHidden("true").child(
-                                                "×"
-                                            )
-                                        ),
-                                        strong.child(
-                                            localize(.errorMessage)
-                                        ),
-                                        variable(\.errorMessage)
-                                    )
-                                ),
+                                    Bold(Strings.errorMessage)
 
-                                // Login card
-                                div.class("card").child(
+                                    context.errorMessage
+                                }
+                                .class("alert alert-secondary alert-dismissible bg-danger text-white border-0 fade show")
+                                .role("alert")
+                            }
+                            Div {
+                                Div {
+                                    Anchor {
+                                        Span {
+                                            Img().source("assets/images/logo.png").alt("Logo").height(30)
+                                        }
+                                    }.href("index.html")
+                                }.class("card-header pt-4 pb-4 text-center bg-primary")
+                                Div {
+                                    Div {
+                                        H4(Strings.loginTitle)
+                                            .class("text-dark-50 text-center mt-0 font-weight-bold")
+                                        P(Strings.loginSubtitle)
+                                            .class("text-muted mb-4")
+                                    }.class("text-center w-75 m-auto")
+                                    Form {
+                                        Div {
+                                            Label(Strings.mailTitle)
+                                                .for("emailaddress")
+                                            Input()
+                                                .class("form-control")
+                                                .type(.email)
+                                                .name("email")
+                                                .id("email")
+                                                .placeholder(localized: Strings.mailPlaceholder)
+                                        }.class("form-group")
+                                        Div {
+                                            Anchor {
+                                                Small(Strings.forgottenPassword)
+                                            }
+                                            .href("/start-reset-password")
+                                            .float(.right)
+                                            .text(color: .muted)
 
-                                    // Logo
-                                    div.class("card-header pt-4 pb-4 text-center bg-primary").child(
-                                        a.href("index.html").child(
-                                            span.child(
-                                                img.src("assets/images/logo.png").alt("").height(30)
-                                            )
-                                        )
-                                    ),
-                                    div.class("card-body p-4").child(
-
-                                        // Description
-                                        div.class("text-center w-75 m-auto").child(
-                                            h4.class("text-dark-50 text-center mt-0 font-weight-bold").child(
-                                                localize(.title)
-                                            ),
-                                            p.class("text-muted mb-4").child(
-                                                localize(.subtitle)
-                                            )
-                                        ),
-
-                                        // Form
-                                        form.action("/login").method(.post).child(
-
-                                            // Email
-                                            div.class("form-group").child(
-                                                label.for("emailaddress").child(
-                                                    localize(.mailTitle)
-                                                ),
-                                                input.class("form-control")
-                                                    .type("email")
-                                                    .name("email")
-                                                    .id("email")
-                                                    .placeholder(localize(.mailPlaceholder))
-                                                    .required
-                                            ),
-
-                                            // Password
-                                            div.class("form-group").child(
-                                                a.href("#").class("text-muted float-right").child(
-                                                    small.child(
-                                                        localize(.forgottenPassword)
-                                                    )
-                                                ),
-                                                label.for("password").child(
-                                                    localize(.passwordTitle)
-                                                ),
-                                                input.class("form-control")
-                                                    .type("password")
-                                                    .name("password")
-                                                    .id("password")
-                                                    .placeholder(localize(.passwordPlaceholder))
-                                                    .required
-                                            ),
-
-                                            // Remember me
-//                                            div.class("form-group mb-3").child(
-//                                                div.class("custom-control custom-checkbox").child(
-//                                                    input.type("checkbox").class("custom-control-input").id("checkbox-signin").checked,
-//                                                    label.class("custom-control-label").for("checkbox-signin").child(
-//                                                        "Remember me"
-//                                                    )
-//                                                )
-//                                            ),
-
-                                            // Login button
-                                            div.class("form-group mb-0 text-center").child(
-                                                button.id("submit-button").class("btn btn-primary").type("submit").child(
-                                                    localize(.loginButton)
-                                                )
-                                            )
-                                        )
-                                    )
-                                ),
-
-                                // Actions
-                                div.class("row mt-3").child(
-                                    div.class("col-12 text-center").child(
-                                        p.class("text-muted").child(
-
-                                            localize(.noUserTitle) + " ",
-
-                                            // Sign up
-                                            a.href("/signup").class("text-dark ml-1").child(
-                                                b.child(
-                                                    localize(.noUserLink)
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            ),
-            withPath: \.base)
+                                            Label(Strings.passwordTitle)
+                                                .for("password")
+                                            Input()
+                                                .class("form-control")
+                                                .type(.password)
+                                                .name("password")
+                                                .id("password")
+                                                .placeholder(localized: Strings.passwordPlaceholder)
+                                        }.class("form-group")
+                                        Div {
+                                            Button(Strings.loginButton)
+                                                .id("submit-button")
+                                                .class("btn btn-primary")
+                                                .type(.submit)
+                                        }.class("form-group mb-0 text-center")
+                                    }.action("/login").method(.post)
+                                }.class("card-body p-4")
+                            }.class("card")
+                            Div {
+                                Div {
+                                    P(Strings.loginNoUserTitle)
+                                        .text(color: .muted)
+                                        .display(.inline)
+                                    Anchor {
+                                        Bold(Strings.loginNoUserLink)
+                                    }
+                                    .href("/signup")
+                                    .class("ml-1")
+                                    .text(color: .dark)
+                                }
+                                .class("col-12 text-center")
+                            }.class("row mt-3")
+                        }.class("col-lg-5")
+                    }.class("row justify-content-center")
+                }.class("container")
+            }.class("account-pages mt-5 mb-5")
+        }
     }
 }

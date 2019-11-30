@@ -5,137 +5,205 @@
 //  Created by Mats Mollestad on 31/03/2019.
 //
 
-import HTMLKit
+import BootstrapKit
 import KognitaCore
 
-public class FlashCardTaskTemplate: LocalizedTemplate {
+extension FlashCardTask {
+    public struct Templates {}
+}
 
-    public init() {}
+extension FlashCardTask.Templates {
+    public struct Execute: HTMLTemplate {
 
-    public static var localePath: KeyPath<FlashCardTaskTemplate.Context, String>? = \.locale
+        public struct Context {
+            let taskPreview: TaskPreviewTemplateContext
+            var nextTaskIndex: Int?
+            var prevTaskIndex: Int?
 
-    public enum LocalizationKeys: String {
-        case answerButton = "exercise.answer.button"
-        case solutionButton = "exercise.solution.button"
-        case nextButton = "exercise.next.button"
-        case stopSessionButton = "exercise.stop.button"
-    }
+            var session: PracticeSession? { return taskPreview.session }
+            var task: Task { return taskPreview.task }
+            var topic: Topic { return taskPreview.topic }
+            var hasBeenCompleted: Bool { return taskPreview.lastResult?.sessionId == session?.id }
+            var score: Double? {
+                if let score = taskPreview.lastResult?.result.resultScore {
+                    return score * 4
+                } else {
+                    return nil
+                }
+            }
 
-    public struct Context {
-        let locale = "nb"
-        let taskPreview: TaskPreviewTemplate.Context
-        let nextTaskPath: String?
-
-        var session: PracticeSession? { return taskPreview.session }
-        var task: Task { return taskPreview.task }
-        var topic: Topic { return taskPreview.topic }
-
-        public init(
-            taskPreview: TaskPreviewContent,
-            user: User,
-            nextTaskPath: String? = nil,
-            practiceProgress: Int? = nil,
-            session: PracticeSession? = nil,
-            lastResult: TaskResultContent? = nil,
-            numberOfTasks: Int
-        ) {
-            self.taskPreview = .init(
-                task: taskPreview,
-                user: user,
-                practiceProgress: practiceProgress,
-                session: session,
-                lastResult: lastResult,
-                taskPath: "flash-card",
-                numberOfTasks: numberOfTasks
-            )
-            self.nextTaskPath = nextTaskPath
-
+            public init(
+                taskPreview: TaskPreviewContent,
+                user: User,
+                currentTaskIndex: Int? = nil,
+                practiceProgress: Int? = nil,
+                session: PracticeSession? = nil,
+                lastResult: TaskResultContent? = nil,
+                numberOfTasks: Int
+            ) {
+                self.taskPreview = .init(
+                    task: taskPreview,
+                    user: user,
+                    practiceProgress: practiceProgress,
+                    session: session,
+                    lastResult: lastResult,
+                    taskPath: "flash-card"
+    //                numberOfTasks: numberOfTasks
+                )
+                if let currentTaskIndex = currentTaskIndex {
+                    if currentTaskIndex > 1 {
+                        self.prevTaskIndex = currentTaskIndex - 1
+                    }
+                    self.nextTaskIndex = currentTaskIndex + 1
+                }
+            }
         }
-    }
 
-    public func build() -> CompiledTemplate {
-        return
-            embed(
-                TaskPreviewTemplate(
-                    actionCard:
-                    div.class("card").child(
-                        div.class("card-body").child(
-                            h4.class("mt-0 mb-3").child(
-                                "Tenk på svaret og sjekk om du har riktig"
-                            ),
+        public init() {}
 
-                            // Submit button
-                            button.type("button").onclick("revealSolution();").class("btn btn-success mr-1").id("submitButton").child(
-                                i.class("mdi mdi-send mr-1"),
-                                localize(.answerButton)
-                            ),
+        public let context: RootValue<Context> = .root()
 
-                            // Practice session Button
-                            renderIf(
-                                isNotNil: \.session,
+        public var body: HTML {
+            TaskPreviewTemplate(context: context.taskPreview) {
+                Card {
+                    Label {
+                        "Skriv svaret her"
+                    }
+                    InputGroup {
+                        TextArea()
+                            .id("flash-card-answer")
+                    }
+                    .invalidFeedback {
+                        "Du må fylle ut et svar"
+                    }
+                    .margin(.two, for: .bottom)
 
-                                button.class("btn btn-danger float-right ml-1").onclick("submitAndEndSession();").child(
-                                    localize(.stopSessionButton)
-                                )
-                            )
+                    Button {
+                        Italic().class("mdi mdi-send")
+                            .margin(.one, for: .right)
+
+                        Strings.exerciseAnswerButton
+                            .localized()
+                    }
+                    .type(.button)
+                    .id("submitButton")
+                    .button(style: .success)
+                    .margin(.one, for: .right)
+                    .on(click: "revealSolution();")
+
+                    IF(context.session.isDefined) {
+                        Button(Strings.exerciseStopSessionButton)
+                            .float(.right)
+                            .button(style: .danger)
+                            .margin(.one, for: .left)
+                            .on(click: "submitAndEndSession();")
+                    }
+                }
+            }
+            .underSolutionCard {
+                Card {
+                    IF(context.nextTaskIndex.isDefined) {
+                        Input()
+                            .id("next-task")
+                            .type(.hidden)
+                            .value(context.nextTaskIndex)
+
+                        Button {
+                            Strings.exerciseNextButton
+                                .localized()
+
+                            Italic().class("mdi mdi-arrow-right")
+                                .margin(.one, for: .left)
+                        }
+                        .float(.right)
+                        .button(style: .primary)
+                        .on(click: "nextTask();")
+                    }
+                    IF(context.prevTaskIndex.isDefined) {
+                        Anchor {
+                            Button {
+                                Italic()
+                                    .class("mdi mdi-arrow-left")
+                                    .margin(.one, for: .right)
+                                "Forrige"
+                            }
+                            .button(style: .light)
+                            .margin(.two, for: .right)
+                            .float(.right)
+                        }
+                        .href(context.prevTaskIndex)
+                    }
+                    Text {
+                        "Hvordan gikk det?"
+                    }
+                    .margin(.one, for: .top)
+                    .margin(.three, for: .bottom)
+                    .style(.heading4)
+
+                    Row {
+                        LevelColumn(
+                            icon: "😒",
+                            description: "Har ingen kontroll",
+                            textAlignment: .left
                         )
-                    ),
-
-                    customScripts: [
-                        script.src("/assets/js/flash-card/submit-performance.js"),
-                        script.src("/assets/js/practice-session-end.js")
-                    ],
-
-                    underSolutionCard:
-                    div.class("card d-none").id("knowledge-card").child(
-                        div.class("card-body").child(
-                            // Next button
-                            renderIf(
-                                isNotNil: \.nextTaskPath,
-
-                                input.id("next-task").type("hidden").value(variable(\.nextTaskPath)),
-                                button.class("btn btn-primary float-right").onclick("nextTask();").child(
-                                    i.class("mdi mdi-play mr-1"),
-                                    localize(.nextButton)
-                                )
-                            ),
-
-                            h4.class("mt-0 mb-3").child(
-                                "Hvordan gikk det?"
-                            ),
-
-                            div.class("row no-gutter").child(
-                                p.class("col-4 text-left h5").child(
-                                    "😒" + br + "Har ikke kontroll"
-                                ),
-
-                                p.class("col-4 text-center h5").child(
-                                    "😅", br, "Har litt kontroll"
-                                ),
-
-                                p.class("col-4 text-right h5").child(
-                                    "🧐", br, "Har full kontroll"
-                                )
-                            ),
-
-                            input.class("custom-range")
-                                .id("knowledge-slider")
-                                .type("range")
-                                .name("range")
-                                .min(0)
-                                .max(4)
-                                .value(2)
-
-
-                            //                    button.type("button").onclick("presentHint();").class("btn btn-info mr-1").child(
-                            //                        i.class("mdi mdi-help mr-1"),
-                            //                        "Trenger du et hint?"
-                            //                    ),
+                        LevelColumn(
+                            icon: "😅",
+                            description: "Har litt kontroll",
+                            textAlignment: .center
                         )
+                        LevelColumn(
+                            icon: "🧐",
+                            description: "Har full kontroll",
+                            textAlignment: .right
+                        )
+                    }
+                    .noGutters()
+
+                    Input()
+                        .class("custom-range")
+                        .id("knowledge-slider")
+                        .type(.range)
+                        .name("range")
+                        .min(value: 0)
+                        .max(value: 4)
+                        .value(
+                            IF(context.score.isDefined) {
+                                context.score
+                            }.else {
+                                2
+                            }
                     )
-                ),
-                withPath: \.taskPreview
-        )
+                }
+                .display(.none)
+                .id("knowledge-card")
+            }
+            .scripts {
+                Script().source("/assets/js/flash-card/submit-performance.js")
+                Script().source("/assets/js/practice-session-end.js")
+                IF(context.hasBeenCompleted) {
+                    Script {
+                        "window.onload = presentControlls;"
+                    }
+                }
+            }
+        }
 
+        struct LevelColumn: HTMLComponent {
+
+            let icon: HTML
+            let description: HTML
+            let textAlignment: Text.Alignment
+
+            var body: HTML {
+                Text {
+                    icon
+                    Break()
+                    description
+                }
+                .column(width: .four)
+                .text(alignment: textAlignment)
+                .style(.heading5)
+            }
+        }
     }
 }
