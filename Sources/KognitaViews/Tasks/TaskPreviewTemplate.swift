@@ -219,15 +219,15 @@ public struct TaskPreviewTemplate<T>: HTMLComponent {
                     .font(style: .bold)
                     .margin(.two, for: .bottom)
 
-                    ProgressBar(
-                        currentValue: context.practiceProgress.unsafelyUnwrapped,
-                        valueRange: 0...100
-                    )
-                        .bar(size: .medium)
-                        .bar(id: "goal-progress-bar")
-                        .modify(if: context.practiceProgress >= 100) {
-                            $0.bar(style: .success)
-                    }
+//                    ProgressBar(
+//                        currentValue: context.practiceProgress.unsafelyUnwrapped,
+//                        valueRange: 0...100
+//                    )
+//                        .bar(size: .medium)
+//                        .bar(id: "goal-progress-bar")
+//                        .modify(if: context.practiceProgress >= 100) {
+//                            $0.bar(style: .success)
+//                    }
 //                        Div {
 //                            ProgressBar(
 //                                currentValue: context.practiceProgress.unsafelyUnwrapped,
@@ -609,36 +609,48 @@ struct Accordions<A, B>: HTMLComponent {
     var body: HTML {
         Div {
             ForEach(enumerated: values) { value in
-                Div {
-                    Div {
-                        Anchor {
-                            title(value)
-                        }
-                            .text(color: .secondary)
-                            .display(.block)
-                            .padding(.two, for: .vertical)
-                            .data(for: "toggle", value: "collapse")
-                            .data(for: "target", value: "#" + bodyId(value.index))
-                            .aria(for: "controls", value: bodyId(value.index))
-                    }
-                    .class("card-header")
-                    .id(headingId(value.index))
-                    Div {
-                        Div {
-                            content(value)
-                        }
-                        .class("card-body")
-                    }
-                    .class("collapse" + IF(value.index == 0) { " show" })
-                    .aria(for: "labelledby", value: headingId(value.index))
-                    .data(for: "parent", value: "#\(id)")
-                    .id(bodyId(value.index))
-                }
-                .class("card")
+                card(value: value)
             }
         }
         .class("custom-accordion mb-4")
         .id(id)
+    }
+
+    func card(value: (RootValue<B>, index: RootValue<Int>)) -> HTML {
+        Div {
+            heading(value: value)
+            content(value: value)
+        }
+        .class("card")
+    }
+    
+    func heading(value: (RootValue<B>, index: RootValue<Int>)) -> HTML {
+        return Div {
+            Anchor {
+                title(value)
+            }
+                .text(color: .secondary)
+                .display(.block)
+                .padding(.two, for: .vertical)
+                .data(for: "toggle", value: "collapse")
+                .data(for: "target", value: "#" + bodyId(value.index))
+                .aria(for: "controls", value: bodyId(value.index))
+        }
+        .class("card-header")
+        .id(headingId(value.index))
+    }
+
+    func content(value: (RootValue<B>, index: RootValue<Int>)) -> HTML {
+        return Div {
+            Div {
+                content(value)
+            }
+            .class("card-body")
+        }
+        .class("collapse" + IF(value.index == 0) { " show" })
+        .aria(for: "labelledby", value: headingId(value.index))
+        .data(for: "parent", value: "#\(id)")
+        .id(bodyId(value.index))
     }
 
     func bodyId(_ index: RootValue<Int>) -> HTML {

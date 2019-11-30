@@ -48,78 +48,9 @@ extension Subject.Templates {
 
                             Div {
                                 Div {
-                                    Form {
-                                        FormGroup(label: "Navn", input: {
-                                            Input()
-                                                .type(.text)
-                                                .id("create-subject-name")
-                                                .placeholder("Mattematikk 1")
-                                                .value(context.value(at: \.subjectInfo?.name))
-                                                .required()
-                                        }) {
-                                            Small {
-                                                "Bare lov vanlig bokstaver og mellomrom"
-                                            }
-                                        }
-
-                                        FormGroup(label: "Beskrivelse") {
-                                            Div {
-                                                context.value(at: \.subjectInfo?.description)
-                                            }
-                                            .id("create-subject-description")
-                                        }
-
-                                        FormGroup(label: "Kategori") {
-                                            Input()
-                                                .type(.text)
-                                                .id("create-subject-category")
-                                                .placeholder("Teknologi")
-                                                .value(context.value(at: \.subjectInfo?.category))
-                                                .required()
-                                        }
-
-                                        Div {
-                                            Label {
-                                                "Fargekode"
-                                            }
-                                            .for("create-subject-color-class")
-                                            .class("col-form-label")
-
-                                            Div {
-                                                ForEach(in: .constant(Subject.ColorClass.allCases)) { option in
-
-                                                    Div {
-                                                        Input()
-                                                            .type("radio")
-                                                            .id(option.rawValue)
-                                                            .class("custom-contol-input mr-2")
-                                                            .name("color-class")
-                                                        Label {
-                                                            H4 {
-                                                                Div {
-                                                                    option.rawValue
-                                                                }
-                                                                .class("badge badge-" + option.rawValue)
-                                                            }
-                                                        }
-                                                        .for(option.rawValue)
-                                                    }
-                                                    .class("custom-control custom-radio")
-                                                }
-                                            }
-                                            .class("mt-1")
-                                        }
-                                        .class("form-group")
-
-                                        Button {
-                                            " Lagre"
-                                        }
-                                        .type(.button)
-                                        .on(click: "createSubject()")
-                                        .class("btn-rounded mb-3")
-                                        .button(style: .success)
-                                    }
-//                                    .novalidate()
+                                    CreateForm(
+                                        context: context.subjectInfo
+                                    )
                                 }
                                 .class("p-2")
                             }
@@ -129,6 +60,96 @@ extension Subject.Templates {
                     }
                     .class("col-12 pt-5")
                 }
+            }
+        }
+    }
+
+    struct CreateForm<T>: HTMLComponent {
+
+        let context: TemplateValue<T, Subject?>
+
+        var body: HTML {
+            Form {
+                FormGroup(label: "Navn", input: {
+                    Input()
+                        .type(.text)
+                        .id("create-subject-name")
+                        .placeholder("Mattematikk 1")
+                        .value(context.value(at: \.self?.name))
+                        .required()
+                }) {
+                    Small {
+                        "Bare lov vanlig bokstaver og mellomrom"
+                    }
+                }
+
+                FormGroup(label: "Beskrivelse") {
+                    Div {
+                        context.value(at: \.self?.description)
+                    }
+                    .id("create-subject-description")
+                }
+
+                FormGroup(label: "Kategori") {
+                    Input()
+                        .type(.text)
+                        .id("create-subject-category")
+                        .placeholder("Teknologi")
+                        .value(context.value(at: \.self?.category))
+                        .required()
+                }
+
+                Div {
+                    Label {
+                        "Fargekode"
+                    }
+                    .for("create-subject-color-class")
+                    .class("col-form-label")
+
+                    ColorCodePicker()
+                }
+                .class("form-group")
+
+                Button {
+                    " Lagre"
+                }
+                .type(.button)
+                .on(click: "createSubject()")
+                .class("btn-rounded mb-3")
+                .button(style: .success)
+            }
+        }
+
+        struct ColorCodePicker: HTMLComponent {
+
+            var body: HTML {
+                Div {
+                    Subject.ColorClass.allCases.forEachHTML { option in
+                        optionHTML(option)
+                    }
+                }
+                .class("mt-1")
+            }
+
+            func optionHTML(_ option: RootValue<Subject.ColorClass>) -> HTML {
+                Div {
+                    Input()
+                        .type(.radio)
+                        .id(option.rawValue)
+                        .class("custom-contol-input mr-2")
+                        .name("color-class")
+                    Label {
+                        H4 {
+                            Div {
+                                option.rawValue
+                            }
+                            .class("badge badge-" + option.rawValue)
+                        }
+                        "Label"
+                    }
+                    .for(option.rawValue)
+                }
+                .class("custom-control custom-radio")
             }
         }
     }
