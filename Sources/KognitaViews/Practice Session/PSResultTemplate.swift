@@ -62,7 +62,7 @@ extension ViewWrapper: ExpressibleByStringLiteral {
 }
 
 extension PracticeSession.Templates {
-    public struct Result: TemplateView {
+    public struct Result: HTMLTemplate {
 
         public struct Context {
             let locale = "nb"
@@ -159,59 +159,19 @@ extension PracticeSession.Templates {
                         Div {
                             Div {
                                 Div {
-                                    Div {
-                                        Table {
-                                            TableHead {
-                                                TableRow {
-                                                    TableHeader(Strings.resultSummaryTopicColumn)
-                                                    TableHeader(Strings.resultSummaryQuestionColumn)
-                                                    TableHeader(Strings.resultSummaryResultColumn)
-                                                    TableHeader(Strings.resultSummaryRepeatColumn)
-                                                }
-                                            }.class("thead-light")
-                                            TableBody {
-                                                ForEach(in: context.tasks) { result in
-                                                    TableRow {
-                                                        TableCell {
-                                                            result.topicName
-                                                        }
-                                                        .text(color: .muted)
-
-                                                        TableCell {
-                                                            result.question
-                                                        }
-                                                        .text(color: .muted)
-
-                                                        TableCell {
-                                                            result.resultDescription
-                                                        }
-                                                        .text(color: .muted)
-
-                                                        TableCell {
-                                                            IF(result.revisitDate.isDefined) {
-                                                                Div {
-                                                                    "localize(.days)"
-                                                                    result.revisitTime
-                                                                }
-                                                                .class("badge float-right")
-                                                            }.else {
-                                                                Div {
-                                                                    "Full kontroll"
-                                                                }
-                                                                .class("badge badge-success float-right")
-                                                            }
-                                                        }
-                                                        .text(color: .muted)
-                                                    }
-                                                }
-                                            }
-                                        }.class("table table-centered w-100 dt-responsive nowrap").id("products-datatable")
-                                    }.class("table-responsive")
-                                }.class("row no-gutters")
-                            }.class("card-body p-0")
-                        }.class("card widget-inline")
-                    }.class("col-12")
+                                    ResultTable(
+                                        tasks: context.tasks
+                                    )
+                                }
+                                .class("table-responsive")
+                            }
+                            .class("row no-gutters")
+                        }
+                        .class("card-body p-0")
+                    }
+                    .class("card widget-inline")
                 }
+                .class("col-12")
             }
             .scripts {
                 Script().source("/assets/js/vendor/Chart.bundle.min.js")
@@ -219,7 +179,76 @@ extension PracticeSession.Templates {
             }
         }
 
-        struct StatsView<T>: StaticView {
+        struct ResultTable<T>: HTMLComponent {
+
+            let tasks: TemplateValue<T, [TaskResultable]>
+
+            var body: HTML {
+                Table {
+                    TableHead {
+                        TableRow {
+                            TableHeader(Strings.resultSummaryTopicColumn)
+                            TableHeader(Strings.resultSummaryQuestionColumn)
+                            TableHeader(Strings.resultSummaryResultColumn)
+                            TableHeader(Strings.resultSummaryRepeatColumn)
+                        }
+                    }.class("thead-light")
+
+                    TableBody {
+                        ForEach(in: tasks) { result in
+                            ResultCell(
+                                result: result
+                            )
+                        }
+                    }
+                }
+                .class("table table-centered w-100 dt-responsive nowrap")
+                .id("products-datatable")
+            }
+
+
+            struct ResultCell<T>: HTMLComponent {
+
+                let result: TemplateValue<T, TaskResultable>
+
+                var body: HTML {
+                    TableRow {
+                        TableCell {
+                            result.topicName
+                        }
+                        .text(color: .muted)
+
+                        TableCell {
+                            result.question
+                        }
+                        .text(color: .muted)
+
+                        TableCell {
+                            result.resultDescription
+                        }
+                        .text(color: .muted)
+
+                        TableCell {
+                            IF(result.revisitDate.isDefined) {
+                                Div {
+                                    "localize(.days)"
+                                    result.revisitTime
+                                }
+                                .class("badge float-right")
+                            }.else {
+                                Div {
+                                    "Full kontroll"
+                                }
+                                .class("badge badge-success float-right")
+                            }
+                        }
+                        .text(color: .muted)
+                    }
+                }
+            }
+        }
+
+        struct StatsView<T>: HTMLComponent {
 
             let stats: TemplateValue<T, String>
             let icon: String

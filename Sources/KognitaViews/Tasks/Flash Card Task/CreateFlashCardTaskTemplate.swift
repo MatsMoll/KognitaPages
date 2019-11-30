@@ -56,8 +56,8 @@ extension FlashCardTask.Templates {
                             Div {
                                 Form {
 
-                                    IF(context.taskInfo.isDefined) {
-                                        IF(context.value(at: \.taskInfo?.deletedAt).isDefined) {
+                                    IF(isDefined: context.taskInfo) { taskInfo in
+                                        IF(taskInfo.deletedAt.isDefined) {
                                             Badge { "Inaktiv" }
                                                 .background(color: .danger)
                                         }.else {
@@ -75,10 +75,13 @@ extension FlashCardTask.Templates {
                                     FormRow {
                                         FormGroup(label: "Eksamensett semester") {
                                             Select {
-                                                IF(context.value(at: \.taskInfo?.examPaperSemester).isDefined) {
-                                                    Option { context.value(at: \.taskInfo?.examPaperSemester?.rawValue) }
-                                                        .value(context.value(at: \.taskInfo?.examPaperSemester?.rawValue))
-//                                                    .selected()
+                                                IF(isDefined: context.taskInfo) { taskInfo in
+                                                    IF(isDefined: taskInfo.examPaperSemester) { exam in
+                                                        Option {
+                                                            exam.rawValue
+                                                        }
+                                                        .value(exam.rawValue)
+                                                    }
                                                 }
                                                 Option { "Ikke eksamensoppgave" }
                                                     .value("")
@@ -99,29 +102,34 @@ extension FlashCardTask.Templates {
                                                 .type(.number)
                                                 .id("card-exam-year")
                                                 .placeholder("2019")
-                                                .value(context.value(at: \.taskInfo?.examPaperYear))
+                                                .value(IF(isDefined: context.taskInfo) { $0.examPaperYear })
                                         }
                                         .column(width: .six, for: .medium)
                                     }
 
                                     FormGroup(label: "Oppgavetext") {
                                         Div {
-                                            context.value(at: \.taskInfo?.description)
-                                                .escaping(.unsafeNone)
+                                            IF(isDefined: context.taskInfo) {
+                                                $0.description
+                                                    .escaping(.unsafeNone)
+                                            }
                                         }
                                         .id("card-description")
                                     }
 
-                                    FormGroup(label: "Spørsmål", input: {
+                                    FormGroup(label: "Spørsmål") {
                                         TextArea {
-                                            context.value(at: \.taskInfo?.question)
+                                            IF(isDefined: context.taskInfo) {
+                                                $0.question
+                                            }
                                         }
                                         .class("form-control")
                                         .id("card-question")
 //                                        .rows(1)
                                         .placeholder("Noe å svare på her")
                                         .required()
-                                    }) {
+                                    }
+                                    .description {
                                         Div {
                                             "Bare lov med store og små bokstaver, tall, mellomrom + (. , : ; !, ?)"
                                         }
@@ -130,8 +138,10 @@ extension FlashCardTask.Templates {
 
                                     FormGroup(label: "Løsning") {
                                         Div {
-                                            context.value(at: \.taskInfo?.solution)
-                                                .escaping(.unsafeNone)
+                                            IF(isDefined: context.taskInfo) {
+                                                $0.solution
+                                                    .escaping(.unsafeNone)
+                                            }
                                         }
                                         .id("card-solution")
                                     }

@@ -74,13 +74,13 @@ extension NumberInputTask.Templates {
                                                     "Eksamensett semester"
                                                 }.for("create-input-exam-semester").class("col-form-label")
                                                 Select {
-                                                    IF(context.value(at: \.taskInfo?.examPaperSemester).isDefined) {
-                                                        Option {
-                                                            context.value(at: \.taskInfo?.examPaperSemester?.rawValue)
-                                                        }
-                                                        .value(context.value(at: \.taskInfo?.examPaperSemester?.rawValue))
-                                                        .isSelected(true)
-                                                    }
+//                                                    IF(context.value(at: \.taskInfo?.examPaperSemester).isDefined) {
+//                                                        Option {
+//                                                            context.value(at: \.taskInfo?.examPaperSemester?.rawValue)
+//                                                        }
+//                                                        .value(context.value(at: \.taskInfo?.examPaperSemester?.rawValue))
+//                                                        .isSelected(true)
+//                                                    }
                                                     Option {
                                                         "Ikke eksamensoppgave"
                                                     }
@@ -112,7 +112,7 @@ extension NumberInputTask.Templates {
                                                     .class("form-control")
                                                     .id("create-input-exam-year")
                                                     .placeholder("2019")
-                                                    .value(context.value(at: \.taskInfo?.examPaperYear))
+                                                    .value(IF(isDefined: context.taskInfo) { $0.examPaperYear })
                                                     .required()
                                             }
                                             .class("form-group col-md-6")
@@ -133,7 +133,10 @@ extension NumberInputTask.Templates {
                                                 "Oppgavetekst"
                                             }.for("create-input-description").class("col-form-label")
                                             Div {
-                                                context.value(at: \.taskInfo?.description).escaping(.unsafeNone)
+                                                IF(isDefined: context.taskInfo) {
+                                                    $0.description
+                                                        .escaping(.unsafeNone)
+                                                }
                                             }.id("create-input-description")
                                         }.class("form-group")
                                         Div {
@@ -141,7 +144,9 @@ extension NumberInputTask.Templates {
                                                 "Spørsmål"
                                             }.for("create-input-question").class("col-form-label")
                                             TextArea {
-                                                context.value(at: \.taskInfo?.question)
+                                                IF(isDefined: context.taskInfo) {
+                                                    $0.question
+                                                }
                                             }
                                             .class("form-control")
                                             .id("create-input-question")
@@ -158,7 +163,13 @@ extension NumberInputTask.Templates {
                                                 Label {
                                                     "Riktig svar"
                                                 }.for("create-input-answer").class("col-form-label")
-                                                Input().type("number").class("form-control").id("create-input-answer").placeholder("50").value(context.value(at: \.inputTask?.correctAnswer)).required()
+                                                Input()
+                                                    .type(.number)
+                                                    .class("form-control")
+                                                    .id("create-input-answer")
+                                                    .placeholder("50")
+                                                    .value(IF(isDefined: context.inputTask) { $0.correctAnswer })
+                                                    .required()
                                                 Small {
                                                     "Skal du skrive desimaltall må det brukes "
                                                     " eks. 2,5. Punktum og mellomrom vil bli ignorert. Altså 10.000 og 10 000 vil bli tolka som 10000"
@@ -169,7 +180,7 @@ extension NumberInputTask.Templates {
                                                     "Enhet"
                                                 }.for("create-input-answer").class("col-form-label")
                                                 TextArea {
-                                                    context.value(at: \.inputTask?.unit)
+                                                    IF(isDefined: context.inputTask) { $0.unit }
                                                 }
                                                 .class("form-control")
                                                 .id("create-input-unit")

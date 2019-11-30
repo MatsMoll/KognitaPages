@@ -100,7 +100,7 @@ extension MultipleChoiseTask.Templates {
                                                 .class("form-control")
                                                 .id("create-multiple-exam-year")
                                                 .placeholder("2019")
-                                                .value(context.value(at: \.taskInfo?.examPaperYear))
+                                                .value(IF(isDefined: context.taskInfo) { $0.examPaperYear })
                                                 .required()
                                         }
                                         .class("form-group col-md-6")
@@ -126,8 +126,10 @@ extension MultipleChoiseTask.Templates {
                                         .for("create-multiple-description")
                                         .class("col-form-label")
                                         Div {
-                                            context.value(at: \.taskInfo?.description)
-                                                .escaping(.unsafeNone)
+                                            IF(isDefined: context.taskInfo) {
+                                                $0.description
+                                                    .escaping(.unsafeNone)
+                                            }
                                         }
                                         .id("create-multiple-description")
                                     }
@@ -140,7 +142,9 @@ extension MultipleChoiseTask.Templates {
                                         .class("col-form-label")
 
                                         TextArea {
-                                            context.value(at: \.taskInfo?.question)
+                                            IF(isDefined: context.taskInfo) {
+                                                $0.question
+                                            }
                                         }
                                         .class("form-control")
                                         .id("create-multiple-question")
@@ -159,8 +163,10 @@ extension MultipleChoiseTask.Templates {
                                         .for("create-multiple-solution")
                                         .class("col-form-label")
                                         Div {
-                                            context.value(at: \.taskInfo?.solution)
-                                                .escaping(.unsafeNone)
+                                            IF(isDefined: context.taskInfo) {
+                                                $0.solution
+                                                    .escaping(.unsafeNone)
+                                            }
                                         }
                                         .id("create-multiple-solution")
                                     }
@@ -171,7 +177,7 @@ extension MultipleChoiseTask.Templates {
                                             .type(.checkbox)
                                             .class("custom-control-input")
                                             .id("create-multiple-select")
-                                            .isChecked(context.value(at: \.multipleTaskInfo?.isMultipleSelect) == true)
+                                            .isChecked(context.multipleTaskInfo.isDefined && context.multipleTaskInfo.unsafelyUnwrapped.isMultipleSelect)
                                         Label {
                                             "Kan velge fler enn et svar"
                                         }
@@ -211,8 +217,10 @@ extension MultipleChoiseTask.Templates {
                                                 }
                                             }
                                             TableBody {
-                                                ForEach(in: context.value(at: \.multipleTaskInfo?.choises)) { choise in
-                                                    ChoiseRow(choise: choise)
+                                                IF(isDefined: context.multipleTaskInfo) { taskInfo in
+                                                    ForEach(in: taskInfo.choises) { choise in
+                                                        ChoiseRow(choise: choise)
+                                                    }
                                                 }
                                             }
                                             .id("create-multiple-choises")

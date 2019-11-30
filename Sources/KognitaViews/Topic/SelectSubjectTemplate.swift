@@ -11,7 +11,7 @@ import BootstrapKit
 import KognitaCore
 
 extension Subject.Templates {
-    public struct SelectRedirect: TemplateView {
+    public struct SelectRedirect: HTMLTemplate {
 
         public struct Context {
             let user: User
@@ -69,7 +69,7 @@ extension Subject.Templates {
             }
         }
 
-        struct SelectCard<A, B>: StaticView {
+        struct SelectCard<A, B>: HTMLComponent {
 
             let subject: TemplateValue<A, Subject>
             let startPath: TemplateValue<B, String>

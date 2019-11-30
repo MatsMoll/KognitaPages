@@ -25,7 +25,7 @@ public protocol CreatorTaskContent {
 
 public struct CreatorTemplates {
 
-    public struct Dashboard: TemplateView {
+    public struct Dashboard: HTMLTemplate {
 
         public struct Context {
             let user: User
@@ -188,7 +188,7 @@ public struct CreatorTemplates {
         }
     }
 
-    struct TimelyTopicView<T>: StaticView {
+    struct TimelyTopicView<T>: HTMLComponent {
 
         let topic: TemplateValue<T, TimelyTopic>
 
@@ -225,7 +225,7 @@ public struct CreatorTemplates {
         }
     }
 
-    struct TaskRow<T>: StaticView {
+    struct TaskRow<T>: HTMLComponent {
 
         let task: TemplateValue<T, CreatorTaskContent>
 
