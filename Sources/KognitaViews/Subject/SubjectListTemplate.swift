@@ -120,7 +120,7 @@ extension Subject.Templates {
 
             let context: TemplateValue<T, TopicResultContent>
 
-            var practiceFunction: HTML { "startPracticeSession(" + context.topic.id + ", " + context.subject.id + ");" }
+            var practiceFunction: HTML { "startPracticeSession([" + context.topic.id + "], " + context.subject.id + ");" }
 
             var body: HTML {
                 Div {
