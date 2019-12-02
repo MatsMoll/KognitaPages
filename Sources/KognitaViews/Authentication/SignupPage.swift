@@ -28,11 +28,11 @@ extension User.Templates {
 
         public var body: HTML {
             User.Templates.AuthenticateBase(
-                context: context.base,
-                cardBody:
+                context: context.base
+            ) {
                 Div {
                     Text {
-                        "localize(.title)"
+                        Strings.registerTitle.localized()
                     }
                     .class("text-dark-50")
                     .text(alignment: .center)
@@ -41,38 +41,38 @@ extension User.Templates {
                     .style(.heading4)
 
                     Text {
-                        "localize(.subtitle)"
+                        Strings.registerSubtilte.localized()
                     }
                     .text(color: .muted)
                     .margin(.four, for: .bottom)
                 }
                 .class("w-75 m-auto")
-                .text(alignment: .center) +
+                .text(alignment: .center)
 
                 Form {
-                    FormGroup(label: "localize(.nameTitle)") {
+                    FormGroup(label: Strings.registerNameTitle.localized()) {
                         Input()
                             .type(.text)
                             .id("name")
-                            .placeholder("localize(.namePlaceholder)")
+                            .placeholder(localized: Strings.registerNamePlaceholder)
                     }
-                    FormGroup(label: "localize(.mailTitle)") {
+                    FormGroup(label: Strings.mailTitle.localized()) {
                         Input()
                             .type(.email)
                             .id("email")
-                            .placeholder("localize(.mailPlaceholder)")
+                            .placeholder(localized: Strings.mailPlaceholder)
                     }
-                    FormGroup(label: "localize(.passwordTitle)") {
+                    FormGroup(label: Strings.passwordTitle.localized()) {
                         Input()
                             .type(.password)
                             .id("password")
-                            .placeholder("localize(.passwordPlaceholder)")
+                            .placeholder(localized: Strings.passwordPlaceholder)
                     }
-                    FormGroup(label: "localize(.confirmPasswordTitle)") {
+                    FormGroup(label: Strings.registerConfirmPasswordTitle.localized()) {
                         Input()
                             .type(.password)
                             .id("verifyPassword")
-                            .placeholder("localize(.confirmPasswordPlaceholder)")
+                            .placeholder(localized: Strings.registerConfirmPasswordPlaceholder)
                     }
 
                     Div {
@@ -83,9 +83,10 @@ extension User.Templates {
                                 .name("acceptedTermsInput")
                                 .id("checkbox-signup")
                             Label {
-                                "localize(.termsOfServiceTitle) "
+                                Strings.registerTermsOfServiceTitle.localized()
+                                " "
                                 Anchor {
-                                    "localize(.termsOfServiceLink)"
+                                    Strings.registerTermsOfServiceLink.localized()
                                 }
                                 .href("#")
                                 .class("text-dark")
@@ -99,7 +100,7 @@ extension User.Templates {
 
                     Div {
                         Button {
-                            "localize(.registerButton)"
+                            Strings.registerButton.localized()
                         }
                         .button(style: .primary)
                         .type(.submit)
@@ -110,7 +111,26 @@ extension User.Templates {
                 }
                 .action("/signup")
                 .method(.post)
-            )
+            }
+            .otherActions {
+                Row {
+                    Div {
+                        Text {
+                            Anchor {
+                                Bold { Strings.alreadyHaveUser.localized() }
+                            }
+                            .href("/login")
+                            .text(color: .dark)
+                            .margin(.one, for: .left)
+                        }
+                        .text(color: .muted)
+                        .style(.paragraph)
+                    }
+                    .text(alignment: .center)
+                    .column(width: .twelve)
+                }
+                .margin(.three, for: .top)
+            }
         }
     }
 }

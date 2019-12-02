@@ -10,6 +10,12 @@ import HTMLKit
 import BootstrapKit
 import KognitaCore
 
+struct LogoImage: HTMLComponent {
+    var body: HTML {
+        Img().source("assets/images/logo.png").alt("Logo").height(30)
+    }
+}
+
 struct BaseTemplateContent {
     let title: String
     let description: String
@@ -217,6 +223,20 @@ struct ContentBaseTemplate<T>: HTMLComponent {
                     IF(userContext.isCreator) {
                         self.tab(with: .constant(creatorTab))
                     }
+                    ListItem {
+                        Form {
+                            Button {
+                                "Logg ut"
+                            }
+                            .type(.submit)
+                            .background(color: .primary)
+                            .class("nav-link btn")
+                        }
+                        .method(.post)
+                        .action("/logout")
+                        .background(color: .primary)
+                    }
+                    .class("nav-item")
                 }
                 .button {
                     Anchor {

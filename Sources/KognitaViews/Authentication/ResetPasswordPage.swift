@@ -31,6 +31,20 @@ extension User.Templates {
         let cardBody: HTML
         var otherActions: HTML = ""
 
+        init(context: TemplateValue<T, AuthenticateBaseContext>, @HTMLBuilder cardBody: () -> HTML) {
+            self.context = context
+            self.cardBody = cardBody()
+            rootUrl = ""
+            otherActions = ""
+        }
+
+        init(context: TemplateValue<T, AuthenticateBaseContext>, cardBody: HTML, rootUrl: String, otherActions: HTML) {
+            self.context = context
+            self.cardBody = cardBody
+            self.rootUrl = rootUrl
+            self.otherActions = otherActions
+        }
+
         var body: HTML {
             BaseTemplate(context: context.base) {
                 KognitaNavigationBar(rootUrl: rootUrl)
@@ -81,6 +95,14 @@ extension User.Templates {
                 .class("account-pages")
             }
         }
+
+        func root(url: String) -> AuthenticateBase {
+            .init(context: context, cardBody: cardBody, rootUrl: url, otherActions: otherActions)
+        }
+
+        func otherActions(@HTMLBuilder otherActions: () -> HTML) -> AuthenticateBase {
+            .init(context: context, cardBody: cardBody, rootUrl: rootUrl, otherActions: otherActions())
+        }
     }
 }
 
@@ -109,8 +131,8 @@ extension User.Templates.ResetPassword {
 
         public var body: HTML {
             User.Templates.AuthenticateBase(
-                context: context.base,
-                cardBody:
+                context: context.base
+            ) {
 
                 Div {
                     Text {
@@ -131,14 +153,14 @@ extension User.Templates.ResetPassword {
                 }
                 .class("w-75")
                 .text(alignment: .center)
-                .margin(.auto) +
+                .margin(.auto)
 
                 Form {
-                    FormGroup(label: "localize(.mailTitle)") {
+                    FormGroup(label: Strings.mailTitle.localized()) {
                         Input()
                             .id("email")
                             .type(.email)
-                            .placeholder("localize(.mailPlaceholder)")
+                            .placeholder(localized: Strings.mailPlaceholder)
                     }
                     Div {
                         Button {
@@ -153,9 +175,9 @@ extension User.Templates.ResetPassword {
                     .margin(.zero, for: .bottom)
                 }
                 .action("/start-reset-password")
-                .method(.post),
-
-                otherActions:
+                .method(.post)
+            }
+            .otherActions {
                 Row {
                     Div {
                         Text {
@@ -174,7 +196,7 @@ extension User.Templates.ResetPassword {
                     .column(width: .twelve)
                 }
                 .margin(.three, for: .top)
-            )
+            }
         }
     }
 
@@ -203,9 +225,7 @@ extension User.Templates.ResetPassword {
                         description: "Gjenopprett Passord",
                         errorMessage: nil
                     )
-                ),
-                rootUrl: rootUrl,
-                cardBody:
+            )) {
                 Div {
                     Text {
                         "Endre passord"
@@ -234,7 +254,8 @@ extension User.Templates.ResetPassword {
                     .button(style: .primary)
                 }
                 .href(rootUrl + context.changeUrl)
-            )
+            }
+            .root(url: rootUrl)
         }
     }
 
@@ -260,8 +281,7 @@ extension User.Templates.ResetPassword {
                         description: "Gjenopprett Passord",
                         errorMessage: nil
                     )
-                ),
-                cardBody:
+            )) {
 
                 Div {
                     Text {
@@ -282,29 +302,29 @@ extension User.Templates.ResetPassword {
                 }
                 .margin(.auto)
                 .width(portion: .threeQuarter)
-                .text(alignment: .center) +
+                .text(alignment: .center)
 
                 Form {
                     Input()
                         .type(.hidden)
                         .name("token")
                         .value(context.token)
-                    FormGroup(label: "localize(.passwordTitle)") {
+                    FormGroup(label: Strings.passwordTitle.localized()) {
                         Input()
                             .type(.password)
                             .id("password")
-                            .placeholder("localize(.passwordPlaceholder)")
+                            .placeholder(localized: Strings.passwordPlaceholder)
                     }
-                    FormGroup(label: "localize(.passwordTitle)") {
+                    FormGroup(label: Strings.registerConfirmPasswordTitle.localized()) {
                         Input()
                             .type(.password)
                             .id("verifyPassword")
-                            .placeholder("localize(.confirmPasswordPlaceholder)")
+                            .placeholder(localized: Strings.registerConfirmPasswordPlaceholder)
                     }
                 }
                 .action("/reset-password")
                 .method(.post)
-            )
+            }
         }
     }
 }
