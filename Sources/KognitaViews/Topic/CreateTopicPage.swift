@@ -40,6 +40,7 @@ extension Topic.Templates {
                 baseContext: .constant(.init(title: "Lag temaer", description: "Lag temaer"))
             ) {
                 Div {
+                    DismissableError()
                     Div {
                         Div {
                             Form {

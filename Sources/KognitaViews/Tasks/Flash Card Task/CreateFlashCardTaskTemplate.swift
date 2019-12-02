@@ -157,9 +157,9 @@ extension FlashCardTask.Templates {
                                     .margin(.three, for: .vertical)
                                     .on(click:
                                         IF(context.taskInfo.isDefined) {
-                                            "createFlashCard();"
-                                        }.else {
                                             "editFlashCard();"
+                                        }.else {
+                                            "createFlashCard();"
                                         }
                                     )
                                 }
