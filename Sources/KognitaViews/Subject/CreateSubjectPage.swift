@@ -61,6 +61,13 @@ extension Subject.Templates {
                     .class("col-12 pt-5")
                 }
             }
+            .header {
+                Link().href("/assets/css/vendor/summernote-bs4.css").relationship(.stylesheet).type("text/css")
+            }
+            .scripts {
+                Script().source("/assets/js/vendor/summernote-bs4.min.js")
+                Script().source("/assets/js/subject/create.js")
+            }
         }
     }
 }
@@ -72,7 +79,7 @@ public struct FormGroup: HTMLComponent {
     let input: FormInput
     let optionalContent: HTML?
 
-    public init(label: String, input: () -> FormInput) {
+    public init(label: HTML, input: () -> FormInput) {
         self.label = Label { label }
         self.input = input()
         self.optionalContent = nil
@@ -206,7 +213,6 @@ struct CreateForm<T>: HTMLComponent {
                         }
                         .class("badge badge-" + option.rawValue)
                     }
-                    "Label"
                 }
                 .for(option.rawValue)
             }

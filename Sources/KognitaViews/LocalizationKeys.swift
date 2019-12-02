@@ -16,6 +16,21 @@ public class Strings {
     static let loginTitle = "login.title"
     static let loginSubtitle = "login.subtitle"
 
+    static let registerTitle = "register.title"
+    static let registerSubtilte = "register.subtitle"
+
+    static let registerNameTitle = "register.name.title"
+    static let registerNamePlaceholder = "register.name.placeholder"
+
+    static let registerConfirmPasswordTitle = "register.password.confirmation.title"
+    static let registerConfirmPasswordPlaceholder = "register.password.confirmation.placeholder"
+
+    static let registerTermsOfServiceTitle = "register.tos.description"
+    static let registerTermsOfServiceLink = "register.tos.link"
+
+    static let registerButton = "register.button"
+    static let alreadyHaveUser = "register.already.user.description"
+
     static let mailTitle = "login.mail.title"
     static let mailPlaceholder = "login.mail.placeholder"
 
