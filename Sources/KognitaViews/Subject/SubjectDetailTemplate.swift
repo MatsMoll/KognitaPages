@@ -23,14 +23,25 @@ extension Subject.Templates {
                 "[\(topicLevels.flatMap { $0 }.compactMap { $0.topic.id }.reduce("") { $0 + "\($1), " }.dropLast(2))]"
             }
 
-            public init(user: User, subject: Subject, topics: [[Topic]], levels: [User.TopicLevel], subjectLevel: User.SubjectLevel, leaderboard: [WorkPoints.LeaderboardRank]) {
+            public init(
+                user: User,
+                subject: Subject,
+                topics: [[(Topic, TopicTaskCount)]],
+                levels: [User.TopicLevel],
+                subjectLevel: User.SubjectLevel,
+                leaderboard: [WorkPoints.LeaderboardRank]
+            ) {
                 self.user = user
                 self.base = .init(title: subject.name, description: subject.name)
                 self.subject = subject
                 self.subjectLevel = subjectLevel
                 self.topicLevels = topics.map { topics in
                     topics.map { topic in
-                        .init(topic: topic, level: levels.first(where: { $0.topicID == topic.id }))
+                        .init(
+                            topic: topic.0,
+                            level: levels.first(where: { $0.topicID == topic.0.id }),
+                            numberOfTasks: topic.1.taskCount
+                        )
                     }
                 }
             }
@@ -114,6 +125,7 @@ extension Subject.Templates {
         struct TopicCardContext {
             let topic: Topic
             let level: User.TopicLevel?
+            let numberOfTasks: Int
         }
 
         struct TopicCard<T>: HTMLComponent {
@@ -124,15 +136,21 @@ extension Subject.Templates {
                 Div {
                     Card {
                         Text {
-                            topic.topic.chapter + ". " + topic.topic.name
+                            topic.topic.name
                         }
                         .margin(.zero, for: .top)
                         .style(.heading3)
 
+                        Small {
+                            "Antall oppgaver: "
+                            topic.numberOfTasks
+                        }
+                        .display(.block)
+
                         Button {
                             Italic().class("mdi mdi-book-open-variant")
                             " "
-                            Localized(key: Strings.subjectStartSession)
+                            Strings.subjectStartSession.localized()
                         }
                         .type(.button)
                         .class("btn-rounded")
@@ -201,7 +219,7 @@ extension Subject.Templates {
                     Button {
                         Italic().class("mdi mdi-book-open-variant")
                         " "
-                        Localized(key: Strings.subjectStartSession)
+                        Strings.subjectStartSession.localized()
                     }
                     .type(.button)
                     .class("btn-rounded")
