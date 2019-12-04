@@ -18,7 +18,7 @@ jobs:
       image: swift:5.1.2-bionic
     runs-on: ubuntu-18.04
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v1.2.0
     - name: Run unit tests
       run: |
         apt-get -qq update && apt-get install -y \
