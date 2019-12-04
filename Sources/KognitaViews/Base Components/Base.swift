@@ -12,7 +12,7 @@ import KognitaCore
 
 struct LogoImage: HTMLComponent {
     var body: HTML {
-        Img().source("assets/images/logo.png").alt("Logo").height(30)
+        Img().source("/assets/images/logo.png").alt("Logo").height(30)
     }
 }
 
