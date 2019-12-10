@@ -64,135 +64,49 @@ extension Subject.Templates {
                     title: context.subject.name,
                     breadcrumbs: breadcrumbs
                 )
-                SubjectCard(
-                    subject: context.subject,
-                    userLevel: context.subjectLevel,
-                    topicIDsJSList: context.topicIDsJSList
-                )
                 Row {
-                    IF(context.topicLevels.isEmpty) {
-                        Div {
-                            Text(Strings.subjectsNoTopics)
-                                .class("page-title")
-                                .style(.heading3)
-                        }
-                        .class("page-title-box")
-                    }.else {
-                        TopicLevels(
-                            levels: context.topicLevels
+                    Div {
+                        SubjectCard(
+                            subject: context.subject,
+                            userLevel: context.subjectLevel,
+                            topicIDsJSList: context.topicIDsJSList
                         )
+                        Row {
+                            IF(context.topicLevels.isEmpty) {
+                                Div {
+                                    Text(Strings.subjectsNoTopics)
+                                        .class("page-title")
+                                        .style(.heading3)
+                                }
+                                .class("page-title-box")
+                            }.else {
+                                TopicLevels(
+                                    levels: context.topicLevels
+                                )
+                            }
+                        }
                     }
+                    .column(width: .eight, for: .large)
+                    Div {
+                        StatisticsCard()
+                        IF(context.user.isCreator) {
+                            CreateContentCard()
+                        }
+                    }
+                    .column(width: .four, for: .large)
                 }
             }
             .scripts {
+                Script().source("/assets/js/vendor/Chart.bundle.min.js")
+                Script().source("/assets/js/results/weekly-histogram.js")
                 Script().source("/assets/js/practice-session-create.js")
             }
-        }
-
-        struct TopicLevels<T>: HTMLComponent {
-
-            let levels: TemplateValue<T, [[TopicCardContext]]>
-
-            var body: HTML {
-                ForEach(enumerated: levels) { topics, index in
-                    Div {
-                        Div {
-                            title(index)
-                        }
-                        .class("page-title-box")
-                    }
-                    .class("col-12")
-                    .margin(.three, for: .top)
-
-                    ForEach(in: topics) { topic in
-                        TopicCard(topic: topic)
-                    }
+            .modals {
+                IF(context.user.isCreator) {
+                    CreateContentModal(
+                        subject: context.subject
+                    )
                 }
-            }
-
-            func title(_ index: RootValue<Int>) -> HTML {
-                Text {
-                    "Nivå "
-                    index.map { value in
-                        value + 1
-                    }
-                }
-                .class("page-title")
-                .style(.heading4)
-            }
-        }
-
-        struct TopicCardContext {
-            let topic: Topic
-            let level: User.TopicLevel?
-            let numberOfTasks: Int
-        }
-
-        struct TopicCard<T>: HTMLComponent {
-
-            let topic: TemplateValue<T, TopicCardContext>
-
-            var body: HTML {
-                Div {
-                    Card {
-                        Text {
-                            topic.topic.name
-                        }
-                        .margin(.zero, for: .top)
-                        .style(.heading3)
-
-                        Small {
-                            "Antall oppgaver: "
-                            topic.numberOfTasks
-                        }
-                        .display(.block)
-
-                        Button {
-                            Italic().class("mdi mdi-book-open-variant")
-                            " "
-                            Strings.subjectStartSession.localized()
-                        }
-                        .type(.button)
-                        .class("btn-rounded")
-                        .button(style: .light)
-                        .margin(.one, for: .vertical)
-                    }
-                    .sub {
-                        IF(isDefined: topic.level) { level in
-                            TopicLevel(
-                                level: level
-                            )
-                        }
-                    }
-                    .display(.block)
-                }
-                .class("col-md-6 col-lg-4")
-                .on(click: "startPracticeSession([" + topic.topic.id + "], " + topic.topic.subjectId + ")")
-            }
-        }
-
-        struct TopicLevel<T>: HTMLComponent {
-
-            let level: TemplateValue<T, User.TopicLevel>
-
-            var body: HTML {
-                UnorderdList {
-                    ListItem {
-                        Text {
-                            level.correctProsentage + "%"
-                            Small { level.correctScoreInteger + " riktig" }
-                                .margin(.one, for: .left)
-
-                        }
-                        .font(style: .bold)
-                        .margin(.two, for: .bottom)
-
-                        KognitaProgressBar(value: level.correctProsentage)
-                    }
-                    .class("list-group-item")
-                    .padding(.three)
-                }
-                .class("list-group list-group-flush")
             }
         }
 
@@ -259,6 +173,49 @@ extension Subject.Templates {
             }
         }
     }
+
+    struct CreateContentCard: HTMLComponent {
+
+        var body: HTML {
+            Card {
+                Text {
+                    "Lag innhold"
+                }
+                .style(.heading3)
+                .text(color: .dark)
+
+                Anchor {
+                    "Foreslå innhold"
+                }
+                .href("#")
+                .button(style: .light)
+                .class("btn-rounded")
+                .toggle(modal: .id("create-content-modal"))
+            }
+        }
+    }
+
+    struct StatisticsCard: HTMLComponent {
+
+        var body: HTML {
+            Card {
+                Text {
+                    "Statistikk"
+                }
+                .style(.heading3)
+                .text(color: .dark)
+                .margin(.two, for: .bottom)
+
+                Text {
+                    "Timer øvd de siste ukene:"
+                }
+                Div {
+                    Canvas().id("practice-time-histogram")
+                }
+                .class("mt-3 chartjs-chart")
+            }
+        }
+    }
 }
 
 struct KognitaProgressBadge<T>: HTMLComponent {
@@ -301,5 +258,13 @@ struct KognitaProgressBar<T>: HTMLComponent {
         .modify(if: 75.0...100.0 ~= value) {
             $0.bar(style: .success)
         }
+    }
+}
+
+extension AttributeNode {
+
+    func toggle(modal id: HTMLIdentifier) -> Self {
+        self.data(for: "toggle", value: "modal")
+            .data(for: "target", value: id)
     }
 }

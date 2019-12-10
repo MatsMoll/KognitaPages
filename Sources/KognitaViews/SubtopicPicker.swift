@@ -16,16 +16,25 @@ struct SubtopicPicker<T>: HTMLComponent {
 
     var body: HTML {
         FormGroup(label: label) {
-            Select(custom: topics) { topic in
+            Select {
                 OptionGroup {
-                    ForEach(in: topic.subtopics) { subtopic in
-                        Option {
-                            subtopic.name + " - " + topic.topic.name
-                        }
-                        .value(subtopic.id)
+                    Option {
+                        "Velg undertema"
                     }
                 }
-                .label(topic.topic.name)
+                .label("Velg undertema")
+                
+                ForEach(in: topics) { topic in
+                    OptionGroup {
+                        ForEach(in: topic.subtopics) { subtopic in
+                            Option {
+                                subtopic.name + " - " + topic.topic.name
+                            }
+                            .value(subtopic.id)
+                        }
+                    }
+                    .label(topic.topic.name)
+                }
             }
             .id(idPrefix + "topic-id")
             .class("select2")
