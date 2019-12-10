@@ -202,7 +202,7 @@ extension MultipleChoiseTask.Templates {
                                             }
                                             .type(.button)
                                             .class("btn btn-success btn-rounded")
-//                                            .on(click: "addChoise();")
+                                            .on(click: "addChoise();")
                                         }
                                         .class("form-group col-md-2")
                                     }

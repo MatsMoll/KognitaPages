@@ -109,14 +109,14 @@ public struct CreatorTemplates {
                             }.href(createMultipleTaskUrl)
                             Anchor {
                                 Button {
-                                    "Lag innskrivningsoppgave"
+                                    "Lag matteoppgave"
                                 }
                                 .type(.button)
                                 .class("btn btn-success ml-2")
                             }.href(createInputTaskUrl)
                             Anchor {
                                 Button {
-                                    "Lag ordkort"
+                                    "Lag kortsvarsoppgave"
                                 }
                                 .type(.button)
                                 .class("btn btn-success ml-2")
