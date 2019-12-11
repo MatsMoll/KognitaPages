@@ -32,10 +32,16 @@ public protocol TaskResultable {
     var question: String { get }
     var revisitTime: Int { get }
     var resultDescription: String { get }
-    var resultScore: Double? { get }
+    var resultScore: Double { get }
     var timeUsed: String { get }
     var date: Date? { get }
     var revisitDate: Date? { get }
+}
+
+struct TopicResultContext {
+    let topicName: String
+    let topicScore: Double
+    let tasks: [TaskResultable]
 }
 
 struct ViewWrapper: HTML {
@@ -75,25 +81,53 @@ extension PracticeSession.Templates {
 
             let tasks: [TaskResultable]
 
+            let topicResults: [TopicResultContext]
+
+            var singleStats: [SingleStatisticCardContent] {
+                [
+                    .init(
+                        title: "Nåværende nivå",
+                        mainContent: accuracy + " 🔥",
+                        extraContent: nil
+                    ),
+                    .init(
+                        title: "Antall oppgaver utført",
+                        mainContent: numberOfTasks,
+                        extraContent: nil
+                    ),
+                    .init(
+                        title: "Tid øvd",
+                        mainContent: timeUsed,
+                        extraContent: nil
+                    ),
+                ]
+            }
+
             public init(user: User, tasks: [TaskResultable], progress: Int, timeUsed: TimeInterval) {
 
                 var maxScore: Double = 0
                 var achievedScore: Double = 0
                 for task in tasks {
-                    if let score = task.resultScore {
-                        maxScore += 1
-                        achievedScore += score.clamped(to: 0...1)
-                    }
+                    maxScore += 100
+                    achievedScore += task.resultScore.clamped(to: 0...100)
                 }
                 let accuracyScore = achievedScore / maxScore
 
                 self.user = user
-//                title: "Resultat | Øving ")
                 self.tasks = tasks
                 self.numberOfTasks = "\(tasks.count)"
                 self.goalProgress = "\(progress)%"
                 self.timeUsed = timeUsed.timeString
                 self.accuracy = "\((10000 * accuracyScore).rounded() / 100)%"
+
+                let grouped = tasks.group(by: \.topicName)
+                topicResults = grouped.map { name, tasks in
+                    TopicResultContext(
+                        topicName: name,
+                        topicScore: tasks.reduce(0.0) { $0 + $1.resultScore } / Double(tasks.count),
+                        tasks: tasks
+                    )
+                }
             }
         }
 
@@ -125,155 +159,50 @@ extension PracticeSession.Templates {
                 }
                 Row {
                     Div {
-                        Div {
-                            Div {
-                                Row {
-                                    StatsView(
-                                        stats: context.numberOfTasks,
-                                        icon: "graph-pie",
-                                        description: Strings.resultSummaryNumberOfTasks
-                                    )
-                                    StatsView(
-                                        stats: context.goalProgress,
-                                        icon: "graph-bar",
-                                        description: Strings.resultSummaryGoal
-                                    )
-                                    StatsView(
-                                        stats: context.timeUsed,
-                                        icon: "preview",
-                                        description: Strings.resultSummaryDuration
-                                    )
-                                    StatsView(
-                                        stats: context.accuracy,
-                                        icon: "checkmark",
-                                        description: Strings.resultSummaryAccuracy
-                                    )
+                        IF(context.topicResults.count > 1) {
+                            Row {
+                                ForEach(in: context.topicResults) { result in
+                                    Div {
+                                        TopicOverview(
+                                            topicName: result.topicName,
+                                            topicLevel: result.topicScore,
+                                            topicTaskResults: result.tasks
+                                        )
+                                    }
+                                    .column(width: .six, for: .medium)
                                 }
-                                .noGutters()
-                            }.class("card-body p-0")
-                        }.class("card widget-inline")
-                    }.class("col-12")
-                }
-                Row {
-                    Div {
-                        Div {
-                            Div {
-                                Div {
-                                    ResultTable(
-                                        tasks: context.tasks
-                                    )
-                                }
-                                .class("table-responsive")
                             }
-                            .class("row no-gutters")
                         }
-                        .class("card-body p-0")
+                        .elseIf(context.topicResults.count == 1) {
+                            Unwrap(value: context.topicResults.first) { result in
+                                TopicOverview(
+                                    topicName: result.topicName,
+                                    topicLevel: result.topicScore,
+                                    topicTaskResults: result.tasks
+                                )
+                            }
+                        }
+                        .else {
+                            Text {
+                                "Vi klarte ikke å finne noen oppgaver i dette øvingsettet"
+                            }
+                            .style(.lead)
+                        }
                     }
-                    .class("card widget-inline")
+                    .column(width: .eight, for: .large)
+                    Div {
+                        ForEach(in: context.singleStats) { statistic in
+                            SingleStatisticCard(
+                                stats: statistic
+                            )
+                        }
+                    }
+                    .column(width: .four, for: .large)
                 }
-                .class("col-12")
             }
             .scripts {
                 Script().source("/assets/js/vendor/Chart.bundle.min.js")
                 Script().source("/assets/js/practice-session-histogram.js")
-            }
-        }
-
-        struct ResultTable<T>: HTMLComponent {
-
-            let tasks: TemplateValue<T, [TaskResultable]>
-
-            var body: HTML {
-                Table {
-                    TableHead {
-                        TableRow {
-                            TableHeader(Strings.resultSummaryTopicColumn)
-                            TableHeader(Strings.resultSummaryQuestionColumn)
-                            TableHeader(Strings.resultSummaryResultColumn)
-                            TableHeader(Strings.resultSummaryRepeatColumn)
-                        }
-                    }.class("thead-light")
-
-                    TableBody {
-                        ForEach(in: tasks) { result in
-                            ResultCell(
-                                result: result
-                            )
-                        }
-                    }
-                }
-                .class("table table-centered w-100 dt-responsive nowrap")
-                .id("products-datatable")
-            }
-
-
-            struct ResultCell<T>: HTMLComponent {
-
-                let result: TemplateValue<T, TaskResultable>
-
-                var body: HTML {
-                    TableRow {
-                        TableCell {
-                            result.topicName
-                        }
-                        .text(color: .muted)
-
-                        TableCell {
-                            result.question
-                        }
-                        .text(color: .muted)
-
-                        TableCell {
-                            result.resultDescription
-                        }
-                        .text(color: .muted)
-
-                        TableCell {
-                            IF(result.revisitDate.isDefined) {
-                                Div {
-                                    "localize(.days)"
-                                    result.revisitTime
-                                }
-                                .class("badge float-right")
-                            }.else {
-                                Div {
-                                    "Full kontroll"
-                                }
-                                .class("badge badge-success float-right")
-                            }
-                        }
-                        .text(color: .muted)
-                    }
-                }
-            }
-        }
-
-        struct StatsView<T>: HTMLComponent {
-
-            let stats: TemplateValue<T, String>
-            let icon: String
-            let description: String
-
-            var body: HTML {
-                Div {
-                    Div {
-                        Div {
-                            Italic()
-                                .class("dripicons-\(icon) text-muted")
-                                .style(css: "font-size: 24px;")
-                            H3 {
-                                Span {
-                                    stats
-                                }
-                            }
-                            Text(description)
-                                .class("text-muted font-15 mb-0")
-                        }
-                        .class("card-body text-center")
-                    }
-                    .class("card shadow-none m-0")
-                }
-                .class("col-sm-6 col-lg-3")
             }
         }
     }
