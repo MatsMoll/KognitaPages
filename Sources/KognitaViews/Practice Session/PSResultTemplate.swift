@@ -28,6 +28,7 @@ extension TimeInterval {
 }
 
 public protocol TaskResultable {
+    var topicId: Topic.ID { get }
     var topicName: String { get }
     var question: String { get }
     var revisitTime: Int { get }
@@ -39,6 +40,7 @@ public protocol TaskResultable {
 }
 
 struct TopicResultContext {
+    let topicId: Topic.ID
     let topicName: String
     let topicScore: Double
     let tasks: [TaskResultable]
@@ -123,6 +125,7 @@ extension PracticeSession.Templates {
                 let grouped = tasks.group(by: \.topicName)
                 topicResults = grouped.map { name, tasks in
                     TopicResultContext(
+                        topicId: tasks.first?.topicId ?? 0,
                         topicName: name,
                         topicScore: tasks.reduce(0.0) { $0 + $1.resultScore } / Double(tasks.count),
                         tasks: tasks
@@ -164,6 +167,7 @@ extension PracticeSession.Templates {
                                 ForEach(in: context.topicResults) { result in
                                     Div {
                                         TopicOverview(
+                                            topicId: result.topicId,
                                             topicName: result.topicName,
                                             topicLevel: result.topicScore,
                                             topicTaskResults: result.tasks
@@ -176,10 +180,12 @@ extension PracticeSession.Templates {
                         .elseIf(context.topicResults.count == 1) {
                             Unwrap(value: context.topicResults.first) { result in
                                 TopicOverview(
+                                    topicId: result.topicId,
                                     topicName: result.topicName,
                                     topicLevel: result.topicScore,
                                     topicTaskResults: result.tasks
                                 )
+                                .isShown(true)
                             }
                         }
                         .else {

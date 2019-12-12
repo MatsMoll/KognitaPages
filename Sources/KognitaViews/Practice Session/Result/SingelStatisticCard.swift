@@ -47,11 +47,11 @@ struct SingleStatisticCard<T>: HTMLComponent, AttributeNode {
 }
 
 
-struct Unwrap<T, V>: HTMLComponent {
+struct Unwrap: HTMLComponent {
 
     let body: HTML
 
-    init(value: TemplateValue<T, V?>, @HTMLBuilder build: (TemplateValue<T, V>) -> HTML) {
+    init<T, V>(value: TemplateValue<T, V?>, @HTMLBuilder build: (TemplateValue<T, V>) -> HTML) {
         body = IF(isDefined: value, content: build)
     }
 }

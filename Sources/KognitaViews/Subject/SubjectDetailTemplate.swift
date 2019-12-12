@@ -172,47 +172,47 @@ extension Subject.Templates {
                 .display(.block)
             }
         }
-    }
 
-    struct CreateContentCard: HTMLComponent {
+        struct CreateContentCard: HTMLComponent {
 
-        var body: HTML {
-            Card {
-                Text {
-                    "Lag innhold"
+            var body: HTML {
+                Card {
+                    Text {
+                        "Lag innhold"
+                    }
+                    .style(.heading3)
+                    .text(color: .dark)
+
+                    Anchor {
+                        "Foreslå innhold"
+                    }
+                    .href("#")
+                    .button(style: .light)
+                    .class("btn-rounded")
+                    .toggle(modal: .id("create-content-modal"))
                 }
-                .style(.heading3)
-                .text(color: .dark)
-
-                Anchor {
-                    "Foreslå innhold"
-                }
-                .href("#")
-                .button(style: .light)
-                .class("btn-rounded")
-                .toggle(modal: .id("create-content-modal"))
             }
         }
-    }
 
-    struct StatisticsCard: HTMLComponent {
+        struct StatisticsCard: HTMLComponent {
 
-        var body: HTML {
-            Card {
-                Text {
-                    "Statistikk"
-                }
-                .style(.heading3)
-                .text(color: .dark)
-                .margin(.two, for: .bottom)
+            var body: HTML {
+                Card {
+                    Text {
+                        "Statistikk"
+                    }
+                    .style(.heading3)
+                    .text(color: .dark)
+                    .margin(.two, for: .bottom)
 
-                Text {
-                    "Timer øvd de siste ukene:"
+                    Text {
+                        "Timer øvd de siste ukene:"
+                    }
+                    Div {
+                        Canvas().id("practice-time-histogram")
+                    }
+                    .class("mt-3 chartjs-chart")
                 }
-                Div {
-                    Canvas().id("practice-time-histogram")
-                }
-                .class("mt-3 chartjs-chart")
             }
         }
     }
