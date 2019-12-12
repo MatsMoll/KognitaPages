@@ -43,75 +43,62 @@ extension Subject.Templates {
 
                 PageTitle(title: Strings.subjectsTitle.localized())
 
-                IF(context.ongoingSessionPath.isDefined) {
-                    Text {
-                        "Fortsett"
-                    }
-                    .style(.heading3)
-                    Row {
-                        Div {
-                            Card {
-                                Text {
-                                    "Fullfør treningssesjonen"
-                                }
-                                .style(.heading3)
-                                .class("mt-0")
-                                Text { "Du har en treningssesjon som ikke er fullført. Sett av litt tid og fullfør." }
-                                Anchor {
-                                    Button {
-                                        Italic().class("mdi mdi-book-open-variant")
-                                        " Fortsett"
-                                    }
-                                    .type(.button)
-                                    .class("btn-rounded mb-1")
-                                    .button(style: .primary)
-                                }
-                                .href(context.ongoingSessionPath)
-                                .text(color: .dark)
-                            }
-                            .display(.block)
-                        }
-                        .class("col-md-6 col-xl-6")
-                    }
-                }
-                H3(Strings.repeatTitle)
                 Row {
-                    IF(context.revisitTasks.isEmpty) {
-                        Div {
-                            Card {
-                                Text { "Hva kommer her?" }
-                                    .style(.heading4)
-                                Text {
-                                    "Her vil det komme opp temaer som vi anbefaler å prioritere først. Dette skal hjelpe deg med å øve mer effektivt og dermed få mer ut av øvingene dine."
-                                }
-                                Text {
-                                    "Disse anbefalingnene vil først komme når du har gjørt noen oppgaver"
+                    Div {
+                        ContinuePracticeSessionCard(
+                            ongoingSessionPath: context.ongoingSessionPath
+                        )
+//                        Text(Strings.repeatTitle)
+//                            .style(.heading3)
+//                        Row {
+//                            IF(context.revisitTasks.isEmpty) {
+//                                Div {
+//                                    Card {
+//                                        Text { "Hva kommer her?" }
+//                                            .style(.heading4)
+//                                        Text {
+//                                            "Her vil det komme opp temaer som vi anbefaler å prioritere først. Dette skal hjelpe deg med å øve mer effektivt og dermed få mer ut av øvingene dine."
+//                                        }
+//                                        Text {
+//                                            "Disse anbefalingnene vil først komme når du har gjørt noen oppgaver"
+//                                        }
+//                                    }
+//                                    .display(.block)
+//                                }
+//                                .column(width: .twelve)
+//                            }.else {
+//                                ForEach(in: context.revisitTasks) { revisit in
+//                                    RevisitCard(context: revisit)
+//                                }
+//                            }
+//                        }
+                        Text(Strings.subjectsListTitle)
+                            .style(.heading3)
+                        Row {
+                            IF(context.cards.isEmpty) {
+                                Text(Strings.subjectsNoContent)
+                                    .style(.heading1)
+                            }.else {
+                                ForEach(in: context.cards) { subject in
+                                    SubjectCard(subject: subject)
                                 }
                             }
-                            .display(.block)
-                        }
-                        .column(width: .twelve)
-                    }.else {
-                        ForEach(in: context.revisitTasks) { revisit in
-                            RevisitCard(context: revisit)
                         }
                     }
-                }
-                Text(Strings.subjectsListTitle)
-                    .style(.heading3)
-                Row {
-                    IF(context.cards.isEmpty) {
-                        Text(Strings.subjectsNoContent)
-                            .style(.heading1)
-                    }.else {
-                        ForEach(in: context.cards) { subject in
-                            SubjectCard(subject: subject)
+                    .column(width: .eight, for: .large)
+                    Div {
+                        StatisticsCard()
+                        IF(context.user.isCreator) {
+                            CreateContentCard()
                         }
                     }
+                    .column(width: .four, for: .large)
                 }
             }
             .scripts {
                 Script().source("/assets/js/practice-session-create.js")
+                Script().source("/assets/js/vendor/Chart.bundle.min.js")
+                Script().source("/assets/js/practice-session-histogram.js")
             }
             .active(path: "/subjects")
         }
@@ -204,7 +191,49 @@ extension Subject.Templates {
                     .href("subjects/" + subject.id)
                     .text(color: .dark)
                 }
-                .class("col-md-6 col-xl-6")
+                .class("col-lg-6")
+            }
+        }
+
+        struct StatisticsCard: HTMLComponent {
+
+            var body: HTML {
+                Card {
+                    Text {
+                        "Statistikk"
+                    }
+                    .style(.heading3)
+                    .text(color: .dark)
+                    .margin(.two, for: .bottom)
+
+                    Text {
+                        "Timer øvd de siste ukene:"
+                    }
+                    Div {
+                        Canvas().id("practice-time-histogram")
+                    }
+                    .class("mt-3 chartjs-chart")
+                }
+            }
+        }
+
+        struct CreateContentCard: HTMLComponent {
+
+            var body: HTML {
+                Card {
+                    Text {
+                        "Mangler et fag?"
+                    }
+                    .style(.heading3)
+                    .text(color: .dark)
+
+                    Anchor {
+                        "Lag nytt fag"
+                    }
+                    .href("/subjects/create")
+                    .button(style: .light)
+                    .class("btn-rounded")
+                }
             }
         }
     }
