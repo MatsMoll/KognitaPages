@@ -82,8 +82,8 @@ extension PracticeSession.Templates.Result {
             .init(topicId: topicId, topicName: topicName, topicLevel: topicLevel, topicTaskResults: topicTaskResults, isShownValue: isShownValue, attributes: attributes)
         }
 
-        func isShown(_ isShown: Conditionable) -> PracticeSession.Templates.Result.TopicOverview<T> {
-            .init(topicId: topicId, topicName: topicName, topicLevel: topicLevel, topicTaskResults: topicTaskResults, isShownValue: isShownValue, attributes: attributes)
+        func isShown(_ condition: Conditionable) -> PracticeSession.Templates.Result.TopicOverview<T> {
+            .init(topicId: topicId, topicName: topicName, topicLevel: topicLevel, topicTaskResults: topicTaskResults, isShownValue: condition, attributes: attributes)
         }
     }
 }
