@@ -8,7 +8,25 @@
 
 import BootstrapKit
 import KognitaCore
-import Foundation
+
+extension HTML {
+    func append(html: HTML) -> HTML {
+        var output: Array<HTML> = []
+
+        if let list = self as? Array<HTML> {
+            output.append(contentsOf: list)
+        } else {
+            output.append(self)
+        }
+
+        if let list = html as? Array<HTML> {
+            output.append(list)
+        } else {
+            output.append(html)
+        }
+        return output
+    }
+}
 
 extension PracticeSession {
     public struct Templates {}
@@ -122,7 +140,17 @@ extension PracticeSession.Templates.History {
 
         let sessions: TemplateValue<T, Sessions>
 
-        var isShown: Conditionable = false
+        init(sessions: TemplateValue<T, Sessions>) {
+            self.sessions = sessions
+        }
+
+        init(sessions: TemplateValue<T, Sessions>, isShownValue: Conditionable, attributes: [HTMLAttribute]) {
+            self.sessions = sessions
+            self.isShownValue = isShownValue
+            self.attributes = attributes
+        }
+
+        private var isShownValue: Conditionable = false
         var attributes: [HTMLAttribute] = []
 
         var body: HTML {
@@ -143,50 +171,63 @@ extension PracticeSession.Templates.History {
             .content {
                 Div {
                     ForEach(in: sessions.sessions) { (session: RootValue<PracticeSession>) in
-                        Anchor {
-
-                            Button {
-                                "Se mer"
-                            }
-                            .button(style: .light)
-                            .float(.right)
-
-                            Text {
-                                "Startet: "
-                                session.createdAt
-                                    .style(date: .medium, time: .short)
-                            }
-                            .text(color: .muted)
-                            .margin(.three, for: .right)
-                            .margin(.one, for: .bottom)
-
-                            Unwrap(value: session.timeUsed) { timeUsed in
-                                Text {
-                                    "Lengde: "
-                                    timeUsed.timeString
-                                }
-                                .text(color: .muted)
-                                .margin(.three, for: .right)
-                                .margin(.one, for: .bottom)
-                            }
-                        }
-                        .class("list-group-item")
-                        .href("/practice-sessions/" + session.id + "/result")
+                        SessionItem(session: session)
                     }
                 }
                 .class("list-group list-group-flush")
             }
-            .collapseId("collapse" + sessions.subject.id)
-            .isShown(isShown)
+            .collapseId("collapse".append(html: sessions.subject.id))
+            .isShown(isShownValue)
             .add(attributes: attributes)
         }
 
         func copy(with attributes: [HTMLAttribute]) -> PracticeSession.Templates.History.SubjectOverview<T> {
-            .init(sessions: sessions, isShown: isShown, attributes: attributes)
+            .init(sessions: sessions, isShownValue: isShownValue, attributes: attributes)
         }
 
         func isShown(_ condition: Conditionable) -> PracticeSession.Templates.History.SubjectOverview<T> {
-            .init(sessions: sessions, isShown: condition, attributes: attributes)
+            .init(sessions: sessions, isShownValue: condition, attributes: attributes)
+        }
+    }
+
+    struct SessionItem: HTMLComponent {
+
+        let session: RootValue<PracticeSession>
+
+        var body: HTML {
+            Anchor {
+
+                Button {
+                    "Se mer"
+                }
+                .button(style: .light)
+                .float(.right)
+
+                Text {
+                    "Startet: "
+                    session.createdAt
+                        .style(date: .medium, time: .short)
+                }
+                .text(color: .muted)
+                .margin(.three, for: .right)
+                .margin(.one, for: .bottom)
+
+                Unwrap(value: session.timeUsed) { timeUsed in
+                    timeUsedText(timeUsed)
+                }
+            }
+            .class("list-group-item")
+            .href("/practice-sessions/".append(html: session.id).append(html: "/result"))
+        }
+
+        func timeUsedText<T>(_ timeUsed: TemplateValue<T, Double>) -> HTML {
+            Text {
+                "Lengde: "
+                timeUsed.timeString
+            }
+            .text(color: .muted)
+            .margin(.three, for: .right)
+            .margin(.one, for: .bottom)
         }
     }
 }
