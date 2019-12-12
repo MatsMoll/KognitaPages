@@ -321,6 +321,12 @@ extension User.Templates.ResetPassword {
                             .id("verifyPassword")
                             .placeholder(localized: Strings.registerConfirmPasswordPlaceholder)
                     }
+                    
+                    Button {
+                        "Endre passord"
+                    }
+                    .type(.submit)
+                    .button(style: .primary)
                 }
                 .action("/reset-password")
                 .method(.post)
