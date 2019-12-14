@@ -14,11 +14,11 @@ extension CreatorTemplates {
         public struct Context {
             let user: User
             let base: BaseTemplateContent
-            let tasks: [CreatorTaskContent]
+            let tasks: [CreatorTaskContentable]
             let topic: Topic
             let subject: Subject
 
-            public init(user: User, subject: Subject, topic: Topic, tasks: [CreatorTaskContent]) {
+            public init(user: User, subject: Subject, topic: Topic, tasks: [CreatorTaskContentable]) {
                 self.user = user
                 self.base = .init(title: topic.name, description: topic.name)
                 self.topic = topic

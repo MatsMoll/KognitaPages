@@ -220,9 +220,9 @@ struct ContentBaseTemplate<T>: HTMLComponent {
                     ForEach(in: tabs) { tab in
                         self.tab(with: tab)
                     }
-                    IF(userContext.isCreator) {
-                        self.tab(with: .constant(creatorTab))
-                    }
+//                    IF(userContext.isCreator) {
+//                        self.tab(with: .constant(creatorTab))
+//                    }
                     ListItem {
                         Form {
                             Button {
