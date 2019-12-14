@@ -64,7 +64,7 @@ extension Topic.Templates {
                                         "Kapittel"
                                     }.for("create-topic-name").class("col-form-label")
                                     Input()
-                                        .type("number")
+                                        .type(.number)
                                         .class("form-control")
                                         .id("create-topic-chapter")
                                         .placeholder("1")

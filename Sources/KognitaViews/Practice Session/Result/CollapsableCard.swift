@@ -40,9 +40,9 @@ struct CollapsingCard: HTML, AttributeNode {
             .data(for: "target", value: "#".append(html: id))
             .aria(for: "controls", value: id)
 
-//            contentNode
-//                .class("collapse".append(html: IF(isShown) { " show" }))
-//                .id(id)
+            contentNode
+                .class("collapse".append(html: IF(isShown) { " show" }))
+                .id(id)
         }
         .class("card")
         .add(attributes: attributes)

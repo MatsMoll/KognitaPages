@@ -100,10 +100,10 @@ public struct TaskPreviewTemplate<T>: HTMLComponent {
 
                 Row {
                     Div {
-                        Div {
-                            Span { "00:00" }.id("timer")
-                        }
-                        .float(.right)
+//                        Div {
+//                            Span { "00:00" }.id("timer")
+//                        }
+//                        .float(.right)
 
                         Text(Strings.exerciseMainTitle)
                             .margin(.zero, for: .top)
@@ -118,15 +118,15 @@ public struct TaskPreviewTemplate<T>: HTMLComponent {
                             .background(color: .primary)
                         }
 
-                        IF(isDefined: context.lastResult) { result in
-                            Badge {
-                                "Siste resultat: "
-                                result.result.resultScore
-                            }
-                            .margin(.three, for: .bottom)
-                            .float(.right)
-                            .class(result.revisitColorClass)
-                        }
+//                        IF(isDefined: context.lastResult) { result in
+//                            Badge {
+//                                "Siste resultat: "
+//                                result.result.resultScore
+//                            }
+//                            .margin(.three, for: .bottom)
+//                            .float(.right)
+//                            .class(result.revisitColorClass)
+//                        }
                     }
                     .column(width: .twelve)
                 }

@@ -10,7 +10,7 @@ import BootstrapKit
 import KognitaCore
 import Foundation
 
-public protocol CreatorTaskContent {
+public protocol CreatorTaskContentable {
     var creatorName: String? { get }
     var subjectName: String { get }
     var subjectID: Int { get }
@@ -29,10 +29,10 @@ public struct CreatorTemplates {
 
         public struct Context {
             let user: User
-            let tasks: [CreatorTaskContent]
+            let tasks: [CreatorTaskContentable]
             let timelyTopics: [TimelyTopic]
 
-            public init(user: User, tasks: [CreatorTaskContent], timelyTopics: [TimelyTopic]) {
+            public init(user: User, tasks: [CreatorTaskContentable], timelyTopics: [TimelyTopic]) {
                 self.user = user
                 self.tasks = tasks
                 self.timelyTopics = timelyTopics
@@ -227,7 +227,7 @@ public struct CreatorTemplates {
 
     struct TaskRow<T>: HTMLComponent {
 
-        let task: TemplateValue<T, CreatorTaskContent>
+        let task: TemplateValue<T, CreatorTaskContentable>
 
         var url: HTML { "/" + task.taskTypePath + "/" + task.taskID }
         var editUrl: HTML { "/creator/" + task.taskTypePath + "/" + task.taskID + "/edit" }
