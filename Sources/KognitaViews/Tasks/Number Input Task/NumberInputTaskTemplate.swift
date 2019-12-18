@@ -30,7 +30,7 @@ extension NumberInputTask.Templates {
             public init(
                 numberTask: NumberInputTask,
                 taskPreview: TaskPreviewContent,
-                user: User,
+                user: UserContent,
                 currentTaskIndex: Int?,
                 session: PracticeSession? = nil,
                 practiceProgress: Int? = nil,

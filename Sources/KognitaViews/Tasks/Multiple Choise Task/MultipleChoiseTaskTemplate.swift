@@ -31,7 +31,7 @@ extension MultipleChoiseTask.Templates {
             public init(
                 multiple: MultipleChoiseTask.Data,
                 taskContent: TaskPreviewContent,
-                user: User,
+                user: UserContent,
                 selectedChoises: [MultipleChoiseTaskChoise.Result] = [],
                 currentTaskIndex: Int? = nil,
                 session: PracticeSession? = nil,
@@ -93,13 +93,18 @@ extension MultipleChoiseTask.Templates {
                     .id("solution-button")
                     .display(.none)
                     .href("#solution")
-                    IF(context.session.isDefined) {
-                        Button(Strings.exerciseStopSessionButton)
-                            .button(style: .danger)
-                            .float(.right)
-                            .margin(.one, for: .left)
-                            .on(click: "endSession();")
+
+                    Unwrap(value: context.session) { session in
+                        Form {
+                            Button(Strings.exerciseStopSessionButton)
+                                .button(style: .danger)
+                                .float(.right)
+                                .margin(.one, for: .left)
+                        }
+                        .action("/practice-sessions/" + session.id + "/end")
+                        .method(.post)
                     }
+
                     IF(context.nextTaskIndex.isDefined) {
                         Anchor {
                             Button {

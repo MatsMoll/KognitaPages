@@ -34,7 +34,7 @@ extension FlashCardTask.Templates {
 
             public init(
                 taskPreview: TaskPreviewContent,
-                user: User,
+                user: UserContent,
                 currentTaskIndex: Int? = nil,
                 practiceProgress: Int? = nil,
                 session: PracticeSession? = nil,
@@ -91,12 +91,22 @@ extension FlashCardTask.Templates {
                     .margin(.one, for: .right)
                     .on(click: "revealSolution();")
 
-                    IF(context.session.isDefined) {
-                        Button(Strings.exerciseStopSessionButton)
-                            .float(.right)
-                            .button(style: .danger)
-                            .margin(.one, for: .left)
-                            .on(click: "submitAndEndSession();")
+//                    IF(context.session.isDefined) {
+//                        Button(Strings.exerciseStopSessionButton)
+//                            .float(.right)
+//                            .button(style: .danger)
+//                            .margin(.one, for: .left)
+//                            .on(click: "submitAndEndSession();")
+//                    }
+                    Unwrap(value: context.session) { session in
+                        Form {
+                            Button(Strings.exerciseStopSessionButton)
+                                .button(style: .danger)
+                                .margin(.one, for: .left)
+                        }
+                        .action("/practice-sessions/" + session.id + "/end")
+                        .method(.post)
+                        .float(.right)
                     }
                 }
             }

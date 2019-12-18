@@ -8,21 +8,13 @@
 import BootstrapKit
 import KognitaCore
 
-//struct TaskPreviewContent {
-//    var subject: Subject
-//    var topic: Topic
-//    var task: Task
-//    var actionDescription: String
-//}
-
 struct TaskPreviewTemplateContext {
     let practiceProgress: Int?
     let session: PracticeSession?
     let taskContent: TaskPreviewContent
     let lastResult: TaskResultContent?
-    let user: User
+    let user: UserContent
     let taskPath: String
-//        let numberOfTasks: Int
 
     var subject: Subject { return taskContent.subject }
     var topic: Topic { return taskContent.topic }
@@ -30,21 +22,18 @@ struct TaskPreviewTemplateContext {
 
     public init(
         task: TaskPreviewContent,
-        user: User,
+        user: UserContent,
         practiceProgress: Int?,
         session: PracticeSession?,
         lastResult: TaskResultContent?,
         taskPath: String
-//            numberOfTasks: Int
-        )
-    {
+    ) {
         self.practiceProgress = practiceProgress
         self.session = session
         self.taskContent = task
         self.lastResult = lastResult
         self.user = user
         self.taskPath = taskPath
-//            self.numberOfTasks = numberOfTasks
     }
 }
 
