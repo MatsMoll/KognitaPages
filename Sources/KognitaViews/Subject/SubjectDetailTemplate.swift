@@ -25,25 +25,19 @@ extension Subject.Templates {
 
             public init(
                 user: User,
-                subject: Subject,
-                topics: [[(Topic, TopicTaskCount)]],
-                levels: [User.TopicLevel],
-                subjectLevel: User.SubjectLevel,
-                leaderboard: [WorkPoints.LeaderboardRank]
+                details: Subject.Details
             ) {
                 self.user = user
-                self.base = .init(title: subject.name, description: subject.name)
-                self.subject = subject
-                self.subjectLevel = subjectLevel
-                self.topicLevels = topics.map { topics in
-                    topics.map { topic in
-                        .init(
-                            topic: topic.0,
-                            level: levels.first(where: { $0.topicID == topic.0.id }),
-                            numberOfTasks: topic.1.taskCount
-                        )
-                    }
-                }
+                self.base = .init(title: details.subject.name, description: details.subject.name)
+                self.subject = details.subject
+                self.subjectLevel = details.subjectLevel
+                self.topicLevels = [details.topics.map { topic in
+                    TopicCardContext(
+                        topic: topic.topic,
+                        level: details.levels.first(where: { $0.topicID == topic.topic.id }),
+                        numberOfTasks: topic.taskCount
+                    )
+                }]
             }
         }
 

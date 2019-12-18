@@ -47,21 +47,21 @@ extension PracticeSession.Templates {
             let user: User
             let sessions: [Sessions]
 
-            public init(user: User, sessions: [(PracticeSession, Subject)]) {
+            public init(user: User, sessions: PracticeSession.HistoryList) {
                 self.user = user
 
                 var groups = [Subject.ID: Sessions]()
 
-                for (session, subject) in sessions {
-                    if let grouped = groups[subject.id ?? 0] {
-                        groups[subject.id ?? 0] = .init(
-                            subject: subject,
-                            sessions: grouped.sessions + [session]
+                for item in sessions.sessions {
+                    if let grouped = groups[item.subject.id ?? 0] {
+                        groups[item.subject.id ?? 0] = .init(
+                            subject: item.subject,
+                            sessions: grouped.sessions + [item.session]
                         )
                     } else {
-                        groups[subject.id ?? 0] = .init(
-                            subject: subject,
-                            sessions: [session]
+                        groups[item.subject.id ?? 0] = .init(
+                            subject: item.subject,
+                            sessions: [item.session]
                         )
                     }
                 }
