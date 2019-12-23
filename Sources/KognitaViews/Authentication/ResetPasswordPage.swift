@@ -238,7 +238,7 @@ extension User.Templates.ResetPassword {
 
                     Text {
                         "Noen har spurt om å få endre passordet ditt "
-                        context.user.name
+                        context.user.username
                     }
                     .style(.paragraph)
                     .text(color: .muted)

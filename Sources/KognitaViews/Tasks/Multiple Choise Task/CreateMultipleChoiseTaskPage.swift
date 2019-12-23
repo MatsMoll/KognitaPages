@@ -163,10 +163,11 @@ extension MultipleChoiseTask.Templates {
                                         .for("create-multiple-solution")
                                         .class("col-form-label")
                                         Div {
-                                            IF(isDefined: context.taskInfo) {
-                                                $0.solution
-                                                    .escaping(.unsafeNone)
-                                            }
+                                            ""
+//                                            IF(isDefined: context.taskInfo) {
+//                                                $0.solution
+//                                                    .escaping(.unsafeNone)
+//                                            }
                                         }
                                         .id("create-multiple-solution")
                                     }

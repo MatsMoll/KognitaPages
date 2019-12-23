@@ -263,8 +263,8 @@ public struct TaskSolutionsTemplate: HTMLTemplate {
             }
             .style(.heading4)
 
-            IF(solution.creatorName.isDefined) {
-                "Lagd av: " + solution.creatorName
+            IF(solution.creatorUsername.isDefined) {
+                "Lagd av: " + solution.creatorUsername
             }
             IF(solution.approvedBy.isDefined) {
                 Badge {
@@ -301,8 +301,8 @@ public struct TaskSolutionsTemplate: HTMLTemplate {
                         }
                         .class("page-title")
                         Div {
-                            IF(context.creatorName.isDefined) {
-                                "Lagd av: " + context.creatorName
+                            IF(context.creatorUsername.isDefined) {
+                                "Lagd av: " + context.creatorUsername
                             }
                             IF(context.approvedBy.isDefined) {
                                 Badge {

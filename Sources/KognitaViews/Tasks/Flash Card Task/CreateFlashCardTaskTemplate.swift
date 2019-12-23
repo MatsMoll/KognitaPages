@@ -138,10 +138,11 @@ extension FlashCardTask.Templates {
 
                                     FormGroup(label: "Løsning") {
                                         Div {
-                                            IF(isDefined: context.taskInfo) {
-                                                $0.solution
-                                                    .escaping(.unsafeNone)
-                                            }
+                                            ""
+//                                            IF(isDefined: context.taskInfo) {
+//                                                $0.solution
+//                                                    .escaping(.unsafeNone)
+//                                            }
                                         }
                                         .id("card-solution")
                                     }
