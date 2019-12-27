@@ -24,8 +24,6 @@ extension Subject.Templates {
 
         public init() {}
 
-        public let context: RootValue<Context> = .root()
-
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
@@ -192,7 +190,7 @@ struct CreateForm<T>: HTMLComponent {
 
         var body: HTML {
             Div {
-                Subject.ColorClass.allCases.forEachHTML { option in
+                Subject.ColorClass.allCases.htmlForEach { option in
                     optionHTML(option)
                 }
             }
