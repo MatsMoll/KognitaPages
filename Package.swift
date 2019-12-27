@@ -16,7 +16,7 @@ dependencies.append(contentsOf: [
 #else
 dependencies.append(contentsOf: [
     .package(url: "https://Kognita:dyjdov-bupgev-goffY8@github.com/MatsMoll/KognitaCore", from: "1.0.0"),
-    .package(url: "https://github.com/MatsMoll/BootstrapKit.git", from: "1.0.0-alpha.1")
+    .package(url: "https://github.com/MatsMoll/BootstrapKit.git", from: "1.0.0-beta.1")
 ])
 #endif
 
