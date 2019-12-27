@@ -211,7 +211,7 @@ private struct TaskCell<T>: HTMLComponent {
 
             Text {
                 "Laget av: "
-                task.creator.name
+                task.creator.username
             }
         }
         .class("list-group-item")

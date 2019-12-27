@@ -53,7 +53,7 @@ extension User.Templates {
                     FormGroup(label: Strings.registerNameTitle.localized()) {
                         Input()
                             .type(.text)
-                            .id("name")
+                            .id("username")
                             .placeholder(localized: Strings.registerNamePlaceholder)
                     }
                     FormGroup(label: Strings.mailTitle.localized()) {
