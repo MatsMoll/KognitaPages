@@ -24,21 +24,21 @@ extension User.Templates {
         }
     }
 
-    struct AuthenticateBase<T>: HTMLComponent {
+    struct AuthenticateBase: HTMLComponent {
 
-        let context: TemplateValue<T, AuthenticateBaseContext>
+        let context: TemplateValue<AuthenticateBaseContext>
         var rootUrl: String = ""
         let cardBody: HTML
         var otherActions: HTML = ""
 
-        init(context: TemplateValue<T, AuthenticateBaseContext>, @HTMLBuilder cardBody: () -> HTML) {
+        init(context: TemplateValue<AuthenticateBaseContext>, @HTMLBuilder cardBody: () -> HTML) {
             self.context = context
             self.cardBody = cardBody()
             rootUrl = ""
             otherActions = ""
         }
 
-        init(context: TemplateValue<T, AuthenticateBaseContext>, cardBody: HTML, rootUrl: String, otherActions: HTML) {
+        init(context: TemplateValue<AuthenticateBaseContext>, cardBody: HTML, rootUrl: String, otherActions: HTML) {
             self.context = context
             self.cardBody = cardBody
             self.rootUrl = rootUrl
@@ -127,7 +127,7 @@ extension User.Templates.ResetPassword {
 
         public init() {}
 
-        public let context: RootValue<Context> = .root()
+        public let context: TemplateValue<Context> = .root()
 
         public var body: HTML {
             User.Templates.AuthenticateBase(
@@ -214,12 +214,12 @@ extension User.Templates.ResetPassword {
 
         public init() {}
 
-        public let context: RootValue<Context> = .root()
+        public let context: TemplateValue<Context> = .root()
         let rootUrl = "uni.kognita.no"
 
         public var body: HTML {
             User.Templates.AuthenticateBase(
-                context: RootValue<User.Templates.AuthenticateBaseContext>.constant(
+                context: TemplateValue<User.Templates.AuthenticateBaseContext>.constant(
                     .init(
                         title: "Gjenopprett Passord",
                         description: "Gjenopprett Passord",
@@ -271,11 +271,11 @@ extension User.Templates.ResetPassword {
 
         public init() {}
 
-        public var context: RootValue<Content> = .root()
+        public var context: TemplateValue<Content> = .root()
 
         public var body: HTML {
             User.Templates.AuthenticateBase(
-                context: RootValue<User.Templates.AuthenticateBaseContext>.constant(
+                context: TemplateValue<User.Templates.AuthenticateBaseContext>.constant(
                     .init(
                         title: "Gjenopprett Passord",
                         description: "Gjenopprett Passord",

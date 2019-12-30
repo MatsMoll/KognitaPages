@@ -26,25 +26,25 @@ struct BaseTemplateContent {
     }
 }
 
-struct BaseTemplate<T>: HTMLComponent {
+struct BaseTemplate: HTMLComponent {
 
-    let context: TemplateValue<T, BaseTemplateContent>
+    let context: TemplateValue<BaseTemplateContent>
     let content: HTML
     var customHeader: HTML = ""
     var rootUrl: String = ""
-    var scripts: HTML = ""
+    var customScripts: HTML = ""
 
-    init(context: TemplateValue<T, BaseTemplateContent>, @HTMLBuilder content: () -> HTML) {
+    init(context: TemplateValue<BaseTemplateContent>, @HTMLBuilder content: () -> HTML) {
         self.context = context
         self.content = content()
     }
 
-    init(context: TemplateValue<T, BaseTemplateContent>, content: HTML, customHeader: HTML, rootUrl: String, scripts: HTML) {
+    init(context: TemplateValue<BaseTemplateContent>, content: HTML, customHeader: HTML, rootUrl: String, scripts: HTML) {
         self.content = content
         self.context = context
         self.customHeader = customHeader
         self.rootUrl = rootUrl
-        self.scripts = scripts
+        self.customScripts = scripts
     }
 
     func scripts(@HTMLBuilder scripts: () -> HTML) -> BaseTemplate {
@@ -52,40 +52,38 @@ struct BaseTemplate<T>: HTMLComponent {
     }
 
     func header(@HTMLBuilder header: () -> HTML) -> BaseTemplate {
-        BaseTemplate(context: context, content: content, customHeader: header(), rootUrl: rootUrl, scripts: scripts)
+        BaseTemplate(context: context, content: content, customHeader: header(), rootUrl: rootUrl, scripts: customScripts)
     }
 
     func rootUrl(_ url: String) -> BaseTemplate {
-        BaseTemplate(context: context, content: content, customHeader: customHeader, rootUrl: url, scripts: scripts)
+        BaseTemplate(context: context, content: content, customHeader: customHeader, rootUrl: url, scripts: customScripts)
     }
 
     var body: HTML {
         Document(type: .html5) {
-            HTMLNode {
-                Head {
-                    Title { context.title + " | Kognita" }
+            Head {
+                Title { context.title + " | Kognita" }
 
-                    Meta().name(.viewport).content("width=device-width, initial-scale=1.0")
-                    Meta().name(.description).content(context.description)
-                    Meta().name(.author).content("MEM")
+                Meta().name(.viewport).content("width=device-width, initial-scale=1.0")
+                Meta().name(.description).content(context.description)
+                Meta().name(.author).content("MEM")
 
-                    Link().relationship(.shortcutIcon).href(rootUrl + "/assets/images/favicon.ico")
-                    Link().relationship(.stylesheet).href(rootUrl + "/assets/css/icons.min.css").type("text/css")
-                    Link().relationship(.stylesheet).href(rootUrl + "/assets/css/app.min.css").type("text/css")
+                Link().relationship(.shortcutIcon).href(rootUrl + "/assets/images/favicon.ico")
+                Link().relationship(.stylesheet).href(rootUrl + "/assets/css/icons.min.css").type("text/css")
+                Link().relationship(.stylesheet).href(rootUrl + "/assets/css/app.min.css").type("text/css")
 
-                    customHeader
-                }
-                Body {
-                    content
-                }
-                Script().source("/assets/js/app.min.js").type("text/javascript")
-                scripts
+                customHeader
             }
+            Body {
+                content
+            }
+            Script().source("/assets/js/app.min.js").type("text/javascript")
+            customScripts
         }
     }
 }
 
-extension BaseTemplate where T == Never {
+extension BaseTemplate {
     init(context: BaseTemplateContent, @HTMLBuilder content: () -> HTML) {
         self.context = .constant(context)
         self.content = content()
@@ -102,7 +100,7 @@ struct ContentBaseTemplateContent {
     }
 }
 
-struct ContentBaseTemplate<T>: HTMLComponent {
+struct ContentBaseTemplate: HTMLComponent {
 
     struct TabContent {
         let link: String
@@ -110,16 +108,16 @@ struct ContentBaseTemplate<T>: HTMLComponent {
         let title: String
     }
 
-    let activePath: TemplateValue<T, String>
-    let userContext: TemplateValue<T, User>
-    let baseContext: TemplateValue<T, BaseTemplateContent>
+    let activePath: TemplateValue<String>
+    let userContext: TemplateValue<User>
+    let baseContext: TemplateValue<BaseTemplateContent>
 
     let content: HTML
     let header: HTML
     let scripts: HTML
     let modals: HTML
 
-    init(userContext: TemplateValue<T, User>, baseContext: TemplateValue<T, BaseTemplateContent>, @HTMLBuilder content: () -> HTML) {
+    init(userContext: TemplateValue<User>, baseContext: TemplateValue<BaseTemplateContent>, @HTMLBuilder content: () -> HTML) {
         self.userContext = userContext
         self.baseContext = baseContext
         self.content = content()
@@ -129,7 +127,7 @@ struct ContentBaseTemplate<T>: HTMLComponent {
         self.modals = ""
     }
 
-    init(base: ContentBaseTemplate, activePath: TemplateValue<T, String>, header: HTML, scripts: HTML, modals: HTML) {
+    init(base: ContentBaseTemplate, activePath: TemplateValue<String>, header: HTML, scripts: HTML, modals: HTML) {
         self.userContext = base.userContext
         self.baseContext = base.baseContext
         self.content = base.content
@@ -171,7 +169,7 @@ struct ContentBaseTemplate<T>: HTMLComponent {
     }
 
 
-    func active(path: TemplateValue<T, String>) -> ContentBaseTemplate {
+    func active(path: TemplateValue<String>) -> ContentBaseTemplate {
         ContentBaseTemplate(base: self, activePath: path, header: header, scripts: scripts, modals: modals)
     }
 
@@ -190,8 +188,8 @@ struct ContentBaseTemplate<T>: HTMLComponent {
 
     struct KognitaNavigationBar: HTMLComponent {
 
-        let userContext: TemplateValue<T, User>
-        let activePath: TemplateValue<T, String>
+        let userContext: TemplateValue<User>
+        let activePath: TemplateValue<String>
 
         private let tabs: [TabContent] = [
             .init(link: "/subjects", iconClass: "dripicons-view-list", title: "Oversikt over fag"),
@@ -252,7 +250,7 @@ struct ContentBaseTemplate<T>: HTMLComponent {
             .class("topnav-navbar")
         }
 
-        func tab(with tab: RootValue<TabContent>) -> HTML {
+        func tab(with tab: TemplateValue<TabContent>) -> HTML {
             ListItem {
                 Anchor {
                     Span {

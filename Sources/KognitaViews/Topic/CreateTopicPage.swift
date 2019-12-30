@@ -32,8 +32,6 @@ extension Topic.Templates {
 
         public init() {}
 
-        public let context: RootValue<Context> = .root()
-
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
@@ -54,7 +52,7 @@ extension Topic.Templates {
                                         .id("create-topic-name")
                                         .placeholder("Sannsynlighet")
                                         .required()
-                                        .value(IF(isDefined: context.topicInfo) { $0.name })
+                                        .value(Unwrap(context.topicInfo) { $0.name })
                                     Small {
                                         "Bare lov vanlig bokstaver og mellomrom"
                                     }
@@ -69,7 +67,7 @@ extension Topic.Templates {
                                         .id("create-topic-chapter")
                                         .placeholder("1")
                                         .required()
-                                        .value(IF(isDefined: context.topicInfo) { $0.chapter })
+                                        .value(Unwrap(context.topicInfo) { $0.chapter })
                                     Small {
                                         "Kan ikke ha samme verdi som noen andre kapittler"
                                     }
@@ -79,34 +77,13 @@ extension Topic.Templates {
                                         "Beskrivelse"
                                     }.for("create-topic-description").class("col-form-label")
                                     Div {
-                                        IF(isDefined: context.topicInfo) {
+                                        Unwrap(context.topicInfo) {
                                             $0.description.escaping(.unsafeNone)
                                         }
                                     }.id("create-topic-description")
                                 }.class("form-group")
 
-                                IF(isDefined: context.topicInfo) { topicInfo in
-                                    Button {
-                                        " Lagre"
-                                    }
-                                    .type(.button)
-                                    .on(click: "editTopic(" + topicInfo.id + ")")
-                                    .class("btn btn-success mb-3 mt-3 mr-2")
-
-                                    Button {
-                                        " Slett"
-                                    }
-                                    .type(.button)
-                                    .on(click: "deleteTopic(" + topicInfo.id + ")")
-                                    .class("btn btn-danger mb-3 mt-3")
-                                }.else {
-                                    Button {
-                                        " Lagre"
-                                    }
-                                    .type(.button)
-                                    .on(click: "createTopic()")
-                                    .class("btn btn-success btn-rounded mb-3 mt-3")
-                                }
+                                ActionButtons(topic: context.topicInfo)
                             }
                         }.class("p-2")
                     }.class("modal-body")
@@ -125,6 +102,37 @@ extension Topic.Templates {
                     Script().source("/assets/js/topic/delete.js")
                 }.else {
                     Script().source("/assets/js/topic/create.js")
+                }
+            }
+        }
+
+        struct ActionButtons: HTMLComponent {
+
+            @TemplateValue(Topic?.self)
+            var topic
+
+            var body: HTML {
+                Unwrap(topic) { topic in
+                    Button {
+                        " Lagre"
+                    }
+                    .type(.button)
+                    .on(click: "editTopic(" + topic.id + ")")
+                    .class("btn btn-success mb-3 mt-3 mr-2")
+
+                    Button {
+                        " Slett"
+                    }
+                    .type(.button)
+                    .on(click: "deleteTopic(" + topic.id + ")")
+                    .class("btn btn-danger mb-3 mt-3")
+                }.else {
+                    Button {
+                        " Lagre"
+                    }
+                    .type(.button)
+                    .on(click: "createTopic()")
+                    .class("btn btn-success btn-rounded mb-3 mt-3")
                 }
             }
         }

@@ -3,21 +3,21 @@ import KognitaCore
 
 extension PracticeSession.Templates.Result {
 
-    struct TopicOverview<T>: HTMLComponent, AttributeNode {
+    struct TopicOverview: HTMLComponent, AttributeNode {
 
-        let topicId: TemplateValue<T, Topic.ID>
-        let topicName: TemplateValue<T, String>
-        let topicLevel: TemplateValue<T, Double>
-        let topicTaskResults: TemplateValue<T, [TaskResultable]>
+        let topicId: TemplateValue<Topic.ID>
+        let topicName: TemplateValue<String>
+        let topicLevel: TemplateValue<Double>
+        let topicTaskResults: TemplateValue<[TaskResultable]>
 
-        init(topicId: TemplateValue<T, Topic.ID>, topicName: TemplateValue<T, String>, topicLevel: TemplateValue<T, Double>, topicTaskResults: TemplateValue<T, [TaskResultable]>) {
+        init(topicId: TemplateValue<Topic.ID>, topicName: TemplateValue<String>, topicLevel: TemplateValue<Double>, topicTaskResults: TemplateValue<[TaskResultable]>) {
             self.topicId = topicId
             self.topicName = topicName
             self.topicLevel = topicLevel
             self.topicTaskResults = topicTaskResults
         }
 
-        init(topicId: TemplateValue<T, Topic.ID>, topicName: TemplateValue<T, String>, topicLevel: TemplateValue<T, Double>, topicTaskResults: TemplateValue<T, [TaskResultable]>, isShownValue: Conditionable, attributes: [HTMLAttribute]) {
+        init(topicId: TemplateValue<Topic.ID>, topicName: TemplateValue<String>, topicLevel: TemplateValue<Double>, topicTaskResults: TemplateValue<[TaskResultable]>, isShownValue: Conditionable, attributes: [HTMLAttribute]) {
             self.topicId = topicId
             self.topicName = topicName
             self.topicLevel = topicLevel
@@ -54,7 +54,7 @@ extension PracticeSession.Templates.Result {
             }
             .content {
                 Div {
-                    ForEach(in: topicTaskResults) { (result: RootValue<TaskResultable>) in
+                    ForEach(in: topicTaskResults) { (result: TemplateValue<TaskResultable>) in
                         Div {
 
                             KognitaProgressBadge(
@@ -78,11 +78,11 @@ extension PracticeSession.Templates.Result {
             .add(attributes: attributes)
         }
 
-        func copy(with attributes: [HTMLAttribute]) -> PracticeSession.Templates.Result.TopicOverview<T> {
+        func copy(with attributes: [HTMLAttribute]) -> PracticeSession.Templates.Result.TopicOverview {
             .init(topicId: topicId, topicName: topicName, topicLevel: topicLevel, topicTaskResults: topicTaskResults, isShownValue: isShownValue, attributes: attributes)
         }
 
-        func isShown(_ condition: Conditionable) -> PracticeSession.Templates.Result.TopicOverview<T> {
+        func isShown(_ condition: Conditionable) -> PracticeSession.Templates.Result.TopicOverview {
             .init(topicId: topicId, topicName: topicName, topicLevel: topicLevel, topicTaskResults: topicTaskResults, isShownValue: condition, attributes: attributes)
         }
     }

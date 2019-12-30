@@ -8,11 +8,11 @@
 import BootstrapKit
 import KognitaCore
 
-struct SubtopicPicker<T>: HTMLComponent {
+struct SubtopicPicker: HTMLComponent {
 
     let label: String
     let idPrefix: HTML
-    let topics: TemplateValue<T, [Topic.Response]>
+    let topics: TemplateValue<[Topic.Response]>
 
     var body: HTML {
         FormGroup(label: label) {
@@ -44,10 +44,10 @@ struct SubtopicPicker<T>: HTMLComponent {
     }
 }
 
-struct TopicPicker<T>: HTMLComponent {
+struct TopicPicker: HTMLComponent {
 
-    let topics: TemplateValue<T, [Topic]>
-    let selectedTopicId: TemplateValue<T, Topic.ID?>
+    let topics: TemplateValue<[Topic]>
+    let selectedTopicId: TemplateValue<Topic.ID?>
     var idPrefix: String? = nil
 
     var body: HTML {

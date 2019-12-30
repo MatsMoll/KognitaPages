@@ -121,17 +121,9 @@ extension FormGroup: AttributeNode {
     }
 }
 
-extension IF {
-    init<A, B>(isDefined value: TemplateValue<A, B?>, @HTMLBuilder content: (TemplateValue<A, B>) -> HTML) {
-        self.init(value.isDefined) {
-            content(value.unsafelyUnwrapped)
-        }
-    }
-}
+struct CreateForm: HTMLComponent {
 
-struct CreateForm<T>: HTMLComponent {
-
-    let context: TemplateValue<T, Subject?>
+    let context: TemplateValue<Subject?>
 
     var body: HTML {
         Form {
@@ -140,7 +132,7 @@ struct CreateForm<T>: HTMLComponent {
                     .type(.text)
                     .id("create-subject-name")
                     .placeholder("Mattematikk 1")
-                    .value(IF(isDefined: context) { $0.name })
+                    .value(Unwrap(context) { $0.name })
                     .required()
             }
             .description {
@@ -151,7 +143,7 @@ struct CreateForm<T>: HTMLComponent {
 
             FormGroup(label: "Beskrivelse") {
                 Div {
-                    IF(isDefined: context) { $0.description }
+                    Unwrap(context) { $0.description }
                 }
                 .id("create-subject-description")
             }
@@ -161,7 +153,7 @@ struct CreateForm<T>: HTMLComponent {
                     .type(.text)
                     .id("create-subject-category")
                     .placeholder("Teknologi")
-                    .value(IF(isDefined: context) { $0.category })
+                    .value(Unwrap(context) { $0.category })
                     .required()
             }
 
@@ -197,7 +189,7 @@ struct CreateForm<T>: HTMLComponent {
             .class("mt-1")
         }
 
-        func optionHTML(_ option: RootValue<Subject.ColorClass>) -> HTML {
+        func optionHTML(_ option: TemplateValue<Subject.ColorClass>) -> HTML {
             Div {
                 Input()
                     .type(.radio)

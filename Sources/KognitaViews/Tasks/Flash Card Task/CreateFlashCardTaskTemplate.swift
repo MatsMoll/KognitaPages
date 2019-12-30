@@ -31,7 +31,7 @@ extension FlashCardTask.Templates {
 
         public init() {}
 
-        public let context: RootValue<Context> = .root()
+        public let context: TemplateValue<Context> = .root()
 
         public var body: HTML {
             ContentBaseTemplate(
@@ -56,7 +56,7 @@ extension FlashCardTask.Templates {
                             Div {
                                 Form {
 
-                                    IF(isDefined: context.taskInfo) { taskInfo in
+                                    Unwrap(context.taskInfo) { taskInfo in
                                         IF(taskInfo.deletedAt.isDefined) {
                                             Badge { "Inaktiv" }
                                                 .background(color: .danger)
@@ -75,8 +75,8 @@ extension FlashCardTask.Templates {
                                     FormRow {
                                         FormGroup(label: "Eksamensett semester") {
                                             Select {
-                                                IF(isDefined: context.taskInfo) { taskInfo in
-                                                    IF(isDefined: taskInfo.examPaperSemester) { exam in
+                                                Unwrap(context.taskInfo) { taskInfo in
+                                                    Unwrap(taskInfo.examPaperSemester) { exam in
                                                         Option {
                                                             exam.rawValue
                                                         }
@@ -102,14 +102,14 @@ extension FlashCardTask.Templates {
                                                 .type(.number)
                                                 .id("card-exam-year")
                                                 .placeholder("2019")
-                                                .value(IF(isDefined: context.taskInfo) { $0.examPaperYear })
+                                                .value(Unwrap(context.taskInfo) { $0.examPaperYear })
                                         }
                                         .column(width: .six, for: .medium)
                                     }
 
                                     FormGroup(label: "Oppgavetext") {
                                         Div {
-                                            IF(isDefined: context.taskInfo) {
+                                            Unwrap(context.taskInfo) {
                                                 $0.description
                                                     .escaping(.unsafeNone)
                                             }
@@ -119,7 +119,7 @@ extension FlashCardTask.Templates {
 
                                     FormGroup(label: "Spørsmål") {
                                         TextArea {
-                                            IF(isDefined: context.taskInfo) {
+                                            Unwrap(context.taskInfo) {
                                                 $0.question
                                             }
                                         }
@@ -139,7 +139,7 @@ extension FlashCardTask.Templates {
                                     FormGroup(label: "Løsning") {
                                         Div {
                                             ""
-//                                            IF(isDefined: context.taskInfo) {
+//                                            Unwrap(context.taskInfo) {
 //                                                $0.solution
 //                                                    .escaping(.unsafeNone)
 //                                            }

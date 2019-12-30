@@ -4,12 +4,12 @@ import KognitaCore
 
 extension Subject.Templates.ListOverview {
 
-    struct ContinuePracticeSessionCard<T>: HTMLComponent {
+    struct ContinuePracticeSessionCard: HTMLComponent {
 
-        let ongoingSessionPath: TemplateValue<T, String?>
+        let ongoingSessionPath: TemplateValue<String?>
 
         var body: HTML {
-            Unwrap(value: ongoingSessionPath) { path in
+            Unwrap(ongoingSessionPath) { path in
                 Row {
                     Div {
                         Card {

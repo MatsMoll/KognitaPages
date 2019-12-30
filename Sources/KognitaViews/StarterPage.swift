@@ -199,7 +199,7 @@ extension Pages {
             let description: String
         }
 
-        let info: RootValue<Info>
+        let info: TemplateValue<Info>
 
         var body: HTML {
             Div {

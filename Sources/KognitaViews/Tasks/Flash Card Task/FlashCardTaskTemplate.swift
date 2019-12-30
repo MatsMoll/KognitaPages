@@ -61,7 +61,7 @@ extension FlashCardTask.Templates {
 
         public init() {}
 
-        public let context: RootValue<Context> = .root()
+        public let context: TemplateValue<Context> = .root()
 
         public var body: HTML {
             TaskPreviewTemplate(context: context.taskPreview) {
@@ -98,7 +98,7 @@ extension FlashCardTask.Templates {
 //                            .margin(.one, for: .left)
 //                            .on(click: "submitAndEndSession();")
 //                    }
-                    Unwrap(value: context.session) { session in
+                    Unwrap(context.session) { session in
                         Form {
                             Button(Strings.exerciseStopSessionButton)
                                 .button(style: .danger)

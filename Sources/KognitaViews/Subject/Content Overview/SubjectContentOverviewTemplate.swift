@@ -115,9 +115,9 @@ extension Subject.Templates {
     }
 }
 
-private struct TopicCard<T>: HTMLComponent {
+private struct TopicCard: HTMLComponent {
 
-    let topicTasks: TemplateValue<T, TopicTasks>
+    let topicTasks: TemplateValue<TopicTasks>
 
     var editUrl: HTML { "/creator/subjects/" + topicTasks.topic.subjectId + "/topics/" + topicTasks.topic.id + "/edit" }
 
@@ -149,15 +149,15 @@ private struct TopicCard<T>: HTMLComponent {
     }
 }
 
-private struct TaskCell<T>: HTMLComponent {
+private struct TaskCell: HTMLComponent {
 
-    let task: TemplateValue<T, CreatorTaskContent>
+    let task: TemplateValue<CreatorTaskContent>
 
     var editUrl: HTML { "/creator/" + task.taskTypePath + "/" + task.task.id + "/edit" }
 
     var body: HTML {
         Div {
-            IF(isDefined: task.task.deletedAt) { deletedAt in
+            Unwrap(task.task.deletedAt) { deletedAt in
                 Badge {
                     "Slettet: "
                     deletedAt.style(date: .short, time: .none)

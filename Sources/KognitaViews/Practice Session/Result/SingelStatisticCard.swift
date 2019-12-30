@@ -7,9 +7,9 @@ struct SingleStatisticCardContent {
     let extraContent: String?
 }
 
-struct SingleStatisticCard<T>: HTMLComponent, AttributeNode {
+struct SingleStatisticCard: HTMLComponent, AttributeNode {
 
-    let stats: TemplateValue<T, SingleStatisticCardContent>
+    let stats: TemplateValue<SingleStatisticCardContent>
     var attributes: [HTMLAttribute] = []
 
     var body: HTML {
@@ -31,7 +31,7 @@ struct SingleStatisticCard<T>: HTMLComponent, AttributeNode {
             }
             .text(color: .muted)
 
-            Unwrap(value: stats.extraContent) { extraContent in
+            Unwrap(stats.extraContent) { extraContent in
                 Text {
                     extraContent
                 }
@@ -41,17 +41,7 @@ struct SingleStatisticCard<T>: HTMLComponent, AttributeNode {
         .add(attributes: attributes)
     }
 
-    func copy(with attributes: [HTMLAttribute]) -> SingleStatisticCard<T> {
+    func copy(with attributes: [HTMLAttribute]) -> SingleStatisticCard {
         .init(stats: stats, attributes: attributes)
-    }
-}
-
-
-struct Unwrap: HTMLComponent {
-
-    let body: HTML
-
-    init<T, V>(value: TemplateValue<T, V?>, @HTMLBuilder build: (TemplateValue<T, V>) -> HTML) {
-        body = IF(isDefined: value, content: build)
     }
 }

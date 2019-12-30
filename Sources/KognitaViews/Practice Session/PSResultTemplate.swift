@@ -136,8 +136,6 @@ extension PracticeSession.Templates {
 
         public init() {}
 
-        public let context: RootValue<Context> = .root()
-
         let breadcrumbItems: [BreadcrumbItem] = [.init(link: "../history", title: .init(view: Localized(key: Strings.historyTitle)))]
 
         public var body: HTML {
@@ -178,7 +176,7 @@ extension PracticeSession.Templates {
                             }
                         }
                         .elseIf(context.topicResults.count == 1) {
-                            Unwrap(value: context.topicResults.first) { result in
+                            Unwrap(context.topicResults.first) { result in
                                 TopicOverview(
                                     topicId: result.topicId,
                                     topicName: result.topicName,

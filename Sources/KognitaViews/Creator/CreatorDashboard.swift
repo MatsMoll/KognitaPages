@@ -41,7 +41,7 @@ public struct CreatorTemplates {
 
         public init() {}
 
-        public let context: RootValue<Context> = .root()
+        public let context: TemplateValue<Context> = .root()
 
         let createMultipleTaskUrl: HTML = "create-task-select-subject?taskType=multiple"
         let createInputTaskUrl: HTML = "create-task-select-subject?taskType=input"
@@ -188,9 +188,9 @@ public struct CreatorTemplates {
         }
     }
 
-    struct TimelyTopicView<T>: HTMLComponent {
+    struct TimelyTopicView: HTMLComponent {
 
-        let topic: TemplateValue<T, TimelyTopic>
+        let topic: TemplateValue<TimelyTopic>
 
         var url: HTML { "/creator/overview/topics/" + topic.topicID }
 
@@ -225,9 +225,9 @@ public struct CreatorTemplates {
         }
     }
 
-    struct TaskRow<T>: HTMLComponent {
+    struct TaskRow: HTMLComponent {
 
-        let task: TemplateValue<T, CreatorTaskContentable>
+        let task: TemplateValue<CreatorTaskContentable>
 
         var url: HTML { "/" + task.taskTypePath + "/" + task.taskID }
         var editUrl: HTML { "/creator/" + task.taskTypePath + "/" + task.taskID + "/edit" }

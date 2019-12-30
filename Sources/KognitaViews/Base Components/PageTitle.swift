@@ -20,7 +20,7 @@ struct PageTitle: HTMLComponent, LocalizableNode {
         title = Localized(key: localizedKey)
     }
 
-    init<A, B>(_ localizedKey: String, with context: TemplateValue<A, B>) where B : Encodable {
+    init<B>(_ localizedKey: String, with context: TemplateValue<B>) where B : Encodable {
         title = Localized(key: localizedKey, context: context)
     }
 
