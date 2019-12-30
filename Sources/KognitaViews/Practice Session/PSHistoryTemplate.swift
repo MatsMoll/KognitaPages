@@ -105,7 +105,7 @@ extension PracticeSession.Templates {
                         }
                     }
                     .elseIf(context.sessions.count == 1) {
-                        Unwrap(value: context.sessions.first) { group in
+                        Unwrap(context.sessions.first) { group in
                             Div {
                                 SubjectOverview(
                                     sessions: group
@@ -212,7 +212,7 @@ extension PracticeSession.Templates.History {
                 .margin(.three, for: .right)
                 .margin(.one, for: .bottom)
 
-                Unwrap(value: session.timeUsed) { timeUsed in
+                Unwrap(session.timeUsed) { timeUsed in
                     timeUsedText(timeUsed)
                 }
             }

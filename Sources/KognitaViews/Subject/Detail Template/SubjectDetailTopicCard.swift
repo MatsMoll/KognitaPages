@@ -79,7 +79,7 @@ extension Subject.Templates.Details {
                     .margin(.one, for: .vertical)
                 }
                 .sub {
-                    IF(isDefined: topic.level) { level in
+                    Unwrap(topic.level) { level in
                         TopicLevel(
                             level: level
                         )

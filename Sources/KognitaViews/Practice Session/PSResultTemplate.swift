@@ -176,7 +176,7 @@ extension PracticeSession.Templates {
                             }
                         }
                         .elseIf(context.topicResults.count == 1) {
-                            Unwrap(value: context.topicResults.first) { result in
+                            Unwrap(context.topicResults.first) { result in
                                 TopicOverview(
                                     topicId: result.topicId,
                                     topicName: result.topicName,

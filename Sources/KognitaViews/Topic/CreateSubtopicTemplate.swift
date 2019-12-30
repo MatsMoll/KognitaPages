@@ -117,7 +117,7 @@ extension Subtopic.Templates {
                         .class("form-control")
                         .id("subtopic-name")
                         .placeholder("Sannsynlighet")
-                        .value(IF(isDefined: subtopicInfo) { $0.name })
+                        .value(Unwrap(subtopicInfo) { $0.name })
                         .required()
                     Small {
                         "Bare lov vanlig bokstaver og mellomrom"
@@ -132,7 +132,7 @@ extension Subtopic.Templates {
                         .class("form-control")
                         .id("subtopic-chapter")
                         .placeholder("1")
-                        .value(IF(isDefined: subtopicInfo) { $0.chapter })
+                        .value(Unwrap(subtopicInfo) { $0.chapter })
                         .required()
                     Small {
                         "Kan ikke ha samme verdi som noen andre kapittler"
@@ -141,7 +141,7 @@ extension Subtopic.Templates {
 
                 DismissableError()
 
-                IF(isDefined: subtopicInfo) { subtopic in
+                Unwrap(subtopicInfo) { subtopic in
                     Button { " Lagre" }
                         .type("button")
                         .on(click: "editSubtopic(" + subtopic.id + ")")

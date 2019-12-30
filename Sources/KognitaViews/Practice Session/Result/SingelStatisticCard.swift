@@ -31,7 +31,7 @@ struct SingleStatisticCard: HTMLComponent, AttributeNode {
             }
             .text(color: .muted)
 
-            Unwrap(value: stats.extraContent) { extraContent in
+            Unwrap(stats.extraContent) { extraContent in
                 Text {
                     extraContent
                 }
@@ -43,15 +43,5 @@ struct SingleStatisticCard: HTMLComponent, AttributeNode {
 
     func copy(with attributes: [HTMLAttribute]) -> SingleStatisticCard {
         .init(stats: stats, attributes: attributes)
-    }
-}
-
-
-struct Unwrap: HTMLComponent {
-
-    let body: HTML
-
-    init<V>(value: TemplateValue<V?>, @HTMLBuilder build: (TemplateValue<V>) -> HTML) {
-        body = IF(isDefined: value, content: build)
     }
 }

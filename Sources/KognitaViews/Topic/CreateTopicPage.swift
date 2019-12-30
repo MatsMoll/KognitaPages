@@ -54,7 +54,7 @@ extension Topic.Templates {
                                         .id("create-topic-name")
                                         .placeholder("Sannsynlighet")
                                         .required()
-                                        .value(IF(isDefined: context.topicInfo) { $0.name })
+                                        .value(Unwrap(context.topicInfo) { $0.name })
                                     Small {
                                         "Bare lov vanlig bokstaver og mellomrom"
                                     }
@@ -69,7 +69,7 @@ extension Topic.Templates {
                                         .id("create-topic-chapter")
                                         .placeholder("1")
                                         .required()
-                                        .value(IF(isDefined: context.topicInfo) { $0.chapter })
+                                        .value(Unwrap(context.topicInfo) { $0.chapter })
                                     Small {
                                         "Kan ikke ha samme verdi som noen andre kapittler"
                                     }
@@ -79,13 +79,13 @@ extension Topic.Templates {
                                         "Beskrivelse"
                                     }.for("create-topic-description").class("col-form-label")
                                     Div {
-                                        IF(isDefined: context.topicInfo) {
+                                        Unwrap(context.topicInfo) {
                                             $0.description.escaping(.unsafeNone)
                                         }
                                     }.id("create-topic-description")
                                 }.class("form-group")
 
-                                IF(isDefined: context.topicInfo) { topicInfo in
+                                Unwrap(context.topicInfo) { topicInfo in
                                     Button {
                                         " Lagre"
                                     }

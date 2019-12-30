@@ -98,7 +98,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
                             .margin(.zero, for: .top)
                             .style(.heading3)
 
-                        IF(isDefined: context.task.examPaperSemester) { exam in
+                        Unwrap(context.task.examPaperSemester) { exam in
                             Badge {
                                 Localized(key: Strings.exerciseExam)
                                 ": " + exam.rawValue + " " + context.task.examPaperYear
@@ -183,7 +183,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
         let context: TemplateValue<TaskPreviewTemplateContext>
 
         var body: HTML {
-            IF(isDefined: context.practiceProgress) { progress in
+            Unwrap(context.practiceProgress) { progress in
                 Card {
                     Text {
                         Localized(key: Strings.exerciseSessionProgressTitle)
@@ -195,7 +195,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
 
                             Small {
                                 Span {
-                                    IF(isDefined: context.session) {
+                                    Unwrap(context.session) {
                                         $0.numberOfTaskGoal
                                     }
                                 }

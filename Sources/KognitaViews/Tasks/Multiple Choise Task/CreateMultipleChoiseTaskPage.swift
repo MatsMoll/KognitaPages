@@ -100,7 +100,7 @@ extension MultipleChoiseTask.Templates {
                                                 .class("form-control")
                                                 .id("create-multiple-exam-year")
                                                 .placeholder("2019")
-                                                .value(IF(isDefined: context.taskInfo) { $0.examPaperYear })
+                                                .value(Unwrap(context.taskInfo) { $0.examPaperYear })
                                                 .required()
                                         }
                                         .class("form-group col-md-6")
@@ -126,7 +126,7 @@ extension MultipleChoiseTask.Templates {
                                         .for("create-multiple-description")
                                         .class("col-form-label")
                                         Div {
-                                            IF(isDefined: context.taskInfo) {
+                                            Unwrap(context.taskInfo) {
                                                 $0.description
                                                     .escaping(.unsafeNone)
                                             }
@@ -142,7 +142,7 @@ extension MultipleChoiseTask.Templates {
                                         .class("col-form-label")
 
                                         TextArea {
-                                            IF(isDefined: context.taskInfo) {
+                                            Unwrap(context.taskInfo) {
                                                 $0.question
                                             }
                                         }
@@ -164,7 +164,7 @@ extension MultipleChoiseTask.Templates {
                                         .class("col-form-label")
                                         Div {
                                             ""
-//                                            IF(isDefined: context.taskInfo) {
+//                                            Unwrap(context.taskInfo) {
 //                                                $0.solution
 //                                                    .escaping(.unsafeNone)
 //                                            }
@@ -218,7 +218,7 @@ extension MultipleChoiseTask.Templates {
                                                 }
                                             }
                                             TableBody {
-                                                IF(isDefined: context.multipleTaskInfo) { taskInfo in
+                                                Unwrap(context.multipleTaskInfo) { taskInfo in
                                                     ForEach(in: taskInfo.choises) { choise in
                                                         ChoiseRow(choise: choise)
                                                     }

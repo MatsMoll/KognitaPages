@@ -157,7 +157,7 @@ private struct TaskCell: HTMLComponent {
 
     var body: HTML {
         Div {
-            IF(isDefined: task.task.deletedAt) { deletedAt in
+            Unwrap(task.task.deletedAt) { deletedAt in
                 Badge {
                     "Slettet: "
                     deletedAt.style(date: .short, time: .none)

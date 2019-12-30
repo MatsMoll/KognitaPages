@@ -121,14 +121,6 @@ extension FormGroup: AttributeNode {
     }
 }
 
-extension IF {
-    init<B>(isDefined value: TemplateValue<B?>, @HTMLBuilder content: (TemplateValue<B>) -> HTML) {
-        self.init(value.isDefined) {
-            content(value.unsafelyUnwrapped)
-        }
-    }
-}
-
 struct CreateForm: HTMLComponent {
 
     let context: TemplateValue<Subject?>
@@ -140,7 +132,7 @@ struct CreateForm: HTMLComponent {
                     .type(.text)
                     .id("create-subject-name")
                     .placeholder("Mattematikk 1")
-                    .value(IF(isDefined: context) { $0.name })
+                    .value(Unwrap(context) { $0.name })
                     .required()
             }
             .description {
@@ -151,7 +143,7 @@ struct CreateForm: HTMLComponent {
 
             FormGroup(label: "Beskrivelse") {
                 Div {
-                    IF(isDefined: context) { $0.description }
+                    Unwrap(context) { $0.description }
                 }
                 .id("create-subject-description")
             }
@@ -161,7 +153,7 @@ struct CreateForm: HTMLComponent {
                     .type(.text)
                     .id("create-subject-category")
                     .placeholder("Teknologi")
-                    .value(IF(isDefined: context) { $0.category })
+                    .value(Unwrap(context) { $0.category })
                     .required()
             }
 

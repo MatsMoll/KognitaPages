@@ -94,7 +94,7 @@ extension MultipleChoiseTask.Templates {
                     .display(.none)
                     .href("#solution")
 
-                    Unwrap(value: context.session) { session in
+                    Unwrap(context.session) { session in
                         Form {
                             Button(Strings.exerciseStopSessionButton)
                                 .button(style: .danger)
