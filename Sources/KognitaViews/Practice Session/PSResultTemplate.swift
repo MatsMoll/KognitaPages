@@ -136,8 +136,6 @@ extension PracticeSession.Templates {
 
         public init() {}
 
-        public let context: RootValue<Context> = .root()
-
         let breadcrumbItems: [BreadcrumbItem] = [.init(link: "../history", title: .init(view: Localized(key: Strings.historyTitle)))]
 
         public var body: HTML {

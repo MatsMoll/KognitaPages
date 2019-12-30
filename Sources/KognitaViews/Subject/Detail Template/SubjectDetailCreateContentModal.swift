@@ -2,9 +2,9 @@ import BootstrapKit
 import KognitaCore
 
 extension Subject.Templates {
-    struct CreateContentModal<T>: HTMLComponent {
+    struct CreateContentModal: HTMLComponent {
 
-        let subject: TemplateValue<T, Subject>
+        let subject: TemplateValue<Subject>
 
         var body: HTML {
             Div {

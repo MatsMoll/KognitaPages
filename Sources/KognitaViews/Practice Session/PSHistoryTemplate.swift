@@ -71,7 +71,7 @@ extension PracticeSession.Templates {
 
         public init() {}
 
-        public let context: RootValue<Context> = .root()
+        public let context: TemplateValue<Context> = .root()
 
         public var body: HTML {
             ContentBaseTemplate(
@@ -136,15 +136,15 @@ extension PracticeSession.Templates {
 
 extension PracticeSession.Templates.History {
 
-    struct SubjectOverview<T>: HTMLComponent, AttributeNode {
+    struct SubjectOverview: HTMLComponent, AttributeNode {
 
-        let sessions: TemplateValue<T, Sessions>
+        let sessions: TemplateValue<Sessions>
 
-        init(sessions: TemplateValue<T, Sessions>) {
+        init(sessions: TemplateValue<Sessions>) {
             self.sessions = sessions
         }
 
-        init(sessions: TemplateValue<T, Sessions>, isShownValue: Conditionable, attributes: [HTMLAttribute]) {
+        init(sessions: TemplateValue<Sessions>, isShownValue: Conditionable, attributes: [HTMLAttribute]) {
             self.sessions = sessions
             self.isShownValue = isShownValue
             self.attributes = attributes
@@ -170,7 +170,7 @@ extension PracticeSession.Templates.History {
             }
             .content {
                 Div {
-                    ForEach(in: sessions.sessions) { (session: RootValue<PracticeSession>) in
+                    ForEach(in: sessions.sessions) { (session: TemplateValue<PracticeSession>) in
                         SessionItem(session: session)
                     }
                 }
@@ -181,18 +181,18 @@ extension PracticeSession.Templates.History {
             .add(attributes: attributes)
         }
 
-        func copy(with attributes: [HTMLAttribute]) -> PracticeSession.Templates.History.SubjectOverview<T> {
+        func copy(with attributes: [HTMLAttribute]) -> PracticeSession.Templates.History.SubjectOverview {
             .init(sessions: sessions, isShownValue: isShownValue, attributes: attributes)
         }
 
-        func isShown(_ condition: Conditionable) -> PracticeSession.Templates.History.SubjectOverview<T> {
+        func isShown(_ condition: Conditionable) -> PracticeSession.Templates.History.SubjectOverview {
             .init(sessions: sessions, isShownValue: condition, attributes: attributes)
         }
     }
 
     struct SessionItem: HTMLComponent {
 
-        let session: RootValue<PracticeSession>
+        let session: TemplateValue<PracticeSession>
 
         var body: HTML {
             Anchor {
@@ -220,7 +220,7 @@ extension PracticeSession.Templates.History {
             .href("/practice-sessions/".append(html: session.id).append(html: "/result"))
         }
 
-        func timeUsedText<T>(_ timeUsed: TemplateValue<T, Double>) -> HTML {
+        func timeUsedText(_ timeUsed: TemplateValue<Double>) -> HTML {
             Text {
                 "Lengde: "
                 timeUsed.timeString

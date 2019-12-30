@@ -29,7 +29,7 @@ extension Subject.Templates {
 
         public init() {}
 
-        public let context: RootValue<Context> = .root()
+        public let context: TemplateValue<Context> = .root()
 
         public var body: HTML {
             ContentBaseTemplate(
@@ -69,11 +69,11 @@ extension Subject.Templates {
             }
         }
 
-        struct SelectCard<A, B>: HTMLComponent {
+        struct SelectCard: HTMLComponent {
 
-            let subject: TemplateValue<A, Subject>
-            let startPath: TemplateValue<B, String>
-            let endPath: TemplateValue<B, String>
+            let subject: TemplateValue<Subject>
+            let startPath: TemplateValue<String>
+            let endPath: TemplateValue<String>
 
             var body: HTML {
                 Div {

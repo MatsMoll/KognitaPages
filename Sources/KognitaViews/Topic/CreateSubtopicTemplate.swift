@@ -37,7 +37,7 @@ extension Subtopic.Templates {
 
         public init() {}
 
-        public let context: RootValue<Context> = .root()
+        public let context: TemplateValue<Context> = .root()
 
         public var body: HTML {
             ContentBaseTemplate(
@@ -93,11 +93,11 @@ extension Subtopic.Templates {
         }
     }
 
-    struct CreateForm<T>: HTMLComponent {
+    struct CreateForm: HTMLComponent {
 
-        let topics: TemplateValue<T, [Topic]>
-        let selectedTopicId: TemplateValue<T, Topic.ID?>
-        let subtopicInfo: TemplateValue<T, Subtopic?>
+        let topics: TemplateValue<[Topic]>
+        let selectedTopicId: TemplateValue<Topic.ID?>
+        let subtopicInfo: TemplateValue<Subtopic?>
 
         var body: HTML {
             Form {

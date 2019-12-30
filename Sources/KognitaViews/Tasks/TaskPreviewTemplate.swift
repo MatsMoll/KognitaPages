@@ -37,21 +37,21 @@ struct TaskPreviewTemplateContext {
     }
 }
 
-public struct TaskPreviewTemplate<T>: HTMLComponent {
+public struct TaskPreviewTemplate: HTMLComponent {
 
-    let context: TemplateValue<T, TaskPreviewTemplateContext>
+    let context: TemplateValue<TaskPreviewTemplateContext>
     let actionCard: HTML
     var underSolutionCard: HTML = ""
     var customScripts: HTML = ""
 
-    init(context: TemplateValue<T, TaskPreviewTemplateContext>, @HTMLBuilder actionCard: () -> HTML) {
+    init(context: TemplateValue<TaskPreviewTemplateContext>, @HTMLBuilder actionCard: () -> HTML) {
         self.context = context
         self.actionCard = actionCard()
         self.underSolutionCard = ""
         self.customScripts = ""
     }
 
-    init(context: TemplateValue<T, TaskPreviewTemplateContext>, actionCard: HTML, underSolutionCard: HTML, customScripts: HTML) {
+    init(context: TemplateValue<TaskPreviewTemplateContext>, actionCard: HTML, underSolutionCard: HTML, customScripts: HTML) {
         self.context = context
         self.actionCard = actionCard
         self.underSolutionCard = underSolutionCard
@@ -140,9 +140,9 @@ public struct TaskPreviewTemplate<T>: HTMLComponent {
         }
     }
 
-    struct QuestionCard<T>: HTMLComponent {
+    struct QuestionCard: HTMLComponent {
 
-        let context: TemplateValue<T, TaskPreviewContent>
+        let context: TemplateValue<TaskPreviewContent>
 
         var body: HTML {
             Row {
@@ -178,9 +178,9 @@ public struct TaskPreviewTemplate<T>: HTMLComponent {
         }
     }
 
-    struct ProgressCard<T>: StaticView {
+    struct ProgressCard: StaticView {
 
-        let context: TemplateValue<T, TaskPreviewTemplateContext>
+        let context: TemplateValue<TaskPreviewTemplateContext>
 
         var body: HTML {
             IF(isDefined: context.practiceProgress) { progress in
@@ -250,7 +250,7 @@ public struct TaskSolutionsTemplate: HTMLTemplate {
 
     public init() {}
 
-    public let context: RootValue<[TaskSolution.Response]> = .root()
+    public let context: TemplateValue<[TaskSolution.Response]> = .root()
 
     public var body: HTML {
         Accordions(values: context, title: { (solution, index) in
@@ -288,9 +288,9 @@ public struct TaskSolutionsTemplate: HTMLTemplate {
 //        }
     }
 
-    struct SolutionCard<T>: HTMLComponent {
+    struct SolutionCard: HTMLComponent {
 
-            let context: TemplateValue<T, TaskSolution.Response>
+            let context: TemplateValue<TaskSolution.Response>
 
             var body: HTML {
                 Card {
@@ -328,14 +328,14 @@ public struct TaskSolutionsTemplate: HTMLTemplate {
         }
 }
 
-struct Accordions<A, B>: HTMLComponent {
+struct Accordions<B>: HTMLComponent {
 
-    let values: TemplateValue<A, [B]>
-    let title: ((RootValue<B>, RootValue<Int>)) -> HTML
-    let content: ((RootValue<B>, RootValue<Int>)) -> HTML
+    let values: TemplateValue<[B]>
+    let title: ((TemplateValue<B>, TemplateValue<Int>)) -> HTML
+    let content: ((TemplateValue<B>, TemplateValue<Int>)) -> HTML
     var id: String = "accordion"
 
-    public init(values: TemplateValue<A, [B]>, @HTMLBuilder title: @escaping ((RootValue<B>, RootValue<Int>)) -> HTML, @HTMLBuilder content: @escaping ((RootValue<B>, RootValue<Int>)) -> HTML) {
+    public init(values: TemplateValue<[B]>, @HTMLBuilder title: @escaping ((TemplateValue<B>, TemplateValue<Int>)) -> HTML, @HTMLBuilder content: @escaping ((TemplateValue<B>, TemplateValue<Int>)) -> HTML) {
         self.values = values
         self.title = title
         self.content = content
@@ -351,7 +351,7 @@ struct Accordions<A, B>: HTMLComponent {
         .id(id)
     }
 
-    func card(value: (RootValue<B>, index: RootValue<Int>)) -> HTML {
+    func card(value: (TemplateValue<B>, index: TemplateValue<Int>)) -> HTML {
         Div {
             heading(value: value)
             content(value: value)
@@ -359,7 +359,7 @@ struct Accordions<A, B>: HTMLComponent {
         .class("card")
     }
     
-    func heading(value: (RootValue<B>, index: RootValue<Int>)) -> HTML {
+    func heading(value: (TemplateValue<B>, index: TemplateValue<Int>)) -> HTML {
         return Div {
             Anchor {
                 title(value)
@@ -375,7 +375,7 @@ struct Accordions<A, B>: HTMLComponent {
         .id(headingId(value.index))
     }
 
-    func content(value: (RootValue<B>, index: RootValue<Int>)) -> HTML {
+    func content(value: (TemplateValue<B>, index: TemplateValue<Int>)) -> HTML {
         return Div {
             Div {
                 content(value)
@@ -388,11 +388,11 @@ struct Accordions<A, B>: HTMLComponent {
         .id(bodyId(value.index))
     }
 
-    func bodyId(_ index: RootValue<Int>) -> HTML {
+    func bodyId(_ index: TemplateValue<Int>) -> HTML {
         "\(id)-body" + index
     }
 
-    func headingId(_ index: RootValue<Int>) -> HTML {
+    func headingId(_ index: TemplateValue<Int>) -> HTML {
         "\(id)-heading" + index
     }
 }

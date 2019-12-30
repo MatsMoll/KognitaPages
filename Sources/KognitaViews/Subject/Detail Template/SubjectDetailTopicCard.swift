@@ -10,9 +10,9 @@ import KognitaCore
 
 extension Subject.Templates.Details {
     
-    struct TopicLevels<T>: HTMLComponent {
+    struct TopicLevels: HTMLComponent {
 
-        let levels: TemplateValue<T, [[TopicCardContext]]>
+        let levels: TemplateValue<[[TopicCardContext]]>
 
         var body: HTML {
             ForEach(enumerated: levels) { topics, index in
@@ -30,12 +30,13 @@ extension Subject.Templates.Details {
             }
         }
 
-        func title(_ index: RootValue<Int>) -> HTML {
+        func title(_ index: TemplateValue<Int>) -> HTML {
             Text {
                 "Nivå "
-                index.map { value in
-                    value + 1
-                }
+                index
+//                index.map { value in
+//                    value + 1
+//                }
             }
             .class("page-title")
             .style(.heading4)
@@ -48,9 +49,9 @@ extension Subject.Templates.Details {
         let numberOfTasks: Int
     }
 
-    struct TopicCard<T>: HTMLComponent {
+    struct TopicCard: HTMLComponent {
 
-        let topic: TemplateValue<T, TopicCardContext>
+        let topic: TemplateValue<TopicCardContext>
 
         var body: HTML {
             Div {
@@ -92,9 +93,9 @@ extension Subject.Templates.Details {
         }
     }
 
-    struct TopicLevel<T>: HTMLComponent {
+    struct TopicLevel: HTMLComponent {
 
-        let level: TemplateValue<T, User.TopicLevel>
+        let level: TemplateValue<User.TopicLevel>
 
         var body: HTML {
             UnorderdList {

@@ -22,7 +22,7 @@ public struct LoginPage: HTMLTemplate {
 
     public init() {}
 
-    public let context: RootValue<Context> = .root()
+    public let context: TemplateValue<Context> = .root()
 
     public var body: HTML {
         BaseTemplate(context: context.base) {

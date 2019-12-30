@@ -43,7 +43,7 @@ extension Subject.Templates {
 
         public init() {}
 
-        public let context: RootValue<Context> = .root()
+        public let context: TemplateValue<Context> = .root()
 
         let breadcrumbs: [BreadcrumbItem] = [
             BreadcrumbItem(link: "../subjects", title: .init(view: Localized(key: Strings.subjectTitle)))
@@ -109,11 +109,11 @@ extension Subject.Templates {
             let level: User.SubjectLevel
         }
 
-        struct SubjectCard<T>: HTMLComponent {
+        struct SubjectCard: HTMLComponent {
 
-            let subject: TemplateValue<T, Subject>
-            let userLevel: TemplateValue<T, User.SubjectLevel>
-            let topicIDsJSList: TemplateValue<T, String>
+            let subject: TemplateValue<Subject>
+            let userLevel: TemplateValue<User.SubjectLevel>
+            let topicIDsJSList: TemplateValue<String>
 
             var body: HTML {
                 Card {
@@ -212,9 +212,9 @@ extension Subject.Templates {
     }
 }
 
-struct KognitaProgressBadge<T>: HTMLComponent {
+struct KognitaProgressBadge: HTMLComponent {
 
-    let value: TemplateValue<T, Double>
+    let value: TemplateValue<Double>
 
     var body: HTML {
         Badge {
@@ -233,9 +233,9 @@ struct KognitaProgressBadge<T>: HTMLComponent {
     }
 }
 
-struct KognitaProgressBar<T>: HTMLComponent {
+struct KognitaProgressBar: HTMLComponent {
 
-    let value: TemplateValue<T, Double>
+    let value: TemplateValue<Double>
 
     var body: HTML {
         ProgressBar(

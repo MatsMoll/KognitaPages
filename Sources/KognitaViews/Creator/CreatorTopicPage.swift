@@ -29,7 +29,7 @@ extension CreatorTemplates {
 
         public init() {}
 
-        public let context: RootValue<Context> = .root()
+        public let context: TemplateValue<Context> = .root()
 
         var createMultipleTaskUrl: HTML {
             "/creator/subjects/" + context.subject.id + "/task/multiple/create?topicId=" + context.topic.id

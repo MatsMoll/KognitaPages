@@ -33,7 +33,7 @@ extension MultipleChoiseTask.Templates {
 
         public init() {}
 
-        public let context: RootValue<Context> = .root()
+        public let context: TemplateValue<Context> = .root()
 
         public var body: HTML {
 
@@ -269,9 +269,9 @@ extension MultipleChoiseTask.Templates {
             }
         }
 
-        struct ChoiseRow<T>: StaticView {
+        struct ChoiseRow: StaticView {
 
-            let choise: TemplateValue<T, MultipleChoiseTaskChoise>
+            let choise: TemplateValue<MultipleChoiseTaskChoise>
             var switchId: HTML { "switch-" + choise.id }
 
             var body: HTML {

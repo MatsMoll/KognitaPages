@@ -122,16 +122,16 @@ extension FormGroup: AttributeNode {
 }
 
 extension IF {
-    init<A, B>(isDefined value: TemplateValue<A, B?>, @HTMLBuilder content: (TemplateValue<A, B>) -> HTML) {
+    init<B>(isDefined value: TemplateValue<B?>, @HTMLBuilder content: (TemplateValue<B>) -> HTML) {
         self.init(value.isDefined) {
             content(value.unsafelyUnwrapped)
         }
     }
 }
 
-struct CreateForm<T>: HTMLComponent {
+struct CreateForm: HTMLComponent {
 
-    let context: TemplateValue<T, Subject?>
+    let context: TemplateValue<Subject?>
 
     var body: HTML {
         Form {
@@ -197,7 +197,7 @@ struct CreateForm<T>: HTMLComponent {
             .class("mt-1")
         }
 
-        func optionHTML(_ option: RootValue<Subject.ColorClass>) -> HTML {
+        func optionHTML(_ option: TemplateValue<Subject.ColorClass>) -> HTML {
             Div {
                 Input()
                     .type(.radio)

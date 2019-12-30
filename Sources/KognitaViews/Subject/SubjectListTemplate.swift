@@ -33,8 +33,6 @@ extension Subject.Templates {
 
         public init() {}
 
-        public let context: RootValue<Context> = .root()
-
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
@@ -103,9 +101,9 @@ extension Subject.Templates {
             .active(path: "/subjects")
         }
 
-        struct RevisitCard<T>: HTMLComponent {
+        struct RevisitCard: HTMLComponent {
 
-            let context: TemplateValue<T, TopicResultContent>
+            let context: TemplateValue<TopicResultContent>
 
             var practiceFunction: HTML { "startPracticeSession([" + context.topic.id + "], " + context.subject.id + ");" }
 
@@ -156,9 +154,9 @@ extension Subject.Templates {
             }
         }
 
-        struct SubjectCard<T>: HTMLComponent {
+        struct SubjectCard: HTMLComponent {
 
-            let subject: TemplateValue<T, Subject>
+            let subject: TemplateValue<Subject>
 
             var body: HTML {
                 Div {

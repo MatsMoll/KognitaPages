@@ -31,7 +31,7 @@ extension FlashCardTask.Templates {
 
         public init() {}
 
-        public let context: RootValue<Context> = .root()
+        public let context: TemplateValue<Context> = .root()
 
         public var body: HTML {
             ContentBaseTemplate(
