@@ -56,7 +56,7 @@ public struct CreatorTemplates {
                     Div {
                         Div {
                             Div {
-                                OrderdList {
+                                OrderedList {
                                     ListItem {
                                         "Lag innhold"
                                     }.class("breadcrumb-item active")

@@ -54,7 +54,7 @@ extension Pages {
                         .class("logo")
                         .text(alignment: .center)
                         Div {
-                            UnorderdList {
+                            UnorderedList {
                                 ListItem {
                                     Anchor(Strings.menuRegister)
                                         .class("nav-link")

@@ -98,7 +98,7 @@ extension Subject.Templates.Details {
         let level: TemplateValue<User.TopicLevel>
 
         var body: HTML {
-            UnorderdList {
+            UnorderedList {
                 ListItem {
                     Text {
                         level.correctProsentage + "%"

@@ -53,7 +53,7 @@ struct KognitaNavigationBar: HTMLComponent {
                         }.class("logo-sm")
                     }.href(rootUrl + "/").class("logo text-center")
                     Div {
-                        UnorderdList {
+                        UnorderedList {
                             ListItem {
                                 Anchor(Strings.menuRegister)
                                     .class("nav-link")

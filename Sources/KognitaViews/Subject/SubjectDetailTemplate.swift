@@ -145,7 +145,7 @@ extension Subject.Templates {
                     .style(.paragraph)
                 }
                 .sub {
-                    UnorderdList {
+                    UnorderedList {
                         ListItem {
                             Text {
                                 userLevel.correctProsentage + "%"

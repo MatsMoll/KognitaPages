@@ -50,7 +50,7 @@ extension CreatorTemplates {
                     Div {
                         Div {
                             Div {
-                                OrderdList {
+                                OrderedList {
                                     ListItem {
                                         context.subject.name
                                     }.class("breadcrumb-item active")

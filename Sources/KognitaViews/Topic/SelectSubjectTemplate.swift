@@ -40,7 +40,7 @@ extension Subject.Templates {
                     Div {
                         Div {
                             Div {
-                                OrderdList {
+                                OrderedList {
                                     ListItem {
                                         "localize(.title)"
                                     }
