@@ -17,7 +17,7 @@ extension Pages {
         public init() {}
 
         public var body: HTML {
-            BaseTemplate(context: .init(title: "Ups en feil oppstod", description: "Ups en feil oppstod")) {
+            BaseTemplate(context: .init(title: "Oi, en feil oppstod!", description: "Oi, en feil oppstod!")) {
                 Div {
                     Container {
                         Row {
@@ -41,18 +41,18 @@ extension Pages {
                                         .alt("File not found")
 
                                     Text {
-                                        "Ups en feil oppstod!"
+                                        "Oi, en feil oppstod!"
                                     }
                                     .style(.heading1)
 
                                     Text {
-                                        "Men dette er ikke din feil!"
+                                        "Men dette er ikke din feil."
                                     }
                                     .style(.heading4)
                                     .text(color: .muted)
 
                                     Text {
-                                        "Hvorfor ikke prøve å laste inn siden på nytt? Eller kontakte oss?"
+                                        "Forsøk å laste inn siden på nytt. Om det ikke fungerer, kontakt oss."
                                     }
                                     .text(color: .muted)
                                     .margin(.three, for: .top)

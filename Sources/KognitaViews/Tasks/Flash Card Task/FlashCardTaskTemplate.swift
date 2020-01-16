@@ -74,7 +74,7 @@ extension FlashCardTask.Templates {
                             .id("flash-card-answer")
                     }
                     .invalidFeedback {
-                        "Du må fylle ut et svar"
+                        "Du må angi et svar"
                     }
                     .margin(.two, for: .bottom)
 

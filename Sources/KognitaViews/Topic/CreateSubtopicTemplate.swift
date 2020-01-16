@@ -120,7 +120,7 @@ extension Subtopic.Templates {
                         .value(Unwrap(subtopicInfo) { $0.name })
                         .required()
                     Small {
-                        "Bare lov vanlig bokstaver og mellomrom"
+                        "Kun tillatt med bokstaver, tall og mellomrom"
                     }
                 }
                 FormRow {
@@ -135,7 +135,7 @@ extension Subtopic.Templates {
                         .value(Unwrap(subtopicInfo) { $0.chapter })
                         .required()
                     Small {
-                        "Kan ikke ha samme verdi som noen andre kapittler"
+                        "Kan ikke ha samme verdi som andre kapitler"
                     }
                 }
 
