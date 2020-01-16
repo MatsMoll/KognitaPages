@@ -72,16 +72,6 @@ extension Topic.Templates {
                                         "Kan ikke ha samme verdi som noen andre kapittler"
                                     }
                                 }.class("form-group")
-                                Div {
-                                    Label {
-                                        "Beskrivelse"
-                                    }.for("create-topic-description").class("col-form-label")
-                                    Div {
-                                        Unwrap(context.topicInfo) {
-                                            $0.description.escaping(.unsafeNone)
-                                        }
-                                    }.id("create-topic-description")
-                                }.class("form-group")
 
                                 ActionButtons(topic: context.topicInfo)
                             }

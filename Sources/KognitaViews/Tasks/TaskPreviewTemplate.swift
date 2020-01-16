@@ -10,7 +10,7 @@ import KognitaCore
 
 struct TaskPreviewTemplateContext {
     let practiceProgress: Int?
-    let session: PracticeSession?
+    let session: PracticeSessionRepresentable?
     let taskContent: TaskPreviewContent
     let lastResult: TaskResultContent?
     let user: UserContent
@@ -24,7 +24,7 @@ struct TaskPreviewTemplateContext {
         task: TaskPreviewContent,
         user: UserContent,
         practiceProgress: Int?,
-        session: PracticeSession?,
+        session: PracticeSessionRepresentable?,
         lastResult: TaskResultContent?,
         taskPath: String
     ) {
@@ -100,7 +100,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
 
                         Unwrap(context.task.examPaperSemester) { exam in
                             Badge {
-                                Localized(key: Strings.exerciseExam)
+                                Strings.exerciseExam.localized()
                                 ": " + exam.rawValue + " " + context.task.examPaperYear
                             }
                             .margin(.three, for: .bottom)
@@ -178,7 +178,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
         }
     }
 
-    struct ProgressCard: StaticView {
+    struct ProgressCard: HTMLComponent {
 
         let context: TemplateValue<TaskPreviewTemplateContext>
 

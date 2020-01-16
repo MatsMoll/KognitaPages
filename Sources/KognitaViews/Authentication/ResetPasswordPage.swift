@@ -94,6 +94,7 @@ extension User.Templates {
                 .margin(.five, for: .bottom)
                 .class("account-pages")
             }
+            .rootUrl(rootUrl)
         }
 
         func root(url: String) -> AuthenticateBase {
@@ -214,8 +215,7 @@ extension User.Templates.ResetPassword {
 
         public init() {}
 
-        public let context: TemplateValue<Context> = .root()
-        let rootUrl = "uni.kognita.no"
+        let rootUrl = "https://uni.kognita.no"
 
         public var body: HTML {
             User.Templates.AuthenticateBase(
@@ -253,7 +253,7 @@ extension User.Templates.ResetPassword {
                     }
                     .button(style: .primary)
                 }
-                .href(rootUrl + context.changeUrl)
+                .href(context.changeUrl)
             }
             .root(url: rootUrl)
         }

@@ -10,54 +10,37 @@ import KognitaCore
 
 extension Subject.Templates.Details {
     
-    struct TopicLevels: HTMLComponent {
+    struct TopicList: HTMLComponent {
 
-        let levels: TemplateValue<[[TopicCardContext]]>
+        @TemplateValue([Topic.UserOverview].self)
+        var topics
+
+        @TemplateValue(Subject.ID?.self)
+        var subjectID
 
         var body: HTML {
-            ForEach(enumerated: levels) { topics, index in
-                Div {
-                    Div {
-                        title(index)
-                    }
-                    .class("page-title-box")
-                }
-                .column(width: .twelve)
-
-                ForEach(in: topics) { topic in
-                    TopicCard(topic: topic)
-                }
+            ForEach(in: topics) { topic in
+                TopicCard(
+                    topic: topic,
+                    subjectID: subjectID
+                )
             }
         }
-
-        func title(_ index: TemplateValue<Int>) -> HTML {
-            Text {
-                "Nivå "
-                index
-//                index.map { value in
-//                    value + 1
-//                }
-            }
-            .class("page-title")
-            .style(.heading4)
-        }
-    }
-
-    struct TopicCardContext {
-        let topic: Topic
-        let level: User.TopicLevel?
-        let numberOfTasks: Int
     }
 
     struct TopicCard: HTMLComponent {
 
-        let topic: TemplateValue<TopicCardContext>
+        @TemplateValue(Topic.UserOverview.self)
+        var topic
+
+        @TemplateValue(Subject.ID?.self)
+        var subjectID
 
         var body: HTML {
             Div {
                 Card {
                     Text {
-                        topic.topic.name
+                        topic.name
                     }
                     .margin(.zero, for: .top)
                     .style(.heading3)
@@ -79,37 +62,34 @@ extension Subject.Templates.Details {
                     .margin(.one, for: .vertical)
                 }
                 .sub {
-                    Unwrap(topic.level) { level in
-                        TopicLevel(
-                            level: level
-                        )
-                    }
+                    Competence(competence: topic.competence)
                 }
                 .display(.block)
             }
             .column(width: .six, for: .medium)
             .column(width: .twelve)
-            .on(click: "startPracticeSession([" + topic.topic.id + "], " + topic.topic.subjectId + ")")
+            .on(click: "startPracticeSession([" + topic.id + "], " + subjectID + ")")
         }
     }
 
-    struct TopicLevel: HTMLComponent {
+    struct Competence: HTMLComponent {
 
-        let level: TemplateValue<User.TopicLevel>
+        @TemplateValue(CompetenceData.self)
+        var competence
 
         var body: HTML {
             UnorderedList {
                 ListItem {
                     Text {
-                        level.correctProsentage + "%"
-                        Small { level.correctScoreInteger + " riktig" }
+                        competence.percentage + "%"
+                        Small { competence.userScore + " riktig" }
                             .margin(.one, for: .left)
 
                     }
                     .font(style: .bold)
                     .margin(.two, for: .bottom)
 
-                    KognitaProgressBar(value: level.correctProsentage)
+                    KognitaProgressBar(value: competence.percentage)
                 }
                 .class("list-group-item")
                 .padding(.three)

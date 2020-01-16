@@ -76,12 +76,6 @@ extension CreatorTemplates {
                             H5 {
                                 "Tema beskrivelse:"
                             }
-                            P {
-                                context.topic.description
-                                    .escaping(.unsafeNone)
-                            }
-                            .class("mb-2")
-                            .text(color: .muted)
                         }
                         .display(.block)
                     }.class("col-12")

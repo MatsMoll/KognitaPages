@@ -23,10 +23,10 @@ extension MultipleChoiseTask.Templates {
             var nextTaskIndex: Int?
             var prevTaskIndex: Int?
             let isResult: Bool
-            var hasBeenCompleted: Bool { return previewContext.lastResult?.sessionId == session?.id }
+            var hasBeenCompleted: Bool { return previewContext.lastResult?.sessionId == (try? session?.requireID()) }
 
             var task: Task { return previewContext.task }
-            var session: PracticeSession? { return previewContext.session }
+            var session: PracticeSessionRepresentable? { return previewContext.session }
 
             public init(
                 multiple: MultipleChoiseTask.Data,
@@ -34,7 +34,7 @@ extension MultipleChoiseTask.Templates {
                 user: UserContent,
                 selectedChoises: [MultipleChoiseTaskChoise.Result] = [],
                 currentTaskIndex: Int? = nil,
-                session: PracticeSession? = nil,
+                session: PracticeSessionRepresentable? = nil,
                 practiceProsess: Int? = nil,
                 lastResult: TaskResultContent? = nil
             ) {

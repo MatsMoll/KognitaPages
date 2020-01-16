@@ -59,7 +59,7 @@ struct ViewWrapper: HTML {
 }
 
 struct BreadcrumbItem {
-    let link: String?
+    let link: ViewWrapper?
     let title: ViewWrapper
 }
 

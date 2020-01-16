@@ -8,6 +8,56 @@
 import BootstrapKit
 import KognitaCore
 
+struct CustomControlInput: HTMLComponent, AttributeNode {
+
+    enum InputType {
+        case checkbox
+        case radio
+    }
+
+    let label: Label
+    let type: Input.Types
+    var attributes: [HTMLAttribute]
+    let identifier: HTML
+
+
+    public init(label: HTML, type: Input.Types, id: HTML) {
+        self.label = Label { label }
+        self.type = type
+        self.identifier = id
+        self.attributes = []
+    }
+
+    private init(label: Label, type: Input.Types, identifier: HTML, attributes: [HTMLAttribute]) {
+        self.label = label
+        self.type = type
+        self.attributes = attributes
+        self.identifier = identifier
+    }
+
+    var body: HTML {
+        Div {
+            Input()
+                .type(type)
+                .class("custom-control-input")
+                .id(identifier)
+            label.class("custom-control-label")
+                .for(identifier)
+        }
+        .class("custom-control")
+        .modify(if: type == .checkbox) {
+            $0.class("custom-checkbox")
+        }
+        .modify(if: type == .radio) {
+            $0.class("custom-radio")
+        }
+    }
+
+    func copy(with attributes: [HTMLAttribute]) -> CustomControlInput {
+        .init(label: label, type: type, identifier: identifier, attributes: attributes)
+    }
+}
+
 extension MultipleChoiseTask.Templates {
     public struct Create: TemplateView {
 
@@ -41,30 +91,21 @@ extension MultipleChoiseTask.Templates {
                 userContext: context.user,
                 baseContext: .constant(.init(title: "Lag oppgave", description: "Lag oppgave"))
             ) {
-                Div {
+                FormCard(title: context.subject.name + " | Lag flervalgs oppgave") {
+
+                    SubtopicPicker(
+                        label: "Undertema",
+                        idPrefix: "create-multiple-",
+                        topics: context.topics
+                    )
+
                     Div {
                         Div {
-                            H4 {
-                                context.subject.name
-                                " | Lag flervalgs oppgave"
-                            }.class("modal-title").id("create-modal-label")
-                        }.class("modal-header text-white bg-" + context.subject.colorClass.rawValue)
-                        Div {
-                            Div {
-                                Form {
-                                    SubtopicPicker(
-                                        label: "Undertema",
-                                        idPrefix: "create-multiple-",
-                                        topics: context.topics
-                                    )
-
-                                    Div {
-                                        Div {
-                                            Label {
-                                                "Eksamensett semester"
-                                            }.for("create-multiple-exam-semester").class("col-form-label")
-                                            Select {
-                                                ""
+                            Label {
+                                "Eksamensett semester"
+                            }.for("create-multiple-exam-semester").class("col-form-label")
+                            Select {
+                                ""
 //                                                IF(context.value(at: \.taskInfo?.examPaperSemester).isDefined) {
 //                                                    Option {
 //                                                        context.value(at: \.taskInfo?.examPaperSemester?.rawValue)
@@ -72,184 +113,144 @@ extension MultipleChoiseTask.Templates {
 //                                                    .value(context.value(at: \.taskInfo?.examPaperSemester?.rawValue))
 //                                                    .isSelected(true)
 //                                                }
-                                                Option {
-                                                    "Ikke eksamensoppgave"
-                                                }
-                                                .value("")
-                                                Option {
-                                                    "Høst"
-                                                }
-                                                .value("fall")
-                                                Option {
-                                                    "Vår"
-                                                }
-                                                .value("spring")
-                                            }
-                                            .id("create-multiple-exam-semester")
-                                            .class("select2 form-control select2")
-                                            .data(for: "toggle", value: "select2")
-                                            .data(for: "placeholder", value: "Velg ...")
-//                                            .required()
-                                        }.class("form-group col-md-6")
-                                        Div {
-                                            Label {
-                                                "År"
-                                            }.for("create-multiple-exam-year").class("col-form-label")
-                                            Input()
-                                                .type(.number)
-                                                .class("form-control")
-                                                .id("create-multiple-exam-year")
-                                                .placeholder("2019")
-                                                .value(Unwrap(context.taskInfo) { $0.examPaperYear })
-                                                .required()
-                                        }
-                                        .class("form-group col-md-6")
-                                    }
-                                    .class("form-row")
-                                    Div {
-                                        Input()
-                                            .type(.checkbox)
-                                            .class("custom-control-input")
-                                            .id("create-multiple-examinable")
-//                                            .checked()
-                                        Label {
-                                            "Bruk på prøver"
-                                        }
-                                        .for("create-multiple-examinable")
-                                        .class("custom-control-label")
-                                    }
-                                    .class("custom-control custom-checkbox mt-3")
-                                    Div {
-                                        Label {
-                                            "Oppgavetekst"
-                                        }
-                                        .for("create-multiple-description")
-                                        .class("col-form-label")
-                                        Div {
-                                            Unwrap(context.taskInfo) {
-                                                $0.description
-                                                    .escaping(.unsafeNone)
-                                            }
-                                        }
-                                        .id("create-multiple-description")
-                                    }
-                                    .class("form-group")
-                                    Div {
-                                        Label {
-                                            "Spørsmål"
-                                        }
-                                        .for("create-multiple-question")
-                                        .class("col-form-label")
-
-                                        TextArea {
-                                            Unwrap(context.taskInfo) {
-                                                $0.question
-                                            }
-                                        }
-                                        .class("form-control")
-                                        .id("create-multiple-question")
-//                                        .rows(1)
-                                        .placeholder("Noe å svare på her")
-                                        .required()
-                                        Div {
-                                            "Bare lov med store og små bokstaver, tall, mellomrom + (. , : ; !, ?)"
-                                        }
-                                        .class("invalid-feedback")
-                                    }.class("form-group")
-                                    Div {
-                                        Label {
-                                            "Løsning"
-                                        }
-                                        .for("create-multiple-solution")
-                                        .class("col-form-label")
-                                        Div {
-                                            ""
-//                                            Unwrap(context.taskInfo) {
-//                                                $0.solution
-//                                                    .escaping(.unsafeNone)
-//                                            }
-                                        }
-                                        .id("create-multiple-solution")
-                                    }
-                                    .class("form-group")
-
-                                    Div {
-                                        Input()
-                                            .type(.checkbox)
-                                            .class("custom-control-input")
-                                            .id("create-multiple-select")
-                                            .isChecked(context.multipleTaskInfo.isDefined && context.multipleTaskInfo.unsafelyUnwrapped.isMultipleSelect)
-                                        Label {
-                                            "Kan velge fler enn et svar"
-                                        }
-                                        .class("custom-control-label")
-                                        .for("create-multiple-select")
-                                    }
-                                    .class("custom-control custom-checkbox mt-3")
-
-                                    Div {
-                                        Div {
-                                            Label {
-                                                "Legg til et valg"
-                                            }
-                                            .for("create-multiple-choise")
-                                            .class("col-form-label")
-                                            Div().id("create-multiple-choise")
-                                        }
-                                        .class("form-group col-md-10")
-                                        Div {
-                                            Button {
-                                                "+"
-                                            }
-                                            .type(.button)
-                                            .class("btn btn-success btn-rounded")
-                                            .on(click: "addChoise();")
-                                        }
-                                        .class("form-group col-md-2")
-                                    }
-                                    .class("form-row mt-2 mb-2")
-                                    Div {
-                                        Table {
-                                            TableHead {
-                                                TableRow {
-                                                    TableHeader { "Valg" }
-                                                    TableHeader { "Er riktig" }
-                                                    TableHeader { "Handlinger" }
-                                                }
-                                            }
-                                            TableBody {
-                                                Unwrap(context.multipleTaskInfo) { taskInfo in
-                                                    ForEach(in: taskInfo.choises) { choise in
-                                                        ChoiseRow(choise: choise)
-                                                    }
-                                                }
-                                            }
-                                            .id("create-multiple-choises")
-                                        }
-                                        .class("col-12")
-                                    }
-                                    .class("form-group")
-
-                                    DismissableError()
-
-                                    Button {
-                                        Italic().class("mdi mdi-save")
-                                        " Lagre"
-                                    }
-                                    .type(.button)
-                                    .on(click: IF(context.taskInfo.isDefined) { "editMultipleChoise();" }.else { "createMultipleChoise();" })
-                                    .class("btn btn-success mb-3 mt-3")
+                                Option {
+                                    "Ikke eksamensoppgave"
                                 }
-                                .class("needs-validation")
-//                                .novalidate()
+                                .value("")
+                                Option {
+                                    "Høst"
+                                }
+                                .value("fall")
+                                Option {
+                                    "Vår"
+                                }
+                                .value("spring")
                             }
-                            .class("p-2")
+                            .id("create-multiple-exam-semester")
+                            .class("select2 form-control select2")
+                            .data(for: "toggle", value: "select2")
+                            .data(for: "placeholder", value: "Velg ...")
+//                                            .required()
+                        }.class("form-group col-md-6")
+
+                        FormGroup(label: "År") {
+                            Input()
+                                .type(.number)
+                                .class("form-control")
+                                .id("create-multiple-exam-year")
+                                .placeholder("2019")
+                                .value(Unwrap(context.taskInfo) { $0.examPaperYear })
+                                .required()
                         }
-                        .class("modal-body")
+                        .column(width: .six)
                     }
-                    .class("card")
+                    .class("form-row")
+
+                    CustomControlInput(
+                        label: "Bruk på prøver",
+                        type: .checkbox,
+                        id: "create-multiple-testable"
+                    )
+                    .margin(.three, for: .bottom)
+
+
+                    FormGroup(label: "Oppgavetekst") {
+                        Div {
+                            Unwrap(context.taskInfo) {
+                                $0.description
+                                    .escaping(.unsafeNone)
+                            }
+                        }
+                        .id("create-multiple-description")
+                    }
+
+
+                    FormGroup(label: "Spørsmål") {
+                        TextArea {
+                            Unwrap(context.taskInfo) {
+                                $0.question
+                            }
+                        }
+                        .class("form-control")
+                        .id("create-multiple-question")
+                        .placeholder("Noe å svare på her")
+                        .required()
+                    }
+                    .description {
+                        Div {
+                            "Bare lov med store og små bokstaver, tall, mellomrom + (. , : ; !, ?)"
+                        }
+                        .class("invalid-feedback")
+                    }
+
+                    FormGroup(label: "Løsning") {
+                        Div()
+                            .id("create-multiple-solution")
+                    }
+
+                    Div {
+                        Input()
+                            .type(.checkbox)
+                            .class("custom-control-input")
+                            .id("create-multiple-select")
+                            .isChecked(context.multipleTaskInfo.isDefined && context.multipleTaskInfo.unsafelyUnwrapped.isMultipleSelect)
+                        Label {
+                            "Kan velge fler enn et svar"
+                        }
+                        .class("custom-control-label")
+                        .for("create-multiple-select")
+                    }
+                    .class("custom-control custom-checkbox mt-3")
+
+                    FormRow {
+                        FormGroup(label: "Legg til et valg") {
+                            Div().id("create-multiple-choise")
+                        }
+                        .column(width: .ten)
+                        Div {
+                           Button {
+                               "+"
+                           }
+                           .type(.button)
+                           .class("btn btn-success btn-rounded")
+                           .on(click: "addChoise();")
+                       }
+                       .class("form-group col-md-2")
+                    }
+
+                    Div {
+                        Table {
+                            TableHead {
+                                TableRow {
+                                    TableHeader { "Valg" }
+                                    TableHeader { "Er riktig" }
+                                    TableHeader { "Handlinger" }
+                                }
+                            }
+                            TableBody {
+                                Unwrap(context.multipleTaskInfo) { taskInfo in
+                                    ForEach(in: taskInfo.choises) { choise in
+                                        ChoiseRow(choise: choise)
+                                    }
+                                }
+                            }
+                            .id("create-multiple-choises")
+                        }
+                        .class("col-12")
+                    }
+                    .class("form-group")
+
+                    DismissableError()
+
+                    Button {
+                        Italic().class("mdi mdi-save")
+                        " Lagre"
+                    }
+                    .type(.button)
+                    .on(click: IF(context.taskInfo.isDefined) { "editMultipleChoise();" }.else { "createMultipleChoise();" })
+                    .class("mb-3 mt-3")
+                    .button(style: .success)
                 }
-                .class("pt-5")
             }
             .header {
                 Link().href("/assets/css/vendor/summernote-bs4.css").relationship(.stylesheet).type("text/css")

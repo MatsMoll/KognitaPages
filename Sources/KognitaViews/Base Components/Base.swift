@@ -10,6 +10,14 @@ import HTMLKit
 import BootstrapKit
 import KognitaCore
 
+extension Button {
+    public func isRounded(_ condtion: Conditionable = true) -> Button {
+        self.modify(if: condtion) {
+            $0.class("btn-rounded")
+        }
+    }
+}
+
 struct LogoImage: HTMLComponent {
     var body: HTML {
         Img().source("/assets/images/logo.png").alt("Logo").height(30)
@@ -30,9 +38,9 @@ struct BaseTemplate: HTMLComponent {
 
     let context: TemplateValue<BaseTemplateContent>
     let content: HTML
-    var customHeader: HTML = ""
-    var rootUrl: String = ""
-    var customScripts: HTML = ""
+    private var customHeader: HTML = ""
+    private var rootUrl: String = ""
+    private var customScripts: HTML = ""
 
     init(context: TemplateValue<BaseTemplateContent>, @HTMLBuilder content: () -> HTML) {
         self.context = context

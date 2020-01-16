@@ -102,7 +102,9 @@ public struct FormGroup: HTMLComponent {
             label.for(inputId)
             inputNode.class("form-control")
             IF(optionalContent != nil) {
-                optionalContent ?? ""
+                Small {
+                    optionalContent ?? ""
+                }
             }
         }
         .class("form-group")
@@ -136,9 +138,7 @@ struct CreateForm: HTMLComponent {
                     .required()
             }
             .description {
-                Small {
-                    "Bare lov vanlig bokstaver og mellomrom"
-                }
+                "Bare lov vanlig bokstaver og mellomrom"
             }
 
             FormGroup(label: "Beskrivelse") {
