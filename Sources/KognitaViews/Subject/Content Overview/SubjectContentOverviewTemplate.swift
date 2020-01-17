@@ -47,8 +47,8 @@ extension Subject.Templates {
             ContentBaseTemplate(
                 userContext: context.user,
                 baseContext: .constant(.init(
-                    title: "Innhold oversikt",
-                    description: "Innhold oversikt")
+                    title: "Innholdsoversikt",
+                    description: "Innholdsoversikt")
                 )
             ) {
                 Row {

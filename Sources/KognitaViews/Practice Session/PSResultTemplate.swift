@@ -98,7 +98,7 @@ extension PracticeSession.Templates {
                         extraContent: nil
                     ),
                     .init(
-                        title: "Tid øvd",
+                        title: "Tid øvet",
                         mainContent: timeUsed,
                         extraContent: nil
                     ),
@@ -188,7 +188,7 @@ extension PracticeSession.Templates {
                         }
                         .else {
                             Text {
-                                "Vi klarte ikke å finne noen oppgaver i dette øvingsettet"
+                                "Vi klarte ikke å finne noen oppgaver i dette øvingssettet"
                             }
                             .style(.lead)
                         }

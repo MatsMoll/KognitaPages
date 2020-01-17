@@ -54,7 +54,7 @@ extension Topic.Templates {
                                         .required()
                                         .value(Unwrap(context.topicInfo) { $0.name })
                                     Small {
-                                        "Bare lov vanlig bokstaver og mellomrom"
+                                        "Kun tillatt med bokstaver, tall og mellomrom"
                                     }
                                 }.class("form-row")
                                 Div {
@@ -69,7 +69,7 @@ extension Topic.Templates {
                                         .required()
                                         .value(Unwrap(context.topicInfo) { $0.chapter })
                                     Small {
-                                        "Kan ikke ha samme verdi som noen andre kapittler"
+                                        "Kan ikke ha samme verdi som noen andre kapitler"
                                     }
                                 }.class("form-group")
                                 Div {

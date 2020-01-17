@@ -107,7 +107,7 @@ extension FlashCardTask.Templates {
                                         .column(width: .six, for: .medium)
                                     }
 
-                                    FormGroup(label: "Oppgavetext") {
+                                    FormGroup(label: "Oppgavetekst") {
                                         Div {
                                             Unwrap(context.taskInfo) {
                                                 $0.description
@@ -131,7 +131,7 @@ extension FlashCardTask.Templates {
                                     }
                                     .description {
                                         Div {
-                                            "Bare lov med store og små bokstaver, tall, mellomrom + (. , : ; !, ?)"
+                                            "Kun tillatt med bokstaver, tall, mellomrom og enkelte tegn (. , : ; ! ?)"
                                         }
                                         .class("invalid-feedback")
                                     }

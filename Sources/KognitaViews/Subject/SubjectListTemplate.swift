@@ -36,7 +36,7 @@ extension Subject.Templates {
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Tema liste", description: "Tema liste"))
+                baseContext: .constant(.init(title: "Temaliste", description: "Temaliste"))
             ) {
 
                 PageTitle(title: Strings.subjectsTitle.localized())
@@ -58,7 +58,7 @@ extension Subject.Templates {
 //                                            "Her vil det komme opp temaer som vi anbefaler å prioritere først. Dette skal hjelpe deg med å øve mer effektivt og dermed få mer ut av øvingene dine."
 //                                        }
 //                                        Text {
-//                                            "Disse anbefalingnene vil først komme når du har gjørt noen oppgaver"
+//                                            "Disse anbefalingene vil først komme når du har utført noen oppgaver"
 //                                        }
 //                                    }
 //                                    .display(.block)

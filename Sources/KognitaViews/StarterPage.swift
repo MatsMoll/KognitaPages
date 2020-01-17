@@ -21,8 +21,8 @@ extension Pages {
         private let info: [FeatureView.Info] = [
             .init(icon: "hourglass-start", title: "Vær effektiv", description: "Bruk mindre tid på å øve ved effektive læringsteknikker"),
             .init(icon: "trophy", title: "Motiverende", description: "Se en tydelig progresjon"),
-            .init(icon: "star-o", title: "Kvalitet", description: "Innholdet er laget av fagpersjoner for å få høy kvalitet"),
-            .init(icon: "heart-o", title: "Laget med av studenter for studenter", description: "Kognita er laget for at studenter skal den beste opplevelsen")
+            .init(icon: "star-o", title: "Kvalitet", description: "Innholdet er laget av fagpersoner med god kompetanse"),
+            .init(icon: "heart-o", title: "Laget med, av og for studenter", description: "Kognita er laget for å gi studenter den beste læringsopplevelsen")
         ]
 
         public init() {}
@@ -103,11 +103,11 @@ extension Pages {
                         Row {
                             Div {
                                 Text {
-                                    "Hvordan funkere det?"
+                                    "Hvordan fungerer det?"
                                 }
                                 .style(.display4)
                                 Text {
-                                    "Kognita baserer seg på effektive læringsteknikker som er vitenskapelig bevist. I tillegg er Kognita designet for å gjøre øvingen mer motiverende ved å gjøre øvingen mer spill aktig."
+                                    "Kognita baserer seg på effektive læringsteknikker som er vitenskapelig bevist. I tillegg er Kognita designet for å gjøre øvingen mer motiverende ved å gjøre øvingen mer spill-aktig."
                                 }
                                 .style(.paragraph)
                                 .margin(.two, for: .top)
@@ -148,7 +148,7 @@ extension Pages {
                         Row {
                             Div {
                                 Text {
-                                    "Kontakt oss?"
+                                    "Kontakt oss"
                                 }
                                 .style(.display4)
                                 Div {
