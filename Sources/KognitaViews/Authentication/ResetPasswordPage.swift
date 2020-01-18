@@ -64,7 +64,7 @@ extension User.Templates {
                                     Div {
                                         Anchor {
                                             Span {
-                                                Img().source(rootUrl + "/assets/images/logo.png").alt("").height(30)
+                                                LogoImage(rootUrl: rootUrl)
                                             }
                                         }
                                         .href("/")

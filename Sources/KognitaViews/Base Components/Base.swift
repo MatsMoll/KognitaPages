@@ -19,8 +19,21 @@ extension Button {
 }
 
 struct LogoImage: HTMLComponent {
+
+    let isDark: Conditionable
+    let rootUrl: String
+
+    init(rootUrl: String = "", isDark: Conditionable = true) {
+        self.rootUrl = rootUrl
+        self.isDark = isDark
+    }
+
     var body: HTML {
-        Img().source("/assets/images/logo.png").alt("Logo").height(30)
+        IF(isDark) {
+            Img().source(rootUrl + "/assets/images/logo-dark.png").alt("Logo").height(30)
+        }.else {
+            Img().source(rootUrl + "/assets/images/logo.png").alt("Logo").height(30)
+        }
     }
 }
 
@@ -74,7 +87,7 @@ struct BaseTemplate: HTMLComponent {
 
                 Meta().name(.viewport).content("width=device-width, initial-scale=1.0")
                 Meta().name(.description).content(context.description)
-                Meta().name(.author).content("MEM")
+                Author { "MEM" }
 
                 Link().relationship(.shortcutIcon).href(rootUrl + "/assets/images/favicon.ico")
                 Link().relationship(.stylesheet).href(rootUrl + "/assets/css/icons.min.css").type("text/css")
@@ -85,6 +98,7 @@ struct BaseTemplate: HTMLComponent {
             Body {
                 content
             }
+            .padding(.zero, for: .bottom)
             Script().source("/assets/js/app.min.js").type("text/javascript")
             customScripts
         }
@@ -156,14 +170,18 @@ struct ContentBaseTemplate: HTMLComponent {
                             activePath: activePath
                         )
                     }
-                }.class("topnav")
+                }
+                .class("topnav")
 
                 Div {
                     Container {
                         content
                     }
-                    CopyrightFooter()
-                }.class("content")
+                }
+                .class("content")
+
+                KognitaFooter()
+                    .margin(.three, for: .top)
             }.class("wrapper")
 
             modals
@@ -214,10 +232,10 @@ struct ContentBaseTemplate: HTMLComponent {
             NavigationBar {
                 NavigationBar.Brand(link: "/subjects") {
                     Span {
-                        Img(source: "/assets/images/logo.png").height(30)
+                        LogoImage()
                     }.class("logo-lg")
                     Span {
-                        Img(source: "/assets/images/logo.png").height(30)
+                        LogoImage()
                     }.class("logo-sm")
                 }
                 .class("logo")

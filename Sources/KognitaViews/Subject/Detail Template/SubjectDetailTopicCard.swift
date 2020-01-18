@@ -18,11 +18,15 @@ extension Subject.Templates.Details {
         @TemplateValue(Subject.ID?.self)
         var subjectID
 
+        @TemplateValue(Bool.self)
+        var canPractice
+
         var body: HTML {
             ForEach(in: topics) { topic in
                 TopicCard(
                     topic: topic,
-                    subjectID: subjectID
+                    subjectID: subjectID,
+                    canPractice: canPractice
                 )
             }
         }
@@ -35,6 +39,9 @@ extension Subject.Templates.Details {
 
         @TemplateValue(Subject.ID?.self)
         var subjectID
+
+        @TemplateValue(Bool.self)
+        var canPractice
 
         var body: HTML {
             Div {
@@ -60,6 +67,7 @@ extension Subject.Templates.Details {
                     .class("btn-rounded")
                     .button(style: .light)
                     .margin(.one, for: .vertical)
+                    .isDisabled(canPractice == false)
                 }
                 .sub {
                     Competence(competence: topic.competence)

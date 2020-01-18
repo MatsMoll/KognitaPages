@@ -13,6 +13,18 @@ extension Subject.Details {
     var makeActiveCall: String {
         "markAsActive(\(subject.id ?? 0))"
     }
+
+    var topicIDsJSList: String {
+        "[\(topics.map { $0.id }.reduce("") { $0 + "\($1), " }.dropLast(2))]"
+    }
+}
+
+extension Button {
+    func isDisabled(_ condition: Conditionable) -> Button {
+        self.modify(if: condition) {
+            $0.add(HTMLAttribute(attribute: "disabled", value: nil))
+        }
+    }
 }
 
 extension Subject.Templates {
@@ -22,10 +34,6 @@ extension Subject.Templates {
             let base: BaseTemplateContent
             let user: User
             let details: Subject.Details
-
-            var topicIDsJSList: String {
-                "[\(details.topics.map { $0.id }.reduce("") { $0 + "\($1), " }.dropLast(2))]"
-            }
 
             public init(
                 user: User,
@@ -59,7 +67,7 @@ extension Subject.Templates {
                         )
                         SubjectCard(
                             details: context.details,
-                            topicIDs: context.topicIDsJSList
+                            topicIDs: context.details.topicIDsJSList
                         )
                         Row {
                             IF(context.details.topics.isEmpty) {
@@ -72,7 +80,8 @@ extension Subject.Templates {
                             }.else {
                                 TopicList(
                                     topics: context.details.topics,
-                                    subjectID: context.details.subject.id
+                                    subjectID: context.details.subject.id,
+                                    canPractice: context.details.canPractice
                                 )
                             }
                         }
@@ -137,6 +146,7 @@ extension Subject.Templates {
                     .button(style: .primary)
                     .margin(.three, for: .bottom)
                     .on(click: "startPracticeSession(" + topicIDs + ", " + details.subject.id + ")")
+                    .isDisabled(details.canPractice == false)
 
                     Text {
                         details.subject.description

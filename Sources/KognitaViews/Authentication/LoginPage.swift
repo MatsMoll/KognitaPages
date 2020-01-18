@@ -54,7 +54,7 @@ public struct LoginPage: HTMLTemplate {
                                 Div {
                                     Anchor {
                                         Span {
-                                            Img().source("assets/images/logo.png").alt("Logo").height(30)
+                                            LogoImage()
                                         }
                                     }.href("index.html")
                                 }.class("card-header pt-4 pb-4 text-center bg-primary")

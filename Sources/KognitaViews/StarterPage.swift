@@ -13,6 +13,47 @@ import BootstrapKit
 //    var header: HTML.ContentNode<Self> { return .init(name: "header") }
 //}
 
+extension AttributeNode {
+    func offset(width: ColumnWidth, for sizeClass: SizeClass) -> Self {
+        switch sizeClass {
+        case .all:  return self.class("offset-\(width.rawValue)")
+        default:    return self.class("offset-\(sizeClass.rawValue)-\(width.rawValue)")
+        }
+    }
+}
+
+struct MaterialDesignIcon: HTMLComponent, AttributeNode {
+    enum Icons: String {
+        case infinity
+    }
+
+    let icon: TemplateValue<Icons>
+    var attributes: [HTMLAttribute]
+
+    init(icon: Icons) {
+        self.icon = .constant(icon)
+        self.attributes = []
+    }
+
+    init(icon: TemplateValue<Icons>) {
+        self.icon = icon
+        self.attributes = []
+    }
+
+    private init(icon: TemplateValue<Icons>, attributes: [HTMLAttribute]) {
+        self.icon = icon
+        self.attributes = attributes
+    }
+
+    func copy(with attributes: [HTMLAttribute]) -> MaterialDesignIcon {
+        .init(icon: icon, attributes: attributes)
+    }
+
+    var body: HTML {
+        Italic().class("mdi mdi-" + icon.rawValue)
+    }
+}
+
 public struct Pages {}
 
 extension Pages {
@@ -32,161 +73,289 @@ extension Pages {
                     title: "Kognita",
                     description: "Kognita"
             )) {
-                Nav {
+                Div {
                     Container {
-                        Anchor {
-                            Span {
-                                Img()
-                                    .source("/assets/images/logo.png")
-                                    .alt("")
-                                    .height(30)
+                        NavigationBar {
+                            NavigationBar.Brand(link: "/") {
+                                Span {
+                                    LogoImage()
+                                }.class("logo-lg")
+                                Span {
+                                    LogoImage()
+                                }.class("logo-sm")
                             }
-                            .class("logo-lg")
-                            Span {
-                                Img()
-                                    .source("/assets/images/logo_sm.png")
-                                    .alt("")
-                                    .height(30)
-                            }
-                            .class("logo-sm")
-                        }
-                        .href("/")
-                        .class("logo")
-                        .text(alignment: .center)
-                        Div {
-                            UnorderedList {
+                            .class("logo")
+
+                            NavigationBar.Collapse {
                                 ListItem {
-                                    Anchor(Strings.menuRegister)
-                                        .class("nav-link")
-                                        .href("/signup")
-                                }
-                                .class("nav-item")
-                                ListItem {
-                                    Anchor(Strings.menuLogin)
-                                        .class("nav-link")
-                                        .href("/login")
-                                }
-                                .class("nav-item")
-                            }
-                            .class("navbar-nav")
-                            .margin(.auto, for: .left)
-                        }
-                        .class("collapse navbar-collapse")
-                        .id("navbarResponsive")
-                    }
-                }
-                .class("navbar navbar-expand-lg navbar-dark navbar-custom fixed-top")
-                Header {
-                    Div {
-                        Container(mode: .fluid) {
-                            Text(Strings.starterPageDescription)
-                                .class("masthead-heading")
-                                .margin(.zero, for: .bottom)
-                                .style(.heading1)
-
-                            Anchor(Strings.starterPageMoreButton)
-                                .href("/signup")
-                                .class("rounded-pill")
-                                .button(style: .primary)
-                                .button(size: .extraLarge)
-                                .margin(.five, for: .top)
-                        }
-                    }
-                    .class("masthead-content")
-                }
-                .class("masthead")
-                .text(alignment: .center)
-                .text(color: .white)
-
-                Section {
-                    Container(mode: .fluid) {
-                        Row {
-                            Div {
-                                Text {
-                                    "Hvordan funkere det?"
-                                }
-                                .style(.display4)
-                                Text {
-                                    "Kognita baserer seg på effektive læringsteknikker som er vitenskapelig bevist. I tillegg er Kognita designet for å gjøre øvingen mer motiverende ved å gjøre øvingen mer spill aktig."
-                                }
-                                .style(.paragraph)
-                                .margin(.two, for: .top)
-                            }
-                            .margin(.auto)
-                            .padding(.five)
-                            .column(width: .eight)
-                            .text(alignment: .center)
-                        }
-                        .alignment(.itemsCenter)
-                    }
-                }
-                Section {
-                    Container(mode: .fluid) {
-                        Row {
-                            Div {
-                                Text {
-                                    "Vår tjeneste"
-                                }
-                                .style(.display4)
-                            }
-                            .column(width: .twelve)
-                            .text(alignment: .center)
-
-                            ForEach(in: info) { item in
-                                FeatureView(info: item)
-                            }
-                        }
-                        .padding(.five, for: .top)
-                        .padding(.five, for: .bottom)
-                    }
-                    .text(color: .white)
-                    .background(color: .primary)
-                    .margin(.five, for: .bottom)
-                }
-                Section {
-                    Container {
-                        Row {
-                            Div {
-                                Text {
-                                    "Kontakt oss?"
-                                }
-                                .style(.display4)
-                                Div {
-                                    Italic()
-                                        .class("fa fa-envelope fa-4x sr-icons")
-                                        .margin(.three, for: .bottom)
                                     Anchor {
-                                        Text { "kontakt@kognita.no" }
-                                            .style(.heading3)
+                                        Span {
+                                            Text(Strings.registerTitle)
+                                        }
                                     }
-                                    .mail(to: "mats@kognita.no")
+                                    .href("/register")
+                                    .class("nav-link")
                                 }
-                                .class("service-box")
-                                .margin(.five, for: .top)
+                                .class("nav-item")
+                                ListItem {
+                                    Anchor {
+                                        Span {
+                                            Text(Strings.loginTitle)
+                                        }
+                                    }
+                                    .href("/login")
+                                    .class("nav-link")
+                                }
+                                .class("nav-item")
                             }
-                            .text(alignment: .center)
-                            .margin(.auto, for: .horizontal)
-                            .column(width: .six, for: .medium)
-                            .column(width: .three, for: .large)
+                            .button {
+                                Anchor {
+                                    Div {
+                                        Span()
+                                        Span()
+                                        Span()
+                                    }.class("lines")
+                                }.class("navbar-toggle")
+                            }
+                        }
+                        .navigationBar(style: .dark)
+                        .class("topnav-navbar")
+                    }
+                }
+                .class("topnav")
+
+                Section {
+                    Container {
+                        Row {
+                            Div {
+                                Text(Strings.starterPageDescription)
+                                    .class("hero-title")
+                                    .text(color: .white)
+                                    .style(.heading2)
+                                    .font(style: .regular)
+                                Anchor(Strings.starterPageMoreButton)
+                                    .href("/signup")
+                                    .class("rounded-pill")
+                                    .button(style: .success)
+                                    .button(size: .extraLarge)
+                                    .margin(.five, for: .top)
+                            }
+                            .column(width: .five, for: .medium)
+                            .margin(.four, for: .top, sizeClass: .medium)
+                            Div {
+                                Div {
+                                    Img(source: "/assets/images/startup.svg")
+                                        .class("img-fluid")
+                                }
+                                .text(alignment: .right)
+                                .margin(.three, for: .top)
+                                .margin(.zero, for: .top, sizeClass: .medium)
+                            }
+                            .column(width: .five, for: .medium)
+                            .offset(width: .two, for: .medium)
                         }
                     }
                 }
-                Footer{
+                .class("hero-section")
+
+                Section {
                     Container {
-                        Text(Strings.copyright)
-                            .class("small")
-                            .margin(.zero)
-                            .text(color: .white)
-                            .text(alignment: .center)
-                            .style(.paragraph)
+                        Row {
+                            Div {
+                                Div {
+                                    Text {
+                                        MaterialDesignIcon(icon: .infinity)
+                                    }
+                                    .style(.heading1)
+                                    Text {
+                                        "En liten tekst her"
+                                    }
+                                    .style(.heading3)
+                                    Text {
+                                        "En litt mindre tekst her?"
+                                    }
+                                }
+                                .text(alignment: .center)
+                            }
+                            .column(width: .twelve, for: .large)
+                        }
+                        .padding(.four, for: .vertical)
+
+                        Row {
+                            Div {
+                                Div {
+                                    Div {
+                                        Span {
+                                            MaterialDesignIcon(icon: .infinity)
+                                                .text(color: .primary)
+                                        }
+                                        .class("avatar-title bg-primary-lighten rounded-circle")
+                                    }
+                                    .class("avatar-sm")
+                                    .margin(.auto)
+                                    Text {
+                                        "Feature beskrivelse"
+                                    }
+                                    .style(.heading4)
+                                    .margin(.three, for: .top)
+                                    Text {
+                                        "En lengre beskrivles"
+                                    }
+                                    .text(color: .muted)
+                                    .margin(.two, for: .top)
+                                    .margin(.zero, for: .bottom)
+                                }
+                                .text(alignment: .center)
+                                .padding(.three)
+                            }
+                            .column(width: .four, for: .large)
+                            Div {
+                                Div {
+                                    Div {
+                                        Span {
+                                            MaterialDesignIcon(icon: .infinity)
+                                                .text(color: .primary)
+                                        }
+                                        .class("avatar-title bg-primary-lighten rounded-circle")
+                                    }
+                                    .class("avatar-sm")
+                                    .margin(.auto)
+                                    Text {
+                                        "Feature beskrivelse"
+                                    }
+                                    .style(.heading4)
+                                    .margin(.three, for: .top)
+                                    Text {
+                                        "En lengre beskrivles"
+                                    }
+                                    .text(color: .muted)
+                                    .margin(.two, for: .top)
+                                    .margin(.zero, for: .bottom)
+                                }
+                                .text(alignment: .center)
+                                .padding(.three)
+                            }
+                            .column(width: .four, for: .large)
+                            Div {
+                                Div {
+                                    Div {
+                                        Span {
+                                            MaterialDesignIcon(icon: .infinity)
+                                                .text(color: .primary)
+                                        }
+                                        .class("avatar-title bg-primary-lighten rounded-circle")
+                                    }
+                                    .class("avatar-sm")
+                                    .margin(.auto)
+                                    Text {
+                                        "Feature beskrivelse"
+                                    }
+                                    .style(.heading4)
+                                    .margin(.three, for: .top)
+                                    Text {
+                                        "En lengre beskrivles"
+                                    }
+                                    .text(color: .muted)
+                                    .margin(.two, for: .top)
+                                    .margin(.zero, for: .bottom)
+                                }
+                                .text(alignment: .center)
+                                .padding(.three)
+                            }
+                            .column(width: .four, for: .large)
+                        }
+                        Row {
+                            Div {
+                                Div {
+                                    Div {
+                                        Span {
+                                            MaterialDesignIcon(icon: .infinity)
+                                                .text(color: .primary)
+                                        }
+                                        .class("avatar-title bg-primary-lighten rounded-circle")
+                                    }
+                                    .class("avatar-sm")
+                                    .margin(.auto)
+                                    Text {
+                                        "Feature beskrivelse"
+                                    }
+                                    .style(.heading4)
+                                    .margin(.three, for: .top)
+                                    Text {
+                                        "En lengre beskrivles"
+                                    }
+                                    .text(color: .muted)
+                                    .margin(.two, for: .top)
+                                    .margin(.zero, for: .bottom)
+                                }
+                                .text(alignment: .center)
+                                .padding(.three)
+                            }
+                            .column(width: .four, for: .large)
+                            Div {
+                                Div {
+                                    Div {
+                                        Span {
+                                            MaterialDesignIcon(icon: .infinity)
+                                                .text(color: .primary)
+                                        }
+                                        .class("avatar-title bg-primary-lighten rounded-circle")
+                                    }
+                                    .class("avatar-sm")
+                                    .margin(.auto)
+                                    Text {
+                                        "Feature beskrivelse"
+                                    }
+                                    .style(.heading4)
+                                    .margin(.three, for: .top)
+                                    Text {
+                                        "En lengre beskrivles"
+                                    }
+                                    .text(color: .muted)
+                                    .margin(.two, for: .top)
+                                    .margin(.zero, for: .bottom)
+                                }
+                                .text(alignment: .center)
+                                .padding(.three)
+                            }
+                            .column(width: .four, for: .large)
+                            Div {
+                                Div {
+                                    Div {
+                                        Span {
+                                            MaterialDesignIcon(icon: .infinity)
+                                                .text(color: .primary)
+                                        }
+                                        .class("avatar-title bg-primary-lighten rounded-circle")
+                                    }
+                                    .class("avatar-sm")
+                                    .margin(.auto)
+                                    Text {
+                                        "Feature beskrivelse"
+                                    }
+                                    .style(.heading4)
+                                    .margin(.three, for: .top)
+                                    Text {
+                                        "En lengre beskrivles"
+                                    }
+                                    .text(color: .muted)
+                                    .margin(.two, for: .top)
+                                    .margin(.zero, for: .bottom)
+                                }
+                                .text(alignment: .center)
+                                .padding(.three)
+                            }
+                            .column(width: .four, for: .large)
+                        }
                     }
                 }
                 .padding(.five, for: .vertical)
-                .background(color: .dark)
+
+                KognitaFooter(isDark: false)
             }
             .header {
-                Link().href("assets/css/landing-page.css").relationship(.stylesheet).type("text/css")
-                Link().href("assets/fonts/font-awesome.min.css").relationship(.stylesheet).type("text/css")
+                Link().href("/assets/css/landing-page.css").relationship(.stylesheet).type("text/css")
+                Link().href("/assets/fonts/font-awesome.min.css").relationship(.stylesheet).type("text/css")
             }
         }
     }
@@ -227,6 +396,120 @@ extension Pages {
             .text(alignment: .center)
             .column(width: .six, for: .medium)
             .column(width: .three, for: .large)
+        }
+    }
+}
+
+
+struct KognitaFooter: HTMLComponent, AttributeNode {
+
+    let isDark: Conditionable
+    var attributes: [HTMLAttribute]
+
+    init(isDark: Conditionable = false) {
+        self.isDark = isDark
+        self.attributes = []
+    }
+
+    private init(isDark: Conditionable, attributes: [HTMLAttribute]) {
+        self.isDark = isDark
+        self.attributes = attributes
+    }
+
+    var body: HTML {
+        Footer {
+            Container {
+                Row {
+                    Div {
+                        LogoImage(isDark: isDark)
+                        Text {
+                            "Kognita gjør det lettere å lære nytt pensum"
+                            Break()
+                            "Du kan derfor bruke mer tid på det du verdsetter"
+                        }
+                        .margin(.four, for: .top)
+                        .text(color: .muted)
+                    }
+                    .column(width: .six, for: .large)
+                    Div {
+                        Text {
+                            "Firma"
+                        }
+                        .style(.heading5)
+                        .modify(if: isDark) {
+                            $0.text(color: .white)
+                        }
+                        .modify(if: !isDark) {
+                            $0.text(color: .dark)
+                        }
+
+
+                        UnorderedList {
+                            ForEach(in: itemLinks) { item in
+                                ListItemLink(context: item)
+                            }
+                        }
+                        .class("list-unstyled")
+                        .padding(.zero, for: .left)
+                        .margin(.zero, for: .bottom)
+                        .margin(.three, for: .top)
+                    }
+                    .column(width: .three, for: .large)
+                    .offset(width: .three, for: .large)
+                }
+                Row {
+                    Div {
+                        Div {
+                            Text(Strings.copyright)
+                                .text(color: .muted)
+                                .text(alignment: .center)
+                                .margin(.four, for: .top)
+                        }
+                        .margin(.five, for: .top)
+                    }
+                    .column(width: .twelve, for: .large)
+                }
+            }
+        }
+        .padding(.five, for: .vertical)
+        .class("border-top border-light")
+        .modify(if: isDark) {
+            $0.background(color: .dark)
+        }
+        .modify(if: !isDark) {
+            $0.background(color: .white)
+        }
+        .add(attributes: attributes)
+    }
+
+    func copy(with attributes: [HTMLAttribute]) -> KognitaFooter {
+        .init(isDark: isDark, attributes: attributes)
+    }
+
+    let itemLinks: [ListItemLink.Context] = [
+        .init(title: "Om oss", url: "#"),
+        .init(title: "Brukervilkår", url: "/terms-of-usage"),
+        .init(title: "Personværn", url: "/privacy-policy"),
+    ]
+
+    struct ListItemLink: HTMLComponent {
+
+        struct Context {
+            let title: String
+            let url: String
+        }
+
+        let context: TemplateValue<Context>
+
+        var body: HTML {
+            ListItem {
+                Anchor {
+                    context.title
+                }
+                .href(context.url)
+                .text(color: .muted)
+            }
+            .margin(.two, for: .top)
         }
     }
 }

@@ -46,12 +46,14 @@ struct KognitaNavigationBar: HTMLComponent {
                 Nav {
                     Anchor {
                         Span {
-                            Img().source(rootUrl + "/assets/images/logo.png").alt("Logo").height(30)
+                            LogoImage(rootUrl: rootUrl)
                         }.class("logo-lg")
                         Span {
-                            Img().source(rootUrl + "/assets/images/logo.png").alt("Logo").height(30)
+                            LogoImage(rootUrl: rootUrl)
                         }.class("logo-sm")
-                    }.href(rootUrl + "/").class("logo text-center")
+                    }
+                    .href(rootUrl + "/")
+                    .class("logo text-center")
                     Div {
                         UnorderedList {
                             ListItem {
