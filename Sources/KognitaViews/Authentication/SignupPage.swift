@@ -88,7 +88,7 @@ extension User.Templates {
                                 Anchor {
                                     Strings.registerTermsOfServiceLink.localized()
                                 }
-                                .href("#")
+                                .href("/terms-of-service")
                                 .class("text-dark")
                             }
                             .class("custom-control-label")

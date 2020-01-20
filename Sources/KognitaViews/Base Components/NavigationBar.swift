@@ -23,7 +23,7 @@ struct BetaHeader: HTMLComponent {
             }
             .display(.inline)
             .text(color: .white)
-            .href("mailto:mats@kognita.no")
+            .href("mailto:kontakt@kognita.no")
 
             Text { "." }
                 .display(.inline)

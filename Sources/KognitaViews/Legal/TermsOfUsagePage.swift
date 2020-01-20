@@ -2,7 +2,7 @@ import BootstrapKit
 
 extension Pages {
 
-    public struct TermsOfUsage: HTMLPage {
+    public struct TermsOfService: HTMLPage {
 
         struct UsageSection: HTMLComponent {
 

@@ -19,14 +19,6 @@ extension Subject.Details {
     }
 }
 
-extension Button {
-    func isDisabled(_ condition: Conditionable) -> Button {
-        self.modify(if: condition) {
-            $0.add(HTMLAttribute(attribute: "disabled", value: nil))
-        }
-    }
-}
-
 extension Subject.Templates {
     public struct Details: HTMLTemplate {
 
@@ -279,56 +271,5 @@ extension Subject.Templates {
                 }
             }
         }
-    }
-}
-
-struct KognitaProgressBadge: HTMLComponent {
-
-    let value: TemplateValue<Double>
-
-    var body: HTML {
-        Badge {
-            value + "%"
-        }
-        .float(.right)
-        .modify(if: 0.0..<50.0 ~= value) {
-            $0.background(color: .danger)
-        }
-        .modify(if: 50.0..<75.0 ~= value) {
-            $0.background(color: .warning)
-        }
-        .modify(if: 75.0...100.0 ~= value) {
-            $0.background(color: .success)
-        }
-    }
-}
-
-struct KognitaProgressBar: HTMLComponent {
-
-    let value: TemplateValue<Double>
-
-    var body: HTML {
-        ProgressBar(
-            currentValue: value,
-            valueRange: 0...100
-        )
-            .bar(size: .medium)
-        .modify(if: 0.0..<50.0 ~= value) {
-            $0.bar(style: .danger)
-        }
-        .modify(if: 50.0..<75.0 ~= value) {
-            $0.bar(style: .warning)
-        }
-        .modify(if: 75.0...100.0 ~= value) {
-            $0.bar(style: .success)
-        }
-    }
-}
-
-extension AttributeNode {
-
-    func toggle(modal id: HTMLIdentifier) -> Self {
-        self.data(for: "toggle", value: "modal")
-            .data(for: "target", value: id)
     }
 }
