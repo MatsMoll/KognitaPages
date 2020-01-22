@@ -13,7 +13,7 @@ extension SubjectTest.Templates {
                 Div {
                     Card {
                         Text {
-                            "Antall som har åpnet"
+                            "Antall åpnet"
                         }
                         .text(color: .secondary)
 
@@ -28,7 +28,7 @@ extension SubjectTest.Templates {
                 Div {
                     Card {
                         Text {
-                            "Antall fullført"
+                            "Antall levert"
                         }
                         .text(color: .secondary)
 

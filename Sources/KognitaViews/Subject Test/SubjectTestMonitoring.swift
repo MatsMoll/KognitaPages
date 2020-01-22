@@ -37,11 +37,15 @@ extension SubjectTest.Templates {
                                 .style(.heading3)
                                 .text(color: .dark)
 
-                                Button {
-                                    "Stopp prøve"
+                                Form {
+                                    Button {
+                                        "Stopp prøve"
+                                    }
+                                    .button(style: .danger)
+                                    .type(.submit)
                                 }
-                                .on(click: "alert('Ikke implementer');")
-                                .button(style: .danger)
+                                .method(.post)
+                                .action("end")
                             }
                         }
                         .column(width: .twelve)
