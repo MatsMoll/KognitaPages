@@ -25,6 +25,11 @@ extension AttributeNode {
 struct MaterialDesignIcon: HTMLComponent, AttributeNode {
     enum Icons: String {
         case infinity
+        case check
+        case checkAll = "check-all"
+        case minus
+        case eye
+        case close
     }
 
     let icon: TemplateValue<Icons>

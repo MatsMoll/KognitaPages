@@ -254,6 +254,11 @@ extension Subject.Templates {
 
             var body: HTML {
                 Card {
+                    Badge {
+                        test.subjectName
+                    }
+                    .background(color: .primary)
+
                     Text {
                         test.title
                     }

@@ -5,6 +5,10 @@ extension SubjectTest.OverviewResponse {
     var openCall: String {
         "openTest(\(id))"
     }
+
+    var monitorUri: String {
+        "/subject-tests/\(id)/monitor"
+    }
 }
 
 extension SubjectTest.Templates {
@@ -89,9 +93,29 @@ extension SubjectTest.Templates {
                     }
 
                     Unwrap(test.endsAt) { endsAt in
-                        Text {
-                            "Slutter: "
-                            endsAt.style(date: .short, time: .full)
+                        IF(test.isOpen) {
+                            Text {
+                                "Slutter: "
+                                endsAt.style(date: .short, time: .medium)
+                            }
+
+                            Anchor {
+                                "Se sanntid status"
+                            }
+                            .href(test.monitorUri)
+                            .button(style: .light)
+                        }
+                        .else {
+                            Text {
+                                "Sluttet: "
+                                endsAt.style(date: .short, time: .medium)
+                            }
+
+                            Anchor {
+                                "Se resultater"
+                            }
+                            .href(test.monitorUri)
+                            .button(style: .light)
                         }
                     }
                     .else {
@@ -119,7 +143,7 @@ extension SubjectTest.Templates {
         var body: HTML {
             Card {
                 Text {
-                    "Lag en test"
+                    "Lag en prøve"
                 }
                 .style(.heading3)
                 .text(color: .dark)

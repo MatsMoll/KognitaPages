@@ -2,12 +2,16 @@
 import BootstrapKit
 import KognitaCore
 
-extension SubjectTest.TestTask: PageItemRepresentable {
+extension SubjectTest.TestTask {
 
     var navigateToCall: String { "navigateTo(\(self.testTaskID))" }
-    var url: String { "javascript:\(navigateToCall);" }
-    var title: String { "\(self.testTaskID)" }
-    var isActive: Bool { self.isCurrent }
+    var url: String { "javascript:\(navigateToCall)" }
+
+    struct PageItem: PageItemRepresentable {
+        let title: String
+        let url: String
+        var isActive: Bool
+    }
 }
 
 extension SubjectTest.MultipleChoiseTaskContent {
@@ -33,6 +37,25 @@ extension SubjectTest.MultipleChoiseTaskContent {
     }
 }
 
+extension Array where Element == SubjectTest.TestTask {
+    var pageItems: [SubjectTest.TestTask.PageItem] {
+        enumerated()
+            .map { index, item in
+                SubjectTest.TestTask.PageItem(
+                    title: "\(index + 1)",
+                    url: item.url,
+                    isActive: item.isCurrent
+                )
+        } + [
+            SubjectTest.TestTask.PageItem(
+                title: "Oversikt",
+                url: "overview",
+                isActive: false
+            )
+        ]
+    }
+}
+
 public struct MultipleChoiseTaskTestMode: HTMLTemplate {
 
     public struct Context {
@@ -52,10 +75,14 @@ public struct MultipleChoiseTaskTestMode: HTMLTemplate {
         BaseTemplate(context: context.baseContext) {
             Container {
                 PageTitle(title: "Test")
-                QuestionCard(task: context.task.task)
-                ActionCard(task: context.task)
+                ContentStructure {
+                    QuestionCard(task: context.task.task)
+                    ActionCard(task: context.task)
+                }
+                .secondary {
+                    TaskNavigation(tasksIDs: context.task.testTasks)
+                }
             }
-            TaskNavigation(tasksIDs: context.task.testTasks)
         }
         .scripts {
             Script(source: "/assets/js/test-session/json-data.js")
@@ -188,17 +215,16 @@ public struct MultipleChoiseTaskTestMode: HTMLTemplate {
         let tasksIDs: TemplateValue<[SubjectTest.TestTask]>
 
         var body: HTML {
-            Container {
+            Card {
                 Text {
                     "Oppgave liste"
                 }
                 .style(.heading4)
                 .text(color: .dark)
 
-                Pagination(items: tasksIDs)
+                Pagination(items: tasksIDs.pageItems)
                     .isRounded(true)
             }
-            .class("fixed-bottom")
             .padding(.three, for: .bottom)
         }
     }
