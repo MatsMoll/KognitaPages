@@ -9,6 +9,10 @@ extension SubjectTest.OverviewResponse {
     var monitorUri: String {
         "/subject-tests/\(id)/monitor"
     }
+
+    var resultUri: String {
+        "/subject-tests/\(id)/results"
+    }
 }
 
 extension SubjectTest.Templates {
@@ -114,7 +118,7 @@ extension SubjectTest.Templates {
                             Anchor {
                                 "Se resultater"
                             }
-                            .href(test.monitorUri)
+                            .href(test.resultUri)
                             .button(style: .light)
                         }
                     }
