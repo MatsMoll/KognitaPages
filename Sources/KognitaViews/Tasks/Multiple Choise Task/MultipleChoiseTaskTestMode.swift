@@ -4,8 +4,7 @@ import KognitaCore
 
 extension SubjectTest.TestTask {
 
-    var navigateToCall: String { "navigateTo(\(self.testTaskID))" }
-    var url: String { "javascript:\(navigateToCall)" }
+    var url: String { "\(testTaskID)" }
 
     struct PageItem: PageItemRepresentable {
         let title: String
