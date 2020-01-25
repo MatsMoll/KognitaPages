@@ -5,25 +5,24 @@ struct Modal: HTMLComponent, AttributeNode {
 
     let title: HTML
     let content: HTML
-    let id: HTML
     var attributes: [HTMLAttribute]
 
     init(title: HTML, id: HTML, @HTMLBuilder content: () -> HTML) {
         self.title = title
         self.content = content()
-        self.id = id
-        self.attributes = []
+        self.attributes = [HTMLAttribute(attribute: "id", value: id)]
     }
 
-    init(title: HTML, id: HTML, content: HTML, attributes: [HTMLAttribute]) {
+    private init(title: HTML, content: HTML, attributes: [HTMLAttribute]) {
         self.title = title
         self.content = content
-        self.id = id
         self.attributes = attributes
     }
 
     var body: HTML {
-        Div {
+        let id = value(of: "id") ?? "modal-content"
+        let modifiesAttributes = attributes.filter({ $0.attribute != "id" })
+        return Div {
             Div {
                 Div {
                     Div {
@@ -60,13 +59,10 @@ struct Modal: HTMLComponent, AttributeNode {
         .role("dialog")
         .aria(for: "labelledby", value: id)
         .aria(for: "hidden", value: "true")
+        .add(attributes: modifiesAttributes)
     }
 
     func copy(with attributes: [HTMLAttribute]) -> Modal {
-        .init(title: title, id: id, content: content, attributes: attributes)
-    }
-
-    func id(_ value: HTML) -> Modal {
-        .init(title: title, id: value, content: content, attributes: attributes)
+        .init(title: title, content: content, attributes: attributes)
     }
 }
