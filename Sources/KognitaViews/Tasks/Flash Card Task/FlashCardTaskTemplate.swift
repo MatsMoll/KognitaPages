@@ -20,10 +20,10 @@ extension FlashCardTask.Templates {
             var nextTaskIndex: Int?
             var prevTaskIndex: Int?
 
-            var session: PracticeSession? { return taskPreview.session }
+            var session: PracticeSessionRepresentable? { return taskPreview.session }
             var task: Task { return taskPreview.task }
             var topic: Topic { return taskPreview.topic }
-            var hasBeenCompleted: Bool { return taskPreview.lastResult?.sessionId == session?.id }
+            var hasBeenCompleted: Bool { return taskPreview.lastResult?.sessionId == (try? session?.requireID()) }
             var score: Double? {
                 if let score = taskPreview.lastResult?.result.resultScore {
                     return score * 4
@@ -37,7 +37,7 @@ extension FlashCardTask.Templates {
                 user: UserContent,
                 currentTaskIndex: Int? = nil,
                 practiceProgress: Int? = nil,
-                session: PracticeSession? = nil,
+                session: PracticeSessionRepresentable? = nil,
                 lastResult: TaskResultContent? = nil,
                 numberOfTasks: Int
             ) {

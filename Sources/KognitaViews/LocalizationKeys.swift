@@ -19,8 +19,8 @@ public class Strings {
     static let registerTitle = "register.title"
     static let registerSubtilte = "register.subtitle"
 
-    static let registerNameTitle = "register.name.title"
-    static let registerNamePlaceholder = "register.name.placeholder"
+    static let registerUsernameTitle = "register.username.title"
+    static let registerUsernamePlaceholder = "register.username.placeholder"
 
     static let registerConfirmPasswordTitle = "register.password.confirmation.title"
     static let registerConfirmPasswordPlaceholder = "register.password.confirmation.placeholder"

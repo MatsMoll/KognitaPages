@@ -46,27 +46,9 @@ struct TopicResultContext {
     let tasks: [TaskResultable]
 }
 
-struct ViewWrapper: HTML {
-    let view: HTML
-
-    func render<T>(with manager: HTMLRenderer.ContextManager<T>) throws -> String {
-        try view.render(with: manager)
-    }
-
-    func prerender(_ formula: HTMLRenderer.Formula) throws {
-        try view.prerender(formula)
-    }
-}
-
 struct BreadcrumbItem {
-    let link: String?
+    let link: ViewWrapper?
     let title: ViewWrapper
-}
-
-extension ViewWrapper: ExpressibleByStringLiteral {
-    init(stringLiteral value: String) {
-        self.view = value
-    }
 }
 
 extension PracticeSession.Templates {

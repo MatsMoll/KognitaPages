@@ -64,7 +64,7 @@ extension User.Templates {
                                     Div {
                                         Anchor {
                                             Span {
-                                                Img().source(rootUrl + "/assets/images/logo.png").alt("").height(30)
+                                                LogoImage(rootUrl: rootUrl)
                                             }
                                         }
                                         .href("/")
@@ -94,6 +94,7 @@ extension User.Templates {
                 .margin(.five, for: .bottom)
                 .class("account-pages")
             }
+            .rootUrl(rootUrl)
         }
 
         func root(url: String) -> AuthenticateBase {
@@ -197,65 +198,6 @@ extension User.Templates.ResetPassword {
                 }
                 .margin(.three, for: .top)
             }
-        }
-    }
-
-    public struct Mail: HTMLTemplate {
-
-        public struct Context {
-            let user: User
-            let changeUrl: String
-
-            public init(user: User, changeUrl: String) {
-                self.user = user
-                self.changeUrl = changeUrl
-            }
-        }
-
-        public init() {}
-
-        public let context: TemplateValue<Context> = .root()
-        let rootUrl = "uni.kognita.no"
-
-        public var body: HTML {
-            User.Templates.AuthenticateBase(
-                context: TemplateValue<User.Templates.AuthenticateBaseContext>.constant(
-                    .init(
-                        title: "Gjenopprett passord",
-                        description: "Gjenopprett passord",
-                        errorMessage: nil
-                    )
-            )) {
-                Div {
-                    Text {
-                        "Endre passord"
-                    }
-                    .class("text-dark-50")
-                    .text(alignment: .center)
-                    .margin(.zero, for: .top)
-                    .style(.heading4)
-                    .font(style: .bold)
-
-                    Text {
-                        "Noen har spurt om å få endre passordet ditt "
-                        context.user.username
-                    }
-                    .style(.paragraph)
-                    .text(color: .muted)
-                    .margin(.four, for: .bottom)
-                }
-                .class("w-75 m-auto")
-                .text(alignment: .center) +
-
-                Anchor {
-                    Button {
-                        "Trykk her for å endre"
-                    }
-                    .button(style: .primary)
-                }
-                .href(rootUrl + context.changeUrl)
-            }
-            .root(url: rootUrl)
         }
     }
 

@@ -8,11 +8,26 @@
 import BootstrapKit
 import KognitaCore
 
-struct SubtopicPicker: HTMLComponent {
+struct SubtopicPicker: HTMLComponent, AttributeNode {
 
+    var attributes: [HTMLAttribute]
     let label: String
     let idPrefix: HTML
     let topics: TemplateValue<[Topic.Response]>
+
+    init(label: String, idPrefix: HTML, topics: TemplateValue<[Topic.Response]>) {
+        self.label = label
+        self.idPrefix = idPrefix
+        self.attributes = []
+        self.topics = topics
+    }
+
+    private init(label: String, idPrefix: HTML, topics: TemplateValue<[Topic.Response]>, attributes: [HTMLAttribute]) {
+        self.label = label
+        self.idPrefix = idPrefix
+        self.attributes = []
+        self.topics = topics
+    }
 
     var body: HTML {
         FormGroup(label: label) {
@@ -41,6 +56,11 @@ struct SubtopicPicker: HTMLComponent {
             .data(for: "toggle", value: "select2")
             .data(for: "placeholder", value: "Velg ...")
         }
+        .add(attributes: attributes)
+    }
+
+    func copy(with attributes: [HTMLAttribute]) -> SubtopicPicker {
+        .init(label: label, idPrefix: idPrefix, topics: topics, attributes: attributes)
     }
 }
 

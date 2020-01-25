@@ -23,7 +23,7 @@ struct BetaHeader: HTMLComponent {
             }
             .display(.inline)
             .text(color: .white)
-            .href("mailto:mats@kognita.no")
+            .href("mailto:kontakt@kognita.no")
 
             Text { "." }
                 .display(.inline)
@@ -35,6 +35,31 @@ struct BetaHeader: HTMLComponent {
     }
 }
 
+struct HyperHamburgerMenu: HTMLComponent, AttributeNode {
+
+    var attributes: [HTMLAttribute]
+
+    init(attributes: [HTMLAttribute] = []) {
+        self.attributes = attributes
+    }
+
+    var body: HTML {
+        Anchor {
+            Div {
+                Span()
+                Span()
+                Span()
+            }.class("lines")
+        }
+        .class("navbar-toggle")
+        .add(attributes: attributes)
+    }
+
+    func copy(with attributes: [HTMLAttribute]) -> HyperHamburgerMenu {
+        .init(attributes: attributes)
+    }
+}
+
 struct KognitaNavigationBar: HTMLComponent {
 
     var rootUrl: String = ""
@@ -43,32 +68,38 @@ struct KognitaNavigationBar: HTMLComponent {
         Div {
             BetaHeader()
             Container {
-                Nav {
+                NavigationBar {
                     Anchor {
                         Span {
-                            Img().source(rootUrl + "/assets/images/logo.png").alt("Logo").height(30)
+                            LogoImage(rootUrl: rootUrl)
                         }.class("logo-lg")
                         Span {
-                            Img().source(rootUrl + "/assets/images/logo.png").alt("Logo").height(30)
+                            LogoImage(rootUrl: rootUrl)
                         }.class("logo-sm")
-                    }.href(rootUrl + "/").class("logo text-center")
-                    Div {
-                        UnorderdList {
-                            ListItem {
-                                Anchor(Strings.menuRegister)
-                                    .class("nav-link")
-                                    .href(rootUrl + "/signup")
-                            }
-                            .class("nav-item")
-                            ListItem {
-                                Anchor(Strings.menuLogin)
-                                    .class("nav-link")
-                                    .href(rootUrl + "/login")
-                            }
-                            .class("nav-item")
-                        }.class("navbar-nav ml-auto")
-                    }.class("collapse navbar-collapse").id("navbarResponsive")
-                }.class("navbar navbar-dark navbar-expand-lg topnav-menu")
+                    }
+                    .href(rootUrl + "/")
+                    .class("logo text-center")
+
+                    NavigationBar.Collapse {
+                        ListItem {
+                            Anchor(Strings.menuRegister)
+                                .class("nav-link")
+                                .href(rootUrl + "/signup")
+                        }
+                        .class("nav-item")
+                        ListItem {
+                            Anchor(Strings.menuLogin)
+                                .class("nav-link")
+                                .href(rootUrl + "/login")
+                        }
+                        .class("nav-item")
+                    }
+                    .button {
+                        HyperHamburgerMenu()
+                    }
+                }
+                .navigationBar(style: .dark)
+                .class("topnav-navbar")
             }
         }.class("topnav")
     }

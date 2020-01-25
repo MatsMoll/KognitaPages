@@ -127,7 +127,6 @@ extension Subject.Templates {
             .role("dialog")
             .aria(for: "labelledby", value: "create-content-modal")
             .aria(for: "hidden", value: "true")
-
         }
     }
 }

@@ -43,6 +43,13 @@ extension Subject.Templates {
         var createMultipleTaskUrl: HTML { "/creator/subjects/" + context.subject.id + "/task/multiple/create" }
         var createFlashCardTaskUrl: HTML { "/creator/subjects/" + context.subject.id + "/task/flash-card/create" }
 
+        var breadcrumbs: [BreadcrumbItem]  {
+            [
+                BreadcrumbItem(link: "/subjects", title: "Fag oversikt"),
+                BreadcrumbItem(link: ViewWrapper(view: "/subjects/" + context.subject.id), title: ViewWrapper(view: context.subject.name))
+            ]
+        }
+
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
@@ -51,6 +58,7 @@ extension Subject.Templates {
                     description: "Innholdsoversikt")
                 )
             ) {
+                PageTitle(title: "Innholds oversikt", breadcrumbs: breadcrumbs)
                 Row {
                     Div {
                         Card {
@@ -95,7 +103,6 @@ extension Subject.Templates {
                     }
                     .column(width: .twelve)
                 }
-                .margin(.five, for: .top)
 
                 Row {
                     ForEach(in: context.grouped) { tasks in
@@ -175,7 +182,7 @@ private struct TaskCell: HTMLComponent {
                 Badge {
                     "Flervalg"
                 }
-                .background(color: .info)
+                .background(color: .light)
                 .margin(.one, for: .left)
             }.else {
                 Badge {
@@ -183,6 +190,17 @@ private struct TaskCell: HTMLComponent {
                 }
                 .background(color: .info)
                 .margin(.one, for: .left)
+            }
+
+            Unwrap(task.task.examPaperYear) { examYear in
+                Unwrap(task.task.examPaperSemester) { examSemester in
+                    Badge {
+                        "Eksamen: "
+                        examSemester.rawValue
+                        " "
+                        examYear
+                    }
+                }
             }
 
             Text {

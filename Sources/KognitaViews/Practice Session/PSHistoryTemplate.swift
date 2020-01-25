@@ -71,8 +71,6 @@ extension PracticeSession.Templates {
 
         public init() {}
 
-        public let context: TemplateValue<Context> = .root()
-
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
