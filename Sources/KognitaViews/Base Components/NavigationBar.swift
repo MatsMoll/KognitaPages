@@ -14,7 +14,7 @@ struct BetaHeader: HTMLComponent {
     var body: HTML {
         Container {
             Text {
-                "🚧👷‍♂️ Dette er en beta versjon av Kognita. Det er bare å prøve den, men vi vil veldig gjerne høre hva du tenker. Du kan kontakte oss via "
+                "🚧👷‍♂️ Dette er en betaversjon av Kognita, men du kan gjerne prøve tjenesten allerede nå. Vi vil veldig gjerne ha dine tilbakemeldinger. Kontakt oss via "
             }
             .display(.inline)
             .style(.paragraph)

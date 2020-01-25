@@ -239,7 +239,7 @@ extension Subject.Templates {
                     .margin(.two, for: .bottom)
 
                     Text {
-                        "Timer øvd de siste ukene:"
+                        "Timer øvet de siste ukene:"
                     }
                     Div {
                         Canvas().id("practice-time-histogram")

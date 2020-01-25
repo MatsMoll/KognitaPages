@@ -80,12 +80,12 @@ struct CreateForm: HTMLComponent {
                 Input()
                     .type(.text)
                     .id("create-subject-name")
-                    .placeholder("Mattematikk 1")
+                    .placeholder("Matematikk 1")
                     .value(Unwrap(context) { $0.name })
                     .required()
             }
             .description {
-                "Bare lov vanlig bokstaver og mellomrom"
+                "Bruk kun vanlige bokstaver, tall og mellomrom"
             }
 
             FormGroup(label: "Beskrivelse") {

@@ -119,8 +119,8 @@ extension User.Templates.ResetPassword {
 
             public init(errorMessage: String?) {
                 base = .init(
-                    title: "Gjenopprett Passord",
-                    description: "Gjenopprett Passord",
+                    title: "Gjenopprett passord",
+                    description: "Gjenopprett passord",
                     errorMessage: errorMessage
                 )
             }
@@ -184,7 +184,7 @@ extension User.Templates.ResetPassword {
                         Text {
                             "Tilbake til "
                             Anchor {
-                                Bold { "logg inn" }
+                                Bold { "innloggingssiden" }
                             }
                             .href("/login")
                             .text(color: .dark)
@@ -219,8 +219,8 @@ extension User.Templates.ResetPassword {
             User.Templates.AuthenticateBase(
                 context: TemplateValue<User.Templates.AuthenticateBaseContext>.constant(
                     .init(
-                        title: "Gjenopprett Passord",
-                        description: "Gjenopprett Passord",
+                        title: "Gjenopprett passord",
+                        description: "Gjenopprett passord",
                         errorMessage: nil
                     )
             )) {

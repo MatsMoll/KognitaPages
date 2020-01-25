@@ -13,7 +13,7 @@ extension Pages {
         public init() {}
 
         public var body: HTML {
-            BaseTemplate(context: .init(title: "Ups en feil oppstod", description: "Ups en feil oppstod")) {
+            BaseTemplate(context: .init(title: "Oi, en feil oppstod!", description: "Oi, en feil oppstod!")) {
                 Div {
                     Container {
                         Row {
@@ -35,7 +35,7 @@ extension Pages {
                                     Img().source("/assets/images/startman.svg").height(120).alt("File not found")
 
                                     Text {
-                                        "Ups!"
+                                        "Oi!"
                                     }
                                     .style(.heading1)
 

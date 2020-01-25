@@ -3,5 +3,9 @@
 /Packages
 /*.xcodeproj
 Package.resolved
+<<<<<<< HEAD
 /.swiftpm
 DerivedData
+=======
+.swiftpm/
+>>>>>>> develop

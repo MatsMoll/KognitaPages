@@ -67,8 +67,8 @@ extension Pages {
         private let info: [FeatureView.Info] = [
             .init(icon: "hourglass-start", title: "Vær effektiv", description: "Bruk mindre tid på å øve ved effektive læringsteknikker"),
             .init(icon: "trophy", title: "Motiverende", description: "Se en tydelig progresjon"),
-            .init(icon: "star-o", title: "Kvalitet", description: "Innholdet er laget av fagpersjoner for å få høy kvalitet"),
-            .init(icon: "heart-o", title: "Laget med av studenter for studenter", description: "Kognita er laget for at studenter skal den beste opplevelsen")
+            .init(icon: "star-o", title: "Kvalitet", description: "Innholdet er laget av fagpersoner med god kompetanse"),
+            .init(icon: "heart-o", title: "Laget med, av og for studenter", description: "Kognita er laget for å gi studenter den beste læringsopplevelsen")
         ]
 
         public init() {}
@@ -141,7 +141,7 @@ extension Pages {
                                     .style(.heading2)
                                     .font(style: .regular)
                                 Text {
-                                    "Utnytt tiden bedre og bruk vitenskapelig beviste metoder, med bakgrunn i aktiv læring"
+                                    "Kognita baserer seg på effektive læringsteknikker som er vitenskapelig bevist. I tillegg er Kognita designet for å gjøre øvingen mer motiverende ved å gjøre øvingen mer spill-aktig."
                                 }
                                 .class("text-white-50")
                                 Anchor(Strings.starterPageMoreButton)

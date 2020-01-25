@@ -128,7 +128,7 @@ extension MultipleChoiseTask.Templates {
                     }
                     .description {
                         Div {
-                            "Bare lov med store og små bokstaver, tall, mellomrom + (. , : ; !, ?)"
+                            "Kun tillatt med bokstaver, tall, mellomrom og enkelte tegn (. , : ; ! ?)"
                         }
                         .class("invalid-feedback")
                     }
