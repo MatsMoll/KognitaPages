@@ -50,11 +50,11 @@ extension User.Templates {
                 .text(alignment: .center)
 
                 Form {
-                    FormGroup(label: Strings.registerNameTitle.localized()) {
+                    FormGroup(label: Strings.registerUsernameTitle.localized()) {
                         Input()
                             .type(.text)
                             .id("username")
-                            .placeholder(localized: Strings.registerNamePlaceholder)
+                            .placeholder(localized: Strings.registerUsernamePlaceholder)
                     }
                     FormGroup(label: Strings.mailTitle.localized()) {
                         Input()

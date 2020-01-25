@@ -8,6 +8,12 @@ extension Task: MultipleSelectItemRepresentable {
     var idRepresentable: String { String(id ?? 0) }
 }
 
+extension SubjectTest.ModifyResponse {
+    var durationInMinutes: Int {
+        Int(duration / 60)
+    }
+}
+
 
 extension SubjectTest.Templates {
 
@@ -38,7 +44,7 @@ extension SubjectTest.Templates {
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Lag temaer", description: "Lag temaer"))
+                baseContext: .constant(.init(title: "Lag prøve", description: "Lag prøve"))
             ) {
                 Div {
                     DismissableError()
@@ -80,7 +86,7 @@ extension SubjectTest.Templates {
                                         .id("create-test-duration")
                                         .type(.number)
                                         .placeholder("10")
-                                        .value(Unwrap(context.test) { $0.duration })
+                                        .value(Unwrap(context.test) { $0.durationInMinutes })
                                 }
 
                                 FormGroup(label: "Oppgaver") {
@@ -109,11 +115,11 @@ extension SubjectTest.Templates {
 
                                 IF(context.test.isDefined) {
                                     Button {
-                                        "Endre Test"
+                                        "Lagre Test"
                                     }
                                     .on(click: context.editCall)
                                     .type(.button)
-                                    .button(style: .warning)
+                                    .button(style: .primary)
 
                                     Button {
                                         "Delete Test"

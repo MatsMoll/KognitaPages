@@ -1,6 +1,13 @@
 
 import BootstrapKit
 import KognitaCore
+import Foundation
+
+extension Date {
+    var iso8601: String {
+        ISO8601DateFormatter().string(from: self)
+    }
+}
 
 extension SubjectTest.TestTask {
 
@@ -73,14 +80,19 @@ public struct MultipleChoiseTaskTestMode: HTMLTemplate {
     public var body: HTML {
         BaseTemplate(context: context.baseContext) {
             Container {
-                PageTitle(title: "Test")
-                ContentStructure {
-                    QuestionCard(task: context.task.task)
-                    ActionCard(task: context.task)
+                PageTitle(title: context.task.test.title)
+
+                Unwrap(context.task.test.endedAt) { endsAt in
+                    Input()
+                        .value(endsAt.iso8601)
+                        .id("ends-at")
+                        .type(.hidden)
                 }
-                .secondary {
-                    TaskNavigation(tasksIDs: context.task.testTasks)
-                }
+
+                QuestionCard(task: context.task.task)
+                ActionCard(task: context.task)
+
+                TaskNavigation(tasksIDs: context.task.testTasks)
             }
         }
         .scripts {
@@ -102,6 +114,14 @@ public struct MultipleChoiseTaskTestMode: HTMLTemplate {
                     .style(.heading3)
 
                     Card {
+                        Badge {
+                            "Tid igjen: "
+                            Span().id("time-left")
+                        }
+                        .background(color: .primary)
+                        .float(.right)
+                        .id("time-left-badge")
+
                         Small {
                             "Les spørsmålet og velg passende svar"
                         }
@@ -155,6 +175,13 @@ public struct MultipleChoiseTaskTestMode: HTMLTemplate {
                     .href(task.url)
                     .margin(.one, for: .right)
                 }
+                .else {
+                    Anchor {
+                        "Forrige"
+                    }
+                    .button(style: .light)
+                    .margin(.one, for: .right)
+                }
 
                 Unwrap(task.nextTask) { task in
                     Anchor {
@@ -162,6 +189,13 @@ public struct MultipleChoiseTaskTestMode: HTMLTemplate {
                     }
                     .button(style: .primary)
                     .href(task.url)
+                }
+                .else {
+                    Anchor {
+                        "Oversikt"
+                    }
+                    .button(style: .primary)
+                    .href("overview")
                 }
             }
         }
@@ -224,7 +258,6 @@ public struct MultipleChoiseTaskTestMode: HTMLTemplate {
                 Pagination(items: tasksIDs.pageItems)
                     .isRounded(true)
             }
-            .padding(.three, for: .bottom)
         }
     }
 }

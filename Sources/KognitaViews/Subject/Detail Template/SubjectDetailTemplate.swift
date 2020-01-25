@@ -257,13 +257,13 @@ extension Subject.Templates {
             var body: HTML {
                 Card {
                     Text {
-                        "Tester"
+                        "Prøver"
                     }
                     .style(.heading3)
                     .text(color: .dark)
 
                     Anchor {
-                        "Se alle tester"
+                        "Se alle prøver"
                     }
                     .href(subjectID + "/subject-tests")
                     .button(style: .light)

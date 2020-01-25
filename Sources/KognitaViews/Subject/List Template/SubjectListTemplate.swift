@@ -249,8 +249,7 @@ extension Subject.Templates {
 
         struct SubjectTestCard: HTMLComponent {
 
-            @TemplateValue(SubjectTest.OverviewResponse.self)
-            var test
+            var test: TemplateValue<SubjectTest.OverviewResponse>
 
             var body: HTML {
                 Card {
@@ -265,7 +264,7 @@ extension Subject.Templates {
                     .style(.heading2)
                     .text(color: .dark)
 
-                    Unwrap(test.endsAt) { endsAt in
+                    Unwrap(test.endsAt) { (endsAt: TemplateValue<Date>) in
                         Text {
                             "Slutter: "
                             endsAt.style(date: .short, time: .medium)

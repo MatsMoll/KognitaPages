@@ -1,5 +1,6 @@
 import BootstrapKit
 import KognitaCore
+import Foundation
 
 extension SubjectTest.OverviewResponse {
     var openCall: String {
@@ -12,6 +13,16 @@ extension SubjectTest.OverviewResponse {
 
     var resultUri: String {
         "/subject-tests/\(id)/results"
+    }
+
+    var editUri: String {
+        "subject-tests/\(id)/edit"
+    }
+}
+
+extension SubjectTest.ListReponse {
+    var containsTests: Bool {
+        !(finnishedTests.isEmpty && unopenedTests.isEmpty && ongoingTests.isEmpty)
     }
 }
 
@@ -33,7 +44,11 @@ extension SubjectTest.Templates {
 
         var breadcrumbs: [BreadcrumbItem] {
             [
-                .init(
+                BreadcrumbItem(
+                    link: "/subjects",
+                    title: "Fag oversikt"
+                ),
+                BreadcrumbItem(
                     link: ViewWrapper(view: "/subjects/" + context.list.subject.id),
                     title: ViewWrapper(view: context.list.subject.name)
                 )
@@ -43,25 +58,17 @@ extension SubjectTest.Templates {
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Tester", description: "Tester"))
+                baseContext: .constant(.init(title: "Prøver", description: "Prøver"))
             ) {
-                PageTitle(title: "Tester", breadcrumbs: breadcrumbs)
+                PageTitle(title: "Prøver", breadcrumbs: breadcrumbs)
 
                 ContentStructure {
-                    Text {
-                        "Alle tester"
-                    }
-                    .style(.heading2)
 
-                    Row {
-                        IF(context.list.tests.isEmpty) {
-                            Text {
-                                "Det finnes ingen tester enda."
-                            }
-                        }.else {
-                            ForEach(in: context.list.tests) { test in
-                                SubjectTestCard(test: test)
-                            }
+                    IF(context.list.containsTests) {
+                        SubjectTestList(list: context.list)
+                    }.else {
+                        Text {
+                            "Det finnes ingen tester enda."
                         }
                     }
                 }
@@ -72,6 +79,52 @@ extension SubjectTest.Templates {
                 Script().source("/assets/js/subject-test/open.js").type("text/javascript")
             }
             .enviroment(locale: "nb")
+        }
+    }
+
+    struct SubjectTestList: HTMLComponent {
+
+        let list: TemplateValue<SubjectTest.ListReponse>
+
+        var body: HTML {
+            NodeList {
+                IF(list.ongoingTests.isEmpty == false) {
+                    Text {
+                        "Pågående prøver"
+                    }
+                    .style(.heading3)
+
+                    Row {
+                        ForEach(in: list.ongoingTests) { test in
+                            SubjectTestCard(test: test)
+                        }
+                    }
+                }
+                IF(list.unopenedTests.isEmpty == false) {
+                    Text {
+                        "Planlagte prøver"
+                    }
+                    .style(.heading3)
+
+                    Row {
+                        ForEach(in: list.unopenedTests) { test in
+                            SubjectTestCard(test: test)
+                        }
+                    }
+                }
+                IF(list.finnishedTests.isEmpty == false) {
+                    Text {
+                        "Fullførte prøver"
+                    }
+                    .style(.heading3)
+
+                    Row {
+                        ForEach(in: list.finnishedTests) { test in
+                            SubjectTestCard(test: test)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -96,49 +149,58 @@ extension SubjectTest.Templates {
                         }
                     }
 
-                    Unwrap(test.endsAt) { endsAt in
-                        IF(test.isOpen) {
-                            Text {
-                                "Slutter: "
-                                endsAt.style(date: .short, time: .medium)
-                            }
-
-                            Anchor {
-                                "Se sanntid status"
-                            }
-                            .href(test.monitorUri)
-                            .button(style: .light)
-                        }
-                        .else {
-                            Text {
-                                "Sluttet: "
-                                endsAt.style(date: .short, time: .medium)
-                            }
-
-                            Anchor {
-                                "Se resultater"
-                            }
-                            .href(test.resultUri)
-                            .button(style: .light)
-                        }
-                    }
-                    .else {
-                        Button {
-                            "Åpne test"
-                        }
-                        .button(style: .light)
-                        .on(click: test.openCall)
-                        
-                        Anchor {
-                            "Rediger"
-                        }
-                        .button(style: .light)
-                        .margin(.one, for: .left)
-                        .href("/subject-tests/" + test.id + "/edit")
-                    }
+                    SubjectTestCardActions(test: test)
                 }
             }
             .column(width: .six)
+        }
+
+        struct SubjectTestCardActions: HTMLComponent {
+
+            let test: TemplateValue<SubjectTest.OverviewResponse>
+
+            var body: HTML {
+                Unwrap(test.endsAt) { (endsAt: TemplateValue<Date>) in
+                    IF(test.isOpen) {
+                        Text {
+                            "Slutter: "
+                            endsAt.style(date: .short, time: .medium)
+                        }
+
+                        Anchor {
+                            "Se sanntid status"
+                        }
+                        .href(test.monitorUri)
+                        .button(style: .light)
+                    }
+                    .else {
+                        Text {
+                            "Sluttet: "
+                            endsAt.style(date: .short, time: .medium)
+                        }
+
+                        Anchor {
+                            "Se resultater"
+                        }
+                        .href(test.resultUri)
+                        .button(style: .light)
+                    }
+                }
+                .else {
+                    Button {
+                        "Åpne test"
+                    }
+                    .button(style: .light)
+                    .on(click: test.openCall)
+
+                    Anchor {
+                        "Rediger"
+                    }
+                    .button(style: .light)
+                    .margin(.one, for: .left)
+                    .href(test.editUri)
+                }
+            }
         }
     }
 

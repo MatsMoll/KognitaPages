@@ -35,6 +35,31 @@ struct BetaHeader: HTMLComponent {
     }
 }
 
+struct HyperHamburgerMenu: HTMLComponent, AttributeNode {
+
+    var attributes: [HTMLAttribute]
+
+    init(attributes: [HTMLAttribute] = []) {
+        self.attributes = attributes
+    }
+
+    var body: HTML {
+        Anchor {
+            Div {
+                Span()
+                Span()
+                Span()
+            }.class("lines")
+        }
+        .class("navbar-toggle")
+        .add(attributes: attributes)
+    }
+
+    func copy(with attributes: [HTMLAttribute]) -> HyperHamburgerMenu {
+        .init(attributes: attributes)
+    }
+}
+
 struct KognitaNavigationBar: HTMLComponent {
 
     var rootUrl: String = ""
@@ -43,7 +68,7 @@ struct KognitaNavigationBar: HTMLComponent {
         Div {
             BetaHeader()
             Container {
-                Nav {
+                NavigationBar {
                     Anchor {
                         Span {
                             LogoImage(rootUrl: rootUrl)
@@ -54,23 +79,27 @@ struct KognitaNavigationBar: HTMLComponent {
                     }
                     .href(rootUrl + "/")
                     .class("logo text-center")
-                    Div {
-                        UnorderedList {
-                            ListItem {
-                                Anchor(Strings.menuRegister)
-                                    .class("nav-link")
-                                    .href(rootUrl + "/signup")
-                            }
-                            .class("nav-item")
-                            ListItem {
-                                Anchor(Strings.menuLogin)
-                                    .class("nav-link")
-                                    .href(rootUrl + "/login")
-                            }
-                            .class("nav-item")
-                        }.class("navbar-nav ml-auto")
-                    }.class("collapse navbar-collapse").id("navbarResponsive")
-                }.class("navbar navbar-dark navbar-expand-lg topnav-menu")
+
+                    NavigationBar.Collapse {
+                        ListItem {
+                            Anchor(Strings.menuRegister)
+                                .class("nav-link")
+                                .href(rootUrl + "/signup")
+                        }
+                        .class("nav-item")
+                        ListItem {
+                            Anchor(Strings.menuLogin)
+                                .class("nav-link")
+                                .href(rootUrl + "/login")
+                        }
+                        .class("nav-item")
+                    }
+                    .button {
+                        HyperHamburgerMenu()
+                    }
+                }
+                .navigationBar(style: .dark)
+                .class("topnav-navbar")
             }
         }.class("topnav")
     }

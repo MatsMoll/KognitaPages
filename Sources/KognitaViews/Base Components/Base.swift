@@ -72,7 +72,7 @@ struct BaseTemplate: HTMLComponent {
                 content
             }
             .padding(.zero, for: .bottom)
-            Script().source("/assets/js/app.min.js").type("text/javascript")
+            Script(source: "/assets/js/app.min.js")
             customScripts
         }
     }

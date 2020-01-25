@@ -11,6 +11,59 @@ struct ContentBaseTemplateContent {
     }
 }
 
+struct HyperNavbar: HTMLComponent {
+    var body: HTML {
+        NodeList {
+            Div {
+                Anchor {
+                    Span {
+                        LogoImage()
+                    }
+                    .class("topnav-logo-lg")
+                    Span {
+                        LogoImage()
+                    }
+                    .class("topnav-logo-sm")
+                }
+                .class("topnav-logo")
+                Anchor {
+                    Div {
+                        Span()
+                        Span()
+                        Span()
+                    }
+                    .class("lines")
+                }
+                .class("navbar-toggle open")
+                .data("toggle", value: "collapse")
+                .data("target", value: "#topnav-menu-content")
+                .aria("expanded", value: false)
+            }
+            .class("navbar-custom topnav-navbar")
+            Div {
+                Div {
+                    Nav {
+                        Div {
+                            UnorderedList {
+                                ListItem {
+                                    "HEllo"
+                                }
+                                .class("nav-item dropdown")
+                            }
+                            .class("navbar-nav")
+                        }
+                        .class("collapse navbar-collapse active")
+                        .id("topnav-menu-content")
+                    }
+                    .class("navbar navbar-dark navbar-expand-lg topnav-menu")
+                }
+                .class("container-fluid active")
+            }
+            .class("topnav")
+        }
+    }
+}
+
 struct ContentBaseTemplate: HTMLComponent {
 
     struct TabContent {
