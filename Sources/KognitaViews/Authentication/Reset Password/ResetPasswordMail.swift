@@ -15,9 +15,12 @@ extension User.Templates.ResetPassword {
             }
         }
 
-        public init() {}
 
-        let rootUrl = "https://kognita.no"
+        let rootUrl: String
+
+        public init(rootUrl: String) {
+            self.rootUrl = rootUrl
+        }
 
         public var body: HTML {
             User.Templates.AuthenticateBase(
