@@ -141,7 +141,7 @@ extension Pages {
                                     .style(.heading2)
                                     .font(style: .regular)
                                 Text {
-                                    "Kognita baserer seg på effektive læringsteknikker som er vitenskapelig bevist. I tillegg er Kognita designet for å gjøre øvingen mer motiverende ved å gjøre øvingen mer spill-aktig."
+                                    "Kognita baserer seg på effektive læringsteknikker som er vitenskapelig bevist. I tillegg er Kognita designet for å gjøre øvingen mer motiverende ved å gjøre opplevelsen mer spill-aktig."
                                 }
                                 .class("text-white-50")
                                 Anchor(Strings.starterPageMoreButton)
