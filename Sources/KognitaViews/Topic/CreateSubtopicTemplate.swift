@@ -113,7 +113,7 @@ extension Subtopic.Templates {
                         "Navn"
                     }.for("subtopic-name").class("col-form-label")
                     Input()
-                        .type("text")
+                        .type(.text)
                         .class("form-control")
                         .id("subtopic-name")
                         .placeholder("Sannsynlighet")
@@ -123,26 +123,39 @@ extension Subtopic.Templates {
                         "Kun tillatt med bokstaver, tall og mellomrom"
                     }
                 }
-
+//
                 DismissableError()
 
-                Unwrap(subtopicInfo) { subtopic in
-                    Button { " Lagre" }
-                        .type("button")
-                        .on(click: "editSubtopic(" + subtopic.id + ")")
-                        .class("btn btn-success mb-3 mt-3 mr-2")
-                    Button { " Slett" }
-                        .type("button")
-                        .on(click: "deleteSubtopic(" + subtopic.id + ")")
-                        .class("btn btn-danger mb-3 mt-3")
-                }.else {
-                    Button { " Lagre" }
-                        .type("button")
-                        .on(click: "createSubtopic()")
-                        .class("btn btn-success btn-rounded mb-3 mt-3")
-                }
-
+                actions
             }
         }
+
+        var actions: HTML {
+            Unwrap(subtopicInfo) { (subtopic: TemplateValue<Subtopic>) in
+                Button { " Lagre" }
+                    .type(.button)
+                    .on(click: subtopic.editCall)
+                    .class("btn btn-success mb-3 mt-3 mr-2")
+                Button { " Slett" }
+                    .type(.button)
+                    .on(click: subtopic.deleteCall)
+                    .class("btn btn-danger mb-3 mt-3")
+            }
+            .else {
+                Button { " Lagre" }
+                    .type(.button)
+                    .on(click: "createSubtopic()")
+                    .class("btn btn-success btn-rounded mb-3 mt-3")
+            }
+        }
+    }
+}
+
+extension Subtopic {
+    var editCall: String {
+        "editSubtopic(\(id ?? 0))"
+    }
+    var deleteCall: String {
+        "deleteSubtopic(\(id ?? 0))"
     }
 }
