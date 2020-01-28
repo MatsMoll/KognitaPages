@@ -29,35 +29,45 @@ struct FormCard: HTMLComponent {
     var body: HTML {
         Div {
             Div {
-                Div {
-                    Text {
-                        title
-                    }
-                    .class("modal-title")
-                    .id("create-modal-label")
-                    .style(.heading4)
+                Text {
+                    title
                 }
-                .class("modal-header")
-                .text(color: .white)
-                .background(color: titleColor)
-
-                Div {
-                    Div {
-                        Form {
-                            formBody
-                        }
-                    }
-                    .padding(.two)
-                }
-                .class("modal-body")
+                .class("modal-title")
+                .id("create-modal-label")
+                .style(.heading4)
             }
-            .class("card")
+            .class("modal-header")
+            .text(color: .white)
+            .background(color: titleColor)
+
+            Div {
+                Div {
+                    Form {
+                        formBody
+                    }
+                }
+                .padding(.two)
+            }
+            .class("modal-body")
         }
-        .padding(.five, for: .top)
+        .class("card")
     }
 
     func title(color: BootstrapStyle) -> FormCard {
         .init(title: title, formBody: formBody, titleColor: titleColor)
+    }
+}
+
+extension FlashCardTask.Templates.Create.Context {
+    var modalTitle: String { subject.name + " | Lag tekst oppgave"}
+    var subjectUri: String { "/subjects/\(subject.id ?? 0)" }
+    var subjectContentOverviewUri: String { "/creator/subjects/\(subject.id ?? 0)/overview" }
+
+    var isTestable: Bool {
+        guard let task = taskInfo else {
+            return false
+        }
+        return task.isTestable
     }
 }
 
@@ -82,14 +92,21 @@ extension FlashCardTask.Templates {
             }
         }
 
-        public init() {}
+        var breadcrumbs: [BreadcrumbItem] {
+            [
+                BreadcrumbItem(link: "/subjects", title: "Fag oversikt"),
+                BreadcrumbItem(link: ViewWrapper(view: context.subjectUri), title: ViewWrapper(view: context.subject.name)),
+                BreadcrumbItem(link: ViewWrapper(view: context.subjectContentOverviewUri), title: "Innholds oversikt")
+            ]
+        }
 
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
                 baseContext: .constant(.init(title: "Lag Oppgave", description: "Lag Oppgave"))
             ) {
-                FormCard(title: context.subject.name + " | Lag innskrivningsoppgave") {
+                PageTitle(title: "Lag tekst oppgave", breadcrumbs: breadcrumbs)
+                FormCard(title: context.modalTitle) {
                     Unwrap(context.taskInfo) { taskInfo in
                         IF(taskInfo.deletedAt.isDefined) {
                             Badge { "Slettet" }
@@ -97,11 +114,33 @@ extension FlashCardTask.Templates {
                         }
                     }
 
-                    SubtopicPicker(
-                        label: "Undertema",
-                        idPrefix: "card-",
-                        topics: context.topics
-                    )
+                    Text {
+                        "Velg Tema"
+                    }
+                    .style(.heading3)
+                    .text(color: .dark)
+
+                    Unwrap(context.taskInfo) { task in
+                        SubtopicPicker(
+                            label: "Undertema",
+                            idPrefix: "card-",
+                            topics: context.topics
+                        )
+                        .selected(id: task.subtopicID)
+                    }
+                    .else {
+                        SubtopicPicker(
+                            label: "Undertema",
+                            idPrefix: "card-",
+                            topics: context.topics
+                        )
+                    }
+
+                    Text {
+                        "Eksamens oppgave?"
+                    }
+                    .style(.heading3)
+                    .text(color: .dark)
 
                     FormRow {
                         FormGroup(label: "Eksamensett semester") {
@@ -138,7 +177,7 @@ extension FlashCardTask.Templates {
                         .column(width: .six, for: .medium)
                     }
 
-                    FormGroup(label: "Oppgavetekst") {
+                    FormGroup {
                         Div {
                             Unwrap(context.taskInfo) {
                                 $0.description
@@ -147,8 +186,15 @@ extension FlashCardTask.Templates {
                         }
                         .id("card-description")
                     }
+                    .customLabel {
+                        Text {
+                            "Oppgavetekst"
+                        }
+                        .style(.heading3)
+                        .text(color: .dark)
+                    }
 
-                    FormGroup(label: "Spørsmål") {
+                    FormGroup {
                         TextArea {
                             Unwrap(context.taskInfo) {
                                 $0.question
@@ -159,6 +205,13 @@ extension FlashCardTask.Templates {
                         .placeholder("Noe å svare på her")
                         .required()
                     }
+                    .customLabel {
+                        Text {
+                            "Spørsmål"
+                        }
+                        .style(.heading3)
+                        .text(color: .dark)
+                    }
                     .description {
                         Div {
                             "Kun tillatt med bokstaver, tall, mellomrom og enkelte tegn (. , : ; ! ?)"
@@ -166,15 +219,22 @@ extension FlashCardTask.Templates {
                         .class("invalid-feedback")
                     }
 
-                    FormGroup(label: "Løsning") {
+                    FormGroup {
                         Div()
                             .id("card-solution")
+                    }
+                    .customLabel {
+                        Text {
+                            "Løsningsforslag"
+                        }
+                        .style(.heading3)
+                        .text(color: .dark)
                     }
 
                     DismissableError()
 
                     Button {
-                        Italic().class("mdi mdi-save")
+                        MaterialDesignIcon(icon: .save)
                         " Lagre"
                     }
                     .type(.button)

@@ -1,17 +1,23 @@
 import BootstrapKit
 import KognitaCore
 
+extension User.ResetPassword.Token.Data {
+    var changeUri: String {
+        "/reset-password?token=\(token)"
+    }
+}
+
 extension User.Templates.ResetPassword {
 
     public struct Mail: HTMLTemplate {
 
         public struct Context {
             let user: User
-            let changeUrl: String
+            let token: User.ResetPassword.Token.Data
 
-            public init(user: User, changeUrl: String) {
+            public init(user: User, token: User.ResetPassword.Token.Data) {
                 self.user = user
-                self.changeUrl = changeUrl
+                self.token = token
             }
         }
 
@@ -58,7 +64,7 @@ extension User.Templates.ResetPassword {
                     }
                     .button(style: .primary)
                 }
-                .href(context.changeUrl)
+                .href(rootUrl + context.token.changeUri)
             }
             .root(url: rootUrl)
         }

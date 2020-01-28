@@ -8,25 +8,32 @@
 import BootstrapKit
 import KognitaCore
 
+extension Subtopic {
+    var unwrapedID: Int { id ?? 0 }
+}
+
 struct SubtopicPicker: HTMLComponent, AttributeNode {
 
     var attributes: [HTMLAttribute]
     let label: String
     let idPrefix: HTML
     let topics: TemplateValue<[Topic.Response]>
+    private let selectedID: TemplateValue<Subtopic.ID>
 
     init(label: String, idPrefix: HTML, topics: TemplateValue<[Topic.Response]>) {
         self.label = label
         self.idPrefix = idPrefix
         self.attributes = []
         self.topics = topics
+        self.selectedID = .constant(-1)
     }
 
-    private init(label: String, idPrefix: HTML, topics: TemplateValue<[Topic.Response]>, attributes: [HTMLAttribute]) {
+    private init(label: String, idPrefix: HTML, topics: TemplateValue<[Topic.Response]>, selectedID: TemplateValue<Subtopic.ID>, attributes: [HTMLAttribute]) {
         self.label = label
         self.idPrefix = idPrefix
         self.attributes = []
         self.topics = topics
+        self.selectedID = selectedID
     }
 
     var body: HTML {
@@ -46,6 +53,7 @@ struct SubtopicPicker: HTMLComponent, AttributeNode {
                                 subtopic.name + " - " + topic.topic.name
                             }
                             .value(subtopic.id)
+                            .isSelected(subtopic.unwrapedID == selectedID)
                         }
                     }
                     .label(topic.topic.name)
@@ -60,7 +68,11 @@ struct SubtopicPicker: HTMLComponent, AttributeNode {
     }
 
     func copy(with attributes: [HTMLAttribute]) -> SubtopicPicker {
-        .init(label: label, idPrefix: idPrefix, topics: topics, attributes: attributes)
+        .init(label: label, idPrefix: idPrefix, topics: topics, selectedID: selectedID, attributes: attributes)
+    }
+
+    func selected(id: TemplateValue<Subtopic.ID>) -> SubtopicPicker {
+        .init(label: label, idPrefix: idPrefix, topics: topics, selectedID: id, attributes: attributes)
     }
 }
 
