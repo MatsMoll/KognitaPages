@@ -9,16 +9,22 @@ import BootstrapKit
 import KognitaCore
 
 extension MultipleChoiseTask.Templates.Create.Context {
-    var modalTitle: String { subject.name + " | Lag flervalgs oppgave"}
-    var subjectUri: String { "/subjects/\(subject.id ?? 0)" }
-    var subjectContentOverviewUri: String { "/creator/subjects/\(subject.id ?? 0)/overview" }
+    var modalTitle: String { content.subject.name + " | Lag flervalgs oppgave"}
+    var subjectUri: String { "/subjects/\(content.subject.id)" }
+    var subjectContentOverviewUri: String { "/creator/subjects/\(content.subject.id)/overview" }
 
     var isTestable: Bool {
-        guard let task = taskInfo else {
+        guard let task = content.task else {
             return false
         }
         return task.isTestable
     }
+
+    var subjectName: String {
+        content.subject.name
+    }
+
+    var isEditingTask: Bool { content.task != nil }
 }
 
 extension MultipleChoiseTask.Templates {
@@ -26,28 +32,18 @@ extension MultipleChoiseTask.Templates {
 
         public struct Context {
             let user: User
-            let subject: Subject
-            let topics: [Topic.Response]
+            let content: MultipleChoiseTask.ModifyContent
 
-            // Used to edit a task
-            let taskInfo: Task?
-            let multipleTaskInfo: MultipleChoiseTask.Data?
-
-            public init(user: User, subject: Subject, topics: [Topic.Response], taskInfo: Task? = nil, multipleTaskInfo: MultipleChoiseTask.Data? = nil, selectedTopicId: Int? = nil) {
+            public init(user: User, content: MultipleChoiseTask.ModifyContent) {
                 self.user = user
-                self.subject = subject
-                self.topics = topics
-//                let sortSelectedTopicId = selectedTopicId ?? taskInfo?.subtopicId
-//                self.topics = .init(topics: topics, selectedSubtopicId: sortSelectedTopicId)
-                self.taskInfo = taskInfo
-                self.multipleTaskInfo = multipleTaskInfo
+                self.content = content
             }
         }
 
         var breadcrumbs: [BreadcrumbItem] {
             [
                 BreadcrumbItem(link: "/subjects", title: "Fag oversikt"),
-                BreadcrumbItem(link: ViewWrapper(view: context.subjectUri), title: ViewWrapper(view: context.subject.name)),
+                BreadcrumbItem(link: ViewWrapper(view: context.subjectUri), title: ViewWrapper(view: context.subjectName)),
                 BreadcrumbItem(link: ViewWrapper(view: context.subjectContentOverviewUri), title: "Innholds oversikt")
             ]
         }
@@ -68,11 +64,11 @@ extension MultipleChoiseTask.Templates {
                     .style(.heading3)
                     .text(color: .dark)
 
-                    Unwrap(context.taskInfo) { task in
+                    Unwrap(context.content.task) { task in
                         SubtopicPicker(
                             label: "Undertema",
                             idPrefix: "create-multiple-",
-                            topics: context.topics
+                            topics: context.content.topics
                         )
                         .selected(id: task.subtopicID)
                     }
@@ -80,7 +76,7 @@ extension MultipleChoiseTask.Templates {
                         SubtopicPicker(
                             label: "Undertema",
                             idPrefix: "create-multiple-",
-                            topics: context.topics
+                            topics: context.content.topics
                         )
                     }
 
@@ -127,7 +123,7 @@ extension MultipleChoiseTask.Templates {
                                 .class("form-control")
                                 .id("create-multiple-exam-year")
                                 .placeholder("2019")
-                                .value(Unwrap(context.taskInfo) { $0.examPaperYear })
+                                .value(Unwrap(context.content.task) { $0.examPaperYear })
                                 .required()
                         }
                         .column(width: .six, for: .medium)
@@ -150,7 +146,7 @@ extension MultipleChoiseTask.Templates {
 
                     FormGroup {
                         Div {
-                            Unwrap(context.taskInfo) {
+                            Unwrap(context.content.task) {
                                 $0.description
                                     .escaping(.unsafeNone)
                             }
@@ -167,7 +163,7 @@ extension MultipleChoiseTask.Templates {
 
                     FormGroup {
                         TextArea {
-                            Unwrap(context.taskInfo) {
+                            Unwrap(context.content.task) {
                                 $0.question
                             }
                         }
@@ -201,7 +197,7 @@ extension MultipleChoiseTask.Templates {
                             .type(.checkbox)
                             .class("custom-control-input")
                             .id("create-multiple-select")
-                            .isChecked(context.multipleTaskInfo.isDefined && context.multipleTaskInfo.unsafelyUnwrapped.isMultipleSelect)
+                            .isChecked(context.content.isMultipleSelect)
                         Label {
                             "Ved å ha på dette kan man velge flere riktige svar"
                         }
@@ -244,19 +240,22 @@ extension MultipleChoiseTask.Templates {
                     }
 
                     Div {
-                        Unwrap(context.multipleTaskInfo) { (multiple: TemplateValue<MultipleChoiseTask.Data>) in
-                            ForEach(in: multiple.choises) { choise in
-                                ChoiseRow(
-                                    canSelectMultiple: multiple.isMultipleSelect,
-                                    choise: choise
-                                )
-                            }
+                        ForEach(in: context.content.choises) { choise in
+                            ChoiseRow(
+                                canSelectMultiple: context.content.isMultipleSelect,
+                                choise: choise
+                            )
                         }
                     }
                     .id("create-multiple-choises")
 
                     FormGroup {
-                        Div()
+                        Div {
+                            Unwrap(context.content.task) { task in
+                                task.solution
+                                    .escaping(.unsafeNone)
+                            }
+                        }
                             .id("create-multiple-solution")
                     }
                     .customLabel {
@@ -274,7 +273,7 @@ extension MultipleChoiseTask.Templates {
                         " Lagre"
                     }
                     .type(.button)
-                    .on(click: IF(context.taskInfo.isDefined) { "editMultipleChoise();" }.else { "createMultipleChoise();" })
+                    .on(click: IF(context.isEditingTask) { "editMultipleChoise();" }.else { "createMultipleChoise();" })
                     .class("mb-3 mt-3")
                     .button(style: .success)
                 }
@@ -291,7 +290,7 @@ extension MultipleChoiseTask.Templates {
                 Script(source: "/assets/js/multiple-choise/json-data.js")
                 Script(source: "/assets/js/multiple-choise/modify-task.js")
 
-                IF(context.taskInfo.isDefined) {
+                IF(context.isEditingTask) {
                     Script().source("/assets/js/multiple-choise/edit.js")
                 }.else {
                     Script().source("/assets/js/multiple-choise/create.js")
@@ -302,7 +301,7 @@ extension MultipleChoiseTask.Templates {
         struct ChoiseRow: HTMLComponent {
 
             let canSelectMultiple: TemplateValue<Bool>
-            let choise: TemplateValue<MultipleChoiseTaskChoise>
+            let choise: TemplateValue<MultipleChoiseTaskChoise.Data>
 
             var body: HTML {
                 Card {
@@ -354,9 +353,9 @@ extension MultipleChoiseTask.Templates {
     }
 }
 
-extension MultipleChoiseTaskChoise {
-    var htmlChoiseID: String { "choise--\(id ?? 0)" }
-    var deleteCall: String { "deleteChoise(-\(id ?? 0));" }
+extension MultipleChoiseTaskChoise.Data {
+    var htmlChoiseID: String { "choise--\(id)" }
+    var deleteCall: String { "deleteChoise(-\(id));" }
 }
 
 extension Button: FormInput {}

@@ -40,6 +40,7 @@ extension Subject.Templates {
                             return nil
                         }
                 }
+                .sorted(by: { $0.topic.chapter < $1.topic.chapter })
                 self.totalNumberOfTasks = totalNumberOfTasks
             }
         }
