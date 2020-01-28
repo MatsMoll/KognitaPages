@@ -8,10 +8,6 @@
 import BootstrapKit
 import KognitaCore
 
-extension Subtopic {
-    var unwrapedID: Int { id ?? 0 }
-}
-
 struct SubtopicPicker: HTMLComponent, AttributeNode {
 
     var attributes: [HTMLAttribute]
@@ -53,7 +49,7 @@ struct SubtopicPicker: HTMLComponent, AttributeNode {
                                 subtopic.name + " - " + topic.topic.name
                             }
                             .value(subtopic.id)
-                            .isSelected(subtopic.unwrapedID == selectedID)
+                            .isSelected(subtopic.id == selectedID)
                         }
                     }
                     .label(topic.topic.name)

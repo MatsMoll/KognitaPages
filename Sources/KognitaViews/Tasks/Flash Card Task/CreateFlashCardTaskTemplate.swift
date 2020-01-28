@@ -59,16 +59,24 @@ struct FormCard: HTMLComponent {
 }
 
 extension FlashCardTask.Templates.Create.Context {
-    var modalTitle: String { subject.name + " | Lag tekst oppgave"}
-    var subjectUri: String { "/subjects/\(subject.id ?? 0)" }
-    var subjectContentOverviewUri: String { "/creator/subjects/\(subject.id ?? 0)/overview" }
+    var modalTitle: String { content.subject.name + " | Lag tekst oppgave"}
+    var subjectUri: String { "/subjects/\(content.subject.id)" }
+    var subjectContentOverviewUri: String { "/creator/subjects/\(content.subject.id)/overview" }
 
     var isTestable: Bool {
-        guard let task = taskInfo else {
+        guard let task = content.task else {
             return false
         }
         return task.isTestable
     }
+
+    var isEditingTask: Bool {
+        content.task != nil
+    }
+}
+
+extension FlashCardTask.ModifyContent {
+    var subjectName: String { subject.name }
 }
 
 extension FlashCardTask.Templates {
@@ -76,26 +84,18 @@ extension FlashCardTask.Templates {
 
         public struct Context {
             let user: User
-            let subject: Subject
-            let topics: [Topic.Response]
+            let content: FlashCardTask.ModifyContent
 
-            // Used to edit a task
-            let taskInfo: Task?
-
-            public init(user: User, subject: Subject, topics: [Topic.Response], content: Task? = nil, selectedTopicId: Int? = nil) {
+            public init(user: User, content: FlashCardTask.ModifyContent) {
                 self.user = user
-                self.subject = subject
-                self.topics = topics
-//                let sortSelectedTopicId = selectedTopicId ?? content?.subtopicId
-//                self.topics = .init(topics: topics, selectedSubtopicId: sortSelectedTopicId)
-                self.taskInfo = content
+                self.content = content
             }
         }
 
         var breadcrumbs: [BreadcrumbItem] {
             [
                 BreadcrumbItem(link: "/subjects", title: "Fag oversikt"),
-                BreadcrumbItem(link: ViewWrapper(view: context.subjectUri), title: ViewWrapper(view: context.subject.name)),
+                BreadcrumbItem(link: ViewWrapper(view: context.subjectUri), title: ViewWrapper(view: context.content.subjectName)),
                 BreadcrumbItem(link: ViewWrapper(view: context.subjectContentOverviewUri), title: "Innholds oversikt")
             ]
         }
@@ -107,8 +107,8 @@ extension FlashCardTask.Templates {
             ) {
                 PageTitle(title: "Lag tekst oppgave", breadcrumbs: breadcrumbs)
                 FormCard(title: context.modalTitle) {
-                    Unwrap(context.taskInfo) { taskInfo in
-                        IF(taskInfo.deletedAt.isDefined) {
+                    Unwrap(context.content.task) { task in
+                        IF(task.isDeleted) {
                             Badge { "Slettet" }
                                 .background(color: .danger)
                         }
@@ -120,11 +120,11 @@ extension FlashCardTask.Templates {
                     .style(.heading3)
                     .text(color: .dark)
 
-                    Unwrap(context.taskInfo) { task in
+                    Unwrap(context.content.task) { task in
                         SubtopicPicker(
                             label: "Undertema",
                             idPrefix: "card-",
-                            topics: context.topics
+                            topics: context.content.topics
                         )
                         .selected(id: task.subtopicID)
                     }
@@ -132,7 +132,7 @@ extension FlashCardTask.Templates {
                         SubtopicPicker(
                             label: "Undertema",
                             idPrefix: "card-",
-                            topics: context.topics
+                            topics: context.content.topics
                         )
                     }
 
@@ -145,7 +145,7 @@ extension FlashCardTask.Templates {
                     FormRow {
                         FormGroup(label: "Eksamensett semester") {
                             Select {
-                                Unwrap(context.taskInfo) { taskInfo in
+                                Unwrap(context.content.task) { taskInfo in
                                     Unwrap(taskInfo.examPaperSemester) { exam in
                                         Option {
                                             exam.rawValue
@@ -172,14 +172,14 @@ extension FlashCardTask.Templates {
                                 .type(.number)
                                 .id("card-exam-year")
                                 .placeholder("2019")
-                                .value(Unwrap(context.taskInfo) { $0.examPaperYear })
+                                .value(Unwrap(context.content.task) { $0.examPaperYear })
                         }
                         .column(width: .six, for: .medium)
                     }
 
                     FormGroup {
                         Div {
-                            Unwrap(context.taskInfo) {
+                            Unwrap(context.content.task) {
                                 $0.description
                                     .escaping(.unsafeNone)
                             }
@@ -196,7 +196,7 @@ extension FlashCardTask.Templates {
 
                     FormGroup {
                         TextArea {
-                            Unwrap(context.taskInfo) {
+                            Unwrap(context.content.task) {
                                 $0.question
                             }
                         }
@@ -220,7 +220,12 @@ extension FlashCardTask.Templates {
                     }
 
                     FormGroup {
-                        Div()
+                        Div {
+                            Unwrap(context.content.task) { task in
+                                task.solution
+                                    .escaping(.unsafeNone)
+                            }
+                        }
                             .id("card-solution")
                     }
                     .customLabel {
@@ -241,7 +246,7 @@ extension FlashCardTask.Templates {
                     .button(style: .success)
                     .margin(.three, for: .vertical)
                     .on(click:
-                        IF(context.taskInfo.isDefined) {
+                        IF(context.isEditingTask) {
                             "editFlashCard();"
                         }.else {
                             "createFlashCard();"
@@ -259,7 +264,7 @@ extension FlashCardTask.Templates {
                 Script().source("/assets/js/vendor/summernote-math.js")
                 Script().source("/assets/js/dismissable-error.js")
                 Script().source("/assets/js/flash-card/json-data.js")
-                IF(context.taskInfo.isDefined) {
+                IF(context.isEditingTask) {
                     Script().source("/assets/js/flash-card/edit.js")
                 }.else {
                     Script().source("/assets/js/flash-card/create.js")

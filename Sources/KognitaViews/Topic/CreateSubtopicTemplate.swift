@@ -123,21 +123,6 @@ extension Subtopic.Templates {
                         "Kun tillatt med bokstaver, tall og mellomrom"
                     }
                 }
-                FormRow {
-                    Label {
-                        "Kapittel"
-                    }.for("subtopic-name").class("col-form-label")
-                    Input()
-                        .type("number")
-                        .class("form-control")
-                        .id("subtopic-chapter")
-                        .placeholder("1")
-                        .value(Unwrap(subtopicInfo) { $0.chapter })
-                        .required()
-                    Small {
-                        "Kan ikke ha samme verdi som andre kapitler"
-                    }
-                }
 
                 DismissableError()
 
