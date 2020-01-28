@@ -58,20 +58,27 @@ extension PracticeSession.Templates {
             let locale = "nb"
             let user: User
 
-            let numberOfTasks: String
-            let goalProgress: String
-            let timeUsed: String
-            let accuracy: String
-
             let tasks: [TaskResultable]
 
             let topicResults: [TopicResultContext]
+
+            let progress: Int
+            let timeUsed: TimeInterval
+            let maxScore: Double
+            let achievedScore: Double
+
+            var accuracyScore: Double {
+                guard maxScore != 0 else {
+                    return 0
+                }
+                return achievedScore / maxScore
+            }
 
             var singleStats: [SingleStatisticCardContent] {
                 [
                     .init(
                         title: "Nåværende nivå",
-                        mainContent: accuracy + " 🔥",
+                        mainContent: accuracyString,
                         extraContent: nil
                     ),
                     .init(
@@ -81,7 +88,7 @@ extension PracticeSession.Templates {
                     ),
                     .init(
                         title: "Tid øvet",
-                        mainContent: timeUsed,
+                        mainContent: timeUsed.timeString,
                         extraContent: nil
                     ),
                 ]
@@ -95,14 +102,13 @@ extension PracticeSession.Templates {
                     maxScore += 100
                     achievedScore += task.resultScore.clamped(to: 0...100)
                 }
-                let accuracyScore = achievedScore / maxScore
 
                 self.user = user
                 self.tasks = tasks
-                self.numberOfTasks = "\(tasks.count)"
-                self.goalProgress = "\(progress)%"
-                self.timeUsed = timeUsed.timeString
-                self.accuracy = "\((10000 * accuracyScore).rounded() / 100)%"
+                self.progress = progress
+                self.timeUsed = timeUsed
+                self.maxScore = maxScore
+                self.achievedScore = achievedScore
 
                 let grouped = tasks.group(by: \.topicName)
                 topicResults = grouped.map { name, tasks in
@@ -126,7 +132,7 @@ extension PracticeSession.Templates {
                 baseContext: .constant(.init(title: "Resultat | Øving ", description: "Resultat | Øving "))
             ) {
                 PageTitle(
-                    title: "Øving " + context.goalProgress,
+                    title: context.title,
                     breadcrumbs: breadcrumbItems
                 )
                 Row {
@@ -191,5 +197,24 @@ extension PracticeSession.Templates {
                 Script().source("/assets/js/practice-session-histogram.js")
             }
         }
+    }
+}
+
+extension PracticeSession.Templates.Result.Context {
+    var numberOfTasks: String { "\(tasks.count)" }
+    var goalProgress: String { "\(progress)%" }
+    var readableAccuracy: Double { (10000 * accuracyScore).rounded() / 100 }
+    var accuracyString: String {
+        if readableAccuracy > 90 {
+            return "\(readableAccuracy) 🏆"
+        } else if readableAccuracy > 70 {
+            return "\(readableAccuracy) 🔥"
+        } else {
+            return "\(readableAccuracy)"
+        }
+    }
+    var date: Date { tasks.first?.date ?? .now }
+    var title: String {
+        "Øving \(date.formatted(dateStyle: .short, timeStyle: .short))"
     }
 }
