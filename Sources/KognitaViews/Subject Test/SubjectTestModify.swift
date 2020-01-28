@@ -24,6 +24,7 @@ extension SubjectTest.Templates {
             var editCall: String { "editTest(\(test?.id ?? 0))" }
             var deleteCall: String { "deleteTest(\(test?.id ?? 0))" }
 
+
             let user: User
             let tasks: [Task]
             let test: SubjectTest.ModifyResponse?
@@ -39,13 +40,21 @@ extension SubjectTest.Templates {
             }
         }
 
-        public init() {}
+        var breadcrumbs: [BreadcrumbItem] {
+            [
+                BreadcrumbItem(link: "/subjects", title: "Fag oversikt")
+            ]
+        }
 
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
                 baseContext: .constant(.init(title: "Lag prøve", description: "Lag prøve"))
             ) {
+                PageTitle(
+                    title: "Lag en prøve",
+                    breadcrumbs: breadcrumbs
+                )
                 Div {
                     DismissableError()
                     Div {
@@ -140,7 +149,7 @@ extension SubjectTest.Templates {
                             }
                         }.class("p-2")
                     }.class("modal-body")
-                }.class("card mt-5")
+                }.class("card")
             }
             .scripts {
                 Script().source("/assets/js/subject-test/json-data.js").type("text/javascript")
@@ -157,3 +166,4 @@ extension SubjectTest.Templates {
         }
     }
 }
+

@@ -119,6 +119,7 @@ extension PracticeSession.Templates {
                         tasks: tasks
                     )
                 }
+                .sorted(by: { $0.topicScore > $1.topicScore })
             }
         }
 

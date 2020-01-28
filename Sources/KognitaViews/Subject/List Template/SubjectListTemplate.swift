@@ -39,6 +39,9 @@ extension Subject.Templates {
 
                 Row {
                     Div {
+                        IF(context.user.isEmailVerified == false) {
+                            VerifyEmailSignifier()
+                        }
                         SubjectTestList(test: context.list.openedTest)
 
 //                        ContinuePracticeSessionCard(
@@ -279,6 +282,37 @@ extension Subject.Templates {
                     .isRounded()
                 }
             }
+        }
+    }
+}
+
+extension Subject.Templates {
+    struct VerifyEmailSignifier: HTMLComponent {
+
+        var body: HTML {
+            Div {
+                Div {
+                    Text {
+                        "Velkommen! 👋🏼"
+                    }
+                    .style(.heading2)
+                }
+                .class("card-header")
+                .background(color: .warning)
+
+                Div {
+                    Text {
+                        "Du har ikke verifisert eposten din"
+                    }
+                    .font(style: .bold)
+
+                    Text {
+                        "Dette må gjøres før du kan få tilgang til funksjonaliteten i Kognita. Vær obs på at denne kan havne i søppelpost eller spam."
+                    }
+                }
+                .class("card-body")
+            }
+            .class("card")
         }
     }
 }
