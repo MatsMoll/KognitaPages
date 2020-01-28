@@ -11,6 +11,7 @@ struct CustomControlInput: HTMLComponent, AttributeNode {
     let type: Input.Types
     var attributes: [HTMLAttribute]
     let identifier: HTML
+    private let isChecked: Conditionable
 
 
     public init(label: HTML, type: Input.Types, id: HTML) {
@@ -18,13 +19,15 @@ struct CustomControlInput: HTMLComponent, AttributeNode {
         self.type = type
         self.identifier = id
         self.attributes = []
+        self.isChecked = false
     }
 
-    private init(label: Label, type: Input.Types, identifier: HTML, attributes: [HTMLAttribute]) {
+    private init(label: Label, type: Input.Types, identifier: HTML, isChecked: Conditionable, attributes: [HTMLAttribute]) {
         self.label = label
         self.type = type
         self.attributes = attributes
         self.identifier = identifier
+        self.isChecked = isChecked
     }
 
     var body: HTML {
@@ -33,10 +36,12 @@ struct CustomControlInput: HTMLComponent, AttributeNode {
                 .type(type)
                 .class("custom-control-input")
                 .id(identifier)
+                .isChecked(isChecked)
             label.class("custom-control-label")
                 .for(identifier)
         }
         .class("custom-control")
+        .add(attributes: attributes)
         .modify(if: type == .checkbox) {
             $0.class("custom-checkbox")
         }
@@ -45,7 +50,11 @@ struct CustomControlInput: HTMLComponent, AttributeNode {
         }
     }
 
+    public func isChecked(_ condition: Conditionable) -> CustomControlInput {
+        .init(label: label, type: type, identifier: identifier, isChecked: condition, attributes: attributes)
+    }
+
     func copy(with attributes: [HTMLAttribute]) -> CustomControlInput {
-        .init(label: label, type: type, identifier: identifier, attributes: attributes)
+        .init(label: label, type: type, identifier: identifier, isChecked: isChecked, attributes: attributes)
     }
 }

@@ -54,6 +54,9 @@ extension Subject.Templates {
                 )
                 Row {
                     Div {
+                        IF(context.user.isEmailVerified == false) {
+                            VerifyEmailSignifier()
+                        }
                         UnactiveSubjectCard(
                             details: context.details
                         )

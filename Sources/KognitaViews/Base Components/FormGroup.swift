@@ -8,6 +8,11 @@ public struct FormGroup: HTMLComponent {
     let input: FormInput
     let optionalContent: HTML?
 
+    public init(input: () -> FormInput) {
+        self.label = Label()
+        self.input = input()
+        self.optionalContent = nil
+    }
     public init(label: HTML, input: () -> FormInput) {
         self.label = Label { label }
         self.input = input()
@@ -45,6 +50,10 @@ public struct FormGroup: HTMLComponent {
 
     func description(@HTMLBuilder content: () -> HTML) -> FormGroup {
         .init(label: label, input: input, optionalContent: content(), attributes: attributes)
+    }
+
+    func customLabel(@HTMLBuilder content: () -> HTML) -> FormGroup {
+        .init(label: Label { content() }, input: input, optionalContent: optionalContent, attributes: attributes)
     }
 }
 

@@ -30,6 +30,8 @@ struct MaterialDesignIcon: HTMLComponent, AttributeNode {
         case minus
         case eye
         case close
+        case save
+        case delete
     }
 
     let icon: TemplateValue<Icons>
