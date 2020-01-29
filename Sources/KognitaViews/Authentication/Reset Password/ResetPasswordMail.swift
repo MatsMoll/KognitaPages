@@ -56,15 +56,19 @@ extension User.Templates.ResetPassword {
                     .margin(.four, for: .bottom)
                 }
                 .class("w-75 m-auto")
-                .text(alignment: .center) +
+                .text(alignment: .center)
 
-                Anchor {
-                    Button {
-                        "Trykk her for å endre"
+                Div {
+                    Anchor {
+                        Button {
+                            "Trykk her for å endre"
+                        }
+                        .button(style: .primary)
                     }
-                    .button(style: .primary)
+                    .href(rootUrl + context.token.changeUri)
                 }
-                .href(rootUrl + context.token.changeUri)
+                .class("form-group")
+                .text(alignment: .center)
             }
             .root(url: rootUrl)
         }

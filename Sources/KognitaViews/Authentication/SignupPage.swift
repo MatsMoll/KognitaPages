@@ -14,13 +14,15 @@ extension User.Templates {
 
         public struct Context {
             let base: User.Templates.AuthenticateBaseContext
+            let submittedForm: User.Create.Data?
 
-            public init(errorMessage: String? = nil) {
+            public init(errorMessage: String? = nil, submittedForm: User.Create.Data? = nil) {
                 self.base = User.Templates.AuthenticateBaseContext(
                     title: "Registrer",
                     description: "Registrer",
                     errorMessage: errorMessage
                 )
+                self.submittedForm = submittedForm
             }
         }
 
@@ -55,24 +57,51 @@ extension User.Templates {
                             .type(.text)
                             .id("username")
                             .placeholder(localized: Strings.registerUsernamePlaceholder)
+                            .minLength(3)
+                            .maxLength(20)
+                            .pattern(regex: "[A-Za-z0-9]+")
+                            .required()
+                            .value(Unwrap(context.submittedForm) { $0.username })
                     }
+                    .invalidFeedback {
+                        "Brukernavnet må være lengre enn tre bokstaver og bare inneholde bokstaver og tall."
+                    }
+
                     FormGroup(label: Strings.mailTitle.localized()) {
                         Input()
                             .type(.email)
                             .id("email")
-                            .placeholder(localized: Strings.mailPlaceholder)
+                            .placeholder("kognita@stud.ntnu.no")
+                            .pattern(regex: ".*@.*ntnu.no")
+                            .required()
+                            .value(Unwrap(context.submittedForm) { $0.email })
                     }
+                    .description {
+                        "Må være en NTNU mail"
+                    }
+
                     FormGroup(label: Strings.passwordTitle.localized()) {
                         Input()
                             .type(.password)
                             .id("password")
                             .placeholder(localized: Strings.passwordPlaceholder)
+                            .minLength(6)
+                            .required()
                     }
+                    .invalidFeedback {
+                        "Passordet må være lengre enn 6 tegn"
+                    }
+
                     FormGroup(label: Strings.registerConfirmPasswordTitle.localized()) {
                         Input()
                             .type(.password)
                             .id("verifyPassword")
                             .placeholder(localized: Strings.registerConfirmPasswordPlaceholder)
+                            .minLength(6)
+                            .required()
+                    }
+                    .invalidFeedback {
+                        "Må være det samme som passordet ovenfor"
                     }
 
                     Div {
@@ -82,6 +111,7 @@ extension User.Templates {
                                 .class("custom-control-input")
                                 .name("acceptedTermsInput")
                                 .id("checkbox-signup")
+                                .required()
                             Label {
                                 Strings.registerTermsOfServiceTitle.localized()
                                 " "
@@ -111,6 +141,11 @@ extension User.Templates {
                 }
                 .action("/signup")
                 .method(.post)
+                .modify(if: context.submittedForm.isDefined) {
+                    $0.class("was-validated")
+                }
+
+                Script(source: "/assets/js/form-feedback.js")
             }
             .otherActions {
                 Row {

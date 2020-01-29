@@ -69,7 +69,7 @@ struct ContentBaseTemplate: HTMLComponent {
     struct TabContent {
         let link: String
         let iconClass: String
-        let title: String
+        let title: ViewWrapper
     }
 
     let activePath: TemplateValue<String>
@@ -160,8 +160,16 @@ struct ContentBaseTemplate: HTMLComponent {
         let activePath: TemplateValue<String>
 
         private let tabs: [TabContent] = [
-            .init(link: "/subjects", iconClass: "dripicons-view-list", title: "Oversikt over fag"),
-            .init(link: "/practice-sessions/history", iconClass: "dripicons-view-list", title: "Øvinger"),
+            .init(
+                link: "/subjects",
+                iconClass: "dripicons-view-list",
+                title: ViewWrapper(view: Strings.menuSubjectList.localized())
+            ),
+            .init(
+                link: "/practice-sessions/history",
+                iconClass: "dripicons-view-list",
+                title: ViewWrapper(view: Strings.menuPracticeHistory.localized())
+            ),
         ]
 
         private let creatorTab = TabContent(
@@ -192,7 +200,7 @@ struct ContentBaseTemplate: HTMLComponent {
                     ListItem {
                         Form {
                             Button {
-                                "Logg ut"
+                                Strings.menuLogout.localized()
                             }
                             .type(.submit)
                             .background(color: .primary)
@@ -205,13 +213,7 @@ struct ContentBaseTemplate: HTMLComponent {
                     .class("nav-item")
                 }
                 .button {
-                    Anchor {
-                        Div {
-                            Span()
-                            Span()
-                            Span()
-                        }.class("lines")
-                    }.class("navbar-toggle")
+                    HyperHamburgerMenu()
                 }
             }
             .navigationBar(style: .dark)

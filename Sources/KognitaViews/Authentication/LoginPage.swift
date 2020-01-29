@@ -32,23 +32,14 @@ public struct LoginPage: HTMLTemplate {
                     Div {
                         Div {
                             IF(context.errorMessage.isDefined) {
-                                Div {
-                                    Button {
-                                        Span {
-                                            "×"
-                                        }.aria(for: "hidden", value: "true")
-                                    }
-                                    .type(.button)
-                                    .class("close")
-                                    .data(for: "dismiss", value: "alert")
-                                    .aria(for: "label", value: "Close")
-
+                                Alert {
                                     Bold(Strings.errorMessage)
 
                                     context.errorMessage
                                 }
-                                .class("alert alert-secondary alert-dismissible bg-danger text-white border-0 fade show")
-                                .role("alert")
+                                .isDismissable(true)
+                                .background(color: .danger)
+                                .text(color: .white)
                             }
                             Div {
                                 Div {
@@ -66,16 +57,14 @@ public struct LoginPage: HTMLTemplate {
                                             .class("text-muted mb-4")
                                     }.class("text-center w-75 m-auto")
                                     Form {
-                                        Div {
-                                            Label(Strings.mailTitle)
-                                                .for("emailaddress")
+                                        FormGroup(label: Strings.mailTitle.localized()) {
                                             Input()
-                                                .class("form-control")
                                                 .type(.email)
-                                                .name("email")
                                                 .id("email")
                                                 .placeholder(localized: Strings.mailPlaceholder)
-                                        }.class("form-group")
+                                                .required()
+                                        }
+
                                         Div {
                                             Anchor {
                                                 Small(Strings.forgottenPassword)
@@ -92,16 +81,21 @@ public struct LoginPage: HTMLTemplate {
                                                 .name("password")
                                                 .id("password")
                                                 .placeholder(localized: Strings.passwordPlaceholder)
+                                                .required()
                                         }.class("form-group")
                                         Div {
                                             Button(Strings.loginButton)
                                                 .id("submit-button")
-                                                .class("btn btn-primary")
+                                                .button(style: .primary)
                                                 .type(.submit)
                                         }.class("form-group mb-0 text-center")
-                                    }.action("/login").method(.post)
-                                }.class("card-body p-4")
-                            }.class("card")
+                                    }
+                                    .action("/login")
+                                    .method(.post)
+                                }
+                                .class("card-body p-4")
+                            }
+                            .class("card")
                             Div {
                                 Div {
                                     P(Strings.loginNoUserTitle)

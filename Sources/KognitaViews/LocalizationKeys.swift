@@ -12,6 +12,9 @@ public class Strings {
     static let errorMessage = "error.message"
     static let menuRegister = "menu.register"
     static let menuLogin = "menu.login"
+    static let menuSubjectList = "menu.overview"
+    static let menuPracticeHistory = "menu.history"
+    static let menuLogout = "menu.logout"
 
     static let loginTitle = "login.title"
     static let loginSubtitle = "login.subtitle"
@@ -27,6 +30,10 @@ public class Strings {
 
     static let registerTermsOfServiceTitle = "register.tos.description"
     static let registerTermsOfServiceLink = "register.tos.link"
+
+    static let resetPasswordTitle = "reset.password.title"
+    static let resetPasswordSubtitle = "reset.password.subtitle"
+    static let resetPasswordButton = "reset.password.button"
 
     static let registerButton = "register.button"
     static let alreadyHaveUser = "register.already.user.description"
