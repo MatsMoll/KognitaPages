@@ -64,6 +64,7 @@ extension MultipleChoiseTask.Templates {
 
         public var body: HTML {
             TaskPreviewTemplate(context: context.previewContext) {
+
                 Card {
                     ForEach(in: context.choises) { choise in
                         ChoiseOption(

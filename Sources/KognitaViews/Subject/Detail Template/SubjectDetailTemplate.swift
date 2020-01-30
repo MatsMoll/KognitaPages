@@ -152,7 +152,7 @@ extension Subject.Templates {
                     .margin(.three, for: .bottom)
                     .style(.paragraph)
                 }
-                .sub {
+                .footer {
                     UnorderedList {
                         ListItem {
                             Text {
@@ -171,6 +171,9 @@ extension Subject.Templates {
                         .padding(.three)
                     }
                     .class("list-group list-group-flush")
+                }
+                .modifyFooter {
+                    $0.padding(.zero)
                 }
                 .display(.block)
             }

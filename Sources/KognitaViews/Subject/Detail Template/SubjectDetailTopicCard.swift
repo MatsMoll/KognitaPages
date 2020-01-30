@@ -69,8 +69,11 @@ extension Subject.Templates.Details {
                     .margin(.one, for: .vertical)
                     .isDisabled(canPractice == false)
                 }
-                .sub {
+                .footer {
                     Competence(competence: topic.competence)
+                }
+                .modifyFooter {
+                    $0.padding(.zero)
                 }
                 .display(.block)
             }

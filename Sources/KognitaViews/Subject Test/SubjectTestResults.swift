@@ -149,6 +149,7 @@ extension SubjectTest.Templates {
                     Card {
                         Text {
                             choise.choise
+                                .escaping(.unsafeNone)
                         }
                         .style(.lead)
                         Text {
