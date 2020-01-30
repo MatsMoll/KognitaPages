@@ -60,6 +60,10 @@ public class Strings {
     static let starterPageMoreButton = "starter.page.more.button"
     static let copyright = "footer.copyright"
 
+    static let verifyEmailTitle = "verify.email.title"
+    static let verifyEmailSubtitle = "verify.email.subtitle"
+    static let verifyEmailButton = "verify.email.button"
+
     static let subjectTitle = "subjects.title"
     static let subjectStartSession = "subject.session.start"
     static let subjectTopicListTitle = "subject.topics.title"

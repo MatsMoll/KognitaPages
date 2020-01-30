@@ -31,21 +31,23 @@ extension User.Templates {
         }
 
         public var body: HTML {
-            AuthenticateBase(
-                context: context.authBase
+            MailTemplate(
+                rootUrl: rootUrl,
+                title: .constant("Verifiser brukeren din | Kognita"),
+                description: .constant("Verifiser brukeren din")
             ) {
                 Div {
                     Text {
-                        "localize(.title)"
+                        Strings.verifyEmailTitle.localized()
                     }
                     .class("text-dark-50")
                     .text(alignment: .center)
                     .margin(.zero, for: .top)
                     .font(style: .bold)
-                    .style(.heading4)
+                    .style(.heading3)
 
                     Text {
-                        "localize(.subtitle)"
+                        Strings.verifyEmailSubtitle.localized()
                     }
                     .text(color: .muted)
                     .margin(.four, for: .bottom)
@@ -55,13 +57,15 @@ extension User.Templates {
                 .width(portion: .threeQuarter)
                 .text(alignment: .center)
 
-                Anchor {
-                    "Verifiser nå"
+                Div {
+                    Anchor {
+                        Strings.verifyEmailButton.localized()
+                    }
+                    .href(rootUrl + context.token.verifyUri)
+                    .button(style: .primary)
                 }
-                .href(rootUrl + context.token.verifyUri)
-                .button(style: .primary)
+                .text(alignment: .center)
             }
-            .root(url: rootUrl)
         }
     }
 }

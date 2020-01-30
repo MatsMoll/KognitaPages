@@ -21,7 +21,6 @@ extension User.Templates.ResetPassword {
             }
         }
 
-
         let rootUrl: String
 
         public init(rootUrl: String) {
@@ -29,14 +28,11 @@ extension User.Templates.ResetPassword {
         }
 
         public var body: HTML {
-            User.Templates.AuthenticateBase(
-                context: TemplateValue<User.Templates.AuthenticateBaseContext>.constant(
-                    .init(
-                        title: "Gjenopprett Passord",
-                        description: "Gjenopprett Passord",
-                        errorMessage: nil
-                    )
-            )) {
+            MailTemplate(
+                rootUrl: rootUrl,
+                title: .constant("Gjenopprett passord | Kognita"),
+                description: .constant("Gjenopprett passordet ditt")
+            ) {
                 Div {
                     Text {
                         "Endre passord"
@@ -44,7 +40,7 @@ extension User.Templates.ResetPassword {
                     .class("text-dark-50")
                     .text(alignment: .center)
                     .margin(.zero, for: .top)
-                    .style(.heading4)
+                    .style(.heading3)
                     .font(style: .bold)
 
                     Text {
@@ -70,7 +66,6 @@ extension User.Templates.ResetPassword {
                 .class("form-group")
                 .text(alignment: .center)
             }
-            .root(url: rootUrl)
         }
     }
 }

@@ -16,12 +16,59 @@ extension User.Templates {
             ) {
                 KognitaNavigationBar()
                 Container {
-                    Text {
-                        "Du har nå verifisert eposten din"
+
+                    Row {
+                        Div {
+                            Card {
+                                Div {
+                                    Text {
+                                        "Du har nå verifisert eposten din"
+                                    }
+                                    .style(.heading4)
+                                    .font(style: .bold)
+                                    .class("text-dark-50")
+                                    .margin(.zero, for: .top)
+
+                                    Text {
+                                        "Du har nå fullført verifiseringa og kan nå begynne å bruke Kognita"
+                                    }
+
+                                    Div {
+                                        Anchor(Strings.loginButton)
+                                            .button(style: .primary)
+                                            .href("/login")
+                                    }
+                                    .class("form-group")
+                                    .text(alignment: .center)
+                                    .margin(.zero, for: .bottom)
+                                }
+                                .margin(.auto)
+                                .width(portion: .threeQuarter)
+                                .text(alignment: .center)
+                            }
+                            .header {
+                                Anchor {
+                                    Span {
+                                        LogoImage()
+                                    }
+                                }
+                                .href("/")
+                            }
+                            .modifyHeader {
+                                $0.background(color: .primary)
+                                    .padding(.four, for: .vertical)
+                                    .text(alignment: .center)
+                            }
+                            .modifyBody {
+                                $0.padding(.four)
+                            }
+                        }
+                        .column(width: .five, for: .large)
                     }
-                    .style(.heading2)
-                    .text(color: .dark)
+                    .horizontal(alignment: .center)
                 }
+                .margin(.five, for: .top)
+                .margin(.five, for: .bottom)
             }
         }
     }

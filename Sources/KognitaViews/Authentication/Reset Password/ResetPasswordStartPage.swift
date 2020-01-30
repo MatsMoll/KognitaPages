@@ -10,27 +10,20 @@ extension User.Templates.ResetPassword {
             let base: User.Templates.AuthenticateBaseContext
 
             public enum States {
-                case error(message: String)
                 case success
-                case load
+                case start
             }
 
-            public init(state: States = .load) {
+            public init(state: States = .start) {
                 switch state {
-                case .error(let message):
-                    base = .init(
-                        title: "Gjenopprett passord",
-                        description: "Gjenopprett passord",
-                        errorMessage: message
-                    )
                 case .success:
                     base = .init(
                         title: "Gjenopprett passord",
                         description: "Gjenopprett passord",
                         alertMessage: "Du skal snart få en email med en link for å gjenopprette passordet ditt",
-                        alertStyle: .warning
+                        alertStyle: .success
                     )
-                case .load:
+                case .start:
                     base = .init(
                         title: "Gjenopprett passord",
                         description: "Gjenopprett passord"

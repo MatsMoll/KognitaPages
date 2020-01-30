@@ -152,7 +152,7 @@ extension Subject.Templates {
                     .margin(.three, for: .bottom)
                     .style(.paragraph)
                 }
-                .sub {
+                .footer {
                     UnorderedList {
                         ListItem {
                             Text {

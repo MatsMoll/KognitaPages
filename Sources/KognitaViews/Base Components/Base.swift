@@ -28,6 +28,10 @@ struct BaseTemplate: HTMLComponent {
     private var rootUrl: String = ""
     private var customScripts: HTML = ""
 
+    private var stylesheetUrl: String { rootUrl + "/assets/css/app.min.css" }
+    private var iconsUrl: String { rootUrl + "/assets/css/icons.min.css" }
+    private var faviconUrl: String { rootUrl + "/assets/images/favicon.ico" }
+
     init(context: TemplateValue<BaseTemplateContent>, @HTMLBuilder content: () -> HTML) {
         self.context = context
         self.content = content()
@@ -56,15 +60,15 @@ struct BaseTemplate: HTMLComponent {
     var body: HTML {
         Document(type: .html5) {
             Head {
+                Viewport(mode: .acordingToDevice)
+
                 Title { context.title + " | Kognita" }
+                Description { context.description }
+                Author { "Kognita" }
 
-                Meta().name(.viewport).content("width=device-width, initial-scale=1.0")
-                Meta().name(.description).content(context.description)
-                Author { "MEM" }
-
-                Link().relationship(.shortcutIcon).href(rootUrl + "/assets/images/favicon.ico")
-                Link().relationship(.stylesheet).href(rootUrl + "/assets/css/icons.min.css").type("text/css")
-                Link().relationship(.stylesheet).href(rootUrl + "/assets/css/app.min.css").type("text/css")
+                Stylesheet(url: stylesheetUrl)
+                Stylesheet(url: iconsUrl)
+                FavIcon(url: faviconUrl)
 
                 customHeader
             }
