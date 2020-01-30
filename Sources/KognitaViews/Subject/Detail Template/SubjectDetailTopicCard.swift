@@ -72,6 +72,9 @@ extension Subject.Templates.Details {
                 .footer {
                     Competence(competence: topic.competence)
                 }
+                .modifyFooter {
+                    $0.padding(.zero)
+                }
                 .display(.block)
             }
             .column(width: .six, for: .medium)

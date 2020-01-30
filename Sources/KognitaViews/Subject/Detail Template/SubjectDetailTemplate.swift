@@ -172,6 +172,9 @@ extension Subject.Templates {
                     }
                     .class("list-group list-group-flush")
                 }
+                .modifyFooter {
+                    $0.padding(.zero)
+                }
                 .display(.block)
             }
         }

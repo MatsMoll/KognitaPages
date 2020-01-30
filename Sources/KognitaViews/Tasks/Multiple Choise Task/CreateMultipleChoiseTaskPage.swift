@@ -33,10 +33,12 @@ extension MultipleChoiseTask.Templates {
         public struct Context {
             let user: User
             let content: MultipleChoiseTask.ModifyContent
+            let wasUpdated: Bool
 
-            public init(user: User, content: MultipleChoiseTask.ModifyContent) {
+            public init(user: User, content: MultipleChoiseTask.ModifyContent, wasUpdated: Bool = false) {
                 self.user = user
                 self.content = content
+                self.wasUpdated = wasUpdated
             }
         }
 
@@ -56,6 +58,14 @@ extension MultipleChoiseTask.Templates {
             ) {
 
                 PageTitle(title: "Lag flervalgs oppgave", breadcrumbs: breadcrumbs)
+                IF(context.wasUpdated) {
+                    Alert {
+                        "Endringene ble lagret"
+                    }
+                    .background(color: .success)
+                    .text(color: .white)
+                    .isDismissable(true)
+                }
                 FormCard(title: context.modalTitle) {
 
                     Text {

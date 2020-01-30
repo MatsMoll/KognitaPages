@@ -85,10 +85,12 @@ extension FlashCardTask.Templates {
         public struct Context {
             let user: User
             let content: FlashCardTask.ModifyContent
+            let wasUpdated: Bool
 
-            public init(user: User, content: FlashCardTask.ModifyContent) {
+            public init(user: User, content: FlashCardTask.ModifyContent, wasUpdated: Bool = false) {
                 self.user = user
                 self.content = content
+                self.wasUpdated = wasUpdated
             }
         }
 
@@ -106,6 +108,14 @@ extension FlashCardTask.Templates {
                 baseContext: .constant(.init(title: "Lag Oppgave", description: "Lag Oppgave"))
             ) {
                 PageTitle(title: "Lag tekst oppgave", breadcrumbs: breadcrumbs)
+                IF(context.wasUpdated) {
+                    Alert {
+                        "Endringene ble lagret"
+                    }
+                    .background(color: .success)
+                    .text(color: .white)
+                    .isDismissable(true)
+                }
                 FormCard(title: context.modalTitle) {
                     Unwrap(context.content.task) { task in
                         IF(task.isDeleted) {
