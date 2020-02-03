@@ -54,7 +54,7 @@ extension Pages {
 
                             PolicySection(
                                 title: policy.title,
-                                details: policy.details
+                                details: policy.details.escaping(.unsafeNone)
                             )
                         }
                     }
@@ -65,8 +65,8 @@ extension Pages {
         }
 
         let introText: String = """
-        Denne personvernerklæringen omhandler AlphaDev AS’ innsamling og bruk av personopplysninger som samles inn i forbindelse med bruk av nettsiden uni.kognita.no eller ved registrering av bruker på uni.kognita.no.
-        AlphaDev AS er behandlingsansvarlig for opplysningene som samles inn ved bruk av uni.kognita.no.
+        Denne personvernerklæringen omhandler AlphaDev AS’ innsamling og bruk av personopplysninger som samles inn i forbindelse med bruk av nettsiden kognita.no eller ved registrering av bruker på kognita.no.
+        AlphaDev AS er behandlingsansvarlig for opplysningene som samles inn ved bruk av kognita.no.
         I denne personvernerklæringen finner du informasjon om hvilke personopplysninger som samles inn, hvorfor vi gjør dette og dine rettigheter knyttet til behandlingen av personopplysningene. Denne erklæringen vil kunne være gjenstand for oppdateringer og endringer.
         """
 
@@ -74,25 +74,14 @@ extension Pages {
             .init(
                 title: "1. Hvilke opplysninger behandles og hvordan brukes opplysningene",
                 details: """
-                Vi samler inn og bruker dine personopplysninger til ulike formål avhengig av hvem du er og hvordan vi kommer i kontakt med deg. Vi behandler personopplysninger som leverandør av tjenester, i markedsføringsøyemed og i forbindelse med besøk på vår hjemmeside, uni.kognita.no.
-                Opplysninger du selv oppgir
-                Ved registrering og senere i kundeforholdet samler inn opplysninger og vurderinger som kan knyttes til en enkeltperson. Som eksempel kan nevnes navn, adresse, telefonnummer og e-postadresse
-                I tillegg kan vi samle annen informasjon knyttet til din bruk av vårt nettsted, herunder relevant statistikk.
-                Opplysninger vi samler inn om din bruk av kognita.no
-                AlphaDev AS loggfører din aktivitet i tjenesten, herunder når du logget inn, antall innlogginger, hvordan du bruker våre tjenester, m. m. og oppbevarer den på våre servere.
-                Informasjonskapsler
-                Informasjonskapsler («cookies») er små tekstfiler som plasseres på din datamaskin, mobiltelefon eller nettbrett når du laster ned en nettside. Informasjonskapslene kan eksempelvis inneholde brukerinnstillinger og informasjon om hvordan du har surfet på og brukt vår nettside, hvilken nettleser du bruker og lignende.
-                Vi benytter forskjellige typer informasjonskapsler på kognita.no. Disse kan deles inn i følgende kategorier:
-                ●    Vi bruker informasjonskapsler for å forbedre nettstedet og forenkle din brukeropplevelse.
-                ●    Vi bruker informasjonskapsler fra tredjepartsverktøy for analyse og statistikk.
-                ●    Vi bruker informasjonskapsler fra ulike annnonseringsplattformer, for å øke effektiviteten av vår digitale markedsføring og spore brukerregistreringer.
-                Dersom du ikke ønsker at vi skal benytte informasjonskapsler til å samle inn data, så kan du endre sikkerhetsinnstillingene for informasjonskapsler på din datamaskin, mobiltelefon eller nettbrett.
+                Vi samler bare inn personopplysninger som er nødvendige for at du skal kunne bruke Tjenesten. Dette betyr at vi ikke selger noen personopplysninger videre til tredjeparter, og alt holdes internt i Tjenesten med mindre vi er lovpålagt til å dele. Opplysningene som blir samlet inn er e-postadresse, og brukeraktiviteten i Tjenesten.
+                For å kunne identifisere de forskjellige brukerene ved innlogging, så bruker Tjenesten informasjonskapsler («cookies») som er en liten tekstfil tilpasset din datamskin, mobiltelefon eller nettbrett.
                 """
             ),
             .init(
                 title: "2. Formålet med innhenting av informasjonen",
                 details:  """
-                Personopplysningene innhentes og behandles for å kunne oppfylle en avtale med deg som bruker eller etter en interesseavveining. Dersom du har akseptert å motta markedsføring på e-post bruker vi informasjonen for å sende deg nyhetsbrev, herunder brukertilpassede og relevante kampanjer. I tillegg bruker vi informasjonen til å forbedre vår tjeneste og sørge for at den videreutvikles på en tilfredsstillende måte, samt til statistiske formål for eget og samarbeidspartneres bruk.
+                Personopplysningene innhentes og behandles for å kunne oppfylle en avtale med deg som bruker. Dersom du har akseptert å motta markedsføring på e-post bruker vi informasjonen for å sende deg nyhetsbrev, herunder brukertilpassede og relevante kampanjer. I tillegg bruker vi informasjonen til å forbedre vår tjeneste og sørge for at den videreutvikles på en tilfredsstillende måte, samt til statistiske formål for eget og brukerens bruk.
                 """
             ),
             .init(
@@ -107,8 +96,7 @@ extension Pages {
                 details: """
                 Vi gir ikke personopplysningene dine videre til andre med mindre det foreligger et lovlig grunnlag for slik utlevering. Eksempler på slikt grunnlag vil typisk være en avtale med deg eller et lovgrunnlag som pålegger oss å gi ut informasjonen.
                 Informasjonen du avgir til AlphaDev AS kan deles med følgende type virksomheter:
-                ●    Tekniske tjenesteleverandører, slik som leverandører for systemer innen kundeservice, analyseverktøy innen markedsføring, kundedialogverktøy, m.v.
-                ●    Markedsføringspartnere, eksempelvis for utsending av nyhetsbrev eller sporing og målretting av reklame.
+                ●    Tekniske tjenesteleverandører, slik som leverandører for systemer innen kundeservice, m.v.
                 Disse virksomhetene anvender personopplysningene innenfor formålet angitt i punkt 2 i denne personvernerklæringen. Virksomhetene er underlagt egne databehandleravtaler inngått med AlphaDev AS.
                 All behandling av personopplysninger som vi foretar er i samsvar med personvernlovgivningen.
                 """
@@ -134,7 +122,7 @@ extension Pages {
                 Du har rett til å kreve innsyn, retting eller sletting av personopplysningene vi behandler om deg. Du har videre rett til å kreve begrenset behandling, rette innsigelse mot behandlingen og kreve rett til dataportabilitet. Du kan lese mer om innholdet i disse rettighetene på Datatilsynets nettside: www.datatilsynet.no.
                 For å ta i bruk dine rettigheter må du ta skriftlig kontakt med oss. Vi vil svare på din henvendelse til oss så fort som mulig.
                 Vi vil kunne be deg om å bekrefte identiteten din eller å oppgi ytterligere informasjon før vi lar deg ta i bruk dine rettigheter overfor oss. Dette gjør vi for å være sikre på at vi kun gir tilgang til dine personopplysninger til deg - og ikke noen som gir seg ut for å være deg.
-                Du kan til enhver tid trekke tilbake ditt samtykke, dersom du har avgitt dette, for behandling av personopplysninger hos oss. Den enkleste måten å gjøre dette på, er å ta skriftlig kontakt med oss på kundeservice@kognita.no.
+                Du kan til enhver tid trekke tilbake ditt samtykke, dersom du har avgitt dette, for behandling av personopplysninger hos oss. Den enkleste måten å gjøre dette på, er å ta skriftlig kontakt med oss på kontakt@kognita.no.
                 Dersom du mener at vår behandling av personopplysninger ikke stemmer med det vi har beskrevet her eller at vi på andre måter bryter personvernlovgivningen, så kan du klage til Datatilsynet.
                 Du finner informasjon om hvordan kontakte Datatilsynet på Datatilsynets nettsider: www.datatilsynet.no.
                 """
@@ -148,7 +136,7 @@ extension Pages {
             .init(
                 title: "9. Kontaktinformasjon",
                 details: """
-                Du kan når som helst stille oss spørsmål om hvordan vi behandler dine brukerdata og gjøre dine ovennevnte rettigheter gjeldende, ved å kontakte vår Kundeservice på e- post: kundeservice@kognita.no.
+                Du kan når som helst stille oss spørsmål om hvordan vi behandler dine brukerdata og gjøre dine ovennevnte rettigheter gjeldende, ved å kontakte vår Kundeservice på e- post: kontakt@kognita.no.
                 """
             )
         ]
