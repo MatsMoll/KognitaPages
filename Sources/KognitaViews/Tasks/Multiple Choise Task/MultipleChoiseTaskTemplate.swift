@@ -99,11 +99,11 @@ extension MultipleChoiseTask.Templates {
                         Form {
                             Button(Strings.exerciseStopSessionButton)
                                 .button(style: .danger)
-                                .float(.right)
                                 .margin(.one, for: .left)
                         }
                         .action("/practice-sessions/" + session.id + "/end")
                         .method(.post)
+                        .float(.right)
                     }
 
                     IF(context.nextTaskIndex.isDefined) {

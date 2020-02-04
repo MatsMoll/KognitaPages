@@ -188,7 +188,7 @@ extension FlashCardTask.Templates {
                     }
 
                     FormGroup {
-                        Div {
+                        TextArea {
                             Unwrap(context.content.task) {
                                 $0.description
                                     .escaping(.unsafeNone)
@@ -230,13 +230,13 @@ extension FlashCardTask.Templates {
                     }
 
                     FormGroup {
-                        Div {
+                        TextArea {
                             Unwrap(context.content.task) { task in
                                 task.solution
                                     .escaping(.unsafeNone)
                             }
                         }
-                            .id("card-solution")
+                        .id("card-solution")
                     }
                     .customLabel {
                         Text {
@@ -265,13 +265,17 @@ extension FlashCardTask.Templates {
                 }
             }
             .header {
-                Link().href("/assets/css/vendor/summernote-bs4.css").relationship(.stylesheet).type("text/css")
-                Link().href("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css").relationship(.stylesheet)
+                Stylesheet(url: "/assets/css/vendor/simplemde.min.css")
+                Stylesheet(url: "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css")
             }
             .scripts {
-                Script().source("/assets/js/vendor/summernote-bs4.min.js")
+                Script().source("/assets/js/vendor/simplemde.min.js")
                 Script().source("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js")
-                Script().source("/assets/js/vendor/summernote-math.js")
+//                Script(source: "https://cdn.jsdelivr.net/npm/marked/marked.min.js")
+                Script(source: "/assets/js/markdown-renderer.js")
+                Script(source: "/assets/js/markdown-editor.js")
+                Script().source("/assets/js/flash-card/modify-task.js")
+//                Script().source("/assets/js/vendor/summernote-math.js")
                 Script().source("/assets/js/dismissable-error.js")
                 Script().source("/assets/js/flash-card/json-data.js")
                 IF(context.isEditingTask) {

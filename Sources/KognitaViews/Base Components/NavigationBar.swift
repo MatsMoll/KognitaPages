@@ -18,6 +18,7 @@ struct BetaHeader: HTMLComponent {
             }
             .display(.inline)
             .style(.paragraph)
+            .class("text-white-50")
             Anchor {
                 "Email"
             }
@@ -28,8 +29,8 @@ struct BetaHeader: HTMLComponent {
             Text { "." }
                 .display(.inline)
                 .style(.paragraph)
+                .class("text-white-50")
         }
-        .text(color: .light)
         .text(alignment: .center)
         .padding(.two, for: .top)
     }
