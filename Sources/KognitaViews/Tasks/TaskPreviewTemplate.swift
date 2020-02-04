@@ -85,14 +85,8 @@ public struct TaskPreviewTemplate: HTMLComponent {
                     .column(width: .twelve)
                 }
 
-                ProgressCard(context: context)
-
                 Row {
                     Div {
-//                        Div {
-//                            Span { "00:00" }.id("timer")
-//                        }
-//                        .float(.right)
 
                         Text(Strings.exerciseMainTitle)
                             .margin(.zero, for: .top)
@@ -106,37 +100,43 @@ public struct TaskPreviewTemplate: HTMLComponent {
                             .margin(.three, for: .bottom)
                             .background(color: .primary)
                         }
-
-//                        IF(isDefined: context.lastResult) { result in
-//                            Badge {
-//                                "Siste resultat: "
-//                                result.result.resultScore
-//                            }
-//                            .margin(.three, for: .bottom)
-//                            .float(.right)
-//                            .class(result.revisitColorClass)
-//                        }
                     }
                     .column(width: .twelve)
                 }
 
-                QuestionCard(context: context.taskContent)
-                actionCard
-                DismissableError()
-                Div()
+                ContentStructure {
+                    QuestionCard(context: context.taskContent)
+                    actionCard
+                    Div()
                     .id("solution")
                     .display(.none)
-//                IF(context.task.solution.isDefined) {
-//                    SolutionCard(context: context)
-//                }
-                underSolutionCard
+                }
+                .secondary {
+                    ProgressCard(context: context)
+                    DismissableError()
+                    underSolutionCard
+                }
 
-                Script().source("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js")
-                customScripts
+//                QuestionCard(context: context.taskContent)
+//                actionCard
+//                DismissableError()
+//                Div()
+//                    .id("solution")
+//                    .display(.none)
+////                IF(context.task.solution.isDefined) {
+////                    SolutionCard(context: context)
+////                }
+//                underSolutionCard
             }
         }
         .header {
-            Link().href("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css").relationship(.stylesheet)
+            Link().href("https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css").relationship(.stylesheet)
+        }
+        .scripts {
+            Script(source: "https://cdn.jsdelivr.net/npm/marked/marked.min.js")
+            Script().source("https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js")
+            Script(source: "/assets/js/markdown-renderer.js")
+            customScripts
         }
     }
 
@@ -162,6 +162,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
                             .text(color: .secondary)
                             .margin(.two, for: .bottom)
                             .margin(.three, for: .top)
+                            .id("task-description")
                         }
                         Text {
                             context.task.question
@@ -257,7 +258,8 @@ public struct TaskSolutionsTemplate: HTMLTemplate {
             Text {
                 Localized(key: Strings.exerciseProposedSolutionTitle)
                 Span {
-                    Italic().class("mdi mdi-chevron-down accordion-arrow")
+                    MaterialDesignIcon(.chevronDown)
+                        .class("accordion-arrow")
                 }
                 .float(.right)
             }
@@ -280,12 +282,12 @@ public struct TaskSolutionsTemplate: HTMLTemplate {
                 .margin(.two, for: .left)
             }
         }) { (solution, index) in
-            solution.solution
-                .escaping(.unsafeNone)
+            Div {
+                solution.solution
+                    .escaping(.unsafeNone)
+            }
+            .class("solutions")
         }
-//        ForEach(in: context) { solution in
-//            SolutionCard(context: solution)
-//        }
     }
 
     struct SolutionCard: HTMLComponent {

@@ -155,7 +155,7 @@ extension MultipleChoiseTask.Templates {
                         .isChecked(context.isTestable)
 
                     FormGroup {
-                        Div {
+                        TextArea {
                             Unwrap(context.content.task) {
                                 $0.description
                                     .escaping(.unsafeNone)
@@ -225,7 +225,7 @@ extension MultipleChoiseTask.Templates {
 
                     FormRow {
                         FormGroup(label: "Legg til et alternativ") {
-                            Div().id("create-multiple-choise")
+                            TextArea().id("create-multiple-choise")
                         }
                         .column(width: .eleven)
 
@@ -260,13 +260,13 @@ extension MultipleChoiseTask.Templates {
                     .id("create-multiple-choises")
 
                     FormGroup {
-                        Div {
+                        TextArea {
                             Unwrap(context.content.task) { task in
                                 task.solution
                                     .escaping(.unsafeNone)
                             }
                         }
-                            .id("create-multiple-solution")
+                        .id("create-multiple-solution")
                     }
                     .customLabel {
                         Text {
@@ -289,13 +289,14 @@ extension MultipleChoiseTask.Templates {
                 }
             }
             .header {
-                Link().href("/assets/css/vendor/summernote-bs4.css").relationship(.stylesheet).type("text/css")
-                Link().href("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css").relationship(.stylesheet)
+                Link().href("/assets/css/vendor/simplemde.min.css").relationship(.stylesheet).type("text/css")
+                Link().href("https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css").relationship(.stylesheet)
             }
             .scripts {
-                Script(source: "/assets/js/vendor/summernote-bs4.min.js")
-                Script(source: "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js")
-                Script(source: "/assets/js/vendor/summernote-math.js")
+                Script(source: "/assets/js/vendor/simplemde.min.js")
+                Script(source: "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js")
+                Script(source: "/assets/js/markdown-renderer.js")
+                Script(source: "/assets/js/markdown-editor.js")
                 Script(source: "/assets/js/dismissable-error.js")
                 Script(source: "/assets/js/multiple-choise/json-data.js")
                 Script(source: "/assets/js/multiple-choise/modify-task.js")

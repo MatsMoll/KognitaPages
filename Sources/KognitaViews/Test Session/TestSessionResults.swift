@@ -3,7 +3,11 @@ import BootstrapKit
 
 extension TestSession.Results {
     var readableScorePersentage: Double {
-        scoreProsentage * 100
+        (scoreProsentage * 10000).rounded() / 100
+    }
+
+    var readableScore: Double {
+        (score * 100).rounded() / 100
     }
 }
 
@@ -32,17 +36,49 @@ extension TestSession.Templates {
 
                 Row {
                     Div {
-                        TestOverview(result: context.results)
+                        Card {
+                            Text {
+                                "Total score"
+                            }
+                            Text {
+                                context.results.readableScorePersentage
+                                "%"
+                            }
+                            .style(.heading3)
+                            .text(color: .dark)
+
+                            Text {
+                                context.results.readableScore
+                                " poeng"
+                            }
+                        }
                     }
+                    .column(width: .four, for: .large)
+                    .column(width: .twelve)
+                    Div {
+                        Card {
+                            H4(Strings.histogramTitle)
+                                .class("header-title mb-4")
+                            Div {
+                                Canvas().id("practice-time-histogram")
+                            }
+                            .class("mt-3 chartjs-chart")
+                        }
+                    }
+                    .column(width: .eight, for: .large)
                     .column(width: .twelve)
 
-                    ForEach(in: context.results.topicResults) { topic in
-                        Div {
-                            TopicOverview(result: topic)
-                        }
-                        .column(width: .four, for: .large)
-                    }
+//                    ForEach(in: context.results.topicResults) { topic in
+//                        Div {
+//                            TopicOverview(result: topic)
+//                        }
+//                        .column(width: .four, for: .large)
+//                    }
                 }
+            }
+            .scripts {
+                Script().source("/assets/js/vendor/Chart.bundle.min.js")
+                Script(source: "/assets/js/practice-session-histogram.js")
             }
         }
 
@@ -73,31 +109,31 @@ extension TestSession.Templates {
             }
         }
 
-        struct TopicOverview: HTMLComponent {
-
-            let result: TemplateValue<TestSession.Results.Topic>
-
-            var body: HTML {
-                Card {
-                    Text {
-                        result.name
-                    }
-                    .style(.heading3)
-                    .text(color: .dark)
-
-                    Text {
-                        result.score + " Poeng"
-                        Small { result.readableScoreProsentage + "%" }
-                            .margin(.one, for: .left)
-
-                    }
-                    .font(style: .bold)
-                    .margin(.two, for: .bottom)
-                    .text(color: .secondary)
-
-                    KognitaProgressBar(value: result.readableScoreProsentage)
-                }
-            }
-        }
+//        struct TopicOverview: HTMLComponent {
+//
+//            let result: TemplateValue<TestSession.Results.Topic>
+//
+//            var body: HTML {
+//                Card {
+//                    Text {
+//                        result.name
+//                    }
+//                    .style(.heading3)
+//                    .text(color: .dark)
+//
+//                    Text {
+//                        result.score + " Poeng"
+//                        Small { result.readableScoreProsentage + "%" }
+//                            .margin(.one, for: .left)
+//
+//                    }
+//                    .font(style: .bold)
+//                    .margin(.two, for: .bottom)
+//                    .text(color: .secondary)
+//
+//                    KognitaProgressBar(value: result.readableScoreProsentage)
+//                }
+//            }
+//        }
     }
 }

@@ -25,6 +25,9 @@ struct MaterialDesignIcon: HTMLComponent, AttributeNode {
         case trophyOutline = "trophy-outline"
         case star
         case starOutline = "star-outline"
+        case chevronDown = "chevron-down"
+        case arrowLeft = "arrow-left"
+        case arrowRight = "arrow-right"
     }
 
     let icon: TemplateValue<Icons>

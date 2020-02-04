@@ -103,10 +103,25 @@ extension FlashCardTask.Templates {
                             Button(Strings.exerciseStopSessionButton)
                                 .button(style: .danger)
                                 .margin(.one, for: .left)
+                                .type(.button)
+                                .on(click: "submitAndEndSession()")
                         }
                         .action("/practice-sessions/" + session.id + "/end")
                         .method(.post)
                         .float(.right)
+                        .id("end-session-form")
+                    }
+                    IF(context.prevTaskIndex.isDefined) {
+                        Anchor {
+                            Button {
+                                MaterialDesignIcon(.arrowLeft)
+                                    .margin(.one, for: .right)
+                                "Forrige"
+                            }
+                            .button(style: .light)
+                            .float(.right)
+                        }
+                        .href(context.prevTaskIndex)
                     }
                 }
             }
@@ -117,31 +132,6 @@ extension FlashCardTask.Templates {
                             .id("next-task")
                             .type(.hidden)
                             .value(context.nextTaskIndex)
-
-                        Button {
-                            Strings.exerciseNextButton
-                                .localized()
-
-                            Italic().class("mdi mdi-arrow-right")
-                                .margin(.one, for: .left)
-                        }
-                        .float(.right)
-                        .button(style: .primary)
-                        .on(click: "nextTask();")
-                    }
-                    IF(context.prevTaskIndex.isDefined) {
-                        Anchor {
-                            Button {
-                                Italic()
-                                    .class("mdi mdi-arrow-left")
-                                    .margin(.one, for: .right)
-                                "Forrige"
-                            }
-                            .button(style: .light)
-                            .margin(.two, for: .right)
-                            .float(.right)
-                        }
-                        .href(context.prevTaskIndex)
                     }
                     Text {
                         "Hvordan gikk det?"
@@ -151,45 +141,74 @@ extension FlashCardTask.Templates {
                     .style(.heading4)
 
                     Row {
-                        LevelColumn(
-                            icon: "😒",
-                            description: "Har ingen kontroll",
-                            textAlignment: .left
-                        )
-                        LevelColumn(
-                            icon: "😅",
-                            description: "Har litt kontroll",
-                            textAlignment: .center
-                        )
-                        LevelColumn(
-                            icon: "🧐",
-                            description: "Har full kontroll",
-                            textAlignment: .right
-                        )
+                        Div {
+                            Text {
+                                "Dårlig"
+                            }
+                            .text(alignment: .left)
+                        }
+                        .column(width: .six)
+
+                        Div {
+                            Text {
+                                "Bra"
+                            }
+                            .text(alignment: .right)
+                        }
+                        .column(width: .six)
                     }
                     .noGutters()
 
-                    Input()
-                        .class("custom-range")
-                        .id("knowledge-slider")
-                        .type(.range)
-                        .name("range")
-                        .min(value: 0)
-                        .max(value: 4)
-                        .value(
-                            IF(context.score.isDefined) {
-                                context.score
-                            }.else {
-                                2
+                    Row {
+                        Div {
+                            Button {
+                                "0"
                             }
-                    )
+                            .on(click: "nextTask(0)")
+                            .button(style: .light)
+                        }
+                        .column(width: .two)
+                        .offset(width: .one, for: .all)
+                        Div {
+                            Button {
+                                "1"
+                            }
+                            .on(click: "nextTask(1)")
+                            .button(style: .light)
+                        }
+                        .column(width: .two)
+                        Div {
+                            Button {
+                                "2"
+                            }
+                            .on(click: "nextTask(2)")
+                            .button(style: .light)
+                        }
+                        .column(width: .two)
+                        Div {
+                            Button {
+                                "3"
+                            }
+                            .on(click: "nextTask(3)")
+                            .button(style: .light)
+                        }
+                        .column(width: .two)
+                        Div {
+                            Button {
+                                "4"
+                            }
+                            .on(click: "nextTask(4)")
+                            .button(style: .light)
+                        }
+                        .column(width: .two)
+                    }
+                    .noGutters()
                 }
                 .display(.none)
                 .id("knowledge-card")
             }
             .scripts {
                 Script().source("/assets/js/flash-card/submit-performance.js")
-                Script().source("/assets/js/practice-session-end.js")
                 IF(context.hasBeenCompleted) {
                     Script {
                         "window.onload = presentControlls;"
