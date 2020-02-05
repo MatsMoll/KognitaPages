@@ -162,7 +162,7 @@ extension FlashCardTask.Templates {
                     Row {
                         Div {
                             Button {
-                                "0"
+                                "1"
                             }
                             .on(click: "nextTask(0)")
                             .button(style: .light)
@@ -171,7 +171,7 @@ extension FlashCardTask.Templates {
                         .offset(width: .one, for: .all)
                         Div {
                             Button {
-                                "1"
+                                "2"
                             }
                             .on(click: "nextTask(1)")
                             .button(style: .light)
@@ -179,7 +179,7 @@ extension FlashCardTask.Templates {
                         .column(width: .two)
                         Div {
                             Button {
-                                "2"
+                                "3"
                             }
                             .on(click: "nextTask(2)")
                             .button(style: .light)
@@ -187,7 +187,7 @@ extension FlashCardTask.Templates {
                         .column(width: .two)
                         Div {
                             Button {
-                                "3"
+                                "4"
                             }
                             .on(click: "nextTask(3)")
                             .button(style: .light)
@@ -195,7 +195,7 @@ extension FlashCardTask.Templates {
                         .column(width: .two)
                         Div {
                             Button {
-                                "4"
+                                "5"
                             }
                             .on(click: "nextTask(4)")
                             .button(style: .light)
