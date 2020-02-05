@@ -16,7 +16,7 @@ extension SubjectTest.OverviewResponse {
     }
 
     var editUri: String {
-        "subject-tests/\(id)/edit"
+        "/subject-tests/\(id)/edit"
     }
 }
 
