@@ -60,10 +60,12 @@ extension Subject.Templates {
                 }
             }
             .header {
-                Link().href("/assets/css/vendor/summernote-bs4.css").relationship(.stylesheet).type("text/css")
+                Stylesheet(url: "/assets/css/vendor/simplemde.min.css")
             }
             .scripts {
-                Script().source("/assets/js/vendor/summernote-bs4.min.js")
+                Script().source("/assets/js/vendor/simplemde.min.js")
+                Script(source: "/assets/js/markdown-renderer.js")
+                Script(source: "/assets/js/markdown-editor.js")
                 Script().source("/assets/js/subject/create.js")
             }
         }
@@ -89,7 +91,7 @@ struct CreateForm: HTMLComponent {
             }
 
             FormGroup(label: "Beskrivelse") {
-                Div {
+                TextArea {
                     Unwrap(context) { $0.description }
                 }
                 .id("create-subject-description")
