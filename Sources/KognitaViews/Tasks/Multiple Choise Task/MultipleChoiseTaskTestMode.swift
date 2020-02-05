@@ -96,8 +96,14 @@ public struct MultipleChoiseTaskTestMode: HTMLTemplate {
             }
         }
         .scripts {
+            Script(source: "https://cdn.jsdelivr.net/npm/marked/marked.min.js")
+            Script().source("https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js")
+            Script(source: "/assets/js/markdown-renderer.js")
             Script(source: "/assets/js/test-session/json-data.js")
             Script(source: "/assets/js/test-session/save.js")
+        }
+        .header {
+            Stylesheet(url: "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css")
         }
     }
 
@@ -127,14 +133,12 @@ public struct MultipleChoiseTaskTestMode: HTMLTemplate {
                         }
 
                         IF(task.description.isDefined) {
-                            Text {
+                            Div {
                                 task.description
                                     .escaping(.unsafeNone)
                             }
-                            .style(.paragraph)
-                            .text(color: .secondary)
-                            .margin(.two, for: .bottom)
-                            .margin(.three, for: .top)
+                            .id("task-description")
+                            .margin(.two, for: .top)
                         }
                         Text {
                             task.question
