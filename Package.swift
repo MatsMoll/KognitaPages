@@ -2,23 +2,33 @@
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
+import Foundation
 
 var dependencies: [Package.Dependency] = [
     // 💧 A server-side Swift web framework.
+    .package(url: "https://github.com/MatsMoll/BootstrapKit.git", from: "1.0.0-beta.5")
 ]
 
-// Kognita Core
-#if os(macOS) // Local development
-dependencies.append(contentsOf: [
-    .package(path: "../KognitaCore"),
-    .package(path: "../../BootstrapKit")
-])
-#else
-dependencies.append(contentsOf: [
-    .package(url: "https://Kognita:dyjdov-bupgev-goffY8@github.com/MatsMoll/KognitaCore", from: "2.0.0"),
-    .package(url: "https://github.com/MatsMoll/BootstrapKit.git", from: "1.0.0-beta.5")
-])
-#endif
+guard let buildType = ProcessInfo.processInfo.environment["BUILD_TYPE"] else {
+    fatalError("BUILD_TYPE Not set")
+}
+switch buildType {
+case "LOCAL":
+    dependencies.append(contentsOf: [
+            .package(path: "../KognitaCore"),
+        ]
+    )
+case "DEV":
+    dependencies.append(contentsOf: [
+            .package(url: "https://Kognita:dyjdov-bupgev-goffY8@github.com/MatsMoll/KognitaCore", .branch("develop")),
+        ]
+    )
+default:
+    dependencies.append(contentsOf: [
+        .package(url: "https://Kognita:dyjdov-bupgev-goffY8@github.com/MatsMoll/KognitaCore", from: "2.0.0"),
+        ]
+    )
+}
 
 let package = Package(
     name: "KognitaViews",

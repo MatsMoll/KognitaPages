@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "BootstrapKit",
+        "repositoryURL": "https://github.com/MatsMoll/BootstrapKit.git",
+        "state": {
+          "branch": null,
+          "revision": "18c713bf1af7a73b07d223c22ccb43e254c14d9b",
+          "version": "1.0.0-beta.5"
+        }
+      },
+      {
         "package": "Console",
         "repositoryURL": "https://github.com/vapor/console.git",
         "state": {
@@ -78,8 +87,8 @@
         "repositoryURL": "https://github.com/vapor-community/HTMLKit",
         "state": {
           "branch": null,
-          "revision": "6af4a02aaaa0e18ab3813c8241ab9e52d396566f",
-          "version": "2.0.0-beta.3"
+          "revision": "b5b8d5f14afac947ed57694016a5b8f365b3045a",
+          "version": "2.0.0-beta.3.2"
         }
       },
       {
