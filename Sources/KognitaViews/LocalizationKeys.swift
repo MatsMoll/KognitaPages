@@ -12,6 +12,9 @@ public class Strings {
     static let errorMessage = "error.message"
     static let menuRegister = "menu.register"
     static let menuLogin = "menu.login"
+    static let menuSubjectList = "menu.overview"
+    static let menuPracticeHistory = "menu.history"
+    static let menuLogout = "menu.logout"
 
     static let loginTitle = "login.title"
     static let loginSubtitle = "login.subtitle"
@@ -19,14 +22,18 @@ public class Strings {
     static let registerTitle = "register.title"
     static let registerSubtilte = "register.subtitle"
 
-    static let registerNameTitle = "register.name.title"
-    static let registerNamePlaceholder = "register.name.placeholder"
+    static let registerUsernameTitle = "register.username.title"
+    static let registerUsernamePlaceholder = "register.username.placeholder"
 
     static let registerConfirmPasswordTitle = "register.password.confirmation.title"
     static let registerConfirmPasswordPlaceholder = "register.password.confirmation.placeholder"
 
     static let registerTermsOfServiceTitle = "register.tos.description"
     static let registerTermsOfServiceLink = "register.tos.link"
+
+    static let resetPasswordTitle = "reset.password.title"
+    static let resetPasswordSubtitle = "reset.password.subtitle"
+    static let resetPasswordButton = "reset.password.button"
 
     static let registerButton = "register.button"
     static let alreadyHaveUser = "register.already.user.description"
@@ -52,6 +59,10 @@ public class Strings {
     static let starterPageDescription = "starter.page.description"
     static let starterPageMoreButton = "starter.page.more.button"
     static let copyright = "footer.copyright"
+
+    static let verifyEmailTitle = "verify.email.title"
+    static let verifyEmailSubtitle = "verify.email.subtitle"
+    static let verifyEmailButton = "verify.email.button"
 
     static let subjectTitle = "subjects.title"
     static let subjectStartSession = "subject.session.start"

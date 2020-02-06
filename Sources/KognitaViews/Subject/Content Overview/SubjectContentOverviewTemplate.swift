@@ -7,6 +7,12 @@ fileprivate struct TopicTasks {
     let tasks: [CreatorTaskContent]
 }
 
+extension Subject {
+    var createMultipleTaskUri: String { "/creator/subjects/\(id ?? 0)/task/multiple/create" }
+    var createFlashCardTaskUri: String { "/creator/subjects/\(id ?? 0)/task/flash-card/create" }
+    var createTopicUri: String { "/creator/subjects/\(id ?? 0)/topics/create" }
+}
+
 extension Subject.Templates {
     public struct ContentOverview: HTMLTemplate {
 
@@ -34,23 +40,27 @@ extension Subject.Templates {
                             return nil
                         }
                 }
+                .sorted(by: { $0.topic.chapter < $1.topic.chapter })
                 self.totalNumberOfTasks = totalNumberOfTasks
             }
         }
 
-        public init() {}
-
-        var createMultipleTaskUrl: HTML { "/creator/subjects/" + context.subject.id + "/task/multiple/create" }
-        var createFlashCardTaskUrl: HTML { "/creator/subjects/" + context.subject.id + "/task/flash-card/create" }
+        var breadcrumbs: [BreadcrumbItem]  {
+            [
+                BreadcrumbItem(link: "/subjects", title: "Fag oversikt"),
+                BreadcrumbItem(link: ViewWrapper(view: "/subjects/" + context.subject.id), title: ViewWrapper(view: context.subject.name))
+            ]
+        }
 
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
                 baseContext: .constant(.init(
-                    title: "Innhold oversikt",
-                    description: "Innhold oversikt")
+                    title: "Innholdsoversikt",
+                    description: "Innholdsoversikt")
                 )
             ) {
+                PageTitle(title: "Innholds oversikt", breadcrumbs: breadcrumbs)
                 Row {
                     Div {
                         Card {
@@ -75,27 +85,26 @@ extension Subject.Templates {
                             Anchor {
                                 "Lag et tema"
                             }
-                            .href("/creator/subjects/" + context.subject.id + "/topics/create")
+                            .href(context.subject.createTopicUri)
                             .button(style: .primary)
 
                             Anchor {
                                 "Lag flervalgsoppgave"
                             }
-                            .href(createMultipleTaskUrl)
+                            .href(context.subject.createMultipleTaskUri)
                             .button(style: .success)
                             .margin(.two, for: .left)
 
                             Anchor {
                                 "Lag kortsvarsoppgave"
                             }
-                            .href(createFlashCardTaskUrl)
+                            .href(context.subject.createFlashCardTaskUri)
                             .button(style: .success)
                             .margin(.two, for: .left)
                         }
                     }
                     .column(width: .twelve)
                 }
-                .margin(.five, for: .top)
 
                 Row {
                     ForEach(in: context.grouped) { tasks in
@@ -104,22 +113,25 @@ extension Subject.Templates {
                                 topicTasks: tasks
                             )
                         }
-                        .column(width: .six)
+                        .column(width: .six, for: .large)
+                        .column(width: .twelve)
                     }
                 }
             }
             .scripts {
-                Script().source("/assets/js/delete-task.js")
+                Script(source: "/assets/js/delete-task.js")
             }
         }
     }
 }
 
+extension TopicTasks {
+    var editUrl: String { "/creator/subjects/\(topic.subjectId)/topics/\(topic.id ?? 0)/edit" }
+}
+
 private struct TopicCard: HTMLComponent {
 
     let topicTasks: TemplateValue<TopicTasks>
-
-    var editUrl: HTML { "/creator/subjects/" + topicTasks.topic.subjectId + "/topics/" + topicTasks.topic.id + "/edit" }
 
     var body: HTML {
         CollapsingCard {
@@ -149,11 +161,14 @@ private struct TopicCard: HTMLComponent {
     }
 }
 
+extension CreatorTaskContent {
+    var editUri: String { "/creator/\(taskTypePath)/\(task.id ?? 0)/edit" }
+    var deleteCall: String { "deleteTask(\(task.id ?? 0), \"\(taskTypePath)\");" }
+}
+
 private struct TaskCell: HTMLComponent {
 
     let task: TemplateValue<CreatorTaskContent>
-
-    var editUrl: HTML { "/creator/" + task.taskTypePath + "/" + task.task.id + "/edit" }
 
     var body: HTML {
         Div {
@@ -175,7 +190,7 @@ private struct TaskCell: HTMLComponent {
                 Badge {
                     "Flervalg"
                 }
-                .background(color: .info)
+                .background(color: .light)
                 .margin(.one, for: .left)
             }.else {
                 Badge {
@@ -183,6 +198,25 @@ private struct TaskCell: HTMLComponent {
                 }
                 .background(color: .info)
                 .margin(.one, for: .left)
+            }
+
+            IF(task.task.isTestable) {
+                Badge {
+                    "Prøve"
+                }
+                .background(color: .warning)
+                .margin(.one, for: .left)
+            }
+
+            Unwrap(task.task.examPaperYear) { examYear in
+                Unwrap(task.task.examPaperSemester) { examSemester in
+                    Badge {
+                        "Eksamen: "
+                        examSemester.rawValue
+                        " "
+                        examYear
+                    }
+                }
             }
 
             Text {
@@ -194,7 +228,7 @@ private struct TaskCell: HTMLComponent {
                 Anchor {
                     "Se mer"
                 }
-                .href(editUrl)
+                .href(task.editUri)
                 .button(style: .light)
 
                 IF(task.task.deletedAt.isNotDefined) {
@@ -202,7 +236,7 @@ private struct TaskCell: HTMLComponent {
                         Italic().class("dripicons-document-delete")
                         " Slett"
                     }
-                    .on(click: "deleteTask(" + task.task.id + ", \"" + task.taskTypePath + "\");")
+                    .on(click: task.deleteCall)
                     .button(style: .danger)
                     .margin(.two, for: .left)
                 }

@@ -71,12 +71,10 @@ extension PracticeSession.Templates {
 
         public init() {}
 
-        public let context: TemplateValue<Context> = .root()
-
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Øving's historikk", description: "Øving's historikk"))
+                baseContext: .constant(.init(title: "Øvingshistorikk", description: "Øvingshistorikk"))
             ) {
 
                 PageTitle(Strings.historyTitle)
@@ -117,7 +115,7 @@ extension PracticeSession.Templates {
                     }
                     .else {
                         Text {
-                            "Du har ikke fullført noen øvnger enda. 🤓"
+                            "Du har ikke fullført noen øvinger enda. 🤓"
                         }
                         .style(.lead)
                     }

@@ -8,183 +8,277 @@
 import BootstrapKit
 import KognitaCore
 
+struct FormCard: HTMLComponent {
+
+    let title: HTML
+    private let titleColor: BootstrapStyle
+    let formBody: HTML
+
+    init(title: HTML, @HTMLBuilder body: () -> HTML) {
+        self.title = title
+        self.formBody = body()
+        self.titleColor = .primary
+    }
+
+    private init(title: HTML, formBody: HTML, titleColor: BootstrapStyle) {
+        self.title = title
+        self.formBody = formBody
+        self.titleColor = titleColor
+    }
+
+    var body: HTML {
+        Div {
+            Div {
+                Text {
+                    title
+                }
+                .class("modal-title")
+                .id("create-modal-label")
+                .style(.heading4)
+            }
+            .class("modal-header")
+            .text(color: .white)
+            .background(color: titleColor)
+
+            Div {
+                Div {
+                    Form {
+                        formBody
+                    }
+                }
+                .padding(.two)
+            }
+            .class("modal-body")
+        }
+        .class("card")
+    }
+
+    func title(color: BootstrapStyle) -> FormCard {
+        .init(title: title, formBody: formBody, titleColor: titleColor)
+    }
+}
+
+extension FlashCardTask.Templates.Create.Context {
+    var modalTitle: String { content.subject.name + " | Lag tekst oppgave"}
+    var subjectUri: String { "/subjects/\(content.subject.id)" }
+    var subjectContentOverviewUri: String { "/creator/subjects/\(content.subject.id)/overview" }
+
+    var isTestable: Bool {
+        guard let task = content.task else {
+            return false
+        }
+        return task.isTestable
+    }
+
+    var isEditingTask: Bool {
+        content.task != nil
+    }
+}
+
+extension FlashCardTask.ModifyContent {
+    var subjectName: String { subject.name }
+}
+
 extension FlashCardTask.Templates {
     public struct Create: TemplateView {
 
         public struct Context {
             let user: User
-            let subject: Subject
-            let topics: [Topic.Response]
+            let content: FlashCardTask.ModifyContent
+            let wasUpdated: Bool
 
-            // Used to edit a task
-            let taskInfo: Task?
-
-            public init(user: User, subject: Subject, topics: [Topic.Response], content: Task? = nil, selectedTopicId: Int? = nil) {
+            public init(user: User, content: FlashCardTask.ModifyContent, wasUpdated: Bool = false) {
                 self.user = user
-                self.subject = subject
-                self.topics = topics
-//                let sortSelectedTopicId = selectedTopicId ?? content?.subtopicId
-//                self.topics = .init(topics: topics, selectedSubtopicId: sortSelectedTopicId)
-                self.taskInfo = content
+                self.content = content
+                self.wasUpdated = wasUpdated
             }
         }
 
-        public init() {}
-
-        public let context: TemplateValue<Context> = .root()
+        var breadcrumbs: [BreadcrumbItem] {
+            [
+                BreadcrumbItem(link: "/subjects", title: "Fag oversikt"),
+                BreadcrumbItem(link: ViewWrapper(view: context.subjectUri), title: ViewWrapper(view: context.content.subjectName)),
+                BreadcrumbItem(link: ViewWrapper(view: context.subjectContentOverviewUri), title: "Innholds oversikt")
+            ]
+        }
 
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
                 baseContext: .constant(.init(title: "Lag Oppgave", description: "Lag Oppgave"))
             ) {
-                Div {
-                    Div {
-                        Div {
-                            Text {
-                                context.subject.name
-                                " | Lag innskrivningsoppgave"
-                            }
-                            .class("modal-title")
-                            .id("create-modal-label")
-                            .style(.heading4)
-                        }
-                        .class("modal-header bg-" + context.subject.colorClass.rawValue)
-                        .text(color: .white)
-
-                        Div {
-                            Div {
-                                Form {
-
-                                    Unwrap(context.taskInfo) { taskInfo in
-                                        IF(taskInfo.deletedAt.isDefined) {
-                                            Badge { "Inaktiv" }
-                                                .background(color: .danger)
-                                        }.else {
-                                            Badge { "Godkjent" }
-                                                .background(color: .success)
-                                        }
-                                    }
-
-                                    SubtopicPicker(
-                                        label: "Undertema",
-                                        idPrefix: "card-",
-                                        topics: context.topics
-                                    )
-
-                                    FormRow {
-                                        FormGroup(label: "Eksamensett semester") {
-                                            Select {
-                                                Unwrap(context.taskInfo) { taskInfo in
-                                                    Unwrap(taskInfo.examPaperSemester) { exam in
-                                                        Option {
-                                                            exam.rawValue
-                                                        }
-                                                        .value(exam.rawValue)
-                                                    }
-                                                }
-                                                Option { "Ikke eksamensoppgave" }
-                                                    .value("")
-                                                Option { "Høst" }
-                                                    .value("fall")
-                                                Option { "Vår" }
-                                                    .value("spring")
-                                            }
-                                            .id("card-exam-semester")
-                                            .class("select2")
-                                            .data(for: "toggle", value: "select2")
-                                            .data(for: "placeholder", value: "Velg ...")
-                                        }
-                                        .column(width: .six, for: .medium)
-
-                                        FormGroup(label: "År") {
-                                            Input()
-                                                .type(.number)
-                                                .id("card-exam-year")
-                                                .placeholder("2019")
-                                                .value(Unwrap(context.taskInfo) { $0.examPaperYear })
-                                        }
-                                        .column(width: .six, for: .medium)
-                                    }
-
-                                    FormGroup(label: "Oppgavetext") {
-                                        Div {
-                                            Unwrap(context.taskInfo) {
-                                                $0.description
-                                                    .escaping(.unsafeNone)
-                                            }
-                                        }
-                                        .id("card-description")
-                                    }
-
-                                    FormGroup(label: "Spørsmål") {
-                                        TextArea {
-                                            Unwrap(context.taskInfo) {
-                                                $0.question
-                                            }
-                                        }
-                                        .class("form-control")
-                                        .id("card-question")
-//                                        .rows(1)
-                                        .placeholder("Noe å svare på her")
-                                        .required()
-                                    }
-                                    .description {
-                                        Div {
-                                            "Bare lov med store og små bokstaver, tall, mellomrom + (. , : ; !, ?)"
-                                        }
-                                        .class("invalid-feedback")
-                                    }
-
-                                    FormGroup(label: "Løsning") {
-                                        Div {
-                                            ""
-//                                            Unwrap(context.taskInfo) {
-//                                                $0.solution
-//                                                    .escaping(.unsafeNone)
-//                                            }
-                                        }
-                                        .id("card-solution")
-                                    }
-
-                                    DismissableError()
-
-                                    Button {
-                                        Italic().class("mdi mdi-save")
-                                        " Lagre"
-                                    }
-                                    .type(.button)
-                                    .button(style: .success)
-                                    .margin(.three, for: .vertical)
-                                    .on(click:
-                                        IF(context.taskInfo.isDefined) {
-                                            "editFlashCard();"
-                                        }.else {
-                                            "createFlashCard();"
-                                        }
-                                    )
-                                }
-                                .class("needs-validation")
-                            }
-                            .padding(.two)
-                        }
-                        .class("modal-body")
+                PageTitle(title: "Lag tekst oppgave", breadcrumbs: breadcrumbs)
+                IF(context.wasUpdated) {
+                    Alert {
+                        "Endringene ble lagret"
                     }
-                    .class("card")
+                    .background(color: .success)
+                    .text(color: .white)
+                    .isDismissable(true)
                 }
-                .padding(.five, for: .top)
+                FormCard(title: context.modalTitle) {
+                    Unwrap(context.content.task) { task in
+                        IF(task.isDeleted) {
+                            Badge { "Slettet" }
+                                .background(color: .danger)
+                        }
+                    }
+
+                    Text {
+                        "Velg Tema"
+                    }
+                    .style(.heading3)
+                    .text(color: .dark)
+
+                    Unwrap(context.content.task) { task in
+                        SubtopicPicker(
+                            label: "Undertema",
+                            idPrefix: "card-",
+                            topics: context.content.topics
+                        )
+                        .selected(id: task.subtopicID)
+                    }
+                    .else {
+                        SubtopicPicker(
+                            label: "Undertema",
+                            idPrefix: "card-",
+                            topics: context.content.topics
+                        )
+                    }
+
+                    Text {
+                        "Eksamens oppgave?"
+                    }
+                    .style(.heading3)
+                    .text(color: .dark)
+
+                    FormRow {
+                        FormGroup(label: "Eksamensett semester") {
+                            Select {
+                                Unwrap(context.content.task) { taskInfo in
+                                    Unwrap(taskInfo.examPaperSemester) { exam in
+                                        Option {
+                                            exam.rawValue
+                                        }
+                                        .value(exam.rawValue)
+                                    }
+                                }
+                                Option { "Ikke eksamensoppgave" }
+                                    .value("")
+                                Option { "Høst" }
+                                    .value("fall")
+                                Option { "Vår" }
+                                    .value("spring")
+                            }
+                            .id("card-exam-semester")
+                            .class("select2")
+                            .data(for: "toggle", value: "select2")
+                            .data(for: "placeholder", value: "Velg ...")
+                        }
+                        .column(width: .six, for: .medium)
+
+                        FormGroup(label: "År") {
+                            Input()
+                                .type(.number)
+                                .id("card-exam-year")
+                                .placeholder("2019")
+                                .value(Unwrap(context.content.task) { $0.examPaperYear })
+                        }
+                        .column(width: .six, for: .medium)
+                    }
+
+                    FormGroup {
+                        TextArea {
+                            Unwrap(context.content.task) {
+                                $0.description
+                                    .escaping(.unsafeNone)
+                            }
+                        }
+                        .id("card-description")
+                    }
+                    .customLabel {
+                        Text {
+                            "Oppgavetekst"
+                        }
+                        .style(.heading3)
+                        .text(color: .dark)
+                    }
+
+                    FormGroup {
+                        TextArea {
+                            Unwrap(context.content.task) {
+                                $0.question
+                            }
+                        }
+                        .class("form-control")
+                        .id("card-question")
+                        .placeholder("Noe å svare på her")
+                        .required()
+                    }
+                    .customLabel {
+                        Text {
+                            "Spørsmål"
+                        }
+                        .style(.heading3)
+                        .text(color: .dark)
+                    }
+                    .description {
+                        Div {
+                            "Kun tillatt med bokstaver, tall, mellomrom og enkelte tegn (. , : ; ! ?)"
+                        }
+                        .class("invalid-feedback")
+                    }
+
+                    FormGroup {
+                        TextArea {
+                            Unwrap(context.content.task) { task in
+                                task.solution
+                                    .escaping(.unsafeNone)
+                            }
+                        }
+                        .id("card-solution")
+                    }
+                    .customLabel {
+                        Text {
+                            "Løsningsforslag"
+                        }
+                        .style(.heading3)
+                        .text(color: .dark)
+                    }
+
+                    DismissableError()
+
+                    Button {
+                        MaterialDesignIcon(icon: .save)
+                        " Lagre"
+                    }
+                    .type(.button)
+                    .button(style: .success)
+                    .margin(.three, for: .vertical)
+                    .on(click:
+                        IF(context.isEditingTask) {
+                            "editFlashCard();"
+                        }.else {
+                            "createFlashCard();"
+                        }
+                    )
+                }
             }
             .header {
-                Link().href("/assets/css/vendor/summernote-bs4.css").relationship(.stylesheet).type("text/css")
-                Link().href("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css").relationship(.stylesheet)
+                Stylesheet(url: "/assets/css/vendor/simplemde.min.css")
+                Stylesheet(url: "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css")
             }
             .scripts {
-                Script().source("/assets/js/vendor/summernote-bs4.min.js")
+                Script().source("/assets/js/vendor/simplemde.min.js")
                 Script().source("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js")
-                Script().source("/assets/js/vendor/summernote-math.js")
+//                Script(source: "https://cdn.jsdelivr.net/npm/marked/marked.min.js")
+                Script(source: "/assets/js/markdown-renderer.js")
+                Script(source: "/assets/js/markdown-editor.js")
+                Script().source("/assets/js/flash-card/modify-task.js")
+//                Script().source("/assets/js/vendor/summernote-math.js")
                 Script().source("/assets/js/dismissable-error.js")
                 Script().source("/assets/js/flash-card/json-data.js")
-                IF(context.taskInfo.isDefined) {
+                IF(context.isEditingTask) {
                     Script().source("/assets/js/flash-card/edit.js")
                 }.else {
                     Script().source("/assets/js/flash-card/create.js")
@@ -193,177 +287,3 @@ extension FlashCardTask.Templates {
         }
     }
 }
-
-//public class CreateFlashCardTaskTemplate: LocalizedTemplate {
-//
-//    public init() {}
-//
-//    public static var localePath: KeyPath<CreateFlashCardTaskTemplate.Context, String>? = \.locale
-//
-//    public enum LocalizationKeys: String {
-//        case none
-//    }
-//
-//    public struct Context {
-//        let locale = "nb"
-//        let base: ContentBaseTemplate.Context
-//        let subject: Subject
-//        let topics: SubtopicPicker.Context
-//
-//        // Used to edit a task
-//        let taskInfo: Task?
-//
-//        public init(user: User, subject: Subject, topics: [Topic.Response], content: Task? = nil, selectedTopicId: Int? = nil) {
-//            self.base = .init(user: user, title: "Lag Oppgave")
-//            self.subject = subject
-//            let sortSelectedTopicId = selectedTopicId ?? content?.subtopicId
-//            self.topics = .init(topics: topics, selectedSubtopicId: sortSelectedTopicId)
-//            self.taskInfo = content
-//        }
-//    }
-//
-//    public func build() -> CompiledTemplate {
-//        return embed(
-//            ContentBaseTemplate(
-//                body:
-//
-//                div.class("pt-5").child(
-//
-//                    div.class("card").child(
-//                        div.class("modal-header text-white bg-" + variable(\.subject.colorClass.rawValue)).child(
-//                            h4.class("modal-title").id("create-modal-label").child(
-//                                variable(\.subject.name), " | Lag innskrivningsoppgave"
-//                            )
-//                        ),
-//                        div.class("modal-body").child(
-//                            div.class("p-2").child(
-//                                form.class("needs-validation").novalidate.child(
-//
-//                                    // Topic
-//                                    embed(
-//                                        SubtopicPicker(idPrefix: "card-"),
-//                                        withPath: \.topics
-//                                    ),
-//
-//                                    renderIf(
-//                                        isNotNil: \.taskInfo,
-//
-//                                        renderIf(
-//                                            \.taskInfo?.deletedAt != nil,
-//
-//                                            div.class("badge badge-danger").child(
-//                                                "Inaktiv"
-//                                            )
-//                                        ).else(
-//                                            div.class("badge badge-success").child(
-//                                                "Godkjent"
-//                                            )
-//                                        )
-//                                    ),
-//
-//                                    // Exam Paper
-//                                    div.class("form-row").child(
-//                                        div.class("form-group col-md-6").child(
-//                                            label.for("card-exam-semester").class("col-form-label").child(
-//                                                "Eksamensett semester"
-//                                            ),
-//
-//                                            select.id("card-exam-semester").class("select2 form-control select2").dataToggle("select2").dataPlaceholder("Velg ...").required.child(
-//                                                renderIf(
-//                                                    isNotNil: \Context.taskInfo?.examPaperSemester,
-//
-//                                                    option.value(variable(\.taskInfo?.examPaperSemester?.rawValue)).selected.child(
-//                                                        variable(\.taskInfo?.examPaperSemester?.rawValue)
-//                                                    )
-//                                                ),
-//                                                option.value("").child(
-//                                                    "Ikke eksamensoppgave"
-//                                                ),
-//                                                option.value("fall").child(
-//                                                    "Høst"
-//                                                ),
-//                                                option.value("spring").child(
-//                                                    "Vår"
-//                                                )
-//                                            )
-//                                        ),
-//
-//                                        div.class("form-group col-md-6").child(
-//                                            label.for("card-exam-year").class("col-form-label").child(
-//                                                "År"
-//                                            ),
-//                                            input.type("number").class("form-control").id("card-exam-year").placeholder("2019").value(variable(\.taskInfo?.examPaperYear)).required
-//                                        )
-//                                    ),
-//
-//                                    // Description
-//                                    div.class("form-group").child(
-//                                        label.for("card-description").class("col-form-label").child(
-//                                            "Oppgavetekst"
-//                                        ),
-//                                        div.id("card-description").child(
-//                                            variable(\.taskInfo?.description, escaping: .unsafeNone)
-//                                        )
-//                                    ),
-//
-//                                    // Question
-//                                    div.class("form-group").child(
-//                                        label.for("card-question").class("col-form-label").child(
-//                                            "Spørsmål"
-//                                        ),
-//                                        textarea.class("form-control").id("card-question").rows(1).placeholder("Noe å svare på her").required.child(
-//                                            variable(\.taskInfo?.question)
-//                                        ),
-//                                        div.class("invalid-feedback").child(
-//                                            "Bare lov med store og små bokstaver, tall, mellomrom + (. , : ; !, ?)"
-//                                        )
-//                                    ),
-//
-//                                    // Solution
-//                                    div.class("form-group").child(
-//                                        label.for("card-solution").class("col-form-label").child(
-//                                            "Løsning"
-//                                        ),
-//                                        div.id("card-solution").child(
-//                                            variable(\.taskInfo?.solution, escaping: .unsafeNone)
-//                                        )
-//                                    ),
-//
-//                                    DismissableError(),
-//
-//                                    button.type("button").onclick(
-//                                        renderIf(isNil: \.taskInfo, "createFlashCard();").else("editFlashCard();")
-//                                        ).class("btn btn-success mb-3 mt-3").child(
-//                                            i.class("mdi mdi-save"),
-//                                            " Lagre"
-//                                    )
-//                                )
-//                            )
-//                        )
-//                    )
-//                ),
-//
-//                headerLinks: [
-//                    link.href("/assets/css/vendor/summernote-bs4.css").rel("stylesheet").type("text/css"),
-//                    link.href("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css").rel("stylesheet")
-//                ],
-//
-//                scripts: [
-//                    script.src("/assets/js/vendor/summernote-bs4.min.js"),
-//                    script.src("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"),
-//                    script.src("/assets/js/vendor/summernote-math.js"),
-//                    script.src("/assets/js/dismissable-error.js"),
-//                    script.src("/assets/js/flash-card/json-data.js"),
-//
-//                    renderIf(
-//                        isNil: \Context.taskInfo,
-//
-//                        script.src("/assets/js/flash-card/create.js")
-//                    ).else(
-//                        script.src("/assets/js/flash-card/edit.js")
-//                    )
-//                ]
-//            ),
-//            withPath: \Context.base)
-//    }
-//}

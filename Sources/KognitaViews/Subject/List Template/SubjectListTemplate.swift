@@ -19,15 +19,11 @@ extension Subject.Templates {
 
         public struct Context {
             let user: User
-            let cards: [Subject]
-            let revisitTasks: [TopicResultContent]
-            let ongoingSessionPath: String?
+            let list: Subject.ListContent
 
-            public init(user: User, cards: [Subject], revisitTasks: [TopicResultContent], ongoingSessionPath: String?) {
+            public init(user: User, list: Subject.ListContent) {
                 self.user = user
-                self.cards = cards
-                self.revisitTasks = revisitTasks
-                self.ongoingSessionPath = ongoingSessionPath
+                self.list = list
             }
         }
 
@@ -36,57 +32,27 @@ extension Subject.Templates {
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Tema liste", description: "Tema liste"))
+                baseContext: .constant(.init(title: "Temaliste", description: "Temaliste"))
             ) {
 
                 PageTitle(title: Strings.subjectsTitle.localized())
 
                 Row {
                     Div {
-                        ContinuePracticeSessionCard(
-                            ongoingSessionPath: context.ongoingSessionPath
-                        )
-//                        Text(Strings.repeatTitle)
-//                            .style(.heading3)
-//                        Row {
-//                            IF(context.revisitTasks.isEmpty) {
-//                                Div {
-//                                    Card {
-//                                        Text { "Hva kommer her?" }
-//                                            .style(.heading4)
-//                                        Text {
-//                                            "Her vil det komme opp temaer som vi anbefaler å prioritere først. Dette skal hjelpe deg med å øve mer effektivt og dermed få mer ut av øvingene dine."
-//                                        }
-//                                        Text {
-//                                            "Disse anbefalingnene vil først komme når du har gjørt noen oppgaver"
-//                                        }
-//                                    }
-//                                    .display(.block)
-//                                }
-//                                .column(width: .twelve)
-//                            }.else {
-//                                ForEach(in: context.revisitTasks) { revisit in
-//                                    RevisitCard(context: revisit)
-//                                }
-//                            }
-//                        }
-                        Text(Strings.subjectsListTitle)
-                            .style(.heading3)
-                        Row {
-                            IF(context.cards.isEmpty) {
-                                Text(Strings.subjectsNoContent)
-                                    .style(.heading1)
-                            }.else {
-                                ForEach(in: context.cards) { subject in
-                                    SubjectCard(subject: subject)
-                                }
-                            }
+                        IF(context.user.isEmailVerified == false) {
+                            VerifyEmailSignifier()
                         }
+                        SubjectTestList(test: context.list.openedTest)
+
+//                        ContinuePracticeSessionCard(
+//                            ongoingSessionPath: context.
+//                        )
+                        SubjectListSection(subjects: context.list.subjects)
                     }
                     .column(width: .eight, for: .large)
                     Div {
                         StatisticsCard()
-                        IF(context.user.isCreator) {
+                        IF(context.user.isAdmin) {
                             CreateContentCard()
                         }
                     }
@@ -99,6 +65,34 @@ extension Subject.Templates {
                 Script().source("/assets/js/practice-session-histogram.js")
             }
             .active(path: "/subjects")
+            .modals {
+                Unwrap(context.list.openedTest) { test in
+                    SubjectTest.Templates.StartModal(test: test)
+                }
+            }
+        }
+
+        struct SubjectListSection: HTMLComponent {
+
+            @TemplateValue([Subject].self)
+            var subjects
+
+            var body: HTML {
+                [
+                    Text(Strings.subjectsListTitle)
+                        .style(.heading3),
+                    Row {
+                        IF(subjects.isEmpty) {
+                            Text(Strings.subjectsNoContent)
+                                .style(.heading1)
+                        }.else {
+                            ForEach(in: subjects) { subject in
+                                SubjectCard(subject: subject)
+                            }
+                        }
+                    }
+                ]
+            }
         }
 
         struct RevisitCard: HTMLComponent {
@@ -233,6 +227,92 @@ extension Subject.Templates {
                     .class("btn-rounded")
                 }
             }
+        }
+
+        struct SubjectTestList: HTMLComponent {
+
+            @TemplateValue(SubjectTest.OverviewResponse?.self)
+            var test
+
+            var body: HTML {
+                Unwrap(test) { test in
+                    Text {
+                        "Åpen test"
+                    }
+                    .style(.heading3)
+                    Row {
+                        Div {
+                            SubjectTestCard(test: test)
+                        }
+                        .column(width: .six, for: .large)
+                    }
+                }
+            }
+        }
+
+        struct SubjectTestCard: HTMLComponent {
+
+            var test: TemplateValue<SubjectTest.OverviewResponse>
+
+            var body: HTML {
+                Card {
+                    Badge {
+                        test.subjectName
+                    }
+                    .background(color: .primary)
+
+                    Text {
+                        test.title
+                    }
+                    .style(.heading2)
+                    .text(color: .dark)
+
+                    Unwrap(test.endsAt) { (endsAt: TemplateValue<Date>) in
+                        Text {
+                            "Slutter: "
+                            endsAt.style(date: .short, time: .medium)
+                        }
+                    }
+
+                    Button {
+                        "Start nå"
+                    }
+                    .toggle(modal: .id("start-subject-test-modal"))
+                    .button(style: .primary)
+                    .isRounded()
+                }
+            }
+        }
+    }
+}
+
+extension Subject.Templates {
+    struct VerifyEmailSignifier: HTMLComponent {
+
+        var body: HTML {
+            Div {
+                Div {
+                    Text {
+                        "Velkommen! 👋🏼"
+                    }
+                    .style(.heading2)
+                }
+                .class("card-header")
+                .background(color: .warning)
+
+                Div {
+                    Text {
+                        "Du har ikke verifisert eposten din"
+                    }
+                    .font(style: .bold)
+
+                    Text {
+                        "Dette må gjøres før du kan få tilgang til funksjonaliteten i Kognita. Vær obs på at denne kan havne i søppelpost eller spam."
+                    }
+                }
+                .class("card-body")
+            }
+            .class("card")
         }
     }
 }

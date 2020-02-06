@@ -10,7 +10,7 @@ import KognitaCore
 
 struct TaskPreviewTemplateContext {
     let practiceProgress: Int?
-    let session: PracticeSession?
+    let session: PracticeSessionRepresentable?
     let taskContent: TaskPreviewContent
     let lastResult: TaskResultContent?
     let user: UserContent
@@ -24,7 +24,7 @@ struct TaskPreviewTemplateContext {
         task: TaskPreviewContent,
         user: UserContent,
         practiceProgress: Int?,
-        session: PracticeSession?,
+        session: PracticeSessionRepresentable?,
         lastResult: TaskResultContent?,
         taskPath: String
     ) {
@@ -85,14 +85,8 @@ public struct TaskPreviewTemplate: HTMLComponent {
                     .column(width: .twelve)
                 }
 
-                ProgressCard(context: context)
-
                 Row {
                     Div {
-//                        Div {
-//                            Span { "00:00" }.id("timer")
-//                        }
-//                        .float(.right)
 
                         Text(Strings.exerciseMainTitle)
                             .margin(.zero, for: .top)
@@ -100,43 +94,49 @@ public struct TaskPreviewTemplate: HTMLComponent {
 
                         Unwrap(context.task.examPaperSemester) { exam in
                             Badge {
-                                Localized(key: Strings.exerciseExam)
+                                Strings.exerciseExam.localized()
                                 ": " + exam.rawValue + " " + context.task.examPaperYear
                             }
                             .margin(.three, for: .bottom)
                             .background(color: .primary)
                         }
-
-//                        IF(isDefined: context.lastResult) { result in
-//                            Badge {
-//                                "Siste resultat: "
-//                                result.result.resultScore
-//                            }
-//                            .margin(.three, for: .bottom)
-//                            .float(.right)
-//                            .class(result.revisitColorClass)
-//                        }
                     }
                     .column(width: .twelve)
                 }
 
-                QuestionCard(context: context.taskContent)
-                actionCard
-                DismissableError()
-                Div()
+                ContentStructure {
+                    QuestionCard(context: context.taskContent)
+                    actionCard
+                    Div()
                     .id("solution")
                     .display(.none)
-//                IF(context.task.solution.isDefined) {
-//                    SolutionCard(context: context)
-//                }
-                underSolutionCard
+                }
+                .secondary {
+                    ProgressCard(context: context)
+                    DismissableError()
+                    underSolutionCard
+                }
 
-                Script().source("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js")
-                customScripts
+//                QuestionCard(context: context.taskContent)
+//                actionCard
+//                DismissableError()
+//                Div()
+//                    .id("solution")
+//                    .display(.none)
+////                IF(context.task.solution.isDefined) {
+////                    SolutionCard(context: context)
+////                }
+//                underSolutionCard
             }
         }
         .header {
-            Link().href("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css").relationship(.stylesheet)
+            Link().href("https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css").relationship(.stylesheet)
+        }
+        .scripts {
+            Script(source: "https://cdn.jsdelivr.net/npm/marked/marked.min.js")
+            Script().source("https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js")
+            Script(source: "/assets/js/markdown-renderer.js")
+            customScripts
         }
     }
 
@@ -162,6 +162,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
                             .text(color: .secondary)
                             .margin(.two, for: .bottom)
                             .margin(.three, for: .top)
+                            .id("task-description")
                         }
                         Text {
                             context.task.question
@@ -178,7 +179,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
         }
     }
 
-    struct ProgressCard: StaticView {
+    struct ProgressCard: HTMLComponent {
 
         let context: TemplateValue<TaskPreviewTemplateContext>
 
@@ -257,14 +258,15 @@ public struct TaskSolutionsTemplate: HTMLTemplate {
             Text {
                 Localized(key: Strings.exerciseProposedSolutionTitle)
                 Span {
-                    Italic().class("mdi mdi-chevron-down accordion-arrow")
+                    MaterialDesignIcon(.chevronDown)
+                        .class("accordion-arrow")
                 }
                 .float(.right)
             }
             .style(.heading4)
 
             IF(solution.creatorUsername.isDefined) {
-                "Lagd av: " + solution.creatorUsername
+                "Laget av: " + solution.creatorUsername
             }
             IF(solution.approvedBy.isDefined) {
                 Badge {
@@ -280,119 +282,50 @@ public struct TaskSolutionsTemplate: HTMLTemplate {
                 .margin(.two, for: .left)
             }
         }) { (solution, index) in
-            solution.solution
-                .escaping(.unsafeNone)
+            Div {
+                solution.solution
+                    .escaping(.unsafeNone)
+            }
+            .class("solutions")
         }
-//        ForEach(in: context) { solution in
-//            SolutionCard(context: solution)
-//        }
     }
 
     struct SolutionCard: HTMLComponent {
 
-            let context: TemplateValue<TaskSolution.Response>
+        let context: TemplateValue<TaskSolution.Response>
 
-            var body: HTML {
-                Card {
+        var body: HTML {
+            Card {
+                Div {
                     Div {
-                        Div {
-                            Text(Strings.exerciseProposedSolutionTitle)
-                                .style(.heading4)
+                        Text(Strings.exerciseProposedSolutionTitle)
+                            .style(.heading4)
+                    }
+                    .class("page-title")
+                    Div {
+                        IF(context.creatorUsername.isDefined) {
+                            "Laget av: " + context.creatorUsername
                         }
-                        .class("page-title")
-                        Div {
-                            IF(context.creatorUsername.isDefined) {
-                                "Lagd av: " + context.creatorUsername
+                        IF(context.approvedBy.isDefined) {
+                            Badge {
+                                "Verifisert av: " + context.approvedBy
                             }
-                            IF(context.approvedBy.isDefined) {
-                                Badge {
-                                    "Verifisert av: " + context.approvedBy
-                                }
-                                .background(color: .success)
-                                .margin(.two, for: .left)
-                            }.else {
-                                Badge {
-                                    "Ikke verifisert enda"
-                                }
-                                .background(color: .warning)
-                                .margin(.two, for: .left)
+                            .background(color: .success)
+                            .margin(.two, for: .left)
+                        }.else {
+                            Badge {
+                                "Ikke verifisert enda"
                             }
+                            .background(color: .warning)
+                            .margin(.two, for: .left)
                         }
                     }
-                    .class("page-title-box")
-                    .margin(.two, for: .bottom)
-
-                    context.solution.escaping(.unsafeNone)
                 }
+                .class("page-title-box")
+                .margin(.two, for: .bottom)
+
+                context.solution.escaping(.unsafeNone)
             }
         }
-}
-
-struct Accordions<B>: HTMLComponent {
-
-    let values: TemplateValue<[B]>
-    let title: ((TemplateValue<B>, TemplateValue<Int>)) -> HTML
-    let content: ((TemplateValue<B>, TemplateValue<Int>)) -> HTML
-    var id: String = "accordion"
-
-    public init(values: TemplateValue<[B]>, @HTMLBuilder title: @escaping ((TemplateValue<B>, TemplateValue<Int>)) -> HTML, @HTMLBuilder content: @escaping ((TemplateValue<B>, TemplateValue<Int>)) -> HTML) {
-        self.values = values
-        self.title = title
-        self.content = content
-    }
-
-    var body: HTML {
-        Div {
-            ForEach(enumerated: values) { value in
-                card(value: value)
-            }
-        }
-        .class("custom-accordion mb-4")
-        .id(id)
-    }
-
-    func card(value: (TemplateValue<B>, index: TemplateValue<Int>)) -> HTML {
-        Div {
-            heading(value: value)
-            content(value: value)
-        }
-        .class("card")
-    }
-    
-    func heading(value: (TemplateValue<B>, index: TemplateValue<Int>)) -> HTML {
-        return Div {
-            Anchor {
-                title(value)
-            }
-                .text(color: .secondary)
-                .display(.block)
-                .padding(.two, for: .vertical)
-                .data(for: "toggle", value: "collapse")
-                .data(for: "target", value: "#" + bodyId(value.index))
-                .aria(for: "controls", value: bodyId(value.index))
-        }
-        .class("card-header")
-        .id(headingId(value.index))
-    }
-
-    func content(value: (TemplateValue<B>, index: TemplateValue<Int>)) -> HTML {
-        return Div {
-            Div {
-                content(value)
-            }
-            .class("card-body")
-        }
-        .class("collapse" + IF(value.index == 0) { " show" })
-        .aria(for: "labelledby", value: headingId(value.index))
-        .data(for: "parent", value: "#\(id)")
-        .id(bodyId(value.index))
-    }
-
-    func bodyId(_ index: TemplateValue<Int>) -> HTML {
-        "\(id)-body" + index
-    }
-
-    func headingId(_ index: TemplateValue<Int>) -> HTML {
-        "\(id)-heading" + index
     }
 }

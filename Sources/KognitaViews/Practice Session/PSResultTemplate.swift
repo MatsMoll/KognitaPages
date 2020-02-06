@@ -46,27 +46,9 @@ struct TopicResultContext {
     let tasks: [TaskResultable]
 }
 
-struct ViewWrapper: HTML {
-    let view: HTML
-
-    func render<T>(with manager: HTMLRenderer.ContextManager<T>) throws -> String {
-        try view.render(with: manager)
-    }
-
-    func prerender(_ formula: HTMLRenderer.Formula) throws {
-        try view.prerender(formula)
-    }
-}
-
 struct BreadcrumbItem {
-    let link: String?
+    let link: ViewWrapper?
     let title: ViewWrapper
-}
-
-extension ViewWrapper: ExpressibleByStringLiteral {
-    init(stringLiteral value: String) {
-        self.view = value
-    }
 }
 
 extension PracticeSession.Templates {
@@ -76,20 +58,27 @@ extension PracticeSession.Templates {
             let locale = "nb"
             let user: User
 
-            let numberOfTasks: String
-            let goalProgress: String
-            let timeUsed: String
-            let accuracy: String
-
             let tasks: [TaskResultable]
 
             let topicResults: [TopicResultContext]
+
+            let progress: Int
+            let timeUsed: TimeInterval
+            let maxScore: Double
+            let achievedScore: Double
+
+            var accuracyScore: Double {
+                guard maxScore != 0 else {
+                    return 0
+                }
+                return achievedScore / maxScore
+            }
 
             var singleStats: [SingleStatisticCardContent] {
                 [
                     .init(
                         title: "Nåværende nivå",
-                        mainContent: accuracy + " 🔥",
+                        mainContent: accuracyString,
                         extraContent: nil
                     ),
                     .init(
@@ -98,8 +87,8 @@ extension PracticeSession.Templates {
                         extraContent: nil
                     ),
                     .init(
-                        title: "Tid øvd",
-                        mainContent: timeUsed,
+                        title: "Tid øvet",
+                        mainContent: timeUsed.timeString,
                         extraContent: nil
                     ),
                 ]
@@ -113,14 +102,13 @@ extension PracticeSession.Templates {
                     maxScore += 100
                     achievedScore += task.resultScore.clamped(to: 0...100)
                 }
-                let accuracyScore = achievedScore / maxScore
 
                 self.user = user
                 self.tasks = tasks
-                self.numberOfTasks = "\(tasks.count)"
-                self.goalProgress = "\(progress)%"
-                self.timeUsed = timeUsed.timeString
-                self.accuracy = "\((10000 * accuracyScore).rounded() / 100)%"
+                self.progress = progress
+                self.timeUsed = timeUsed
+                self.maxScore = maxScore
+                self.achievedScore = achievedScore
 
                 let grouped = tasks.group(by: \.topicName)
                 topicResults = grouped.map { name, tasks in
@@ -131,6 +119,7 @@ extension PracticeSession.Templates {
                         tasks: tasks
                     )
                 }
+                .sorted(by: { $0.topicScore > $1.topicScore })
             }
         }
 
@@ -144,7 +133,7 @@ extension PracticeSession.Templates {
                 baseContext: .constant(.init(title: "Resultat | Øving ", description: "Resultat | Øving "))
             ) {
                 PageTitle(
-                    title: "Øving " + context.goalProgress,
+                    title: context.title,
                     breadcrumbs: breadcrumbItems
                 )
                 Row {
@@ -188,7 +177,7 @@ extension PracticeSession.Templates {
                         }
                         .else {
                             Text {
-                                "Vi klarte ikke å finne noen oppgaver i dette øvingsettet"
+                                "Vi klarte ikke å finne noen oppgaver i dette øvingssettet"
                             }
                             .style(.lead)
                         }
@@ -209,5 +198,24 @@ extension PracticeSession.Templates {
                 Script().source("/assets/js/practice-session-histogram.js")
             }
         }
+    }
+}
+
+extension PracticeSession.Templates.Result.Context {
+    var numberOfTasks: String { "\(tasks.count)" }
+    var goalProgress: String { "\(progress)%" }
+    var readableAccuracy: Double { (10000 * accuracyScore).rounded() / 100 }
+    var accuracyString: String {
+        if readableAccuracy > 90 {
+            return "\(readableAccuracy) 🏆"
+        } else if readableAccuracy > 70 {
+            return "\(readableAccuracy) 🔥"
+        } else {
+            return "\(readableAccuracy)"
+        }
+    }
+    var date: Date { tasks.first?.date ?? .now }
+    var title: String {
+        "Øving \(date.formatted(dateStyle: .short, timeStyle: .short))"
     }
 }

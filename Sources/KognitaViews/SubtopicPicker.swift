@@ -8,11 +8,29 @@
 import BootstrapKit
 import KognitaCore
 
-struct SubtopicPicker: HTMLComponent {
+struct SubtopicPicker: HTMLComponent, AttributeNode {
 
+    var attributes: [HTMLAttribute]
     let label: String
     let idPrefix: HTML
     let topics: TemplateValue<[Topic.Response]>
+    private let selectedID: TemplateValue<Subtopic.ID>
+
+    init(label: String, idPrefix: HTML, topics: TemplateValue<[Topic.Response]>) {
+        self.label = label
+        self.idPrefix = idPrefix
+        self.attributes = []
+        self.topics = topics
+        self.selectedID = .constant(-1)
+    }
+
+    private init(label: String, idPrefix: HTML, topics: TemplateValue<[Topic.Response]>, selectedID: TemplateValue<Subtopic.ID>, attributes: [HTMLAttribute]) {
+        self.label = label
+        self.idPrefix = idPrefix
+        self.attributes = []
+        self.topics = topics
+        self.selectedID = selectedID
+    }
 
     var body: HTML {
         FormGroup(label: label) {
@@ -31,6 +49,7 @@ struct SubtopicPicker: HTMLComponent {
                                 subtopic.name + " - " + topic.topic.name
                             }
                             .value(subtopic.id)
+                            .isSelected(subtopic.id == selectedID)
                         }
                     }
                     .label(topic.topic.name)
@@ -41,6 +60,15 @@ struct SubtopicPicker: HTMLComponent {
             .data(for: "toggle", value: "select2")
             .data(for: "placeholder", value: "Velg ...")
         }
+        .add(attributes: attributes)
+    }
+
+    func copy(with attributes: [HTMLAttribute]) -> SubtopicPicker {
+        .init(label: label, idPrefix: idPrefix, topics: topics, selectedID: selectedID, attributes: attributes)
+    }
+
+    func selected(id: TemplateValue<Subtopic.ID>) -> SubtopicPicker {
+        .init(label: label, idPrefix: idPrefix, topics: topics, selectedID: id, attributes: attributes)
     }
 }
 

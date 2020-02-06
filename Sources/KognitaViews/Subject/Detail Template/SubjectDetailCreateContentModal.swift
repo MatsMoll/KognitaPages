@@ -89,7 +89,7 @@ extension Subject.Templates {
                                 .margin(.three, for: .left)
 
                                 Text {
-                                    "Dette passer bra for automatisk testing, men også bra for å teste grunnleggende teori, som ikke inneholder mellom utregning."
+                                    "Dette passer bra for automatisk testing, men også for å teste grunnleggende teori som ikke inneholder mellomregning."
                                 }
 
 
@@ -111,7 +111,7 @@ extension Subject.Templates {
                                 .margin(.three, for: .left)
 
                                 Text {
-                                    "Dette passer bra for å terpe og lære ny kunnskap, ettersom disse er litt vanskeligere. Det passer også for oppgaver med en god del begrunnelse."
+                                    "Dette passer bra for å terpe og for å lære ny kunnskap ettersom besvarelsesmetoden er mer krevende. Det passer også for oppgaver med en del begrunnelse."
                                 }
                             }
                             .class("p-2")
@@ -127,7 +127,6 @@ extension Subject.Templates {
             .role("dialog")
             .aria(for: "labelledby", value: "create-content-modal")
             .aria(for: "hidden", value: "true")
-
         }
     }
 }
