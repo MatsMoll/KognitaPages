@@ -9,10 +9,7 @@ var dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/MatsMoll/BootstrapKit.git", from: "1.0.0-beta.5")
 ]
 
-guard let buildType = ProcessInfo.processInfo.environment["BUILD_TYPE"] else {
-    fatalError("BUILD_TYPE Not set")
-}
-switch buildType {
+switch ProcessInfo.processInfo.environment["BUILD_TYPE"] {
 case "LOCAL":
     dependencies.append(contentsOf: [
             .package(path: "../KognitaCore"),
