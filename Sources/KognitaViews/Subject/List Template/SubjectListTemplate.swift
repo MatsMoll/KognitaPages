@@ -20,10 +20,12 @@ extension Subject.Templates {
         public struct Context {
             let user: User
             let list: Subject.ListContent
+            let wasIncorrectPassword: Bool
 
-            public init(user: User, list: Subject.ListContent) {
+            public init(user: User, list: Subject.ListContent, wasIncorrectPassword: Bool) {
                 self.user = user
                 self.list = list
+                self.wasIncorrectPassword = wasIncorrectPassword
             }
         }
 
@@ -63,11 +65,22 @@ extension Subject.Templates {
                 Script().source("/assets/js/practice-session-create.js")
                 Script().source("/assets/js/vendor/Chart.bundle.min.js")
                 Script().source("/assets/js/practice-session-histogram.js")
+                IF(context.wasIncorrectPassword) {
+                    Script {
+"""
+$("#start-subject-test-modal").modal('show');
+"""
+                    }
+                }
+
             }
             .active(path: "/subjects")
             .modals {
                 Unwrap(context.list.openedTest) { test in
-                    SubjectTest.Templates.StartModal(test: test)
+                    SubjectTest.Templates.StartModal(
+                        test: test,
+                        wasIncorrectPassword: context.wasIncorrectPassword
+                    )
                 }
             }
         }

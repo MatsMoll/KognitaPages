@@ -9,31 +9,48 @@ import BootstrapKit
 import KognitaCore
 
 struct TaskPreviewTemplateContext {
-    let practiceProgress: Int?
-    let session: PracticeSessionRepresentable?
+    let practiceProgress: Int
+    let session: PracticeSessionRepresentable
     let taskContent: TaskPreviewContent
     let lastResult: TaskResultContent?
     let user: UserContent
     let taskPath: String
+    let currentTaskIndex: Int
 
     var subject: Subject { return taskContent.subject }
     var topic: Topic { return taskContent.topic }
     var task: Task { return taskContent.task }
 
+    var nextTaskIndex: Int {
+        currentTaskIndex + 1
+    }
+    var nextTaskCall: String {
+        "navigateTo(\(nextTaskIndex))"
+    }
+
+    var prevTaskIndex: Int? {
+        guard currentTaskIndex > 1 else {
+            return nil
+        }
+        return currentTaskIndex - 1
+    }
+
     public init(
         task: TaskPreviewContent,
         user: UserContent,
-        practiceProgress: Int?,
-        session: PracticeSessionRepresentable?,
-        lastResult: TaskResultContent?,
-        taskPath: String
+        practiceProgress: Int,
+        session: PracticeSessionRepresentable,
+        taskPath: String,
+        currentTaskIndex: Int,
+        lastResult: TaskResultContent?
     ) {
         self.practiceProgress = practiceProgress
         self.session = session
         self.taskContent = task
-        self.lastResult = lastResult
         self.user = user
         self.taskPath = taskPath
+        self.currentTaskIndex = currentTaskIndex
+        self.lastResult = lastResult
     }
 }
 
@@ -112,7 +129,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
                     .display(.none)
                 }
                 .secondary {
-                    ProgressCard(context: context)
+                    NavigationCard(context: context)
                     DismissableError()
                     underSolutionCard
                 }
@@ -179,67 +196,84 @@ public struct TaskPreviewTemplate: HTMLComponent {
         }
     }
 
-    struct ProgressCard: HTMLComponent {
+    struct NavigationCard: HTMLComponent {
 
         let context: TemplateValue<TaskPreviewTemplateContext>
 
         var body: HTML {
-            Unwrap(context.practiceProgress) { progress in
-                Card {
-                    Text {
-                        Localized(key: Strings.exerciseSessionProgressTitle)
-                        Span {
-                            Span {
-                                context.practiceProgress + "% "
-                            }
-                            .id("goal-progress-label")
-
-                            Small {
-                                Span {
-                                    Unwrap(context.session) {
-                                        $0.numberOfTaskGoal
-                                    }
-                                }
-                                .id("goal-value")
-                                " "
-                                Localized(key: Strings.exerciseSessionProgressGoal)
-                            }
-                            .text(color: .muted)
-                        }
-                        .float(.right)
-                    }
-                    .style(.paragraph)
-                    .font(style: .bold)
-                    .margin(.two, for: .bottom)
-
-                    ProgressBar(
-                        currentValue: progress,
-                        valueRange: 0...100
-                    )
-                        .bar(size: .medium)
-                        .bar(id: "goal-progress-bar")
-                        .modify(if: progress >= 100) {
-                            $0.bar(style: .success)
-                    }
-//                        Div {
-//                            ProgressBar(
-//                                currentValue: context.practiceProgress.unsafelyUnwrapped,
-//                                valueRange: 0...100
-//                            )
-//                            Div()
-//                                .id("goal-progress-bar")
-//                                .class("progress-bar")
-//                                .role("progressbar")
-//                                .aria(for: "valuenow", value: variable(\.practiceProgress))
-//                                .aria(for: "valuemin", value: 0)
-//                                .aria(for: "valuemax", value: 100)
-//                                .style("width: ", variable(\.practiceProgress), "%;")
-//                                .if(\.practiceProgress >= 100, add: .class("bg-success"))
-//                        }
-//                        .class("progress progress-md")
+            Card {
+                Text {
+                    "Navigasjon"
                 }
-            }
+                .style(.heading3)
 
+                Button {
+                    Strings.exerciseNextButton
+                        .localized()
+                    MaterialDesignIcon(.arrowRight)
+                        .margin(.one, for: .left)
+                }
+                .id("nextButton")
+                .on(click: context.nextTaskCall)
+                .display(.none)
+                .float(.right)
+                .margin(.one, for: .left)
+                .button(style: .primary)
+
+                Unwrap(context.prevTaskIndex) { prevTaskIndex in
+                    Anchor {
+                        MaterialDesignIcon(.arrowLeft)
+                            .margin(.one, for: .right)
+                        "Forrige"
+                    }
+                    .button(style: .light)
+                    .href(prevTaskIndex)
+                    .margin(.two, for: .bottom)
+                }
+
+                Form {
+                    Button(Strings.exerciseStopSessionButton)
+                        .button(style: .danger)
+                }
+                .action("/practice-sessions/" + context.session.id + "/end")
+                .method(.post)
+            }
+            .footer {
+                Text {
+                    Localized(key: Strings.exerciseSessionProgressTitle)
+                    Span {
+                        Span {
+                            context.practiceProgress + "% "
+                        }
+                        .id("goal-progress-label")
+
+                        Small {
+                            Span {
+                                context.session.numberOfTaskGoal
+                            }
+                            .id("goal-value")
+                            " "
+                            Localized(key: Strings.exerciseSessionProgressGoal)
+                        }
+                        .text(color: .muted)
+                    }
+                    .float(.right)
+                }
+                .style(.paragraph)
+                .font(style: .bold)
+                .margin(.two, for: .bottom)
+
+                ProgressBar(
+                    currentValue: context.practiceProgress,
+                    valueRange: 0...100
+                )
+                    .bar(size: .medium)
+                    .bar(id: "goal-progress-bar")
+                    .modify(if: context.practiceProgress >= 100) {
+                        $0.bar(style: .success)
+                }
+                .margin(.two, for: .bottom)
+            }
         }
     }
 }

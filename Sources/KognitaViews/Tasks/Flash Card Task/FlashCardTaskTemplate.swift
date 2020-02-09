@@ -17,8 +17,6 @@ extension FlashCardTask.Templates {
 
         public struct Context {
             let taskPreview: TaskPreviewTemplateContext
-            var nextTaskIndex: Int?
-            var prevTaskIndex: Int?
 
             var session: PracticeSessionRepresentable? { return taskPreview.session }
             var task: Task { return taskPreview.task }
@@ -35,9 +33,9 @@ extension FlashCardTask.Templates {
             public init(
                 taskPreview: TaskPreviewContent,
                 user: UserContent,
-                currentTaskIndex: Int? = nil,
-                practiceProgress: Int? = nil,
-                session: PracticeSessionRepresentable? = nil,
+                currentTaskIndex: Int,
+                practiceProgress: Int,
+                session: PracticeSessionRepresentable,
                 lastResult: TaskResultContent? = nil,
                 numberOfTasks: Int
             ) {
@@ -46,16 +44,10 @@ extension FlashCardTask.Templates {
                     user: user,
                     practiceProgress: practiceProgress,
                     session: session,
-                    lastResult: lastResult,
-                    taskPath: "flash-card"
-    //                numberOfTasks: numberOfTasks
+                    taskPath: "flash-card",
+                    currentTaskIndex: currentTaskIndex,
+                    lastResult: lastResult
                 )
-                if let currentTaskIndex = currentTaskIndex {
-                    if currentTaskIndex > 1 {
-                        self.prevTaskIndex = currentTaskIndex - 1
-                    }
-                    self.nextTaskIndex = currentTaskIndex + 1
-                }
             }
         }
 
@@ -90,49 +82,14 @@ extension FlashCardTask.Templates {
                     .button(style: .success)
                     .margin(.one, for: .right)
                     .on(click: "revealSolution();")
-
-//                    IF(context.session.isDefined) {
-//                        Button(Strings.exerciseStopSessionButton)
-//                            .float(.right)
-//                            .button(style: .danger)
-//                            .margin(.one, for: .left)
-//                            .on(click: "submitAndEndSession();")
-//                    }
-                    Unwrap(context.session) { session in
-                        Form {
-                            Button(Strings.exerciseStopSessionButton)
-                                .button(style: .danger)
-                                .margin(.one, for: .left)
-                                .type(.button)
-                                .on(click: "submitAndEndSession()")
-                        }
-                        .action("/practice-sessions/" + session.id + "/end")
-                        .method(.post)
-                        .float(.right)
-                        .id("end-session-form")
-                    }
-                    IF(context.prevTaskIndex.isDefined) {
-                        Anchor {
-                            Button {
-                                MaterialDesignIcon(.arrowLeft)
-                                    .margin(.one, for: .right)
-                                "Forrige"
-                            }
-                            .button(style: .light)
-                            .float(.right)
-                        }
-                        .href(context.prevTaskIndex)
-                    }
                 }
             }
             .underSolutionCard {
                 Card {
-                    IF(context.nextTaskIndex.isDefined) {
-                        Input()
-                            .id("next-task")
-                            .type(.hidden)
-                            .value(context.nextTaskIndex)
-                    }
+                    Input()
+                        .id("next-task")
+                        .type(.hidden)
+                        .value(context.taskPreview.nextTaskIndex)
                     Text {
                         "Hvordan gikk det?"
                     }
