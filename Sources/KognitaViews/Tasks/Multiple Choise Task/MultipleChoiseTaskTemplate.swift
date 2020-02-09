@@ -20,8 +20,6 @@ extension MultipleChoiseTask.Templates {
             let choises: [ChoiseContext]
             let multipleChoiseTask: MultipleChoiseTask.Data
 
-            var nextTaskIndex: Int?
-            var prevTaskIndex: Int?
             let isResult: Bool
             var hasBeenCompleted: Bool { return previewContext.lastResult?.sessionId == (try? session?.requireID()) }
 
@@ -33,28 +31,23 @@ extension MultipleChoiseTask.Templates {
                 taskContent: TaskPreviewContent,
                 user: UserContent,
                 selectedChoises: [MultipleChoiseTaskChoise.Result] = [],
-                currentTaskIndex: Int? = nil,
-                session: PracticeSessionRepresentable? = nil,
-                practiceProsess: Int? = nil,
-                lastResult: TaskResultContent? = nil
+                currentTaskIndex: Int,
+                session: PracticeSessionRepresentable,
+                lastResult: TaskResultContent?,
+                practiceProgress: Int
             ) {
                 self.previewContext = .init(
                     task: taskContent,
                     user: user,
-                    practiceProgress: practiceProsess,
+                    practiceProgress: practiceProgress,
                     session: session,
-                    lastResult: lastResult,
-                    taskPath: "multiple-choise"
+                    taskPath: "multiple-choise",
+                    currentTaskIndex: currentTaskIndex,
+                    lastResult: lastResult
                 )
                 self.multipleChoiseTask = multiple
                 self.isResult = !selectedChoises.isEmpty
                 self.choises = multiple.choises.map { .init(choise: $0, selectedChoises: selectedChoises) }
-                if let currentTaskIndex = currentTaskIndex {
-                    if currentTaskIndex > 1 {
-                        self.prevTaskIndex = currentTaskIndex - 1
-                    }
-                    self.nextTaskIndex = currentTaskIndex + 1
-                }
             }
         }
 
@@ -94,49 +87,6 @@ extension MultipleChoiseTask.Templates {
                     .id("solution-button")
                     .display(.none)
                     .href("#solution")
-
-                    Unwrap(context.session) { session in
-                        Form {
-                            Button(Strings.exerciseStopSessionButton)
-                                .button(style: .danger)
-                                .margin(.one, for: .left)
-                        }
-                        .action("/practice-sessions/" + session.id + "/end")
-                        .method(.post)
-                        .float(.right)
-                    }
-
-                    IF(context.nextTaskIndex.isDefined) {
-                        Anchor {
-                            Button {
-                                Strings.exerciseNextButton
-                                    .localized()
-                                Italic().class("mdi mdi-arrow-right ml-1")
-                            }
-                            .type(.button)
-                            .button(style: .primary)
-                        }
-                        .id("nextButton")
-                        .href(context.nextTaskIndex)
-                        .display(.none)
-                        .float(.right)
-                        .margin(.one, for: .left)
-                        .relationship(.next)
-                    }
-                    IF(context.prevTaskIndex.isDefined) {
-                        Anchor {
-                            Button {
-                                Italic().class("mdi mdi-arrow-left mr-1")
-                                "Forrige"
-                            }
-                            .type(.button)
-                            .button(style: .light)
-                        }
-                        .id("prevButton")
-                        .href(context.prevTaskIndex)
-                        .float(.right)
-                        .relationship(.prev)
-                    }
                 }
             }
             .scripts {
