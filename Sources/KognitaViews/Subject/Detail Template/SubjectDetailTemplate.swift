@@ -131,6 +131,12 @@ extension Subject.Templates {
                         .margin(.zero, for: .top)
                         .style(.heading2)
 
+                    IF(details.canPractice == false) {
+                        Text {
+                            "Du har dessverre ikke tilgang til øvingsmodus helt enda."
+                        }
+                    }
+
                     Button {
                         Italic().class("mdi mdi-book-open-variant")
                         " "
