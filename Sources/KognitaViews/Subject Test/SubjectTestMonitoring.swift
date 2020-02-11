@@ -24,12 +24,33 @@ extension SubjectTest.Templates {
                 baseContext: .constant(.init(title: "Oversikt", description: "Oversikt"))
             ) {
                 PageTitle(title: context.test.title)
+
+                Unwrap(context.test.endedAt) { endsAt in
+                    Input()
+                        .value(endsAt.iso8601)
+                        .id("ends-at")
+                        .type(.hidden)
+                }
+
                 ContentStructure {
                     Row { "" }.id("user-status")
                 }
                 .secondary {
                     Row {
                         Div {
+                            Card {
+                                Text {
+                                    "Tid igjen "
+                                }
+                                .text(color: .secondary)
+
+                                Text {
+                                    Span().id("time-left")
+                                }
+                                .style(.heading3)
+                                .text(color: .dark)
+                            }
+
                             Card {
                                 Text {
                                     "Handlinger"
