@@ -34,7 +34,7 @@ extension MultipleChoiseTask.Templates {
                 session: PracticeSessionRepresentable,
                 lastResult: TaskResultContent?,
                 practiceProgress: Int,
-                selectedChoises: [MultipleChoiseTaskChoise.Result] = []
+                selectedChoises: [MultipleChoiseTaskChoise.ID] = []
             ) {
                 self.previewContext = .init(
                     task: taskContent,
@@ -102,17 +102,11 @@ extension MultipleChoiseTask.Templates {
 
         struct ChoiseContext {
             let isSelected: Bool
-            let isCorrect: Bool
+            var isCorrect: Bool { choise.isCorrect }
             let choise: MultipleChoiseTaskChoise
 
-            init(choise: MultipleChoiseTaskChoise, selectedChoises: [MultipleChoiseTaskChoise.Result] = []) {
-                let selectedIndex = selectedChoises.firstIndex(where: { $0.id == choise.id })
-                if let selectedIndex = selectedIndex {
-                    self.isCorrect = selectedChoises[selectedIndex].isCorrect
-                } else {
-                    self.isCorrect = false
-                }
-                self.isSelected = selectedIndex != nil
+            init(choise: MultipleChoiseTaskChoise, selectedChoises: [MultipleChoiseTaskChoise.ID] = []) {
+                self.isSelected = selectedChoises.contains(choise.id ?? 0)
                 self.choise = choise
             }
         }
@@ -130,23 +124,12 @@ extension MultipleChoiseTask.Templates {
                                 .name("choiseInput")
                                 .class("custom-control-input")
                                 .id(choise.choise.id)
+                                .isChecked(choise.isSelected)
                                 .modify(if: canSelectMultiple) {
                                     $0.type(.checkbox)
                                 }
                                 .modify(if: !canSelectMultiple) {
                                     $0.type(.radio)
-                                }
-                                .modify(if: choise.isSelected) { (isSelected: Input) in
-                                    isSelected
-                                        .text(color: .white)
-                                        .modify(if: choise.isCorrect) { (isCorrect: Input) in
-                                            isCorrect
-                                                .background(color: .success)
-                                        }
-                                        .modify(if: !choise.isCorrect) { (isIncorrect: Input) in
-                                            isIncorrect
-                                                .background(color: .danger)
-                                    }
                                 }
                             Label {
                                 choise.choise.choise
@@ -162,9 +145,18 @@ extension MultipleChoiseTask.Templates {
                         .modify(if: !canSelectMultiple) {
                             $0.class("custom-radio")
                         }
+                        .modify(if: choise.isSelected || choise.isCorrect) {
+                            $0.text(color: .white)
+                        }
                     }
                     .class("p-2 text-secondary")
                     .id(choise.choise.id + "-div")
+                    .modify(if: choise.isCorrect) {
+                        $0.background(color: .success)
+                    }
+                    .modify(if: choise.isSelected && !choise.isCorrect) {
+                        $0.background(color: .danger)
+                    }
                 }
                 .class("card mb-1 shadow-none border")
             }
