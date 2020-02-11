@@ -127,6 +127,9 @@ extension MultipleChoiseTask.Templates {
                                 .class("custom-control-input")
                                 .id(choise.choise.id)
                                 .isChecked(choise.isSelected)
+                                .modify(if: hasBeenAnswered) {
+                                    $0.add(HTMLAttribute(attribute: "disabled", value: "disabled"))
+                                }
                                 .modify(if: canSelectMultiple) {
                                     $0.type(.checkbox)
                                 }
@@ -139,6 +142,9 @@ extension MultipleChoiseTask.Templates {
                             }
                             .class("custom-control-label")
                             .for(choise.choise.id)
+                            .modify(if: hasBeenAnswered && (choise.isSelected || choise.isCorrect)) {
+                                $0.text(color: .white)
+                            }
                         }
                         .class("custom-control")
                         .modify(if: canSelectMultiple) {
@@ -146,9 +152,6 @@ extension MultipleChoiseTask.Templates {
                         }
                         .modify(if: !canSelectMultiple) {
                             $0.class("custom-radio")
-                        }
-                        .modify(if: hasBeenAnswered && (choise.isSelected || choise.isCorrect)) {
-                            $0.text(color: .white)
                         }
                     }
                     .class("p-2 text-secondary")
