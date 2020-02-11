@@ -61,6 +61,7 @@ extension MultipleChoiseTask.Templates {
                 Card {
                     ForEach(in: context.choises) { choise in
                         ChoiseOption(
+                            hasBeenAnswered: context.hasBeenCompleted,
                             canSelectMultiple: context.multipleChoiseTask.isMultipleSelect,
                             choise: choise
                         )
@@ -113,6 +114,7 @@ extension MultipleChoiseTask.Templates {
 
         struct ChoiseOption: HTMLComponent {
 
+            let hasBeenAnswered: Conditionable
             let canSelectMultiple: Conditionable
             let choise: TemplateValue<ChoiseContext>
 
@@ -145,13 +147,13 @@ extension MultipleChoiseTask.Templates {
                         .modify(if: !canSelectMultiple) {
                             $0.class("custom-radio")
                         }
-                        .modify(if: choise.isSelected || choise.isCorrect) {
+                        .modify(if: hasBeenAnswered && (choise.isSelected || choise.isCorrect)) {
                             $0.text(color: .white)
                         }
                     }
                     .class("p-2 text-secondary")
                     .id(choise.choise.id + "-div")
-                    .modify(if: choise.isCorrect) {
+                    .modify(if: hasBeenAnswered && choise.isCorrect) {
                         $0.background(color: .success)
                     }
                     .modify(if: choise.isSelected && !choise.isCorrect) {
