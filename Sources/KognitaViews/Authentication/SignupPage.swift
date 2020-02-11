@@ -144,8 +144,6 @@ extension User.Templates {
                 .modify(if: context.submittedForm.isDefined) {
                     $0.class("was-validated")
                 }
-
-                Script(source: "/assets/js/form-feedback.js")
             }
             .otherActions {
                 Row {
