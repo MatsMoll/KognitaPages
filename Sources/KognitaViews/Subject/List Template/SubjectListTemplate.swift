@@ -241,61 +241,6 @@ $("#start-subject-test-modal").modal('show');
                 }
             }
         }
-
-        struct SubjectTestList: HTMLComponent {
-
-            @TemplateValue(SubjectTest.OverviewResponse?.self)
-            var test
-
-            var body: HTML {
-                Unwrap(test) { test in
-                    Text {
-                        "Åpen test"
-                    }
-                    .style(.heading3)
-                    Row {
-                        Div {
-                            SubjectTestCard(test: test)
-                        }
-                        .column(width: .six, for: .large)
-                    }
-                }
-            }
-        }
-
-        struct SubjectTestCard: HTMLComponent {
-
-            var test: TemplateValue<SubjectTest.OverviewResponse>
-
-            var body: HTML {
-                Card {
-                    Badge {
-                        test.subjectName
-                    }
-                    .background(color: .primary)
-
-                    Text {
-                        test.title
-                    }
-                    .style(.heading2)
-                    .text(color: .dark)
-
-                    Unwrap(test.endsAt) { (endsAt: TemplateValue<Date>) in
-                        Text {
-                            "Slutter: "
-                            endsAt.style(date: .short, time: .medium)
-                        }
-                    }
-
-                    Button {
-                        "Start nå"
-                    }
-                    .toggle(modal: .id("start-subject-test-modal"))
-                    .button(style: .primary)
-                    .isRounded()
-                }
-            }
-        }
     }
 }
 
@@ -326,6 +271,66 @@ extension Subject.Templates {
                 .class("card-body")
             }
             .class("card")
+        }
+    }
+
+    struct SubjectTestList: HTMLComponent {
+
+        @TemplateValue(SubjectTest.OverviewResponse?.self)
+        var test
+
+        var body: HTML {
+            Unwrap(test) { test in
+                Text {
+                    "Åpen test"
+                }
+                .style(.heading3)
+                Row {
+                    Div {
+                        SubjectTestCard(test: test)
+                    }
+                    .column(width: .twelve)
+                }
+            }
+        }
+    }
+
+    struct SubjectTestCard: HTMLComponent {
+
+        var test: TemplateValue<SubjectTest.OverviewResponse>
+
+        var body: HTML {
+            Card {
+
+                Text {
+                    test.title
+                }
+                .style(.heading2)
+                .text(color: .dark)
+
+                Unwrap(test.endsAt) { (endsAt: TemplateValue<Date>) in
+                    Text {
+                        "Slutter: "
+                        endsAt.style(date: .short, time: .medium)
+                    }
+                }
+
+                Button {
+                    "Start nå"
+                }
+                .toggle(modal: .id("start-subject-test-modal"))
+                .button(style: .primary)
+                .isRounded()
+            }
+            .header {
+                Text {
+                    test.subjectName
+                }.style(.heading3)
+            }
+            .modifyHeader {
+                $0.background(color: .danger)
+                    .text(color: .white)
+            }
         }
     }
 }

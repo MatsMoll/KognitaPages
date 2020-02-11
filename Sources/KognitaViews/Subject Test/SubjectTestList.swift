@@ -68,7 +68,7 @@ extension SubjectTest.Templates {
                         SubjectTestList(list: context.list)
                     }.else {
                         Text {
-                            "Det finnes ingen tester enda."
+                            "Det finnes ingen prøver enda."
                         }
                     }
                 }
@@ -152,7 +152,8 @@ extension SubjectTest.Templates {
                     SubjectTestCardActions(test: test)
                 }
             }
-            .column(width: .six)
+            .column(width: .six, for: .large)
+            .column(width: .twelve)
         }
 
         struct SubjectTestCardActions: HTMLComponent {
@@ -184,11 +185,18 @@ extension SubjectTest.Templates {
                         }
                         .href(test.resultUri)
                         .button(style: .light)
+
+                        Button {
+                            "Gjenåpne prøve"
+                        }
+                        .button(style: .light)
+                        .on(click: test.openCall)
+                        .margin(.one, for: .left)
                     }
                 }
                 .else {
                     Button {
-                        "Åpne test"
+                        "Åpne prøve"
                     }
                     .button(style: .light)
                     .on(click: test.openCall)
@@ -215,7 +223,7 @@ extension SubjectTest.Templates {
                 .text(color: .dark)
 
                 Anchor {
-                    "Lag test"
+                    "Lag prøve"
                 }
                 .href("subject-tests/create")
                 .button(style: .primary)
