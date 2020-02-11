@@ -30,11 +30,11 @@ extension MultipleChoiseTask.Templates {
                 multiple: MultipleChoiseTask.Data,
                 taskContent: TaskPreviewContent,
                 user: UserContent,
-                selectedChoises: [MultipleChoiseTaskChoise.Result] = [],
                 currentTaskIndex: Int,
                 session: PracticeSessionRepresentable,
                 lastResult: TaskResultContent?,
-                practiceProgress: Int
+                practiceProgress: Int,
+                selectedChoises: [MultipleChoiseTaskChoise.Result] = []
             ) {
                 self.previewContext = .init(
                     task: taskContent,
