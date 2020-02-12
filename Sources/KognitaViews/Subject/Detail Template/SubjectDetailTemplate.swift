@@ -83,7 +83,7 @@ extension Subject.Templates {
                     .column(width: .eight, for: .large)
                     Div {
                         StatisticsCard()
-                        IF(context.user.isAdmin) {
+                        IF(context.details.isModerator) {
                             CreateContentCard()
                             SubjectTestSignifier(subjectID: context.details.subject.id)
                         }
