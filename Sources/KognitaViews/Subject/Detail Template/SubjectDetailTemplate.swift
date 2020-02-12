@@ -40,7 +40,7 @@ extension Subject.Templates {
         public init() {}
 
         let breadcrumbs: [BreadcrumbItem] = [
-            BreadcrumbItem(link: "../subjects", title: .init(view: Localized(key: Strings.subjectTitle)))
+            BreadcrumbItem(link: "../subjects", title: .init(view: Strings.subjectTitle.localized()))
         ]
 
         public var body: HTML {
@@ -58,6 +58,7 @@ extension Subject.Templates {
                             VerifyEmailSignifier()
                         }
                         UnactiveSubjectCard(details: context.details)
+                        SubjectTestList(test: context.details.openTest)
                         SubjectCard(
                             details: context.details,
                             topicIDs: context.details.topicIDsJSList
@@ -84,9 +85,7 @@ extension Subject.Templates {
                         StatisticsCard()
                         IF(context.details.isModerator) {
                             CreateContentCard()
-                            SubjectTestSignifier(
-                                subjectID: context.details.subject.id
-                            )
+                            SubjectTestSignifier(subjectID: context.details.subject.id)
                         }
                     }
                     .column(width: .four, for: .large)
@@ -102,6 +101,12 @@ extension Subject.Templates {
                 IF(context.user.isAdmin) {
                     CreateContentModal(
                         subject: context.details.subject
+                    )
+                }
+                Unwrap(context.details.openTest) { test in
+                    SubjectTest.Templates.StartModal(
+                        test: test,
+                        wasIncorrectPassword: .constant(false)
                     )
                 }
             }
@@ -128,6 +133,12 @@ extension Subject.Templates {
                         .text(color: .dark)
                         .margin(.zero, for: .top)
                         .style(.heading2)
+
+                    IF(details.canPractice == false) {
+                        Text {
+                            "Du har dessverre ikke tilgang til øvingsmodus helt enda."
+                        }
+                    }
 
                     Button {
                         Italic().class("mdi mdi-book-open-variant")
