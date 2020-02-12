@@ -57,9 +57,7 @@ extension Subject.Templates {
                         IF(context.user.isEmailVerified == false) {
                             VerifyEmailSignifier()
                         }
-                        UnactiveSubjectCard(
-                            details: context.details
-                        )
+                        UnactiveSubjectCard(details: context.details)
                         SubjectCard(
                             details: context.details,
                             topicIDs: context.details.topicIDsJSList
@@ -84,7 +82,7 @@ extension Subject.Templates {
                     .column(width: .eight, for: .large)
                     Div {
                         StatisticsCard()
-                        IF(context.user.isAdmin) {
+                        IF(context.details.isModerator) {
                             CreateContentCard()
                             SubjectTestSignifier(
                                 subjectID: context.details.subject.id
