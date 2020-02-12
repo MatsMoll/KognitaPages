@@ -29,6 +29,7 @@ extension FlashCardTask.Templates {
                     return nil
                 }
             }
+            var prevAnswer: FlashCardAnswer?
 
             public init(
                 taskPreview: TaskPreviewContent,
@@ -37,7 +38,7 @@ extension FlashCardTask.Templates {
                 practiceProgress: Int,
                 session: PracticeSessionRepresentable,
                 lastResult: TaskResultContent? = nil,
-                numberOfTasks: Int
+                prevAnswer: FlashCardAnswer?
             ) {
                 self.taskPreview = .init(
                     task: taskPreview,
@@ -48,6 +49,7 @@ extension FlashCardTask.Templates {
                     currentTaskIndex: currentTaskIndex,
                     lastResult: lastResult
                 )
+                self.prevAnswer = prevAnswer
             }
         }
 
@@ -62,8 +64,11 @@ extension FlashCardTask.Templates {
                         "Skriv svaret her"
                     }
                     InputGroup {
-                        TextArea()
-                            .id("flash-card-answer")
+                        TextArea {
+                            Unwrap(context.prevAnswer) { answer in
+                                answer.answer
+                            }
+                        }.id("flash-card-answer")
                     }
                     .invalidFeedback {
                         "Du må angi et svar"
