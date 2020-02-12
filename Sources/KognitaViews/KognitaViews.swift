@@ -35,6 +35,7 @@ public struct KognitaViews {
         try renderer.add(view: User.Templates.ResetPassword.Reset())
         try renderer.add(view: User.Templates.VerifyMail(rootUrl: rootUrl))
         try renderer.add(view: User.Templates.VerifiedConfirmation())
+        try renderer.add(view: User.Templates.Profile())
 
         // Main User pages
         try renderer.add(view: Subject.Templates.ListOverview())

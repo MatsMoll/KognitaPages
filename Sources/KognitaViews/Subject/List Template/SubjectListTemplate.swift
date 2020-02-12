@@ -161,45 +161,6 @@ $("#start-subject-test-modal").modal('show');
             }
         }
 
-        struct SubjectCard: HTMLComponent {
-
-            let subject: TemplateValue<Subject>
-
-            var body: HTML {
-                Div {
-                    Anchor {
-                        Div {
-                            Div {
-                                H3 {
-                                    subject.name
-                                }
-                                Badge {
-                                    subject.category
-                                }
-                                .background(color: .light)
-                            }
-                            .class("card-header bg-" + subject.colorClass.rawValue)
-                            .text(color: .white)
-                            Div {
-                                P {
-                                    subject.description
-                                        .escaping(.unsafeNone)
-                                }
-                                Button(Strings.subjectExploreButton)
-                                    .class("btn btn-" + subject.colorClass.rawValue + " btn-rounded")
-                            }
-                            .class("card-body position-relative")
-                        }
-                        .class("card")
-                        .display(.block)
-                    }
-                    .href("subjects/" + subject.id)
-                    .text(color: .dark)
-                }
-                .class("col-lg-6")
-            }
-        }
-
         struct StatisticsCard: HTMLComponent {
 
             var body: HTML {
@@ -300,6 +261,46 @@ $("#start-subject-test-modal").modal('show');
 }
 
 extension Subject.Templates {
+
+    struct SubjectCard: HTMLComponent {
+
+        let subject: TemplateValue<Subject>
+
+        var body: HTML {
+            Div {
+                Anchor {
+                    Div {
+                        Div {
+                            H3 {
+                                subject.name
+                            }
+                            Badge {
+                                subject.category
+                            }
+                            .background(color: .light)
+                        }
+                        .class("card-header bg-" + subject.colorClass.rawValue)
+                        .text(color: .white)
+                        Div {
+                            P {
+                                subject.description
+                                    .escaping(.unsafeNone)
+                            }
+                            Button(Strings.subjectExploreButton)
+                                .class("btn btn-" + subject.colorClass.rawValue + " btn-rounded")
+                        }
+                        .class("card-body position-relative")
+                    }
+                    .class("card")
+                    .display(.block)
+                }
+                .href("subjects/" + subject.id)
+                .text(color: .dark)
+            }
+            .class("col-lg-6")
+        }
+    }
+
     struct VerifyEmailSignifier: HTMLComponent {
 
         var body: HTML {
