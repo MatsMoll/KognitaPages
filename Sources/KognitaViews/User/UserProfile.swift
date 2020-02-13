@@ -40,25 +40,27 @@ extension User.Templates {
                             Text {
                                 "Brukernavn: "
                             }
-                            .display(.inline)
-                            
+                            .margin(.three, for: .top)
+                            .margin(.one, for: .bottom)
+
                             Text {
                                 context.user.username
                             }
                             .display(.inline)
-                            .font(style: .bold)
+                            .style(.heading4)
 
                             Text {
-                                "Email: " + context.user.email
+                                "Email: "
                             }
+                            .margin(.three, for: .top)
+                            .margin(.one, for: .bottom)
 
-                            Anchor {
-                                " "
-                                "Endre passord"
+                            Text {
+                                context.user.email
                             }
-                            .button(style: .primary)
-                            .text(color: .white)
-                            .href("/reset-password")
+                            .display(.inline)
+                            .style(.heading4)
+
                         }
                     }
                     .column(width: .four)

@@ -221,7 +221,7 @@ struct ContentBaseTemplate: HTMLComponent {
                                 }
                                 .class("dropdown-item")
                                 .href("#")
-                                .add(HTMLAttribute(attribute: "onclick", value: "this.closest(\"form\").submit()"))
+                                .on(click: "this.closest(\"form\").submit()")
                             }
                             .action("/logout")
                             .method(.post)
