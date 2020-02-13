@@ -315,22 +315,46 @@ extension Subject.Templates {
                     }
                 }
 
-                Button {
-                    "Start nå"
+                IF(test.hasSubmitted) {
+                    Anchor {
+                        "Se resultatet"
+                    }
+                    .href(test.testResultUri)
+                    .button(style: .success)
                 }
-                .toggle(modal: .id("start-subject-test-modal"))
-                .button(style: .primary)
-                .isRounded()
+                .else {
+                    Button {
+                        "Start nå"
+                    }
+                    .toggle(modal: .id("start-subject-test-modal"))
+                    .button(style: .primary)
+                    .isRounded()
+                }
             }
             .header {
                 Text {
                     test.subjectName
                 }.style(.heading3)
             }
-            .modifyHeader {
-                $0.background(color: .danger)
-                    .text(color: .white)
+            .modifyHeader { header in
+                header.modify(if: test.hasSubmitted) {
+                    $0.background(color: .success)
+                        .text(color: .white)
+                }
+                .modify(if: test.hasSubmitted == false) {
+                    $0.background(color: .danger)
+                        .text(color: .white)
+                }
             }
         }
+    }
+}
+
+extension SubjectTest.OverviewResponse {
+    var testResultUri: String {
+        guard let sessionID = testSessionID else {
+            return ""
+        }
+        return "/test-sessions/\(sessionID)/results"
     }
 }
