@@ -61,7 +61,8 @@ extension User.Templates {
 
                         }
                     }
-                    .column(width: .four)
+                    .column(width: .four, for: .large)
+                    .column(width: .twelve)
 
                     Div {
                         IF(context.user.isEmailVerified == false) {
@@ -79,7 +80,8 @@ extension User.Templates {
                             }
                         }
                     }
-                    .column(width: .eight)
+                    .column(width: .eight, for: .large)
+                    .column(width: .twelve)
                 }
             }
         }
