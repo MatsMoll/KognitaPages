@@ -68,7 +68,7 @@ struct ContentBaseTemplate: HTMLComponent {
 
     struct TabContent {
         let link: String
-        let iconClass: String
+        let icon: MaterialDesignIcon.Icons
         let title: ViewWrapper
     }
 
@@ -91,7 +91,7 @@ struct ContentBaseTemplate: HTMLComponent {
         self.modals = ""
     }
 
-    init(base: ContentBaseTemplate, activePath: TemplateValue<String>, header: HTML, scripts: HTML, modals: HTML) {
+    private init(base: ContentBaseTemplate, activePath: TemplateValue<String>, header: HTML, scripts: HTML, modals: HTML) {
         self.userContext = base.userContext
         self.baseContext = base.baseContext
         self.content = base.content
@@ -162,19 +162,19 @@ struct ContentBaseTemplate: HTMLComponent {
         private let tabs: [TabContent] = [
             .init(
                 link: "/subjects",
-                iconClass: "dripicons-view-list",
+                icon: .formatListBulleted,
                 title: ViewWrapper(view: Strings.menuSubjectList.localized())
             ),
             .init(
                 link: "/practice-sessions/history",
-                iconClass: "dripicons-view-list",
+                icon: .history,
                 title: ViewWrapper(view: Strings.menuPracticeHistory.localized())
             ),
         ]
 
         private let creatorTab = TabContent(
             link: "/creator/dashboard",
-            iconClass: "dripicons-view-list",
+            icon: .accountCircle,
             title: "Lag innhold"
         )
 
@@ -195,19 +195,41 @@ struct ContentBaseTemplate: HTMLComponent {
                         self.tab(with: tab)
                     }
                     ListItem {
-                        Form {
-                            Button {
-                                Strings.menuLogout.localized()
+                        Anchor{
+                            Text {
+                                MaterialDesignIcon(.accountCircle)
+                                " "
+                                userContext.username
                             }
-                            .type(.submit)
-                            .background(color: .primary)
-                            .class("nav-link btn")
+                            .style(.cardText)
                         }
-                        .method(.post)
-                        .action("/logout")
-                        .background(color: .primary)
+                        .class("nav-link dropdown")
+                        .id("navbarDropdown")
+                        .role("button")
+
+                        Div {
+                            Form {
+                                Anchor {
+                                    "Min profil"
+                                }
+                                .href("/profile")
+                                .class("dropdown-item")
+
+
+                                Anchor {
+                                    Strings.menuLogout.localized()
+                                }
+                                .class("dropdown-item")
+                                .href("#")
+                                .on(click: "this.closest(\"form\").submit()")
+                            }
+                            .action("/logout")
+                            .method(.post)
+                        }
+                        .class("dropdown-menu")
+                        .margin(.zero)
                     }
-                    .class("nav-item")
+                    .class("nav-item dropdown")
                 }
                 .button {
                     HyperHamburgerMenu()
@@ -221,7 +243,7 @@ struct ContentBaseTemplate: HTMLComponent {
             ListItem {
                 Anchor {
                     Span {
-                        Italic().class(tab.iconClass)
+                        MaterialDesignIcon(tab.icon)
                         " "
                         tab.title
                     }
