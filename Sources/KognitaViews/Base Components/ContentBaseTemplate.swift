@@ -237,32 +237,6 @@ struct ContentBaseTemplate: HTMLComponent {
             }
             .navigationBar(style: .dark)
             .class("topnav-navbar")
-
-
-            //            NavigationBar.Collapse {
-            //                    ForEach(in: tabs) { tab in
-            //                        self.tab(with: tab)
-            //                    }
-            //                    ListItem {
-            //                        Form {
-            //                            NavigationBar {
-            //                                Strings.menuLogout.localized()
-            //                            }
-            //                            .background(color: .primary)
-            //                            .class("nav-link btn")
-            //                        }
-            //                        //.method(.post)
-            //                        .action("/logout")
-            //                        .background(color: .primary)
-            //                    }
-            //                    .class("nav-item")
-            //                }
-            //                .button {
-            //                    HyperHamburgerMenu()
-            //                }
-            //            }
-            //            .navigationBar(style: .dark)
-            //            .class("topnav-navbar")
         }
 
         func tab(with tab: TemplateValue<TabContent>) -> HTML {

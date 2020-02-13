@@ -46,7 +46,6 @@ extension User.Templates {
                             Text {
                                 context.user.username
                             }
-                            .display(.inline)
                             .style(.heading4)
 
                             Text {
@@ -58,7 +57,6 @@ extension User.Templates {
                             Text {
                                 context.user.email
                             }
-                            .display(.inline)
                             .style(.heading4)
 
                         }
