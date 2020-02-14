@@ -161,45 +161,6 @@ $("#start-subject-test-modal").modal('show');
             }
         }
 
-        struct SubjectCard: HTMLComponent {
-
-            let subject: TemplateValue<Subject>
-
-            var body: HTML {
-                Div {
-                    Anchor {
-                        Div {
-                            Div {
-                                H3 {
-                                    subject.name
-                                }
-                                Badge {
-                                    subject.category
-                                }
-                                .background(color: .light)
-                            }
-                            .class("card-header bg-" + subject.colorClass.rawValue)
-                            .text(color: .white)
-                            Div {
-                                P {
-                                    subject.description
-                                        .escaping(.unsafeNone)
-                                }
-                                Button(Strings.subjectExploreButton)
-                                    .class("btn btn-" + subject.colorClass.rawValue + " btn-rounded")
-                            }
-                            .class("card-body position-relative")
-                        }
-                        .class("card")
-                        .display(.block)
-                    }
-                    .href("subjects/" + subject.id)
-                    .text(color: .dark)
-                }
-                .class("col-lg-6")
-            }
-        }
-
         struct StatisticsCard: HTMLComponent {
 
             var body: HTML {
@@ -245,6 +206,46 @@ $("#start-subject-test-modal").modal('show');
 }
 
 extension Subject.Templates {
+
+    struct SubjectCard: HTMLComponent {
+
+        let subject: TemplateValue<Subject>
+
+        var body: HTML {
+            Div {
+                Anchor {
+                    Div {
+                        Div {
+                            H3 {
+                                subject.name
+                            }
+                            Badge {
+                                subject.category
+                            }
+                            .background(color: .light)
+                        }
+                        .class("card-header bg-" + subject.colorClass.rawValue)
+                        .text(color: .white)
+                        Div {
+                            P {
+                                subject.description
+                                    .escaping(.unsafeNone)
+                            }
+                            Button(Strings.subjectExploreButton)
+                                .class("btn btn-" + subject.colorClass.rawValue + " btn-rounded")
+                        }
+                        .class("card-body position-relative")
+                    }
+                    .class("card")
+                    .display(.block)
+                }
+                .href("subjects/" + subject.id)
+                .text(color: .dark)
+            }
+            .class("col-lg-6")
+        }
+    }
+
     struct VerifyEmailSignifier: HTMLComponent {
 
         var body: HTML {
@@ -315,22 +316,46 @@ extension Subject.Templates {
                     }
                 }
 
-                Button {
-                    "Start nå"
+                IF(test.hasSubmitted) {
+                    Anchor {
+                        "Se resultatet"
+                    }
+                    .href(test.testResultUri)
+                    .button(style: .success)
                 }
-                .toggle(modal: .id("start-subject-test-modal"))
-                .button(style: .primary)
-                .isRounded()
+                .else {
+                    Button {
+                        "Start nå"
+                    }
+                    .toggle(modal: .id("start-subject-test-modal"))
+                    .button(style: .primary)
+                    .isRounded()
+                }
             }
             .header {
                 Text {
                     test.subjectName
                 }.style(.heading3)
             }
-            .modifyHeader {
-                $0.background(color: .danger)
-                    .text(color: .white)
+            .modifyHeader { header in
+                header.modify(if: test.hasSubmitted) {
+                    $0.background(color: .success)
+                        .text(color: .white)
+                }
+                .modify(if: test.hasSubmitted == false) {
+                    $0.background(color: .danger)
+                        .text(color: .white)
+                }
             }
         }
+    }
+}
+
+extension SubjectTest.OverviewResponse {
+    var testResultUri: String {
+        guard let sessionID = testSessionID else {
+            return ""
+        }
+        return "/test-sessions/\(sessionID)/results"
     }
 }

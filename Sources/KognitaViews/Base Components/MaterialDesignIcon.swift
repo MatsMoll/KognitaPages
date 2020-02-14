@@ -28,6 +28,10 @@ struct MaterialDesignIcon: HTMLComponent, AttributeNode {
         case chevronDown = "chevron-down"
         case arrowLeft = "arrow-left"
         case arrowRight = "arrow-right"
+        case accountCircle = "account-circle"
+        case formatListBulleted = "format-list-bulleted"
+        case viewList = "view-list"
+        case history
     }
 
     let icon: TemplateValue<Icons>

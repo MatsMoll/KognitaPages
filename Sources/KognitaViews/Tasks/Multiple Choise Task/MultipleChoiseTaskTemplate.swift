@@ -30,11 +30,11 @@ extension MultipleChoiseTask.Templates {
                 multiple: MultipleChoiseTask.Data,
                 taskContent: TaskPreviewContent,
                 user: UserContent,
-                selectedChoises: [MultipleChoiseTaskChoise.Result] = [],
                 currentTaskIndex: Int,
                 session: PracticeSessionRepresentable,
                 lastResult: TaskResultContent?,
-                practiceProgress: Int
+                practiceProgress: Int,
+                selectedChoises: [MultipleChoiseTaskChoise.ID] = []
             ) {
                 self.previewContext = .init(
                     task: taskContent,
@@ -61,6 +61,7 @@ extension MultipleChoiseTask.Templates {
                 Card {
                     ForEach(in: context.choises) { choise in
                         ChoiseOption(
+                            hasBeenAnswered: context.hasBeenCompleted,
                             canSelectMultiple: context.multipleChoiseTask.isMultipleSelect,
                             choise: choise
                         )
@@ -102,23 +103,18 @@ extension MultipleChoiseTask.Templates {
 
         struct ChoiseContext {
             let isSelected: Bool
-            let isCorrect: Bool
+            var isCorrect: Bool { choise.isCorrect }
             let choise: MultipleChoiseTaskChoise
 
-            init(choise: MultipleChoiseTaskChoise, selectedChoises: [MultipleChoiseTaskChoise.Result] = []) {
-                let selectedIndex = selectedChoises.firstIndex(where: { $0.id == choise.id })
-                if let selectedIndex = selectedIndex {
-                    self.isCorrect = selectedChoises[selectedIndex].isCorrect
-                } else {
-                    self.isCorrect = false
-                }
-                self.isSelected = selectedIndex != nil
+            init(choise: MultipleChoiseTaskChoise, selectedChoises: [MultipleChoiseTaskChoise.ID] = []) {
+                self.isSelected = selectedChoises.contains(choise.id ?? 0)
                 self.choise = choise
             }
         }
 
         struct ChoiseOption: HTMLComponent {
 
+            let hasBeenAnswered: Conditionable
             let canSelectMultiple: Conditionable
             let choise: TemplateValue<ChoiseContext>
 
@@ -130,23 +126,15 @@ extension MultipleChoiseTask.Templates {
                                 .name("choiseInput")
                                 .class("custom-control-input")
                                 .id(choise.choise.id)
+                                .isChecked(choise.isSelected)
+                                .modify(if: hasBeenAnswered) {
+                                    $0.add(HTMLAttribute(attribute: "disabled", value: "disabled"))
+                                }
                                 .modify(if: canSelectMultiple) {
                                     $0.type(.checkbox)
                                 }
                                 .modify(if: !canSelectMultiple) {
                                     $0.type(.radio)
-                                }
-                                .modify(if: choise.isSelected) { (isSelected: Input) in
-                                    isSelected
-                                        .text(color: .white)
-                                        .modify(if: choise.isCorrect) { (isCorrect: Input) in
-                                            isCorrect
-                                                .background(color: .success)
-                                        }
-                                        .modify(if: !choise.isCorrect) { (isIncorrect: Input) in
-                                            isIncorrect
-                                                .background(color: .danger)
-                                    }
                                 }
                             Label {
                                 choise.choise.choise
@@ -154,6 +142,9 @@ extension MultipleChoiseTask.Templates {
                             }
                             .class("custom-control-label")
                             .for(choise.choise.id)
+                            .modify(if: hasBeenAnswered && (choise.isSelected || choise.isCorrect)) {
+                                $0.text(color: .white)
+                            }
                         }
                         .class("custom-control")
                         .modify(if: canSelectMultiple) {
@@ -165,6 +156,12 @@ extension MultipleChoiseTask.Templates {
                     }
                     .class("p-2 text-secondary")
                     .id(choise.choise.id + "-div")
+                    .modify(if: hasBeenAnswered && choise.isCorrect) {
+                        $0.background(color: .success)
+                    }
+                    .modify(if: choise.isSelected && !choise.isCorrect) {
+                        $0.background(color: .danger)
+                    }
                 }
                 .class("card mb-1 shadow-none border")
             }

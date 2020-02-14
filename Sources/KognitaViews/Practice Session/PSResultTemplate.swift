@@ -206,13 +206,13 @@ extension PracticeSession.Templates.Result.Context {
     var goalProgress: String { "\(progress)%" }
     var readableAccuracy: Double { (10000 * accuracyScore).rounded() / 100 }
     var accuracyString: String {
+        var text = "\(readableAccuracy)%"
         if readableAccuracy > 90 {
-            return "\(readableAccuracy) 🏆"
+            text += " 🏆"
         } else if readableAccuracy > 70 {
-            return "\(readableAccuracy) 🔥"
-        } else {
-            return "\(readableAccuracy)"
+            text += " 🔥"
         }
+        return text
     }
     var date: Date { tasks.first?.date ?? .now }
     var title: String {

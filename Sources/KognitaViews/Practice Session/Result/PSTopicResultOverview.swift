@@ -39,7 +39,7 @@ extension PracticeSession.Templates.Result {
                 .margin(.zero, for: .top)
 
                 Text {
-                    topicLevel + "%"
+                    topicLevel.twoDecimals + "%"
                     Small { topicTaskResults.count + " oppgaver" }
                         .margin(.one, for: .left)
 
@@ -58,7 +58,7 @@ extension PracticeSession.Templates.Result {
                         Div {
 
                             KognitaProgressBadge(
-                                value: result.resultScore
+                                value: result.resultScore.twoDecimals
                             )
 
                             Text {
@@ -85,5 +85,11 @@ extension PracticeSession.Templates.Result {
         func isShown(_ condition: Conditionable) -> PracticeSession.Templates.Result.TopicOverview {
             .init(topicId: topicId, topicName: topicName, topicLevel: topicLevel, topicTaskResults: topicTaskResults, isShownValue: condition, attributes: attributes)
         }
+    }
+}
+
+extension Double {
+    fileprivate var twoDecimals: Double {
+        (self * 100).rounded() / 100
     }
 }
