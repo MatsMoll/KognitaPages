@@ -77,6 +77,16 @@ extension SubjectTest.Templates {
                                 }
 
                                 Unwrap(context.test) { test in
+                                    FormGroup(label: "Er Team Based Learning") {
+                                        Input()
+                                            .type(.checkbox)
+                                            .id("create-is-tbl")
+                                            .isChecked(test.isTeamBasedLearning)
+                                    }
+                                    .description {
+                                        "Ved å velge team based learning, så kan studentene ikke se detaliert resultat rett etter prøven men bare det totale resultatet"
+                                    }
+
                                     FormGroup(label: "Planlagt dato") {
                                         DatePicker()
                                             .id("create-test-scheduled-at")
@@ -84,6 +94,15 @@ extension SubjectTest.Templates {
                                     }
                                 }
                                 .else {
+                                    FormGroup(label: "Er Team Based Learning") {
+                                        Input()
+                                            .type(.checkbox)
+                                            .id("create-is-tbl")
+                                    }
+                                    .description {
+                                        "Ved å velge team based learning, så kan studentene ikke se detaliert resultat rett etter prøven men bare det totale resultatet"
+                                    }
+
                                     FormGroup(label: "Planlagt dato") {
                                         DatePicker()
                                             .id("create-test-scheduled-at")

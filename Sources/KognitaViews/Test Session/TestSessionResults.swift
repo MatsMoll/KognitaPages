@@ -68,12 +68,14 @@ extension TestSession.Templates {
                     .column(width: .eight, for: .large)
                     .column(width: .twelve)
 
-//                    ForEach(in: context.results.topicResults) { topic in
-//                        Div {
-//                            TopicOverview(result: topic)
-//                        }
-//                        .column(width: .four, for: .large)
-//                    }
+                    IF(context.results.shouldPresentDetails) {
+                        ForEach(in: context.results.topicResults) { topic in
+                            Div {
+                                TopicOverview(result: topic)
+                            }
+                            .column(width: .four, for: .large)
+                        }
+                    }
                 }
             }
             .scripts {
@@ -109,31 +111,67 @@ extension TestSession.Templates {
             }
         }
 
-//        struct TopicOverview: HTMLComponent {
-//
-//            let result: TemplateValue<TestSession.Results.Topic>
-//
-//            var body: HTML {
-//                Card {
-//                    Text {
-//                        result.name
-//                    }
-//                    .style(.heading3)
-//                    .text(color: .dark)
-//
-//                    Text {
-//                        result.score + " Poeng"
-//                        Small { result.readableScoreProsentage + "%" }
-//                            .margin(.one, for: .left)
-//
-//                    }
-//                    .font(style: .bold)
-//                    .margin(.two, for: .bottom)
-//                    .text(color: .secondary)
-//
-//                    KognitaProgressBar(value: result.readableScoreProsentage)
-//                }
-//            }
-//        }
+        struct TopicOverview: HTMLComponent {
+
+            let result: TemplateValue<TestSession.Results.Topic>
+
+            var body: HTML {
+                CollapsingCard {
+                    Text {
+                        result.name
+                    }
+                    .style(.heading3)
+                    .text(color: .dark)
+
+                    Text {
+                        result.score.twoDecimals + " Poeng"
+                        Small { result.readableScoreProsentage.twoDecimals + "%" }
+                            .margin(.one, for: .left)
+
+                    }
+                    .font(style: .bold)
+                    .margin(.two, for: .bottom)
+                    .text(color: .secondary)
+
+                    KognitaProgressBar(value: result.readableScoreProsentage)
+                }
+                .content {
+                    Div {
+                        ForEach(in: result.taskResults) { task in
+                            Div {
+                                TaskOverview(task: task)
+                            }
+                            .class("list-group-item")
+                        }
+                    }
+                    .class("list-group list-group-flush")
+                }
+                .collapseId(result.collapseID)
+            }
+        }
+
+        struct TaskOverview: HTMLComponent {
+
+            let task: TemplateValue<TestSession.Results.Task>
+
+            var body: HTML {
+                NodeList {
+                    KognitaProgressBadge(value: task.score.timesHundred.twoDecimals)
+
+                    Text {
+                        task.question
+                    }
+                    .text(color: .secondary)
+                    .margin(.three, for: .right)
+                    .margin(.one, for: .bottom)
+                }
+            }
+        }
+    }
+}
+
+extension TestSession.Results.Topic {
+    var collapseID: String {
+        name.replacingOccurrences(of: " ", with: "-")
     }
 }
