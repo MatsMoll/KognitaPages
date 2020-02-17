@@ -65,6 +65,8 @@ extension Subject.Templates {
                 Script().source("/assets/js/practice-session-create.js")
                 Script().source("/assets/js/vendor/Chart.bundle.min.js")
                 Script().source("/assets/js/practice-session-histogram.js")
+                Script().source("https://cdn.jsdelivr.net/npm/marked/marked.min.js")
+                Script().source("/assets/js/markdown-renderer.js")
                 IF(context.wasIncorrectPassword) {
                     Script {
 """
@@ -231,6 +233,8 @@ extension Subject.Templates {
                                 subject.description
                                     .escaping(.unsafeNone)
                             }
+                            .class("render-markdown")
+
                             Button(Strings.subjectExploreButton)
                                 .class("btn btn-" + subject.colorClass.rawValue + " btn-rounded")
                         }
