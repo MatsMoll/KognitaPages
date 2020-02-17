@@ -96,6 +96,8 @@ extension Subject.Templates {
                 Script().source("/assets/js/results/weekly-histogram.js")
                 Script().source("/assets/js/practice-session-create.js")
                 Script().source("/assets/js/subject/mark-as-active.js")
+                Script().source("https://cdn.jsdelivr.net/npm/marked/marked.min.js")
+                Script().source("/assets/js/markdown-renderer.js")
             }
             .modals {
                 IF(context.user.isAdmin) {
@@ -160,6 +162,7 @@ extension Subject.Templates {
                     .text(color: .muted)
                     .margin(.three, for: .bottom)
                     .style(.paragraph)
+                    .class("render-markdown")
                 }
                 .footer {
                     UnorderedList {
