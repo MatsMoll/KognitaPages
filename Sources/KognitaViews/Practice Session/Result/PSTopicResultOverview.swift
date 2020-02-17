@@ -64,7 +64,7 @@ extension PracticeSession.Templates.Result {
                             Text {
                                 result.question
                             }
-                            .text(color: .muted)
+                            .text(color: .secondary)
                             .margin(.three, for: .right)
                             .margin(.one, for: .bottom)
                         }
@@ -89,7 +89,11 @@ extension PracticeSession.Templates.Result {
 }
 
 extension Double {
-    fileprivate var twoDecimals: Double {
+    var twoDecimals: Double {
         (self * 100).rounded() / 100
+    }
+
+    var timesHundred: Double {
+        self * 100
     }
 }
