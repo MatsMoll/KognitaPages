@@ -113,9 +113,15 @@ extension SubjectTest.Templates {
                     }
                 }
             }
+            .header {
+                Stylesheet(url: "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css")
+            }
             .scripts {
                 Script(source: "/assets/js/vendor/Chart.bundle.min.js")
                 Script(source: "/assets/js/subject-test/score-histogram.js")
+                Script().source("https://cdn.jsdelivr.net/npm/marked/marked.min.js")
+                Script().source("https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js")
+                Script().source("/assets/js/markdown-renderer.js")
             }
         }
 
@@ -126,6 +132,15 @@ extension SubjectTest.Templates {
 
             var body: HTML {
                 Card {
+
+                    Unwrap(result.description) { description in
+                        Text {
+                            description
+                        }
+                        .style(.cardText)
+                        .class("render-markdown")
+                    }
+
                     Text {
                         result.question
                     }
@@ -151,7 +166,9 @@ extension SubjectTest.Templates {
                             choise.choise
                                 .escaping(.unsafeNone)
                         }
+                        .class("render-markdown")
                         .style(.lead)
+                        
                         Text {
                             choise.numberOfSubmissions
                             " svar"
