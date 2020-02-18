@@ -8,6 +8,42 @@
 
 import BootstrapKit
 import KognitaCore
+import Foundation
+
+public protocol SessionRepresentable: Codable {
+
+    var title: String { get }
+    var sessionUri: String { get }
+    var executionDate: Date { get }
+}
+
+extension PracticeSession.HighOverview: SessionRepresentable {
+
+    public var title: String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return "Øving: " + formatter.string(from: executionDate)
+    }
+
+    public var sessionUri: String {
+        "/practice-sessions/\(id)/result"
+    }
+
+    public var executionDate: Date {
+        createdAt
+    }
+}
+
+extension TestSession.HighOverview: SessionRepresentable {
+
+    public var title: String { testTitle }
+
+    public var sessionUri: String { "/test-sessions/\(id)/results" }
+
+    public var executionDate: Date { createdAt }
+}
+
 
 extension HTML {
     func append(html: HTML) -> HTML {
@@ -37,8 +73,9 @@ extension PracticeSession.Templates {
     public struct History: HTMLTemplate {
 
         struct Sessions {
-            let subject: Subject
-            let sessions: [PracticeSession]
+            let subjectName: String
+            let subjectID: Subject.ID
+            let sessions: [SessionRepresentable]
         }
 
         public struct Context {
@@ -47,21 +84,38 @@ extension PracticeSession.Templates {
             let user: User
             let sessions: [Sessions]
 
-            public init(user: User, sessions: PracticeSession.HistoryList) {
+            public init(user: User, sessions: TaskSession.HistoryList) {
                 self.user = user
 
                 var groups = [Subject.ID: Sessions]()
 
-                for item in sessions.sessions {
-                    if let grouped = groups[item.subject.id ?? 0] {
-                        groups[item.subject.id ?? 0] = .init(
-                            subject: item.subject,
-                            sessions: grouped.sessions + [item.session]
+                for item in sessions.practiceSessions {
+                    if let grouped = groups[item.subjectID] {
+                        groups[item.subjectID] = .init(
+                            subjectName: item.subjectName,
+                            subjectID: item.subjectID,
+                            sessions: grouped.sessions + [item]
                         )
                     } else {
-                        groups[item.subject.id ?? 0] = .init(
-                            subject: item.subject,
-                            sessions: [item.session]
+                        groups[item.subjectID] = .init(
+                            subjectName: item.subjectName,
+                            subjectID: item.subjectID,
+                            sessions: [item]
+                        )
+                    }
+                }
+                for item in sessions.testSessions {
+                    if let grouped = groups[item.subjectID] {
+                        groups[item.subjectID] = .init(
+                            subjectName: item.subjectName,
+                            subjectID: item.subjectID,
+                            sessions: grouped.sessions + [item]
+                        )
+                    } else {
+                        groups[item.subjectID] = .init(
+                            subjectName: item.subjectName,
+                            subjectID: item.subjectID,
+                            sessions: [item]
                         )
                     }
                 }
@@ -99,7 +153,8 @@ extension PracticeSession.Templates {
                                     sessions: group
                                 )
                             }
-                            .column(width: .six)
+                            .column(width: .six, for: .large)
+                            .column(width: .twelve)
                         }
                     }
                     .elseIf(context.sessions.count == 1) {
@@ -108,7 +163,7 @@ extension PracticeSession.Templates {
                                 SubjectOverview(
                                     sessions: group
                                 )
-                                .isShown(true)
+                                    .isShown(true)
                             }
                             .column(width: .twelve)
                         }
@@ -154,7 +209,7 @@ extension PracticeSession.Templates.History {
         var body: HTML {
             CollapsingCard {
                 Text {
-                    sessions.subject.name
+                    sessions.subjectName
                 }
                 .style(.heading3)
                 .text(color: .secondary)
@@ -168,13 +223,14 @@ extension PracticeSession.Templates.History {
             }
             .content {
                 Div {
-                    ForEach(in: sessions.sessions) { (session: TemplateValue<PracticeSession>) in
+                    ForEach(in: sessions.sessions) { (session: TemplateValue<SessionRepresentable>) in
                         SessionItem(session: session)
                     }
+
                 }
                 .class("list-group list-group-flush")
             }
-            .collapseId("collapse".append(html: sessions.subject.id))
+            .collapseId("collapse".append(html: sessions.subjectID))
             .isShown(isShownValue)
             .add(attributes: attributes)
         }
@@ -190,7 +246,7 @@ extension PracticeSession.Templates.History {
 
     struct SessionItem: HTMLComponent {
 
-        let session: TemplateValue<PracticeSession>
+        let session: TemplateValue<SessionRepresentable>
 
         var body: HTML {
             Anchor {
@@ -202,20 +258,24 @@ extension PracticeSession.Templates.History {
                 .float(.right)
 
                 Text {
+                    session.title
+                }
+                .margin(.three, for: .right)
+                .margin(.one, for: .bottom)
+                .style(.heading4)
+                .text(color: .dark)
+
+                Text {
                     "Startet: "
-                    session.createdAt
+                    session.executionDate
                         .style(date: .medium, time: .short)
                 }
                 .text(color: .muted)
                 .margin(.three, for: .right)
                 .margin(.one, for: .bottom)
-
-                Unwrap(session.timeUsed) { timeUsed in
-                    timeUsedText(timeUsed)
-                }
             }
             .class("list-group-item")
-            .href("/practice-sessions/".append(html: session.id).append(html: "/result"))
+            .href(session.sessionUri)
         }
 
         func timeUsedText(_ timeUsed: TemplateValue<Double>) -> HTML {
