@@ -25,6 +25,12 @@ extension TestSession.Templates {
             }
         }
 
+        var breadcrumbs: [BreadcrumbItem] {
+            [
+                BreadcrumbItem(link: "/practice-sessions/history", title: ViewWrapper(view: Strings.menuPracticeHistory.localized()))
+            ]
+        }
+
         public init() {}
 
         public var body: HTML {
@@ -32,7 +38,7 @@ extension TestSession.Templates {
                 userContext: context.user,
                 baseContext: .constant(.init(title: "Resultat", description: "Resultat"))
             ) {
-                PageTitle(title: context.results.testTitle)
+                PageTitle(title: context.results.testTitle, breadcrumbs: breadcrumbs)
 
                 Row {
                     Div {
@@ -67,8 +73,18 @@ extension TestSession.Templates {
                     }
                     .column(width: .eight, for: .large)
                     .column(width: .twelve)
+                }
 
-                    IF(context.results.shouldPresentDetails) {
+                IF(context.results.shouldPresentDetails) {
+                    Row {
+                        Text {
+                            "Temaer"
+                        }
+                        .style(.heading3)
+                        .column(width: .twelve)
+                    }
+
+                    Row {
                         ForEach(in: context.results.topicResults) { topic in
                             Div {
                                 TopicOverview(result: topic)
