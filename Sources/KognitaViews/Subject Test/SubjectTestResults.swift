@@ -112,6 +112,30 @@ extension SubjectTest.Templates {
                         .column(width: .six, for: .large)
                     }
                 }
+
+                Text {
+                    "Bruker resultater"
+                }
+                .style(.heading3)
+
+                Row {
+                    ForEach(in: context.results.userResults) { result in
+                        Div {
+                            Card {
+                                KognitaProgressBadge(value: result.percentage.twoDecimals)
+                                Text {
+                                    "Antall poenge: "
+                                    result.score.twoDecimals
+                                }
+                                Text {
+                                    result.userEmail
+                                }
+                                .style(.heading3)
+                            }
+                        }
+                        .column(width: .six, for: .large)
+                    }
+                }
             }
             .header {
                 Stylesheet(url: "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css")
