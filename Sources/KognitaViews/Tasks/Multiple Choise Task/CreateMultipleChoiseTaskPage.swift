@@ -13,13 +13,6 @@ extension MultipleChoiseTask.Templates.Create.Context {
     var subjectUri: String { "/subjects/\(content.subject.id)" }
     var subjectContentOverviewUri: String { "/creator/subjects/\(content.subject.id)/overview" }
 
-    var isTestable: Bool {
-        guard let task = content.task else {
-            return false
-        }
-        return task.isTestable
-    }
-
     var subjectName: String {
         content.subject.name
     }
@@ -34,11 +27,17 @@ extension MultipleChoiseTask.Templates {
             let user: User
             let content: MultipleChoiseTask.ModifyContent
             let wasUpdated: Bool
+            let isTestable: Bool
 
-            public init(user: User, content: MultipleChoiseTask.ModifyContent, wasUpdated: Bool = false) {
+            public init(user: User, content: MultipleChoiseTask.ModifyContent, wasUpdated: Bool = false, isTestable: Bool = false) {
                 self.user = user
                 self.content = content
                 self.wasUpdated = wasUpdated
+                if let task = content.task {
+                    self.isTestable = task.isTestable
+                } else {
+                    self.isTestable = isTestable
+                }
             }
         }
 
