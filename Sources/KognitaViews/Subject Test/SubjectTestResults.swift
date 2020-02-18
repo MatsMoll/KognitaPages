@@ -132,10 +132,9 @@ extension SubjectTest.Templates {
 
             var body: HTML {
                 Card {
-
                     Unwrap(result.description) { description in
                         Text {
-                            description
+                            description.escaping(.unsafeNone)
                         }
                         .style(.cardText)
                         .class("render-markdown")
