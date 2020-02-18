@@ -23,8 +23,9 @@ extension SubjectTest.Templates {
 
             var editCall: String { "editTest(\(test?.id ?? 0))" }
             var deleteCall: String { "deleteTest(\(test?.id ?? 0))" }
+            var createTaskUri: String { "/creator/subjects/\(subjectID)/task/multiple/create?isTestable=true" }
 
-
+            let subjectID: Subject.ID
             let user: User
             let tasks: [Task]
             let test: SubjectTest.ModifyResponse?
@@ -33,7 +34,8 @@ extension SubjectTest.Templates {
                 test?.taskIDs.map { String($0) } ?? []
             }
 
-            public init(user: User, tasks: [Task], test: SubjectTest.ModifyResponse? = nil) {
+            public init(subjectID: Subject.ID, user: User, tasks: [Task], test: SubjectTest.ModifyResponse? = nil) {
+                self.subjectID = subjectID
                 self.user = user
                 self.tasks = tasks
                 self.test = test
@@ -132,6 +134,15 @@ extension SubjectTest.Templates {
                                 .description {
                                     "Her vil bare oppgaver som er markert med 'ikke for øving' bli vist. Du kan lage en oppgave "
                                 }
+
+                                Anchor {
+                                    "Lag oppgave"
+                                }
+                                .href(context.createTaskUri)
+                                .button(style: .primary)
+                                .float(.bottom)
+                                .margin(.zero, for: .top)
+                                .margin(.three, for: .bottom)
 
                                 FormGroup(label: "Passord") {
                                     Input()
