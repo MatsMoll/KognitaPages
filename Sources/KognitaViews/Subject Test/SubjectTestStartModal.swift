@@ -25,6 +25,23 @@ extension SubjectTest.Templates {
                 .style(.heading3)
 
                 Form {
+                    FormGroup(label: "Forventet score") {
+                        Input()
+                            .type(.number)
+                            .id("expectedScore")
+                            .placeholder("50")
+                            .name("expectedScore")
+                            .max(value: 100)
+                            .min(value: 0)
+                    }
+                    .description {
+                        "Skriv inn en realistisk forventer av hvor mange prosent du får på prøven! Fra 0 til 100%"
+                    }
+                    .margin(.three, for: .bottom)
+
+                    Label {
+                        "Passord"
+                    }
                     InputGroup {
                         Input()
                             .type(.password)

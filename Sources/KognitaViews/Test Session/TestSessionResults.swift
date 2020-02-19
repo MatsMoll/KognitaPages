@@ -3,11 +3,22 @@ import BootstrapKit
 
 extension TestSession.Results {
     var readableScorePersentage: Double {
-        (scoreProsentage * 10000).rounded() / 100
+        (scorePercentage * 10000).rounded() / 100
     }
 
     var readableScore: Double {
         (score * 100).rounded() / 100
+    }
+
+    var goalMessage: String {
+        guard let expectedScore = expectedScore else {
+            return ""
+        }
+        if expectedScore < Int(scorePercentage * 100) {
+            return "Bra jobba! Du oppnådde forventingene dine 🔥"
+        } else {
+            return "Ups! Bedre lykke til neste gang 🍀"
+        }
     }
 }
 
@@ -56,6 +67,23 @@ extension TestSession.Templates {
                             Text {
                                 context.results.readableScore
                                 " poeng"
+                            }
+                        }
+
+                        Card {
+                            Text {
+                                "Forventet score"
+                            }
+
+                            Text {
+                                context.results.expectedScore
+                                "%"
+                            }
+                            .style(.heading3)
+                            .text(color: .dark)
+
+                            Text {
+                                context.results.goalMessage
                             }
                         }
                     }
