@@ -216,17 +216,20 @@ extension SubjectTest.Templates {
 
                     Row {
                         ForEach(in: results) { (result: TemplateValue<SubjectTest.UserResult>) in
-                            Card {
-                                KognitaProgressBadge(value: result.percentage.twoDecimals)
-                                Text {
-                                    "Antall poenge: "
-                                    result.score.twoDecimals
+                            Div {
+                                Card {
+                                    KognitaProgressBadge(value: result.percentage.timesHundred.twoDecimals)
+                                    Text {
+                                        "Antall poenge: "
+                                        result.score.twoDecimals
+                                    }
+                                    Text {
+                                        result.userEmail
+                                    }
+                                    .style(.heading3)
                                 }
-                                Text {
-                                    result.userEmail
-                                }
-                                .style(.heading3)
                             }
+                            .column(width: .four, for: .large)
                         }
                     }
                 }
