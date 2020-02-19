@@ -112,6 +112,8 @@ extension SubjectTest.Templates {
                         .column(width: .six, for: .large)
                     }
                 }
+
+                UserResultSection(results: context.results.userResults)
             }
             .header {
                 Stylesheet(url: "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css")
@@ -195,6 +197,37 @@ extension SubjectTest.Templates {
                     .class("shadow-none border")
                     .modify(if: choise.isCorrect) {
                         $0.class("border-success")
+                    }
+                }
+            }
+        }
+
+
+        struct UserResultSection: HTMLComponent {
+
+            let results: TemplateValue<[SubjectTest.UserResult]>
+
+            var body: HTML {
+                NodeList {
+                    Text {
+                        "Bruker resultater"
+                    }
+                    .style(.heading3)
+
+                    Row {
+                        ForEach(in: results) { (result: TemplateValue<SubjectTest.UserResult>) in
+                            Card {
+                                KognitaProgressBadge(value: result.percentage.twoDecimals)
+                                Text {
+                                    "Antall poenge: "
+                                    result.score.twoDecimals
+                                }
+                                Text {
+                                    result.userEmail
+                                }
+                                .style(.heading3)
+                            }
+                        }
                     }
                 }
             }
