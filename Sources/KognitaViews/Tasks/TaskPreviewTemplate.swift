@@ -132,6 +132,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
                     NavigationCard(context: context)
                     DismissableError()
                     underSolutionCard
+                    DiscussionCard(context: context)
                 }
 
 //                QuestionCard(context: context.taskContent)
@@ -276,7 +277,38 @@ public struct TaskPreviewTemplate: HTMLComponent {
             }
         }
     }
+
+    struct DiscussionCard: HTMLComponent {
+
+        let context: TemplateValue<TaskPreviewTemplateContext>
+
+        public var body: HTML {
+            Card {
+                Text {
+                    "Diskusjon"
+                }
+                .style(.heading3)
+            }
+            .footer {
+                Text {
+                    "Spørsmål"
+                }
+                .style(.heading6)
+
+                Button {
+                    MaterialDesignIcon(.arrowRight)
+                        .margin(.one, for: .left)
+                        
+                }
+            }
+        }
+    }
 }
+
+
+
+
+
 
 typealias StaticView = HTMLComponent
 typealias TemplateView = HTMLTemplate
