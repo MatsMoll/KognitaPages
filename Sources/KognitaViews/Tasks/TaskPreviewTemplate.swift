@@ -163,6 +163,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
             Script().source("https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js")
             Script(source: "/assets/js/markdown-renderer.js")
             Script(source: "/assets/js/task-discussion/create.js")
+            Script(source: "/assets/js/task-discussion/create-response.js")
             customScripts
         }
     }
