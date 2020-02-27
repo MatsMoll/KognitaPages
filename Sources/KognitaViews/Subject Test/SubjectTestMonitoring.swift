@@ -1,6 +1,6 @@
 import BootstrapKit
 import KognitaCore
-
+import Foundation
 
 extension SubjectTest.Templates {
 
@@ -9,6 +9,7 @@ extension SubjectTest.Templates {
         public struct Context {
             let user: User
             let test: SubjectTest
+            var renderedAt: Date { .now }
 
             public init(user: User, test: SubjectTest) {
                 self.user = user
@@ -31,6 +32,11 @@ extension SubjectTest.Templates {
                         .id("ends-at")
                         .type(.hidden)
                 }
+
+                Input()
+                    .value(context.renderedAt.iso8601)
+                    .id("rendered-at")
+                    .type(.hidden)
 
                 ContentStructure {
                     Row { "" }.id("user-status")
