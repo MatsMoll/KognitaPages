@@ -32,6 +32,8 @@ struct MaterialDesignIcon: HTMLComponent, AttributeNode {
         case formatListBulleted = "format-list-bulleted"
         case viewList = "view-list"
         case history
+        case heart
+        case heartOutline = "heart-outline"
     }
 
     let icon: TemplateValue<Icons>

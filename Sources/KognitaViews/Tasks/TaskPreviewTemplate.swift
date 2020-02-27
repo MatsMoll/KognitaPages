@@ -89,18 +89,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
             description: "Lær ved å øve"
         )) {
             Container {
-                Row {
-                    Div {
-                        Div {
-                            H4 {
-                                context.topic.name
-                            }
-                            .class("page-title")
-                        }
-                        .class("page-title-box")
-                    }
-                    .column(width: .twelve)
-                }
+                PageTitle(title: context.topic.name)
 
                 Row {
                     Div {
@@ -133,17 +122,6 @@ public struct TaskPreviewTemplate: HTMLComponent {
                     DismissableError()
                     underSolutionCard
                 }
-
-//                QuestionCard(context: context.taskContent)
-//                actionCard
-//                DismissableError()
-//                Div()
-//                    .id("solution")
-//                    .display(.none)
-////                IF(context.task.solution.isDefined) {
-////                    SolutionCard(context: context)
-////                }
-//                underSolutionCard
             }
         }
         .header {
@@ -153,6 +131,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
             Script(source: "https://cdn.jsdelivr.net/npm/marked/marked.min.js")
             Script().source("https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js")
             Script(source: "/assets/js/markdown-renderer.js")
+            Script(source: "/assets/js/task-solution/vote.js")
             customScripts
         }
     }
@@ -280,86 +259,3 @@ public struct TaskPreviewTemplate: HTMLComponent {
 
 typealias StaticView = HTMLComponent
 typealias TemplateView = HTMLTemplate
-
-public struct TaskSolutionsTemplate: HTMLTemplate {
-
-    public init() {}
-
-    public let context: TemplateValue<[TaskSolution.Response]> = .root()
-
-    public var body: HTML {
-        Accordions(values: context, title: { (solution, index) in
-            Text {
-                Localized(key: Strings.exerciseProposedSolutionTitle)
-                Span {
-                    MaterialDesignIcon(.chevronDown)
-                        .class("accordion-arrow")
-                }
-                .float(.right)
-            }
-            .style(.heading4)
-
-            IF(solution.creatorUsername.isDefined) {
-                "Laget av: " + solution.creatorUsername
-            }
-            IF(solution.approvedBy.isDefined) {
-                Badge {
-                    "Verifisert av: " + solution.approvedBy
-                }
-                .background(color: .success)
-                .margin(.two, for: .left)
-            }.else {
-                Badge {
-                    "Ikke verifisert enda"
-                }
-                .background(color: .warning)
-                .margin(.two, for: .left)
-            }
-        }) { (solution, index) in
-            Div {
-                solution.solution
-                    .escaping(.unsafeNone)
-            }
-            .class("solutions")
-        }
-    }
-
-    struct SolutionCard: HTMLComponent {
-
-        let context: TemplateValue<TaskSolution.Response>
-
-        var body: HTML {
-            Card {
-                Div {
-                    Div {
-                        Text(Strings.exerciseProposedSolutionTitle)
-                            .style(.heading4)
-                    }
-                    .class("page-title")
-                    Div {
-                        IF(context.creatorUsername.isDefined) {
-                            "Laget av: " + context.creatorUsername
-                        }
-                        IF(context.approvedBy.isDefined) {
-                            Badge {
-                                "Verifisert av: " + context.approvedBy
-                            }
-                            .background(color: .success)
-                            .margin(.two, for: .left)
-                        }.else {
-                            Badge {
-                                "Ikke verifisert enda"
-                            }
-                            .background(color: .warning)
-                            .margin(.two, for: .left)
-                        }
-                    }
-                }
-                .class("page-title-box")
-                .margin(.two, for: .bottom)
-
-                context.solution.escaping(.unsafeNone)
-            }
-        }
-    }
-}

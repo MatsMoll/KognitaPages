@@ -57,7 +57,7 @@ public struct KognitaViews {
     //    // Task Template
         try renderer.add(view: FlashCardTask.Templates.Execute())
         try renderer.add(view: MultipleChoiseTask.Templates.Execute())
-        try renderer.add(view: TaskSolutionsTemplate())
+        try renderer.add(view: TaskSolution.Templates.List())
         try renderer.add(view: MultipleChoiseTaskTestMode())
     //
     //    // Create Content
