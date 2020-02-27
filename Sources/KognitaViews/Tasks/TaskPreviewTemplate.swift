@@ -16,6 +16,7 @@ struct TaskPreviewTemplateContext {
     let user: UserContent
     let taskPath: String
     let currentTaskIndex: Int
+    let discussions: [TaskDiscussion.Details]
 
     var subject: Subject { return taskContent.subject }
     var topic: Topic { return taskContent.topic }
@@ -42,7 +43,8 @@ struct TaskPreviewTemplateContext {
         session: PracticeSessionRepresentable,
         taskPath: String,
         currentTaskIndex: Int,
-        lastResult: TaskResultContent?
+        lastResult: TaskResultContent?,
+        discussions: [TaskDiscussion.Details]
     ) {
         self.practiceProgress = practiceProgress
         self.session = session
@@ -51,6 +53,7 @@ struct TaskPreviewTemplateContext {
         self.taskPath = taskPath
         self.currentTaskIndex = currentTaskIndex
         self.lastResult = lastResult
+        self.discussions = discussions
     }
 }
 
@@ -102,6 +105,11 @@ public struct TaskPreviewTemplate: HTMLComponent {
                     .column(width: .twelve)
                 }
 
+                Input()
+                    .type(.hidden)
+                    .value(context.task.id)
+                    .id("task-id")
+
                 Row {
                     Div {
 
@@ -132,7 +140,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
                     NavigationCard(context: context)
                     DismissableError()
                     underSolutionCard
-                    DiscussionCard(context: context)
+                    DiscussionCard(discussions: context.discussions)
                 }
 
 //                QuestionCard(context: context.taskContent)
@@ -154,6 +162,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
             Script(source: "https://cdn.jsdelivr.net/npm/marked/marked.min.js")
             Script().source("https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js")
             Script(source: "/assets/js/markdown-renderer.js")
+            Script(source: "/assets/js/task-discussion/create.js")
             customScripts
         }
     }
@@ -274,32 +283,6 @@ public struct TaskPreviewTemplate: HTMLComponent {
                         $0.bar(style: .success)
                 }
                 .margin(.two, for: .bottom)
-            }
-        }
-    }
-
-    struct DiscussionCard: HTMLComponent {
-
-        let context: TemplateValue<TaskPreviewTemplateContext>
-
-        public var body: HTML {
-            Card {
-                Text {
-                    "Diskusjon"
-                }
-                .style(.heading3)
-            }
-            .footer {
-                Text {
-                    "Spørsmål"
-                }
-                .style(.heading6)
-
-                Button {
-                    MaterialDesignIcon(.arrowRight)
-                        .margin(.one, for: .left)
-                        
-                }
             }
         }
     }

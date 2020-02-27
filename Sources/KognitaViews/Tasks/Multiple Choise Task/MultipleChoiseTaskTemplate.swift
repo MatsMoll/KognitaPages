@@ -34,7 +34,8 @@ extension MultipleChoiseTask.Templates {
                 session: PracticeSessionRepresentable,
                 lastResult: TaskResultContent?,
                 practiceProgress: Int,
-                selectedChoises: [MultipleChoiseTaskChoise.ID] = []
+                selectedChoises: [MultipleChoiseTaskChoise.ID] = [],
+                discussions: [TaskDiscussion.Details]
             ) {
                 self.previewContext = .init(
                     task: taskContent,
@@ -43,7 +44,8 @@ extension MultipleChoiseTask.Templates {
                     session: session,
                     taskPath: "multiple-choise",
                     currentTaskIndex: currentTaskIndex,
-                    lastResult: lastResult
+                    lastResult: lastResult,
+                    discussions: discussions
                 )
                 self.multipleChoiseTask = multiple
                 self.isResult = !selectedChoises.isEmpty

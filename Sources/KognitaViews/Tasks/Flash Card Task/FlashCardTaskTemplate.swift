@@ -38,7 +38,8 @@ extension FlashCardTask.Templates {
                 practiceProgress: Int,
                 session: PracticeSessionRepresentable,
                 lastResult: TaskResultContent? = nil,
-                prevAnswer: FlashCardAnswer?
+                prevAnswer: FlashCardAnswer?,
+                discussions: [TaskDiscussion.Details]
             ) {
                 self.taskPreview = .init(
                     task: taskPreview,
@@ -47,7 +48,8 @@ extension FlashCardTask.Templates {
                     session: session,
                     taskPath: "flash-card",
                     currentTaskIndex: currentTaskIndex,
-                    lastResult: lastResult
+                    lastResult: lastResult,
+                    discussions: discussions
                 )
                 self.prevAnswer = prevAnswer
             }
