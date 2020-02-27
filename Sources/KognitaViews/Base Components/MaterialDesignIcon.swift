@@ -67,6 +67,8 @@ struct MaterialDesignIcon: HTMLComponent, AttributeNode {
     }
 
     var body: HTML {
-        Italic().class("mdi mdi-" + icon.rawValue)
+        Italic()
+            .class("mdi mdi-" + icon.rawValue)
+            .add(attributes: attributes)
     }
 }
