@@ -92,6 +92,7 @@ public struct MultipleChoiseTaskTestMode: HTMLTemplate {
         let user: User
         let task: SubjectTest.MultipleChoiseTaskContent
         var baseContext: BaseTemplateContent { .init(title: "", description: "") }
+        var renderedAt: Date { .now }
 
         public init(user: User, task: SubjectTest.MultipleChoiseTaskContent) {
             self.user = user
@@ -114,8 +115,8 @@ public struct MultipleChoiseTaskTestMode: HTMLTemplate {
                 }
 
                 Input()
-                    .value(context.task.requestedAt.iso8601)
-                    .id("requested-at")
+                    .value(context.renderedAt.iso8601)
+                    .id("rendered-at")
                     .type(.hidden)
 
                 QuestionCard(task: context.task.task)
