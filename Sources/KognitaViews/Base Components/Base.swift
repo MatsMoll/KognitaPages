@@ -92,6 +92,7 @@ struct BaseTemplate: HTMLComponent {
             Script(source: "/assets/js/app.min.js")
             customScripts
         }
+        .enviroment(locale: "nb")
     }
 }
 
