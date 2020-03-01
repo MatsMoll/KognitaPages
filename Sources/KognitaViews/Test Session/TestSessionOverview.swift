@@ -38,50 +38,49 @@ extension TestSession.Templates {
             ) {
                 Container {
                     PageTitle(title: context.overview.test.title)
-                    Text {
-                        "Oversikt"
-                    }
-                    .style(.heading3)
-                    .text(color: .dark)
 
-                    IF(context.unansweredTasks.isEmpty == false) {
+                    ContentStructure {
                         Text {
-                            "Ubesvarte oppgaver"
+                            "Oversikt"
+                        }
+                        .style(.heading3)
+                        .text(color: .dark)
+
+                        IF(context.unansweredTasks.isEmpty == false) {
+                            Text {
+                                "Ubesvarte oppgaver"
+                            }
+                            .style(.heading4)
+                            .text(color: .secondary)
+
+                            Row {
+                                ForEach(in: context.unansweredTasks) { task in
+                                    Div {
+                                        TaskCard(overview: task)
+                                    }
+                                    .column(width: .four, for: .large)
+                                }
+                            }
+                        }
+                        Text {
+                            "Alle oppgaver"
                         }
                         .style(.heading4)
                         .text(color: .secondary)
 
                         Row {
-                            ForEach(in: context.unansweredTasks) { task in
+                            ForEach(in: context.overview.tasks) { task in
                                 Div {
                                     TaskCard(overview: task)
                                 }
-                                .column(width: .four, for: .large)
+                                .column(width: .six, for: .large)
                             }
                         }
                     }
-                    Text {
-                        "Alle oppgaver"
-                    }
-                    .style(.heading4)
-                    .text(color: .secondary)
-
-                    Row {
-                        ForEach(in: context.overview.tasks) { task in
-                            Div {
-                                TaskCard(overview: task)
-                            }
-                            .column(width: .four, for: .large)
-                        }
-                    }
-
-                    Row {
-                        Div {
-                            SubmitCard(
-                                overview: context.overview
-                            )
-                        }
-                        .column(width: .twelve)
+                    .secondary {
+                        SubmitCard(
+                            overview: context.overview
+                        )
                     }
                 }
             }
@@ -99,7 +98,7 @@ extension TestSession.Templates {
                             "Avgitt svar "
                             MaterialDesignIcon(icon: .check)
                         }
-                        .background(color: .success)
+                        .background(color: .light)
                     }.else {
                         Badge {
                             "IKKE avgitt svar "
@@ -130,7 +129,7 @@ extension TestSession.Templates {
             var body: HTML {
                 Card {
                     Text {
-                        "Er du ferdig?"
+                        "Vil du levere?"
                     }
                     .style(.heading3)
                     .text(color: .dark)
