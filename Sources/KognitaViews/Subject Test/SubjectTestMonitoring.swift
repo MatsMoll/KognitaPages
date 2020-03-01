@@ -59,6 +59,19 @@ extension SubjectTest.Templates {
 
                             Card {
                                 Text {
+                                    "Passord"
+                                }
+                                .text(color: .secondary)
+
+                                Text {
+                                    context.test.password
+                                }
+                                .style(.heading3)
+                                .text(color: .dark)
+                            }
+
+                            Card {
+                                Text {
                                     "Handlinger"
                                 }
                                 .style(.heading3)
