@@ -34,7 +34,8 @@ extension TaskPreviewTemplate {
 
                             Div {
                                 Button {
-                                    MaterialDesignIcon(.arrowRight).background(color: .primary)
+                                    MaterialDesignIcon(.arrowRight)
+                                        .text(color: .primary)
 
                                 }
                                 .float(.right)
@@ -48,19 +49,28 @@ extension TaskPreviewTemplate {
                                 .data("dDesc", value: discussion.description)
                                 .on(click: discussion.fetchResponsesCall)
 
-                                Text {
-                                    discussion.description
+                                Div {
+                                    Div {
+
+                                        Text {
+                                            discussion.description
+                                        }
+                                        .style(.heading4)
+
+                                    }
+                                    .display(.flex)
+                                    .margin(.three, for: .top)
                                 }
-                                .style(.heading4)
 
                                 Small {
                                     "Spurt av: "
                                     discussion.username
                                 }
-                                .margin(.three, for: .bottom)
+                                .margin(.four, for: .bottom)
                             }
                             .class("border-bottom border-light")
                             .padding(.two, for: .bottom)
+                        
 
                         }
                     }.style(.heading6)
@@ -91,11 +101,6 @@ extension TaskPreviewTemplate {
                     }
                     .id("disc-username")
 
-                    Text {
-                        "Responser: "
-                    }
-                    .margin(.two, for: .top)
-
                     Div().id("disc-responses").display(.none)
 
 
@@ -104,6 +109,7 @@ extension TaskPreviewTemplate {
                             .id("create-discussion-response")
                             .placeholder("En eller annen respons")
                     }
+                    .margin(.four, for: .top)
 
                     Button {
                         "Svar"
