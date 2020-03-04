@@ -142,17 +142,6 @@ public struct TaskPreviewTemplate: HTMLComponent {
                     underSolutionCard
                     DiscussionCard(discussions: context.discussions)
                 }
-
-//                QuestionCard(context: context.taskContent)
-//                actionCard
-//                DismissableError()
-//                Div()
-//                    .id("solution")
-//                    .display(.none)
-////                IF(context.task.solution.isDefined) {
-////                    SolutionCard(context: context)
-////                }
-//                underSolutionCard
             }
         }
         .header {
