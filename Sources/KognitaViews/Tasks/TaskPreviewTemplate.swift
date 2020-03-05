@@ -93,11 +93,6 @@ public struct TaskPreviewTemplate: HTMLComponent {
 
                 Row {
                     Div {
-
-                        Text(Strings.exerciseMainTitle)
-                            .margin(.zero, for: .top)
-                            .style(.heading3)
-
                         Unwrap(context.task.examPaperSemester) { exam in
                             Badge {
                                 Strings.exerciseExam.localized()
@@ -144,10 +139,12 @@ public struct TaskPreviewTemplate: HTMLComponent {
             Row {
                 Div {
                     Card {
-                        Small {
-                            context.actionDescription
+                        Text {
+                            Strings.exerciseMainTitle.localized()
+                            " 2"
                         }
-                        .text(color: .secondary)
+                            .margin(.zero, for: .top)
+                            .style(.heading3)
 
                         IF(context.task.description.isDefined) {
                             Text {
@@ -157,16 +154,12 @@ public struct TaskPreviewTemplate: HTMLComponent {
                             .style(.paragraph)
                             .text(color: .secondary)
                             .margin(.two, for: .bottom)
-                            .margin(.three, for: .top)
-                            .id("task-description")
+                            .class("render-markdown")
                         }
                         Text {
                             context.task.question
                         }
-                        .style(.heading5)
-                        .modify(if: context.task.description.isNotDefined) {
-                            $0.margin(.three, for: .top)
-                        }
+                        .style(.heading4)
                     }
                     .display(.block)
                 }

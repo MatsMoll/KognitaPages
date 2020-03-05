@@ -91,6 +91,7 @@ struct BaseTemplate: HTMLComponent {
             .padding(.zero, for: .bottom)
             Script(source: "/assets/js/app.min.js")
             customScripts
+            content.scripts
         }
     }
 }

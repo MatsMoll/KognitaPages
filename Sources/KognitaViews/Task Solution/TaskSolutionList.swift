@@ -6,7 +6,8 @@ extension TaskSolution {
 }
 
 extension TaskSolution.Response {
-    var voteCall: String { "voteOnSolution(\(id))" }
+    var voteCall: String { "voteOnSolution(\(id), this)" }
+    var voteID: String { "solution-\(id)" }
 }
 
 extension TaskSolution.Templates {
@@ -21,6 +22,22 @@ extension TaskSolution.Templates {
                 Text {
                     "Løsningsforslag av "
                     solution.creatorUsername
+
+                    Span {
+                        MaterialDesignIcon(.chevronDown)
+                            .class("accordion-arrow")
+                    }
+                    .float(.right)
+                }
+                .style(.heading3)
+
+                Text {
+                    "Nytting for "
+                    Span {
+                        solution.numberOfVotes
+                    }
+                    .id(solution.voteID)
+                    " personer"
 
                     Small {
                         Unwrap(solution.approvedBy) { approvedBy in
@@ -38,34 +55,50 @@ extension TaskSolution.Templates {
                             .margin(.two, for: .left)
                         }
                     }
-
-                    Span {
-                        MaterialDesignIcon(.chevronDown)
-                            .class("accordion-arrow")
-                    }
-                    .float(.right)
                 }
-                .style(.heading3)
-
-                Text {
-                    solution.numberOfVotes
-                    " likes"
-
-                    Button {
-                        MaterialDesignIcon(.heartOutline)
-                            .id("like-button")
-                    }
-                    .on(click: solution.voteCall)
-                    .button(style: .light)
-                    .margin(.two, for: .left)
-                }
-
             }) { (solution, index) in
                 Div {
                     solution.solution
                         .escaping(.unsafeNone)
+
+                    Text {
+                        "Var løsningsforslaget nyttig? Trykk på knappen og si om det hjalp"
+
+                        Button {
+                            IF(solution.userHasVoted) {
+                                MaterialDesignIcon(.heart)
+                                    .class("vote-button")
+                                    .text(color: .danger)
+                            }.else {
+                                MaterialDesignIcon(.heartOutline)
+                                    .class("vote-button")
+                            }
+                        }
+                        .on(click: solution.voteCall)
+                        .button(style: .light)
+                        .margin(.two, for: .left)
+                    }
+                    .style(.heading5)
                 }
                 .class("solutions")
+            }
+            .footer {
+                Text {
+                    "Løst det på en annen måte?"
+                }
+                .style(.heading4)
+
+                Text {
+                    "Foreslå et annet løsningsforslag"
+                }
+                FormGroup(label: "Løsningsforslag") {
+                    TextArea().id("new-solution")
+                }
+                Button {
+                    "Foreslå løsningsforslag"
+                }
+                .on(click: "")
+                .button(style: .light)
             }
         }
 

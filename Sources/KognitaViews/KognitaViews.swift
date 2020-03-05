@@ -41,6 +41,7 @@ public struct KognitaViews {
         try renderer.add(view: Subject.Templates.ListOverview())
         try renderer.add(view: Subject.Templates.Details())
         try renderer.add(view: Subject.Templates.SelectRedirect())
+        try renderer.add(view: Subject.Templates.TaskList())
 
         try renderer.add(view: SubjectTest.Templates.Modify())
         try renderer.add(view: SubjectTest.Templates.List())

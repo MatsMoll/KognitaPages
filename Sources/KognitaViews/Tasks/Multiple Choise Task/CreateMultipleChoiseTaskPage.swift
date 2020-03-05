@@ -28,11 +28,13 @@ extension MultipleChoiseTask.Templates {
             let content: MultipleChoiseTask.ModifyContent
             let wasUpdated: Bool
             let isTestable: Bool
+            let isModerator: Bool
 
-            public init(user: User, content: MultipleChoiseTask.ModifyContent, wasUpdated: Bool = false, isTestable: Bool = false) {
+            public init(user: User, content: MultipleChoiseTask.ModifyContent, isModerator: Bool, wasUpdated: Bool = false, isTestable: Bool = false) {
                 self.user = user
                 self.content = content
                 self.wasUpdated = wasUpdated
+                self.isModerator = isModerator
                 if let task = content.task {
                     self.isTestable = task.isTestable
                 } else {
@@ -98,22 +100,16 @@ extension MultipleChoiseTask.Templates {
                     Div {
                         FormGroup(label: "Eksamensett semester") {
                             Select {
-                                ""
-//                                                IF(context.value(at: \.taskInfo?.examPaperSemester).isDefined) {
-//                                                    Option {
-//                                                        context.value(at: \.taskInfo?.examPaperSemester?.rawValue)
-//                                                    }
-//                                                    .value(context.value(at: \.taskInfo?.examPaperSemester?.rawValue))
-//                                                    .isSelected(true)
-//                                                }
                                 Option {
                                     "Ikke eksamensoppgave"
                                 }
                                 .value("")
+
                                 Option {
                                     "Høst"
                                 }
                                 .value("fall")
+
                                 Option {
                                     "Vår"
                                 }
@@ -139,19 +135,21 @@ extension MultipleChoiseTask.Templates {
                     }
                     .class("form-row")
 
-                    Text {
-                        "Bruk på prøver"
-                    }
-                    .style(.heading3)
-                    .text(color: .dark)
+                    IF(context.isModerator) {
+                        Text {
+                            "Bruk på prøver"
+                        }
+                        .style(.heading3)
+                        .text(color: .dark)
 
-                    CustomControlInput(
-                        label: "Ved å velge denne kan man bruke oppgaven på prøver, men ikke til å øve",
-                        type: .checkbox,
-                        id: "create-multiple-testable"
-                    )
-                        .margin(.three, for: .bottom)
-                        .isChecked(context.isTestable)
+                        CustomControlInput(
+                            label: "Ved å velge denne kan man bruke oppgaven på prøver, men ikke til å øve",
+                            type: .checkbox,
+                            id: "create-multiple-testable"
+                        )
+                            .margin(.three, for: .bottom)
+                            .isChecked(context.isTestable)
+                    }
 
                     FormGroup {
                         TextArea {
