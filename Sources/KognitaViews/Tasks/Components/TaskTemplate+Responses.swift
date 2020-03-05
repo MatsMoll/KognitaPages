@@ -1,6 +1,19 @@
 import BootstrapKit
 import KognitaCore
 
+public enum TextBreak: String {
+    case wrap
+    case noWrap = "nowrap"
+    case `break`
+    case truncate
+}
+
+extension GlobalAttributes {
+    func text(break textBreak: TextBreak) -> Self {
+        self.class("text-\(textBreak.rawValue)")
+    }
+}
+
 
 extension TaskPreviewTemplate {
 

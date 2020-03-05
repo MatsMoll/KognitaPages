@@ -56,10 +56,10 @@ extension TaskPreviewTemplate {
                                             discussion.description
                                         }
                                         .style(.heading4)
+                                        .margin(.zero, for: .top)
 
                                     }
                                     .display(.flex)
-                                    .margin(.three, for: .top)
                                 }
 
                                 Small {
@@ -70,11 +70,14 @@ extension TaskPreviewTemplate {
                             }
                             .class("border-bottom border-light")
                             .padding(.two, for: .bottom)
-                        
-
+                            .padding(.two, for: .top)
                         }
-                    }.style(.heading6)
+
+                    }
+                    .style(.heading6)
+                    .margin(.zero, for: .top)
                 }
+                .text(break: .break)
 
                 Card {
                     FormGroup(label: "Noe du lurer på?") {
@@ -117,6 +120,7 @@ extension TaskPreviewTemplate {
                     .button(style: .primary)
                     .on(click: "createResponse()")
                 }
+                .text(break: .break)
                 .set(data: "dID", to: "disc-id")
                 .set(data: "dDesc", to: "disc-description")
                 .set(data: "dUname", to: "disc-username")
