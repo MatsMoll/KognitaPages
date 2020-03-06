@@ -80,20 +80,23 @@ extension Subject.Templates {
             let user: User
             let subject: Subject
             let totalNumberOfTasks: Int
+            let isModerator: Bool
 
             fileprivate let listContext: Subject.Templates.TaskList.Context
             let topics: [Topic]
 
-            public init(user: User, subject: Subject, tasks: [CreatorTaskContent]) {
+            public init(user: User, subject: Subject, tasks: [CreatorTaskContent], isModerator: Bool) {
                 self.user = user
                 self.subject = subject
                 self.totalNumberOfTasks = tasks.count
                 self.listContext = .init(
                     userID: user.id ?? 0,
+                    isModerator: isModerator,
                     tasks: tasks
                 )
                 self.topics = tasks.group(by: \.topic.id)
                     .compactMap { id, tasks in tasks.first(where: { $0.topic.id == id })?.topic }
+                self.isModerator = isModerator
             }
         }
 
@@ -135,24 +138,28 @@ extension Subject.Templates {
                             .margin(.two, for: .bottom)
 
                             Anchor {
-                                "Lag et tema"
-                            }
-                            .href(context.subject.createTopicUri)
-                            .button(style: .primary)
-
-                            Anchor {
-                                "Lag flervalgsoppgave"
+                                "Lag flervalgsoppgave "
+                                MaterialDesignIcon(.formatListBulleted)
                             }
                             .href(context.subject.createMultipleTaskUri)
                             .button(style: .success)
-                            .margin(.two, for: .left)
 
                             Anchor {
-                                "Lag innskrivingsoppgave"
+                                "Lag innskrivingsoppgave "
+                                MaterialDesignIcon(.messageReplyText)
                             }
                             .href(context.subject.createFlashCardTaskUri)
                             .button(style: .success)
                             .margin(.two, for: .left)
+
+                            IF(context.isModerator) {
+                                Anchor {
+                                    "Lag et tema"
+                                }
+                                .href(context.subject.createTopicUri)
+                                .button(style: .primary)
+                                .margin(.two, for: .left)
+                            }
                         }
                     }
                     .column(width: .twelve)
@@ -288,6 +295,17 @@ struct SearchCard: HTMLComponent {
                     .margin(.three, for: .bottom)
 
                     Row {
+                        Div {
+                            Text {
+                                "Filterer på tema"
+                            }
+                            .style(.heading4)
+                        }
+                        .column(width: .twelve)
+                    }
+
+                    Row {
+
                         ForEach(in: context.topics) { topic in
                             Div {
                                 Div {
@@ -345,8 +363,10 @@ struct SearchFetch: HTMLComponent {
     var scripts: HTML {
         let script =
         """
+        var lastFetch = new Date();
         function \(functionName)() {
-          let query = $("#\(request.formID)").serializeArray().reduce(function (r, v) { return r + v.name + "=" + encodeURI(v.value) + "&"; }, "").slice(0, -1)
+          if (Math.abs(lastFetch - new Date()) < 1000) { return; }
+          lastFetch = new Date(); let query = $("#\(request.formID)").serializeArray().reduce(function (r, v) { return r + v.name + "=" + encodeURI(v.value) + "&"; }, "").slice(0, -1)
           fetch("\(request.url)?" + query, {
               method: "GET",
               headers: {

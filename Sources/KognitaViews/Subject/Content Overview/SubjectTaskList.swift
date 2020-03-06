@@ -6,11 +6,13 @@ extension Subject.Templates {
     public struct TaskList: HTMLTemplate {
 
         public struct Context {
-            let userID: User.ID
+            let userID: User.ID?
+            let isModerator: Bool
             let tasks: [CreatorTaskContent]
 
-            public init(userID: User.ID, tasks: [CreatorTaskContent]) {
+            public init(userID: User.ID, isModerator: Bool, tasks: [CreatorTaskContent]) {
                 self.userID = userID
+                self.isModerator = isModerator
                 self.tasks = tasks
             }
         }
@@ -42,9 +44,12 @@ extension Subject.Templates {
                 }
                 .column(width: .twelve)
 
-                ForEach(in: context.tasks) { task in
+                ForEach(in: context.tasks) { (task: TemplateValue<CreatorTaskContent>) in
                     Div {
-                        TaskCell(task: task)
+                        TaskCell(
+                            canEdit: context.isModerator || context.userID == task.creator.id,
+                            task: task
+                        )
                     }
                     .column(width: .twelve)
                 }
@@ -54,35 +59,32 @@ extension Subject.Templates {
 
     private struct TaskCell: HTMLComponent {
 
+        let canEdit: Conditionable
         let task: TemplateValue<CreatorTaskContent>
 
         var body: HTML {
             Card {
+
+                IF(task.IsMultipleChoise) {
+                    Badge {
+                        "Flervalg "
+                        MaterialDesignIcon(.formatListBulleted)
+                    }
+                    .background(color: .light)
+                }.else {
+                    Badge {
+                        "Innskriving "
+                        MaterialDesignIcon(.messageReplyText)
+                    }
+                    .background(color: .info)
+                }
+
                 Unwrap(task.task.deletedAt) { deletedAt in
                     Badge {
                         "Slettet: "
                         deletedAt.style(date: .short, time: .none)
                     }
                     .background(color: .danger)
-                }
-                .else {
-                    Badge {
-                        "Aktiv"
-                    }
-                    .background(color: .success)
-                }
-
-                IF(task.IsMultipleChoise) {
-                    Badge {
-                        "Flervalg"
-                    }
-                    .background(color: .light)
-                    .margin(.one, for: .left)
-                }.else {
-                    Badge {
-                        "Innskriving"
-                    }
-                    .background(color: .info)
                     .margin(.one, for: .left)
                 }
 
@@ -106,36 +108,37 @@ extension Subject.Templates {
                 }
 
                 Text {
-                    
+                    "Tema: "
+                    task.topic.name
                 }
+                .margin(.one, for: .vertical)
 
                 Text {
                     task.task.question
                 }
                 .style(.heading4)
 
-                Div {
-                    Anchor {
-                        "Se mer"
-                    }
-                    .href(task.editUri)
-                    .button(style: .light)
-
-                    IF(task.task.deletedAt.isNotDefined) {
-                        Button {
-                            Italic().class("dripicons-document-delete")
-                            " Slett"
-                        }
-                        .on(click: task.deleteCall)
-                        .button(style: .danger)
-                        .margin(.two, for: .left)
-                    }
-                }
-                .float(.right)
-
                 Text {
                     "Laget av: "
                     task.creator.username
+                }
+
+                IF(canEdit) {
+                    Anchor {
+                        "Rediger"
+                    }
+                    .href(task.editUri)
+                    .button(style: .light)
+                }
+
+                IF(canEdit && task.task.deletedAt.isNotDefined) {
+                    Button {
+                        Italic().class("dripicons-document-delete")
+                        " Slett"
+                    }
+                    .on(click: task.deleteCall)
+                    .button(style: .danger)
+                    .margin(.two, for: .left)
                 }
             }
         }
