@@ -93,6 +93,7 @@ struct BaseTemplate: HTMLComponent {
             customScripts
             content.scripts
         }
+        .enviroment(locale: "nb")
     }
 }
 

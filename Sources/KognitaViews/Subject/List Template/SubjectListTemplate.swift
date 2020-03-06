@@ -326,6 +326,7 @@ extension Subject.Templates {
                     }
                     .href(test.testResultUri)
                     .button(style: .success)
+                    .isRounded()
                 }
                 .else {
                     Button {
@@ -361,5 +362,13 @@ extension SubjectTest.OverviewResponse {
             return ""
         }
         return "/test-sessions/\(sessionID)/results"
+    }
+}
+
+extension Anchor {
+    public func isRounded(_ condtion: Conditionable = true) -> Anchor {
+        self.modify(if: condtion) {
+            $0.class("btn-rounded")
+        }
     }
 }

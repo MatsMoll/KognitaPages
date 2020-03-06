@@ -64,7 +64,7 @@ extension Subject.Templates.Details {
                         Strings.subjectStartSession.localized()
                     }
                     .type(.button)
-                    .class("btn-rounded")
+                    .isRounded()
                     .button(style: .light)
                     .margin(.one, for: .vertical)
                     .isDisabled(canPractice == false)

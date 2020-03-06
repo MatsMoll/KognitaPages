@@ -1,6 +1,6 @@
 import BootstrapKit
 import KognitaCore
-
+import Foundation
 
 extension SubjectTest.Templates {
 
@@ -9,6 +9,7 @@ extension SubjectTest.Templates {
         public struct Context {
             let user: User
             let test: SubjectTest
+            var renderedAt: Date { .now }
 
             public init(user: User, test: SubjectTest) {
                 self.user = user
@@ -32,6 +33,11 @@ extension SubjectTest.Templates {
                         .type(.hidden)
                 }
 
+                Input()
+                    .value(context.renderedAt.iso8601)
+                    .id("rendered-at")
+                    .type(.hidden)
+
                 ContentStructure {
                     Row { "" }.id("user-status")
                 }
@@ -46,6 +52,19 @@ extension SubjectTest.Templates {
 
                                 Text {
                                     Span().id("time-left")
+                                }
+                                .style(.heading3)
+                                .text(color: .dark)
+                            }
+
+                            Card {
+                                Text {
+                                    "Passord"
+                                }
+                                .text(color: .secondary)
+
+                                Text {
+                                    context.test.password
                                 }
                                 .style(.heading3)
                                 .text(color: .dark)

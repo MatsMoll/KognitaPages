@@ -9,6 +9,30 @@ extension Date {
     }
 }
 
+struct Spinner: HTMLComponent, AttributeNode {
+
+    var attributes: [HTMLAttribute]
+
+    init() {
+        attributes = []
+    }
+
+    private init(attributes: [HTMLAttribute]) {
+        self.attributes = attributes
+    }
+
+    var body: HTML {
+        Div()
+            .class("spinner-grow spinner-grow-sm")
+            .role("status")
+            .add(attributes: attributes)
+    }
+
+    func copy(with attributes: [HTMLAttribute]) -> Spinner {
+        .init(attributes: attributes)
+    }
+}
+
 extension SubjectTest.TestTask {
 
     var url: String { "\(testTaskID)" }
@@ -68,6 +92,7 @@ public struct MultipleChoiseTaskTestMode: HTMLTemplate {
         let user: User
         let task: SubjectTest.MultipleChoiseTaskContent
         var baseContext: BaseTemplateContent { .init(title: "", description: "") }
+        var renderedAt: Date { .now }
 
         public init(user: User, task: SubjectTest.MultipleChoiseTaskContent) {
             self.user = user
@@ -88,6 +113,11 @@ public struct MultipleChoiseTaskTestMode: HTMLTemplate {
                         .id("ends-at")
                         .type(.hidden)
                 }
+
+                Input()
+                    .value(context.renderedAt.iso8601)
+                    .id("rendered-at")
+                    .type(.hidden)
 
                 QuestionCard(task: context.task.task)
                 ActionCard(task: context.task)
@@ -170,6 +200,27 @@ public struct MultipleChoiseTaskTestMode: HTMLTemplate {
                         choise: choise
                     )
                 }
+
+                Div {
+                    Badge {
+                        MaterialDesignIcon(.check)
+                            .id("save-status-icon")
+
+                        Div()
+                            .id("save-status-spinner")
+                            .display(.none)
+
+                        Span {
+                            "Lagret"
+                        }
+                        .margin(.one, for: .left)
+                        .id("save-status")
+                    }
+                    .background(color: .success)
+                    .id("save-status-badge")
+                    .margin(.two, for: .vertical)
+                }
+                .display(.block)
 
                 Unwrap(task.prevTask) { task in
                     Anchor {
