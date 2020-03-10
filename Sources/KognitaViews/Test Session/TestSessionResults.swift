@@ -9,6 +9,10 @@ extension TestSession.Results {
     var readableScore: Double {
         (score * 100).rounded() / 100
     }
+
+    var startPracticeCall: String {
+        "startPracticeSession(\(topicResults.map { $0.id }), \(subjectID));"
+    }
 }
 
 extension TestSession.Templates {
@@ -62,6 +66,9 @@ extension TestSession.Templates {
                     .column(width: .four, for: .large)
                     .column(width: .twelve)
                     Div {
+                        IF(context.results.canPractice) {
+                            PracticeCard(startPracticeSessionCall: context.results.startPracticeCall)
+                        }
                         Card {
                             H4(Strings.histogramTitle)
                                 .class("header-title mb-4")
@@ -97,6 +104,7 @@ extension TestSession.Templates {
             .scripts {
                 Script().source("/assets/js/vendor/Chart.bundle.min.js")
                 Script(source: "/assets/js/practice-session-histogram.js")
+                Script(source: "/assets/js/practice-session-create.js")
             }
         }
 
@@ -180,6 +188,32 @@ extension TestSession.Templates {
                     .text(color: .secondary)
                     .margin(.three, for: .right)
                     .margin(.one, for: .bottom)
+                }
+            }
+        }
+
+        struct PracticeCard: HTMLComponent {
+
+            let startPracticeSessionCall: TemplateValue<String>
+
+            var body: HTML {
+                Card {
+                    Text {
+                        "Viste du at du kan øve med Kognita?"
+                    }
+                    .style(.heading3)
+                    .text(color: .dark)
+
+                    Text {
+                        "Prøve øvefunksjonen og øv litt på temane du hadde på prøven"
+                    }
+
+                    Button {
+                        "Begynn og øv"
+                    }
+                    .on(click: startPracticeSessionCall)
+                    .button(style: .success)
+                    .isRounded()
                 }
             }
         }
