@@ -59,6 +59,12 @@ extension MultipleChoiseTask.Templates {
             TaskPreviewTemplate(context: context.previewContext) {
 
                 Card {
+                    Text {
+                        context.previewContext.taskContent.actionDescription
+                    }
+                    .style(.heading5)
+                    .margin(.zero, for: .top)
+
                     ForEach(in: context.choises) { choise in
                         ChoiseOption(
                             hasBeenAnswered: context.hasBeenCompleted,
@@ -79,24 +85,13 @@ extension MultipleChoiseTask.Templates {
                         .margin(.one, for: .right)
                         .id("submitButton")
                     }
-                    Anchor {
-                        Button(Strings.exerciseSolutionButton)
-                            .type(.button)
-                            .button(style: .success)
-                            .margin(.one, for: .right)
-                    }
-                    .id("solution-button")
-                    .display(.none)
-                    .href("#solution")
                 }
             }
             .scripts {
                 Script().source("/assets/js/multiple-choise/task-submit.js")
                 Script().source("/assets/js/practice-session-end.js")
                 IF(context.hasBeenCompleted) {
-                    Script {
-                        "window.onload = presentControlls;"
-                    }
+                    Script { "window.onload = presentControlls;" }
                 }
             }
         }
