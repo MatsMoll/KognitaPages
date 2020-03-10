@@ -29,7 +29,7 @@ extension TaskSolution.Templates {
                     }
                     .float(.right)
                 }
-                .style(.heading3)
+                .style(.heading4)
 
                 Text {
                     "Nytting for "
@@ -78,26 +78,20 @@ extension TaskSolution.Templates {
                         .button(style: .light)
                         .margin(.two, for: .left)
                     }
-                    .style(.heading5)
+                    .style(.heading6)
                 }
                 .class("solutions")
             }
             .footer {
                 Text {
-                    "Løst det på en annen måte?"
+                    "Vil du skrive ditt eget løsningsforslag?"
                 }
                 .style(.heading4)
 
-                Text {
-                    "Foreslå et annet løsningsforslag"
-                }
-                FormGroup(label: "Løsningsforslag") {
-                    TextArea().id("new-solution")
-                }
                 Button {
-                    "Foreslå løsningsforslag"
+                    "Foreslå et løsningsforslag"
                 }
-                .on(click: "")
+                .toggle(modal: .id("create-alternative-solution"))
                 .button(style: .light)
             }
         }

@@ -89,14 +89,19 @@ public struct TaskPreviewTemplate: HTMLComponent {
             description: "Lær ved å øve"
         )) {
             Container {
-                PageTitle(title: context.topic.name)
+                PageTitle(title: Strings.exerciseMainTitle.localized() + " " + context.currentTaskIndex)
+                
+                Input().type(.hidden).value(context.task.id).id("task-id")
 
                 Row {
                     Div {
                         Unwrap(context.task.examPaperSemester) { exam in
                             Badge {
                                 Strings.exerciseExam.localized()
-                                ": " + exam.rawValue + " " + context.task.examPaperYear
+                                ": "
+                                exam.norwegianDescription
+                                " "
+                                context.task.examPaperYear
                             }
                             .margin(.three, for: .bottom)
                             .background(color: .primary)
@@ -108,9 +113,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
                 ContentStructure {
                     QuestionCard(context: context.taskContent)
                     actionCard
-                    Div()
-                    .id("solution")
-                    .display(.none)
+                    Div().id("solution").display(.none)
                 }
                 .secondary {
                     NavigationCard(context: context)
@@ -118,15 +121,40 @@ public struct TaskPreviewTemplate: HTMLComponent {
                     underSolutionCard
                 }
             }
+
+            Modal(title: "Lag et løsningsforslag", id: "create-alternative-solution") {
+
+                CustomControlInput(
+                    label: "Vis brukernavnet",
+                    type: .checkbox,
+                    id: "present-user"
+                )
+                    .isChecked(true)
+                    .margin(.two, for: .bottom)
+
+                FormGroup(label: "Løsningsforslag") {
+                    MarkdownEditor(id: "suggested-solution")
+                        .placeholder("Et eller annet løsningsforslag")
+                }
+
+                Button {
+                    "Lag løsningsforslag"
+                }
+                .on(click: "suggestSolution()")
+                .button(style: .primary)
+            }
         }
         .header {
+            Link().href("/assets/css/vendor/simplemde.min.css").relationship(.stylesheet).type("text/css")
             Link().href("https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css").relationship(.stylesheet)
         }
         .scripts {
+            Script(source: "/assets/js/vendor/simplemde.min.js")
             Script(source: "https://cdn.jsdelivr.net/npm/marked/marked.min.js")
             Script().source("https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js")
             Script(source: "/assets/js/markdown-renderer.js")
             Script(source: "/assets/js/task-solution/vote.js")
+            Script(source: "/assets/js/task-solution/suggest-solution.js")
             customScripts
         }
     }
@@ -139,13 +167,6 @@ public struct TaskPreviewTemplate: HTMLComponent {
             Row {
                 Div {
                     Card {
-                        Text {
-                            Strings.exerciseMainTitle.localized()
-                            " 2"
-                        }
-                            .margin(.zero, for: .top)
-                            .style(.heading3)
-
                         IF(context.task.description.isDefined) {
                             Text {
                                 context.task.description

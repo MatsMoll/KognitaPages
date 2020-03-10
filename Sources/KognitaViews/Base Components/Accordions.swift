@@ -24,18 +24,20 @@ struct Accordions<B>: HTMLComponent {
     }
 
     var body: HTML {
-        Div {
-            ForEach(enumerated: values) { value in
-                card(value: value)
+        NodeList {
+            Div {
+                ForEach(enumerated: values) { value in
+                    card(value: value)
+                }
             }
+            .class("custom-accordion mb-4")
+            .id(id)
             IF(footer != nil) {
                 Card {
                     footer ?? ""
                 }
             }
         }
-        .class("custom-accordion mb-4")
-        .id(id)
     }
 
     func card(value: (TemplateValue<B>, index: TemplateValue<Int>)) -> HTML {
@@ -44,6 +46,7 @@ struct Accordions<B>: HTMLComponent {
             content(value: value)
         }
         .class("card")
+        .margin(.zero, for: .bottom)
     }
 
     func heading(value: (TemplateValue<B>, index: TemplateValue<Int>)) -> HTML {
