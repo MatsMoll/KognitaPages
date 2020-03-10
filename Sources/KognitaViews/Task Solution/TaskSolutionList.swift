@@ -56,7 +56,7 @@ extension TaskSolution.Templates {
                         }
                     }
                 }
-            }) { (solution, index) in
+            }) { (solution: TemplateValue<TaskSolution.Response>, index: TemplateValue<Int>) in
                 Div {
                     solution.solution
                         .escaping(.unsafeNone)

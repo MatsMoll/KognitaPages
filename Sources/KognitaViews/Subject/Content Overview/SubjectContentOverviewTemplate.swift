@@ -306,7 +306,7 @@ struct SearchCard: HTMLComponent {
 
                     Row {
 
-                        ForEach(in: context.topics) { topic in
+                        ForEach(in: context.topics) { (topic: TemplateValue<Topic>) in
                             Div {
                                 Div {
                                     Input()
@@ -386,7 +386,7 @@ struct SearchFetch: HTMLComponent {
         }
         """
         return NodeList {
-            form.scripts
+//            form.scripts
             Script { script }
         }
     }
