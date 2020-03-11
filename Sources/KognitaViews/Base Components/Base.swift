@@ -76,8 +76,7 @@ struct BaseTemplate: HTMLComponent {
     }
 
     var body: HTML {
-        print(content.scripts)
-        return Document(type: .html5) {
+        Document(type: .html5) {
             Head {
                 Viewport(mode: .acordingToDevice)
 

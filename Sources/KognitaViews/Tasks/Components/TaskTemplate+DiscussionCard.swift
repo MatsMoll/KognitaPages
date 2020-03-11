@@ -26,7 +26,9 @@ extension TaskPreviewTemplate {
                         "Diskusjon"
                     }
                     .style(.heading3)
-                }
+                    }
+                .class("reveal")
+                .display(.none)
                 .footer {
 
                     Text {
@@ -91,6 +93,8 @@ extension TaskPreviewTemplate {
                     .on(click: "createDiscussion()")
                     .button(style: .primary)
                 }
+                .class("reveal")
+                .display(.none)
 
                 Modal(title: "Diskusjon", id: "discussion") {
 
