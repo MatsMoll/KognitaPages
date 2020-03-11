@@ -81,8 +81,7 @@ extension TaskPreviewTemplate {
 
                 Card {
                     FormGroup(label: "Noe du lurer på?") {
-                        TextArea()
-                            .id("create-discussion-question")
+                        MarkdownEditor(id: "create-discussion-question")
                             .placeholder("Hva lurer du på?")
                     }
 

@@ -17,6 +17,8 @@ extension Subject.Details {
     var topicIDsJSList: String {
         "[\(topics.map { $0.id }.reduce("") { $0 + "\($1), " }.dropLast(2))]"
     }
+
+    var canCreateTasks: Bool { isModerator || canPractice }
 }
 
 extension Subject.Templates {
@@ -83,8 +85,10 @@ extension Subject.Templates {
                     .column(width: .eight, for: .large)
                     Div {
                         StatisticsCard()
-                        IF(context.details.isModerator) {
+                        IF(context.details.canCreateTasks) {
                             CreateContentCard()
+                        }
+                        IF(context.details.isModerator) {
                             SubjectTestSignifier(subjectID: context.details.subject.id)
                         }
                     }
@@ -100,9 +104,10 @@ extension Subject.Templates {
                 Script().source("/assets/js/markdown-renderer.js")
             }
             .modals {
-                IF(context.user.isAdmin) {
+                IF(context.details.canCreateTasks) {
                     CreateContentModal(
-                        subject: context.details.subject
+                        subject: context.details.subject,
+                        isModerator: context.details.isModerator
                     )
                 }
                 Unwrap(context.details.openTest) { test in

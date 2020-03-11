@@ -5,6 +5,7 @@ extension Subject.Templates {
     struct CreateContentModal: HTMLComponent {
 
         let subject: TemplateValue<Subject>
+        let isModerator: TemplateValue<Bool>
 
         var body: HTML {
             Div {
@@ -50,24 +51,26 @@ extension Subject.Templates {
 
 
 
-                                Text {
-                                    "Lag et tema"
-                                }
-                                .style(.heading4)
-                                .text(color: .dark)
-                                .margin(.four, for: .top)
+                                IF(isModerator) {
+                                    Text {
+                                        "Lag et tema"
+                                    }
+                                    .style(.heading4)
+                                    .text(color: .dark)
+                                    .margin(.four, for: .top)
 
-                                Anchor {
-                                    "Lag tema"
-                                }
-                                .href("/creator/subjects/" + subject.id + "/topics/create")
-                                .button(style: .light)
-                                .class("btn-rounded")
-                                .float(.right)
-                                .margin(.three, for: .left)
+                                    Anchor {
+                                        "Lag tema"
+                                    }
+                                    .href("/creator/subjects/" + subject.id + "/topics/create")
+                                    .button(style: .light)
+                                    .class("btn-rounded")
+                                    .float(.right)
+                                    .margin(.three, for: .left)
 
-                                Text {
-                                    "Her kan du dele faget inn i flere deler og dermed få en bedre oversikt over studentens kompetanse"
+                                    Text {
+                                        "Her kan du dele faget inn i flere deler og dermed få en bedre oversikt over studentens kompetanse"
+                                    }
                                 }
 
 

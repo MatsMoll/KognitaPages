@@ -6,22 +6,38 @@ struct Accordions<B>: HTMLComponent {
     let values: TemplateValue<[B]>
     let title: ((TemplateValue<B>, TemplateValue<Int>)) -> HTML
     let content: ((TemplateValue<B>, TemplateValue<Int>)) -> HTML
+    private let footer: HTML?
     var id: String = "accordion"
 
     public init(values: TemplateValue<[B]>, @HTMLBuilder title: @escaping ((TemplateValue<B>, TemplateValue<Int>)) -> HTML, @HTMLBuilder content: @escaping ((TemplateValue<B>, TemplateValue<Int>)) -> HTML) {
         self.values = values
         self.title = title
         self.content = content
+        self.footer = ""
+    }
+
+    private init(values: TemplateValue<[B]>, title: @escaping ((TemplateValue<B>, TemplateValue<Int>)) -> HTML, content: @escaping ((TemplateValue<B>, TemplateValue<Int>)) -> HTML, footer: HTML?) {
+        self.values = values
+        self.title = title
+        self.content = content
+        self.footer = footer
     }
 
     var body: HTML {
-        Div {
-            ForEach(enumerated: values) { value in
-                card(value: value)
+        NodeList {
+            Div {
+                ForEach(enumerated: values) { value in
+                    card(value: value)
+                }
+            }
+            .class("custom-accordion mb-4")
+            .id(id)
+            IF(footer != nil) {
+                Card {
+                    footer ?? ""
+                }
             }
         }
-        .class("custom-accordion mb-4")
-        .id(id)
     }
 
     func card(value: (TemplateValue<B>, index: TemplateValue<Int>)) -> HTML {
@@ -30,6 +46,7 @@ struct Accordions<B>: HTMLComponent {
             content(value: value)
         }
         .class("card")
+        .margin(.zero, for: .bottom)
     }
 
     func heading(value: (TemplateValue<B>, index: TemplateValue<Int>)) -> HTML {
@@ -67,6 +84,10 @@ struct Accordions<B>: HTMLComponent {
 
     func headingId(_ index: TemplateValue<Int>) -> HTML {
         "\(id)-heading" + index
+    }
+
+    func footer(@HTMLBuilder footer: () -> HTML) -> Accordions {
+        .init(values: values, title: title, content: content, footer: footer())
     }
 }
 

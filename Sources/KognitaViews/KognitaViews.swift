@@ -41,6 +41,7 @@ public struct KognitaViews {
         try renderer.add(view: Subject.Templates.ListOverview())
         try renderer.add(view: Subject.Templates.Details())
         try renderer.add(view: Subject.Templates.SelectRedirect())
+        try renderer.add(view: Subject.Templates.TaskList())
 
         try renderer.add(view: SubjectTest.Templates.Modify())
         try renderer.add(view: SubjectTest.Templates.List())
@@ -57,8 +58,8 @@ public struct KognitaViews {
     //    // Task Template
         try renderer.add(view: FlashCardTask.Templates.Execute())
         try renderer.add(view: MultipleChoiseTask.Templates.Execute())
-        try renderer.add(view: TaskSolutionsTemplate())
         try renderer.add(view: TaskPreviewTemplate.Responses())
+        try renderer.add(view: TaskSolution.Templates.List())
         try renderer.add(view: MultipleChoiseTaskTestMode())
     //
     //    // Create Content

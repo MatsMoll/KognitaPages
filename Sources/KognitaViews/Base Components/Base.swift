@@ -20,6 +20,24 @@ struct BaseTemplateContent {
     }
 }
 
+private struct HotjarScript: HTMLComponent {
+
+    var body: HTML {
+        Script {
+"""
+(function(h,o,t,j,a,r){
+    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+    h._hjSettings={hjid:1692974,hjsv:6};
+    a=o.getElementsByTagName('head')[0];
+    r=o.createElement('script');r.async=1;
+    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+    a.appendChild(r);
+})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+"""
+        }
+    }
+}
+
 struct BaseTemplate: HTMLComponent {
 
     let context: TemplateValue<BaseTemplateContent>
@@ -58,7 +76,8 @@ struct BaseTemplate: HTMLComponent {
     }
 
     var body: HTML {
-        Document(type: .html5) {
+        print(content.scripts)
+        return Document(type: .html5) {
             Head {
                 Viewport(mode: .acordingToDevice)
 
@@ -71,19 +90,7 @@ struct BaseTemplate: HTMLComponent {
                 FavIcon(url: faviconUrl)
 
                 customHeader
-                // Hotjar tracking
-                Script {
-"""
-(function(h,o,t,j,a,r){
-    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-    h._hjSettings={hjid:1692974,hjsv:6};
-    a=o.getElementsByTagName('head')[0];
-    r=o.createElement('script');r.async=1;
-    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-    a.appendChild(r);
-})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-"""
-                }
+                HotjarScript()
             }
             Body {
                 content
