@@ -146,12 +146,12 @@ public struct TaskPreviewTemplate: HTMLComponent {
         }
         .header {
             Link().href("/assets/css/vendor/simplemde.min.css").relationship(.stylesheet).type("text/css")
-            Link().href("https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css").relationship(.stylesheet)
+            Link().href("/assets/css/vendor/katex.min.css").relationship(.stylesheet)
         }
         .scripts {
             Script(source: "/assets/js/vendor/simplemde.min.js")
-            Script(source: "https://cdn.jsdelivr.net/npm/marked/marked.min.js")
-            Script().source("https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js")
+            Script(source: "/assets/js/vendor/marked.min.js")
+            Script(source: "/assets/js/vendor/katex.min.js")
             Script(source: "/assets/js/markdown-renderer.js")
             Script(source: "/assets/js/task-solution/vote.js")
             Script(source: "/assets/js/task-solution/suggest-solution.js")
