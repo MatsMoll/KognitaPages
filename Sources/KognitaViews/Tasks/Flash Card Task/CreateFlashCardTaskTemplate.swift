@@ -195,13 +195,12 @@ extension FlashCardTask.Templates {
                             }
                         }
                         .id("card-description")
+                        .placeholder("Du har gitt en funksjon ...")
                     }
                     .customLabel {
-                        Text {
-                            "Oppgavetekst"
-                        }
-                        .style(.heading3)
-                        .text(color: .dark)
+                        Text { "Innledelse" }
+                            .style(.heading3)
+                            .text(color: .dark)
                     }
 
                     FormGroup {
@@ -216,17 +215,13 @@ extension FlashCardTask.Templates {
                         .required()
                     }
                     .customLabel {
-                        Text {
-                            "Spørsmål"
-                        }
-                        .style(.heading3)
-                        .text(color: .dark)
+                        Text { "Spørsmål" }
+                            .style(.heading3)
+                            .text(color: .dark)
                     }
                     .description {
-                        Div {
-                            "Kun tillatt med bokstaver, tall, mellomrom og enkelte tegn (. , : ; ! ?)"
-                        }
-                        .class("invalid-feedback")
+                        Div { "Kun tillatt med bokstaver, tall, mellomrom og enkelte tegn (. , : ; ! ?)" }
+                            .class("invalid-feedback")
                     }
 
                     FormGroup {
@@ -237,13 +232,12 @@ extension FlashCardTask.Templates {
                             }
                         }
                         .id("card-solution")
+                        .placeholder("Gitt at funksjonen er konveks, så fører det til at ...")
                     }
                     .customLabel {
-                        Text {
-                            "Løsningsforslag"
-                        }
-                        .style(.heading3)
-                        .text(color: .dark)
+                        Text { "Løsningsforslag" }
+                            .style(.heading3)
+                            .text(color: .dark)
                     }
 
                     DismissableError()
@@ -266,22 +260,20 @@ extension FlashCardTask.Templates {
             }
             .header {
                 Stylesheet(url: "/assets/css/vendor/simplemde.min.css")
-                Stylesheet(url: "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css")
+                Stylesheet(url: "/assets/css/vendor/katex.min.css")
             }
             .scripts {
-                Script().source("/assets/js/vendor/simplemde.min.js")
-                Script().source("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js")
-//                Script(source: "https://cdn.jsdelivr.net/npm/marked/marked.min.js")
+                Script(source: "/assets/js/vendor/simplemde.min.js")
+                Script(source: "/assets/js/vendor/katex.min.js")
                 Script(source: "/assets/js/markdown-renderer.js")
                 Script(source: "/assets/js/markdown-editor.js")
-                Script().source("/assets/js/flash-card/modify-task.js")
-//                Script().source("/assets/js/vendor/summernote-math.js")
-                Script().source("/assets/js/dismissable-error.js")
-                Script().source("/assets/js/flash-card/json-data.js")
+                Script(source: "/assets/js/flash-card/modify-task.js")
+                Script(source: "/assets/js/dismissable-error.js")
+                Script(source: "/assets/js/flash-card/json-data.js")
                 IF(context.isEditingTask) {
-                    Script().source("/assets/js/flash-card/edit.js")
+                    Script(source: "/assets/js/flash-card/edit.js")
                 }.else {
-                    Script().source("/assets/js/flash-card/create.js")
+                    Script(source: "/assets/js/flash-card/create.js")
                 }
             }
         }
