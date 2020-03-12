@@ -27,26 +27,8 @@ extension TaskSolution.Templates {
                         Text { "Valg:" }
                             .font(style: .italic)
 
-                        ForEach(in: solution.choises) { choise in
-                            Div {
-                                Text {
-                                    IF(choise.isCorrect) {
-                                        Badge {
-                                            "Riktig "
-                                            MaterialDesignIcon(.check)
-                                        }
-                                        .background(color: .success)
-                                        .float(.right)
-                                    }
-
-                                    Div { choise.choise.escaping(.unsafeNone) }
-                                        .class("render-markdown")
-                                }
-                            }
-                            .borderRadius(.rounded)
-                            .border(color: .light)
-                            .margin(.one, for: .vertical)
-                            .padding(.two)
+                        ForEach(in: solution.choises) { (choise: TemplateValue<MultipleChoiseTaskChoise.Data>) in
+                            ChoiseView(choise: choise)
                         }
                     }
 
@@ -93,6 +75,33 @@ function approveSolution(id) {
 }
 """
                 }
+            }
+        }
+
+        private struct ChoiseView: HTMLComponent {
+
+            let choise: TemplateValue<MultipleChoiseTaskChoise.Data>
+
+            var body: HTML {
+                Div {
+                    Text {
+                        IF(choise.isCorrect) {
+                            Badge {
+                                "Riktig "
+                                MaterialDesignIcon(.check)
+                            }
+                            .background(color: .success)
+                            .float(.right)
+                        }
+
+                        Div { choise.choise.escaping(.unsafeNone) }
+                            .class("render-markdown")
+                    }
+                }
+                .borderRadius(.rounded)
+                .border(color: .light)
+                .margin(.one, for: .vertical)
+                .padding(.two)
             }
         }
     }
