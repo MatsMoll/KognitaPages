@@ -65,7 +65,7 @@ extension Subject.Templates {
         var body: HTML {
             Card {
 
-                IF(task.IsMultipleChoise) {
+                IF(task.isMultipleChoise) {
                     Badge {
                         "Flervalg "
                         MaterialDesignIcon(.formatListBulleted)
