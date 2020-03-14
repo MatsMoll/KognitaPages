@@ -258,14 +258,16 @@ extension MultipleChoiseTask.Templates {
                     .id("create-multiple-choises")
 
                     FormGroup {
-                        TextArea {
+                        MarkdownEditor(id: "solution") {
                             Unwrap(context.content.task) { task in
                                 task.solution
                                     .escaping(.unsafeNone)
                             }
                         }
-                        .id("create-multiple-solution")
                         .placeholder("Gitt at funksjonen er konveks, så fører det til at ...")
+                        .onChange { editor in
+                            Script.solutionScore(editorName: editor)
+                        }
                     }
                     .customLabel {
                         Text {
@@ -273,6 +275,9 @@ extension MultipleChoiseTask.Templates {
                         }
                         .style(.heading3)
                         .text(color: .dark)
+                    }
+                    .description {
+                        TaskSolution.Templates.Requmendations()
                     }
 
                     DismissableError()
@@ -293,6 +298,7 @@ extension MultipleChoiseTask.Templates {
             }
             .scripts {
                 Script(source: "/assets/js/vendor/simplemde.min.js")
+                Script(source: "/assets/js/vendor/marked.min.js")
                 Script(source: "/assets/js/vendor/katex.min.js")
                 Script(source: "/assets/js/markdown-renderer.js")
                 Script(source: "/assets/js/markdown-editor.js")
