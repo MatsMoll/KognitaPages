@@ -68,7 +68,9 @@ extension FlashCardTask.Templates {
                             Unwrap(context.prevAnswer) { answer in
                                 answer.answer
                             }
-                        }.id("flash-card-answer")
+                        }
+                        .id("flash-card-answer")
+                        .placeholder("Skriv et passende svar, eller trykk på *sjekk svar* for å se løsningen")
                     }
                     .invalidFeedback {
                         "Du må angi et svar"

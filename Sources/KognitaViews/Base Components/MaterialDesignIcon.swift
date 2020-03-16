@@ -32,6 +32,9 @@ struct MaterialDesignIcon: HTMLComponent, AttributeNode {
         case formatListBulleted = "format-list-bulleted"
         case viewList = "view-list"
         case history
+        case heart
+        case heartOutline = "heart-outline"
+        case messageReplyText = "message-reply-text"
     }
 
     let icon: TemplateValue<Icons>
@@ -67,8 +70,6 @@ struct MaterialDesignIcon: HTMLComponent, AttributeNode {
     }
 
     var body: HTML {
-        Italic()
-            .class("mdi mdi-" + icon.rawValue)
-            .add(attributes: attributes)
+        Italic().class("mdi mdi-" + icon.rawValue).add(attributes: attributes)
     }
 }

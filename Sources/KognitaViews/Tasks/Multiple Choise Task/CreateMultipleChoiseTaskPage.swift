@@ -28,11 +28,13 @@ extension MultipleChoiseTask.Templates {
             let content: MultipleChoiseTask.ModifyContent
             let wasUpdated: Bool
             let isTestable: Bool
+            let isModerator: Bool
 
-            public init(user: User, content: MultipleChoiseTask.ModifyContent, wasUpdated: Bool = false, isTestable: Bool = false) {
+            public init(user: User, content: MultipleChoiseTask.ModifyContent, isModerator: Bool, wasUpdated: Bool = false, isTestable: Bool = false) {
                 self.user = user
                 self.content = content
                 self.wasUpdated = wasUpdated
+                self.isModerator = isModerator
                 if let task = content.task {
                     self.isTestable = task.isTestable
                 } else {
@@ -98,22 +100,16 @@ extension MultipleChoiseTask.Templates {
                     Div {
                         FormGroup(label: "Eksamensett semester") {
                             Select {
-                                ""
-//                                                IF(context.value(at: \.taskInfo?.examPaperSemester).isDefined) {
-//                                                    Option {
-//                                                        context.value(at: \.taskInfo?.examPaperSemester?.rawValue)
-//                                                    }
-//                                                    .value(context.value(at: \.taskInfo?.examPaperSemester?.rawValue))
-//                                                    .isSelected(true)
-//                                                }
                                 Option {
                                     "Ikke eksamensoppgave"
                                 }
                                 .value("")
+
                                 Option {
                                     "Høst"
                                 }
                                 .value("fall")
+
                                 Option {
                                     "Vår"
                                 }
@@ -139,19 +135,21 @@ extension MultipleChoiseTask.Templates {
                     }
                     .class("form-row")
 
-                    Text {
-                        "Bruk på prøver"
-                    }
-                    .style(.heading3)
-                    .text(color: .dark)
+                    IF(context.isModerator) {
+                        Text {
+                            "Bruk på prøver"
+                        }
+                        .style(.heading3)
+                        .text(color: .dark)
 
-                    CustomControlInput(
-                        label: "Ved å velge denne kan man bruke oppgaven på prøver, men ikke til å øve",
-                        type: .checkbox,
-                        id: "create-multiple-testable"
-                    )
-                        .margin(.three, for: .bottom)
-                        .isChecked(context.isTestable)
+                        CustomControlInput(
+                            label: "Ved å velge denne kan man bruke oppgaven på prøver, men ikke til å øve",
+                            type: .checkbox,
+                            id: "create-multiple-testable"
+                        )
+                            .margin(.three, for: .bottom)
+                            .isChecked(context.isTestable)
+                    }
 
                     FormGroup {
                         TextArea {
@@ -161,10 +159,11 @@ extension MultipleChoiseTask.Templates {
                             }
                         }
                         .id("create-multiple-description")
+                        .placeholder("Du har gitt en funksjon ...")
                     }
                     .customLabel {
                         Text {
-                            "Oppgavetekst"
+                            "Innledelse"
                         }
                         .style(.heading3)
                         .text(color: .dark)
@@ -259,13 +258,16 @@ extension MultipleChoiseTask.Templates {
                     .id("create-multiple-choises")
 
                     FormGroup {
-                        TextArea {
+                        MarkdownEditor(id: "solution") {
                             Unwrap(context.content.task) { task in
                                 task.solution
                                     .escaping(.unsafeNone)
                             }
                         }
-                        .id("create-multiple-solution")
+                        .placeholder("Gitt at funksjonen er konveks, så fører det til at ...")
+                        .onChange { editor in
+                            Script.solutionScore(editorName: editor)
+                        }
                     }
                     .customLabel {
                         Text {
@@ -273,6 +275,9 @@ extension MultipleChoiseTask.Templates {
                         }
                         .style(.heading3)
                         .text(color: .dark)
+                    }
+                    .description {
+                        TaskSolution.Templates.Requmendations()
                     }
 
                     DismissableError()
@@ -289,11 +294,12 @@ extension MultipleChoiseTask.Templates {
             }
             .header {
                 Link().href("/assets/css/vendor/simplemde.min.css").relationship(.stylesheet).type("text/css")
-                Link().href("https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css").relationship(.stylesheet)
+                Link().href("/assets/css/vendor/katex.min.css").relationship(.stylesheet)
             }
             .scripts {
                 Script(source: "/assets/js/vendor/simplemde.min.js")
-                Script(source: "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js")
+                Script(source: "/assets/js/vendor/marked.min.js")
+                Script(source: "/assets/js/vendor/katex.min.js")
                 Script(source: "/assets/js/markdown-renderer.js")
                 Script(source: "/assets/js/markdown-editor.js")
                 Script(source: "/assets/js/dismissable-error.js")

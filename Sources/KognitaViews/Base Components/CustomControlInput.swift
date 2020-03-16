@@ -36,6 +36,7 @@ struct CustomControlInput: HTMLComponent, AttributeNode {
                 .type(type)
                 .class("custom-control-input")
                 .id(identifier)
+                .add(HTMLAttribute(attribute: "name", value: identifier))
                 .isChecked(isChecked)
             label.class("custom-control-label")
                 .for(identifier)
