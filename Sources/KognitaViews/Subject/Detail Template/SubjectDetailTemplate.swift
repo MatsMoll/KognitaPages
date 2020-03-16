@@ -19,6 +19,8 @@ extension Subject.Details {
     }
 
     var canCreateTasks: Bool { isModerator || canPractice }
+
+    var createContentUri: String { "/creator/subjects/\(subject.id ?? 0)/overview" }
 }
 
 extension Subject.Templates {
@@ -85,10 +87,8 @@ extension Subject.Templates {
                     .column(width: .eight, for: .large)
                     Div {
                         StatisticsCard()
-                        IF(context.details.canCreateTasks) {
-                            CreateContentCard()
-                        }
                         IF(context.details.isModerator) {
+                            CreateContentCard(createContentUri: context.details.createContentUri)
                             SubjectTestSignifier(subjectID: context.details.subject.id)
                         }
                     }
@@ -198,21 +198,18 @@ extension Subject.Templates {
 
         struct CreateContentCard: HTMLComponent {
 
+            let createContentUri: TemplateValue<String>
+
             var body: HTML {
                 Card {
-                    Text {
-                        "Lag innhold"
-                    }
-                    .style(.heading3)
-                    .text(color: .dark)
+                    Text { "Gå gjennom innholdet" }
+                        .style(.heading3)
+                        .text(color: .dark)
 
-                    Anchor {
-                        "Foreslå innhold"
-                    }
-                    .href("#")
-                    .button(style: .light)
-                    .class("btn-rounded")
-                    .toggle(modal: .id("create-content-modal"))
+                    Anchor { "Se innholdet" }
+                        .href(createContentUri)
+                        .button(style: .light)
+                        .isRounded()
                 }
             }
         }

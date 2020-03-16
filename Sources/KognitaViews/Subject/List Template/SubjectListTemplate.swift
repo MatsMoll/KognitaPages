@@ -120,13 +120,13 @@ $("#start-subject-test-modal").modal('show');
 
             var body: HTML {
                 NodeList {
-                    Text(Strings.subjectsListTitle)
+                    Text { "Andre emner" }
                         .style(.heading3)
-                    Row {
-                        IF(subjects.isEmpty) {
-                            Text(Strings.subjectsNoContent)
-                                .style(.heading1)
-                        }.else {
+                    IF(subjects.isEmpty) {
+                        Text { "Det finnes ingen andre emner" }
+                            .style(.heading4)
+                    }.else {
+                        Row {
                             ForEach(in: subjects) { subject in
                                 SubjectCard(subject: subject)
                             }
