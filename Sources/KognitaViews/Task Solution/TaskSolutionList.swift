@@ -5,6 +5,29 @@ extension TaskSolution {
     public enum Templates {}
 }
 
+extension TaskSolution.Templates {
+    struct Requmendations: HTMLComponent {
+        var body: HTML {
+            NodeList {
+                Text {
+                    "Ditt løsningsforslag har fått en rating på "
+                    Span { "0" }.id("solution-rating")
+                    " av 10 mulige."
+                }
+                .style(.heading5)
+
+                Text { "For et godt løsningsforslag: " }
+                UnorderedList {
+                    ListItem { "Ha et løsningsforslag på ca. 60-150 ord. Dette for å holde løsningsforslaget direktet, men også utdypende nok." }
+                    ListItem { "Finn et bildet som kan beskrive løsningen hvis dette er mulig." }
+                    ListItem { "Finn en kilde til løsningsforslaget slik at man kan lese mer hvis nødvending. Her anbefales nettresurser for å gjøre det lettere tilgjengelig." }
+                    ListItem { "Punktlister eller annen strukturert informasjon anbefales også." }
+                }
+            }
+        }
+    }
+}
+
 extension TaskSolution.Response {
     var voteCall: String { "voteOnSolution(\(id), this)" }
     var voteID: String { "solution-\(id)" }

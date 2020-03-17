@@ -81,11 +81,12 @@ extension Subject.Templates {
             let subject: Subject
             let totalNumberOfTasks: Int
             let isModerator: Bool
+            let solutions: [TaskSolution.Unverified]
 
             fileprivate let listContext: Subject.Templates.TaskList.Context
             let topics: [Topic]
 
-            public init(user: User, subject: Subject, tasks: [CreatorTaskContent], isModerator: Bool) {
+            public init(user: User, subject: Subject, tasks: [CreatorTaskContent], isModerator: Bool, solutions: [TaskSolution.Unverified]) {
                 self.user = user
                 self.subject = subject
                 self.totalNumberOfTasks = tasks.count
@@ -97,6 +98,7 @@ extension Subject.Templates {
                 self.topics = tasks.group(by: \.topic.id)
                     .compactMap { id, tasks in tasks.first(where: { $0.topic.id == id })?.topic }
                 self.isModerator = isModerator
+                self.solutions = solutions
             }
         }
 
@@ -165,15 +167,43 @@ extension Subject.Templates {
                     .column(width: .twelve)
                 }
                 Row {
+                    UnverifiedSolutionsSection(solutions: context.solutions)
+                }
+                Row {
                     SearchCard(context: context)
                 }
                 Row {
                     Subject.Templates.TaskList(context: context.listContext)
                 }.id("search-result")
+
+                Stylesheet(url: "/assets/css/vendor/katex.min.css")
             }
             .scripts {
                 Script(source: "/assets/js/delete-task.js")
             }
+        }
+    }
+}
+
+extension Array where Element == TaskSolution.Unverified {
+    fileprivate var accordianTitle: String {
+        "Godkjenn løsningsforslag (\(count))"
+    }
+}
+
+private struct UnverifiedSolutionsSection: HTMLComponent {
+
+    let solutions: TemplateValue<[TaskSolution.Unverified]>
+
+    var body: HTML {
+        IF(solutions.isEmpty == false) {
+            Div {
+                Accordion(title: solutions.accordianTitle) {
+                    TaskSolution.Templates
+                        .UnverifiedList(solutions: solutions)
+                }
+            }
+            .column(width: .twelve)
         }
     }
 }

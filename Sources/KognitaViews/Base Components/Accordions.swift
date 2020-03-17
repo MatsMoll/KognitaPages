@@ -91,3 +91,85 @@ struct Accordions<B>: HTMLComponent {
     }
 }
 
+
+struct Accordion: HTMLComponent {
+
+    let title: TemplateValue<String>
+    let content: HTML
+    private let footer: HTML?
+    var id: String = "accordion"
+
+    public init(title: TemplateValue<String>, @HTMLBuilder content: () -> HTML) {
+        self.title = title
+        self.content = content()
+        self.footer = ""
+    }
+
+    private init(title: TemplateValue<String>, content: HTML, footer: HTML?) {
+        self.title = title
+        self.content = content
+        self.footer = footer
+    }
+
+    var body: HTML {
+        Div {
+            card()
+            IF(footer != nil) {
+                footer ?? ""
+            }
+        }
+        .class("custom-accordion mb-4")
+        .id(id)
+    }
+
+    func card() -> HTML {
+        Div {
+            heading()
+            bodyContent()
+        }
+        .class("card")
+        .margin(.zero, for: .bottom)
+    }
+
+    func heading() -> HTML {
+        return Div {
+            Anchor {
+                Text {
+                    title
+
+                    Span {
+                        MaterialDesignIcon(.chevronDown)
+                            .class("accordion-arrow")
+                    }
+                    .float(.right)
+                }
+                .style(.heading3)
+            }
+                .text(color: .secondary)
+                .display(.block)
+                .padding(.two, for: .vertical)
+                .data(for: "toggle", value: "collapse")
+                .data(for: "target", value: "#accordian-body")
+                .aria(for: "controls", value: "accordian-body")
+        }
+        .class("card-header")
+    }
+
+    func bodyContent() -> HTML {
+        return Div {
+            Div {
+                content
+            }
+            .class("card-body")
+        }
+        .class("collapse show")
+        .aria(for: "labelledby", value: "accordian-body")
+        .data(for: "parent", value: "#\(id)")
+        .id("accordian-body")
+    }
+
+    func footer(@HTMLBuilder footer: () -> HTML) -> Accordion {
+        .init(title: title, content: content, footer: footer())
+    }
+}
+

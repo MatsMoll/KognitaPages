@@ -159,10 +159,11 @@ extension MultipleChoiseTask.Templates {
                             }
                         }
                         .id("create-multiple-description")
+                        .placeholder("Du har gitt en funksjon ...")
                     }
                     .customLabel {
                         Text {
-                            "Oppgavetekst"
+                            "Innledelse"
                         }
                         .style(.heading3)
                         .text(color: .dark)
@@ -257,13 +258,16 @@ extension MultipleChoiseTask.Templates {
                     .id("create-multiple-choises")
 
                     FormGroup {
-                        TextArea {
+                        MarkdownEditor(id: "solution") {
                             Unwrap(context.content.task) { task in
                                 task.solution
                                     .escaping(.unsafeNone)
                             }
                         }
-                        .id("create-multiple-solution")
+                        .placeholder("Gitt at funksjonen er konveks, så fører det til at ...")
+                        .onChange { editor in
+                            Script.solutionScore(editorName: editor)
+                        }
                     }
                     .customLabel {
                         Text {
@@ -271,6 +275,9 @@ extension MultipleChoiseTask.Templates {
                         }
                         .style(.heading3)
                         .text(color: .dark)
+                    }
+                    .description {
+                        TaskSolution.Templates.Requmendations()
                     }
 
                     DismissableError()
@@ -287,11 +294,12 @@ extension MultipleChoiseTask.Templates {
             }
             .header {
                 Link().href("/assets/css/vendor/simplemde.min.css").relationship(.stylesheet).type("text/css")
-                Link().href("https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css").relationship(.stylesheet)
+                Link().href("/assets/css/vendor/katex.min.css").relationship(.stylesheet)
             }
             .scripts {
                 Script(source: "/assets/js/vendor/simplemde.min.js")
-                Script(source: "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js")
+                Script(source: "/assets/js/vendor/marked.min.js")
+                Script(source: "/assets/js/vendor/katex.min.js")
                 Script(source: "/assets/js/markdown-renderer.js")
                 Script(source: "/assets/js/markdown-editor.js")
                 Script(source: "/assets/js/dismissable-error.js")

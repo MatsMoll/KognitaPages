@@ -57,6 +57,15 @@ struct TaskPreviewTemplateContext {
     }
 }
 
+extension Script {
+    static func solutionScore(editorName: String) -> String {
+"""
+let parser = new DOMParser(); let htmlDoc = parser.parseFromString(renderMarkdown(\(editorName).value()), 'text/html');
+let hrefs = new Set(Array.from(htmlDoc.getElementsByTagName("a")).map(x => x.getAttribute("href"))); let imgs = new Set(Array.from(htmlDoc.getElementsByTagName("img")).map(x => x.getAttribute("src"))); let lists = Array.from(htmlDoc.getElementsByTagName("li")); let text = htmlDoc.getElementsByTagName("body")[0].innerText.split(/\\s+/); var totalPoints = 0; totalPoints += Math.min(hrefs.size * 3, 4); totalPoints += Math.min(imgs.size * 2, 3); totalPoints += Math.min(lists.length, 1); totalPoints += (text.length < 150 && text.length > 60) ? 3 : 0; var pointsString = totalPoints + " "; if (totalPoints >= 6) { pointsString += "💯"; } else if (totalPoints > 3) {pointsString += "🤔";} else {pointsString += "💩";} $("#solution-rating").text(pointsString);
+"""
+    }
+}
+
 public struct TaskPreviewTemplate: HTMLComponent {
 
     let context: TemplateValue<TaskPreviewTemplateContext>
@@ -144,7 +153,14 @@ public struct TaskPreviewTemplate: HTMLComponent {
                 FormGroup(label: "Løsningsforslag") {
                     MarkdownEditor(id: "suggested-solution")
                         .placeholder("Et eller annet løsningsforslag")
+                        .onChange { editor in
+                            Script.solutionScore(editorName: editor)
+                    }
                 }
+                .description {
+                    TaskSolution.Templates.Requmendations()
+                }
+                .margin(.four, for: .bottom)
 
                 Button {
                     "Lag løsningsforslag"
@@ -157,12 +173,12 @@ public struct TaskPreviewTemplate: HTMLComponent {
         }
         .header {
             Link().href("/assets/css/vendor/simplemde.min.css").relationship(.stylesheet).type("text/css")
-            Link().href("https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css").relationship(.stylesheet)
+            Link().href("/assets/css/vendor/katex.min.css").relationship(.stylesheet)
         }
         .scripts {
             Script(source: "/assets/js/vendor/simplemde.min.js")
-            Script(source: "https://cdn.jsdelivr.net/npm/marked/marked.min.js")
-            Script().source("https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js")
+            Script(source: "/assets/js/vendor/marked.min.js")
+            Script(source: "/assets/js/vendor/katex.min.js")
             Script(source: "/assets/js/markdown-renderer.js")
             Script(source: "/assets/js/task-discussion/create.js")
             Script(source: "/assets/js/task-discussion/create-response.js")
