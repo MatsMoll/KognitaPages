@@ -87,8 +87,10 @@ extension Subject.Templates {
                     .column(width: .eight, for: .large)
                     Div {
                         StatisticsCard()
-                        IF(context.details.isModerator) {
+                        IF(context.details.canCreateTasks) {
                             CreateContentCard(createContentUri: context.details.createContentUri)
+                        }
+                        IF(context.details.isModerator) {
                             SubjectTestSignifier(subjectID: context.details.subject.id)
                         }
                     }
