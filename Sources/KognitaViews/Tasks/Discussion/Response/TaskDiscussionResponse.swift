@@ -4,7 +4,7 @@
 //
 //  Created by Eskild Brobak on 27/02/2020.
 //
-
+import Foundation
 import BootstrapKit
 import KognitaCore
 
@@ -21,10 +21,14 @@ struct DiscussionResponse: HTMLPage {
                 .margin(.two, for: .right)
 
             Div {
-
                 Div {
                     Text {
                         response.username
+
+                        Unwrap(response.createdAt) { (createdAt: TemplateValue<Date>) in
+                            Small { createdAt.style(date: .short, time: .short) }
+                                .margin(.one, for: .left)
+                        }
                     }
                     .style(.heading5)
                     .margin(.zero, for: .top)
@@ -41,6 +45,7 @@ struct DiscussionResponse: HTMLPage {
             .margin(.two, for: .top)
         }
         .class("border-bottom border-light")
+        .enviroment(locale: "nb")
     }
 }
 

@@ -1,5 +1,6 @@
 import BootstrapKit
 import KognitaCore
+import Foundation
 
 extension TaskDiscussion.Details {
     var fetchResponsesCall: String { "fetchDiscussionResponses(\(id))" }
@@ -57,54 +58,59 @@ extension TaskDiscussion.Templates {
                 .footer {
 
                     Text {
-                        ForEach(in: context) { (discussion: TemplateValue<TaskDiscussion.Details>) in
-
-                            Div {
-                                Button {
-                                    MaterialDesignIcon(.arrowRight)
-
-                                }
-                                .float(.right)
-                                .text(color: .dark)
-                                .button(style: .light)
-                                .button(size: .extraSmall)
-                                .margin(.three, for: .left)
-                                .toggle(modal: .id("response"))
-                                .data("dID", value: discussion.id)
-                                .data("dUname", value: discussion.username)
-                                .data("dDesc", value: discussion.description)
-                                .on(click: discussion.fetchResponsesCall)
-
+                        IF(context.isEmpty) {
+                            Text { "Det finnes ingen diskusjoner enda! Om det er noe du lurer på, så er det bare å spørre!" }
+                                .style(.heading4)
+                        }
+                        .else {
+                            ForEach(in: context) { (discussion: TemplateValue<TaskDiscussion.Details>) in
                                 Div {
-                                    Div {
-
-                                        Text {
-                                            discussion.description
-                                        }
-                                        .style(.heading4)
-                                        .margin(.zero, for: .top)
+                                    Button {
+                                        MaterialDesignIcon(.arrowRight)
 
                                     }
-                                    .display(.flex)
-                                }
+                                    .float(.right)
+                                    .text(color: .dark)
+                                    .button(style: .light)
+                                    .button(size: .extraSmall)
+                                    .margin(.three, for: .left)
+                                    .toggle(modal: .id("response"))
+                                    .data("dID", value: discussion.id)
+                                    .data("dUname", value: discussion.username)
+                                    .data("dDesc", value: discussion.description)
+                                    .on(click: discussion.fetchResponsesCall)
 
-                                Small {
-                                    "Spurt av: "
-                                    discussion.username
+                                    Div {
+                                        Div {
+
+                                            Text {
+                                                discussion.description
+                                            }
+                                            .style(.heading4)
+                                            .margin(.zero, for: .top)
+
+                                        }
+                                        .display(.flex)
+                                    }
+
+                                    Small {
+                                        "Spurt av: "
+                                        discussion.username
+                                    }
+
+
                                 }
-                                .margin(.four, for: .bottom)
+                                .class("border-bottom border-light")
+                                .padding(.two, for: .bottom)
+                                .padding(.two, for: .top)
                             }
-                            .class("border-bottom border-light")
-                            .padding(.two, for: .bottom)
-                            .padding(.two, for: .top)
                         }
 
                         Button {
                             "Lag diskusjon"
                         }
                         .toggle(modal: .id("discussion-modal"))
-                        .margin(.two)
-                        .float(.bottom)
+                        .margin(.two, for: .top)
                         .button(style: .light)
                     }
                     .style(.heading6)
@@ -122,6 +128,7 @@ extension TaskDiscussion.Templates {
                         "Spurt av: "
                     }
                     .id("disc-username")
+
 
                     Div().id("disc-responses").display(.none)
 
