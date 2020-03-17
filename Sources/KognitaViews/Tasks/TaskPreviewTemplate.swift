@@ -17,6 +17,7 @@ struct TaskPreviewTemplateContext {
     let taskPath: String
     let currentTaskIndex: Int
 
+
     var subject: Subject { return taskContent.subject }
     var topic: Topic { return taskContent.topic }
     var task: Task { return taskContent.task }
@@ -102,6 +103,11 @@ public struct TaskPreviewTemplate: HTMLComponent {
                 
                 Input().type(.hidden).value(context.task.id).id("task-id")
 
+                Input()
+                    .type(.hidden)
+                    .value(context.task.id)
+                    .id("task-id")
+
                 Row {
                     Div {
                         Unwrap(context.task.examPaperSemester) { exam in
@@ -128,6 +134,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
                     NavigationCard(context: context)
                     DismissableError()
                     underSolutionCard
+                    Div().id("discussions").display(.none)
                 }
             }
 
@@ -159,6 +166,8 @@ public struct TaskPreviewTemplate: HTMLComponent {
                 .on(click: "suggestSolution()")
                 .button(style: .primary)
             }
+
+            TaskDiscussion.Templates.CreateModal()
         }
         .header {
             Link().href("/assets/css/vendor/simplemde.min.css").relationship(.stylesheet).type("text/css")
@@ -169,6 +178,9 @@ public struct TaskPreviewTemplate: HTMLComponent {
             Script(source: "/assets/js/vendor/marked.min.js")
             Script(source: "/assets/js/vendor/katex.min.js")
             Script(source: "/assets/js/markdown-renderer.js")
+            Script(source: "/assets/js/task-discussion/create.js")
+            Script(source: "/assets/js/task-discussion/create-response.js")
+            Script(source: "/assets/js/task-discussion/fetch-discussions.js")
             Script(source: "/assets/js/task-solution/vote.js")
             Script(source: "/assets/js/task-solution/suggest-solution.js")
             customScripts
@@ -286,6 +298,11 @@ public struct TaskPreviewTemplate: HTMLComponent {
         }
     }
 }
+
+
+
+
+
 
 typealias StaticView = HTMLComponent
 typealias TemplateView = HTMLTemplate
