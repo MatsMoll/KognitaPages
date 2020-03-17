@@ -11,14 +11,36 @@ import KognitaCore
 
 struct DiscussionResponse: HTMLPage {
 
-    let context: TaskDiscussion.Pivot.Response
+    let response: TemplateValue<TaskDiscussion.Pivot.Response.Details>
 
     public var body: HTML {
+        Div {
+            MaterialDesignIcon(.accountCircle)
+                .float(.left)
+                .style(css: "font-size: 40px;")
+                .margin(.two, for: .right)
 
-        Card {
-            //context.
-            " "
+            Div {
+
+                Div {
+                    Text {
+                        response.username
+                    }
+                    .style(.heading5)
+                    .margin(.zero, for: .top)
+
+                    Text {
+                        response.response
+                    }
+                    .style(.lead)
+                    .margin(.one, for: .bottom)
+                    .padding(.two, for: .bottom)
+                }
+            }
+            .display(.flex)
+            .margin(.two, for: .top)
         }
+        .class("border-bottom border-light")
     }
 }
 

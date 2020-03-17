@@ -5,39 +5,63 @@ extension TaskDiscussion.Details {
     var fetchResponsesCall: String { "fetchDiscussionResponses(\(id))" }
 }
 
-extension TaskPreviewTemplate {
+extension TaskDiscussion {
+    public enum Templates {}
+}
 
-    struct DiscussionCard: HTMLComponent {
+extension TaskDiscussion.Templates {
 
-        let discussions: TemplateValue<[TaskDiscussion.Details]>
+    struct CreateModal: HTMLComponent {
 
-        var scripts: HTML {
+        var body: HTML {
+            Modal(title: "Diskusjon", id: "discussion-modal") {
+
+                FormGroup(label: "Noe du lurer på?") {
+                    TextArea()
+                        .id("create-discussion-question")
+                        .placeholder("Hva lurer du på?")
+                }
+
+                Button {
+                    "Still et spørsmål"
+                }
+                .on(click: "createDiscussion()")
+                .button(style: .primary)
+            }
+        }
+    }
+}
+
+extension TaskDiscussion.Templates {
+
+    public struct DiscussionCard: HTMLTemplate {
+
+        public typealias Context = [TaskDiscussion.Details]
+
+
+        public var scripts: HTML {
             NodeList {
-                body.scripts
+                htmlBody.scripts
                 Script(source: "/assets/js/task-discussion/fetch-responses.js")
             }
         }
 
-        var body: HTML {
-
+        var htmlBody: HTML {
             NodeList {
                 Card {
                     Text {
                         "Diskusjon"
                     }
                     .style(.heading3)
-                    }
-                .class("reveal")
-                .display(.none)
+                }
                 .footer {
 
                     Text {
-                        ForEach(in: discussions) { (discussion: TemplateValue<TaskDiscussion.Details>) in
+                        ForEach(in: context) { (discussion: TemplateValue<TaskDiscussion.Details>) in
 
                             Div {
                                 Button {
                                     MaterialDesignIcon(.arrowRight)
-                                        .text(color: .primary)
 
                                 }
                                 .float(.right)
@@ -45,7 +69,7 @@ extension TaskPreviewTemplate {
                                 .button(style: .light)
                                 .button(size: .extraSmall)
                                 .margin(.three, for: .left)
-                                .toggle(modal: .id("discussion"))
+                                .toggle(modal: .id("response"))
                                 .data("dID", value: discussion.id)
                                 .data("dUname", value: discussion.username)
                                 .data("dDesc", value: discussion.description)
@@ -75,28 +99,20 @@ extension TaskPreviewTemplate {
                             .padding(.two, for: .top)
                         }
 
+                        Button {
+                            "Lag diskusjon"
+                        }
+                        .toggle(modal: .id("discussion-modal"))
+                        .margin(.two)
+                        .float(.bottom)
+                        .button(style: .light)
                     }
                     .style(.heading6)
                     .margin(.zero, for: .top)
                 }
                 .text(break: .break)
 
-                Card {
-                    FormGroup(label: "Noe du lurer på?") {
-                        MarkdownEditor(id: "create-discussion-question")
-                            .placeholder("Hva lurer du på?")
-                    }
-
-                    Button {
-                        "Still et spørsmål"
-                    }
-                    .on(click: "createDiscussion()")
-                    .button(style: .primary)
-                }
-                .class("reveal")
-                .display(.none)
-
-                Modal(title: "Diskusjon", id: "discussion") {
+                Modal(title: "Svar", id: "response") {
 
                     Input().id("disc-id").type(.hidden)
 
@@ -127,6 +143,13 @@ extension TaskPreviewTemplate {
                 .set(data: "dID", to: "disc-id")
                 .set(data: "dDesc", to: "disc-description")
                 .set(data: "dUname", to: "disc-username")
+            }
+        }
+
+        public var body: HTML {
+            NodeList {
+                htmlBody
+                scripts
             }
         }
     }

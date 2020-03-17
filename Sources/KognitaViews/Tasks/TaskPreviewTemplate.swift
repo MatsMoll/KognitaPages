@@ -127,7 +127,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
                     NavigationCard(context: context)
                     DismissableError()
                     underSolutionCard
-                    DiscussionCard(discussions: context.discussions)
+                    Div().id("discussions").display(.none)
                 }
             }
 
@@ -152,6 +152,8 @@ public struct TaskPreviewTemplate: HTMLComponent {
                 .on(click: "suggestSolution()")
                 .button(style: .primary)
             }
+
+            TaskDiscussion.Templates.CreateModal()
         }
         .header {
             Link().href("/assets/css/vendor/simplemde.min.css").relationship(.stylesheet).type("text/css")
@@ -164,6 +166,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
             Script(source: "/assets/js/markdown-renderer.js")
             Script(source: "/assets/js/task-discussion/create.js")
             Script(source: "/assets/js/task-discussion/create-response.js")
+            Script(source: "/assets/js/task-discussion/fetch-discussions.js")
             Script(source: "/assets/js/task-solution/vote.js")
             Script(source: "/assets/js/task-solution/suggest-solution.js")
             customScripts

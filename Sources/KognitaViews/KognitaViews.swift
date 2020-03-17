@@ -61,6 +61,7 @@ public struct KognitaViews {
         try renderer.add(view: TaskPreviewTemplate.Responses())
         try renderer.add(view: TaskSolution.Templates.List())
         try renderer.add(view: MultipleChoiseTaskTestMode())
+        try renderer.add(view: TaskDiscussion.Templates.DiscussionCard())
     //
     //    // Create Content
         try renderer.add(view: Subject.Templates.Create())
