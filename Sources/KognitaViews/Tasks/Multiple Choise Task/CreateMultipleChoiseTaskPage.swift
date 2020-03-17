@@ -18,6 +18,21 @@ extension MultipleChoiseTask.Templates.Create.Context {
     }
 
     var isEditingTask: Bool { content.task != nil }
+
+    var saveCall: String {
+        if isEditingTask {
+            return "editMultipleChoise();"
+        } else {
+            return "createMultipleChoise();"
+        }
+    }
+
+    var deleteCall: String? {
+        guard let taskID = content.task?.id else {
+            return nil
+        }
+        return "deleteTask(\(taskID), \"tasks/multiple-choise\");"
+    }
 }
 
 extension MultipleChoiseTask.Templates {
@@ -29,12 +44,14 @@ extension MultipleChoiseTask.Templates {
             let wasUpdated: Bool
             let isTestable: Bool
             let isModerator: Bool
+            let canEdit: Bool
 
             public init(user: User, content: MultipleChoiseTask.ModifyContent, isModerator: Bool, wasUpdated: Bool = false, isTestable: Bool = false) {
                 self.user = user
                 self.content = content
                 self.wasUpdated = wasUpdated
                 self.isModerator = isModerator
+                self.canEdit = isModerator ? true : (user.id ?? 0) == content.task?.id
                 if let task = content.task {
                     self.isTestable = task.isTestable
                 } else {
@@ -282,14 +299,29 @@ extension MultipleChoiseTask.Templates {
 
                     DismissableError()
 
-                    Button {
-                        MaterialDesignIcon(icon: .save)
-                        " Lagre"
+                    IF(context.canEdit) {
+                        Button {
+                            MaterialDesignIcon(icon: .check)
+                            " Lagre"
+                        }
+                        .type(.button)
+                        .on(click: context.saveCall)
+                        .class("mb-3 mt-3")
+                        .button(style: .success)
+
+                        Unwrap(context.deleteCall) { deleteCall in
+
+                            Button {
+                                MaterialDesignIcon(icon: .delete)
+                                " Slett"
+                            }
+                            .type(.button)
+                            .on(click: context.saveCall)
+                            .margin(.three, for: .vertical)
+                            .margin(.one, for: .left)
+                            .button(style: .danger)
+                        }
                     }
-                    .type(.button)
-                    .on(click: IF(context.isEditingTask) { "editMultipleChoise();" }.else { "createMultipleChoise();" })
-                    .class("mb-3 mt-3")
-                    .button(style: .success)
                 }
             }
             .header {
@@ -303,6 +335,7 @@ extension MultipleChoiseTask.Templates {
                 Script(source: "/assets/js/markdown-renderer.js")
                 Script(source: "/assets/js/markdown-editor.js")
                 Script(source: "/assets/js/dismissable-error.js")
+                Script(source: "/assets/js/delete-task.js")
                 Script(source: "/assets/js/multiple-choise/json-data.js")
                 Script(source: "/assets/js/multiple-choise/modify-task.js")
 
