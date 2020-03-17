@@ -9,13 +9,42 @@ import BootstrapKit
 import KognitaCore
 
 extension User.Templates {
+    struct ProfileCard: HTMLComponent {
+
+        let user: TemplateValue<User>
+
+        var body: HTML {
+            Card {
+                Text { MaterialDesignIcon(.accountCircle) }
+                    .style(.display1)
+                    .text(alignment: .center)
+
+                Text { "Brukernavn: " }
+                    .margin(.three, for: .top)
+                    .margin(.one, for: .bottom)
+
+                Text { user.username }
+                    .style(.heading4)
+
+                Text { "Email: " }
+                    .margin(.three, for: .top)
+                    .margin(.one, for: .bottom)
+
+                Text { user.email }
+                    .style(.heading4)
+            }
+        }
+    }
+}
+
+extension User.Templates {
     public struct Profile: HTMLTemplate {
 
         public struct Context {
             let user: User
-            let subjects: [Subject]
+            let subjects: [Subject.ListOverview]
 
-            public init(user: User, subjects: [Subject]) {
+            public init(user: User, subjects: [Subject.ListOverview]) {
                 self.user = user
                 self.subjects = subjects
             }
