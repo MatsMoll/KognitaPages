@@ -16,7 +16,7 @@ struct TaskPreviewTemplateContext {
     let user: UserContent
     let taskPath: String
     let currentTaskIndex: Int
-    let discussions: [TaskDiscussion.Details]
+
 
     var subject: Subject { return taskContent.subject }
     var topic: Topic { return taskContent.topic }
@@ -43,8 +43,7 @@ struct TaskPreviewTemplateContext {
         session: PracticeSessionRepresentable,
         taskPath: String,
         currentTaskIndex: Int,
-        lastResult: TaskResultContent?,
-        discussions: [TaskDiscussion.Details]
+        lastResult: TaskResultContent?
     ) {
         self.practiceProgress = practiceProgress
         self.session = session
@@ -53,7 +52,6 @@ struct TaskPreviewTemplateContext {
         self.taskPath = taskPath
         self.currentTaskIndex = currentTaskIndex
         self.lastResult = lastResult
-        self.discussions = discussions
     }
 }
 
