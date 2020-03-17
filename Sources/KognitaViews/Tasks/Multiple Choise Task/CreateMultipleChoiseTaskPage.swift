@@ -51,10 +51,11 @@ extension MultipleChoiseTask.Templates {
                 self.content = content
                 self.wasUpdated = wasUpdated
                 self.isModerator = isModerator
-                self.canEdit = isModerator ? true : (user.id ?? 0) == content.task?.id
                 if let task = content.task {
+                    self.canEdit = isModerator ? true : (user.id ?? 0) == content.task?.id
                     self.isTestable = task.isTestable
                 } else {
+                    self.canEdit = true
                     self.isTestable = isTestable
                 }
             }
