@@ -105,7 +105,7 @@ struct ContentBaseTemplate: HTMLComponent {
         BaseTemplate(context: baseContext) {
             Div {
                 Div {
-                    BetaHeader()
+//                    BetaHeader()
                     Container {
                         KognitaNavigationBar(
                             userContext: userContext,
@@ -195,41 +195,15 @@ struct ContentBaseTemplate: HTMLComponent {
                         self.tab(with: tab)
                     }
                     ListItem {
-                        Anchor{
-                            Text {
-                                MaterialDesignIcon(.accountCircle)
-                                " "
-                                userContext.username
-                            }
-                            .style(.cardText)
-                        }
-                        .class("nav-link dropdown")
-                        .id("navbarDropdown")
-                        .role("button")
-
-                        Div {
-                            Form {
-                                Anchor {
-                                    "Min profil"
-                                }
-                                .href("/profile")
-                                .class("dropdown-item")
-
-
-                                Anchor {
-                                    Strings.menuLogout.localized()
-                                }
-                                .class("dropdown-item")
+                        Form {
+                            Anchor { Strings.menuLogout.localized() }
+                                .class("nav-link")
                                 .href("#")
                                 .on(click: "this.closest(\"form\").submit()")
-                            }
-                            .action("/logout")
-                            .method(.post)
                         }
-                        .class("dropdown-menu")
-                        .margin(.zero)
+                        .action("/logout")
+                        .method(.post)
                     }
-                    .class("nav-item dropdown")
                 }
                 .button {
                     HyperHamburgerMenu()

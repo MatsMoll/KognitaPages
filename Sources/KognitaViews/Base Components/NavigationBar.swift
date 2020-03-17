@@ -67,7 +67,7 @@ struct KognitaNavigationBar: HTMLComponent {
 
     var body: HTML {
         Div {
-            BetaHeader()
+//            BetaHeader()
             Container {
                 NavigationBar {
                     Anchor {

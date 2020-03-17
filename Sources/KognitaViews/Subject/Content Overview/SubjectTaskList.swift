@@ -133,7 +133,7 @@ extension Subject.Templates {
 
                 IF(canEdit && task.task.deletedAt.isNotDefined) {
                     Button {
-                        Italic().class("dripicons-document-delete")
+                        MaterialDesignIcon(.delete)
                         " Slett"
                     }
                     .on(click: task.deleteCall)

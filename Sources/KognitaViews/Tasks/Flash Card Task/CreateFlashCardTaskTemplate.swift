@@ -73,6 +73,21 @@ extension FlashCardTask.Templates.Create.Context {
     var isEditingTask: Bool {
         content.task != nil
     }
+
+    var saveCall: String {
+        if isEditingTask {
+            return "editFlashCard();"
+        } else {
+            return "createFlashCard();"
+        }
+    }
+
+    var deleteCall: String? {
+        guard let taskID = content.task?.id else {
+            return nil
+        }
+        return "deleteTask(\(taskID), \"tasks/flash-card\");"
+    }
 }
 
 extension FlashCardTask.ModifyContent {
@@ -86,10 +101,12 @@ extension FlashCardTask.Templates {
             let user: User
             let content: FlashCardTask.ModifyContent
             let wasUpdated: Bool
+            let canEdit: Bool
 
-            public init(user: User, content: FlashCardTask.ModifyContent, wasUpdated: Bool = false) {
+            public init(user: User, content: FlashCardTask.ModifyContent, canEdit: Bool, wasUpdated: Bool = false) {
                 self.user = user
                 self.content = content
+                self.canEdit = canEdit
                 self.wasUpdated = wasUpdated
             }
         }
@@ -247,20 +264,29 @@ extension FlashCardTask.Templates {
 
                     DismissableError()
 
-                    Button {
-                        MaterialDesignIcon(icon: .save)
-                        " Lagre"
-                    }
-                    .type(.button)
-                    .button(style: .success)
-                    .margin(.three, for: .vertical)
-                    .on(click:
-                        IF(context.isEditingTask) {
-                            "editFlashCard();"
-                        }.else {
-                            "createFlashCard();"
+                    IF(context.canEdit) {
+                        Button {
+                            MaterialDesignIcon(icon: .check)
+                            " Lagre"
                         }
-                    )
+                        .type(.button)
+                        .button(style: .success)
+                        .margin(.three, for: .vertical)
+                        .on(click: context.saveCall)
+
+                        Unwrap(context.deleteCall) { deleteCall in
+
+                            Button {
+                                MaterialDesignIcon(icon: .delete)
+                                " Slett"
+                            }
+                            .type(.button)
+                            .button(style: .danger)
+                            .margin(.three, for: .vertical)
+                            .margin(.one, for: .left)
+                            .on(click: deleteCall)
+                        }
+                    }
                 }
             }
             .header {
@@ -275,6 +301,7 @@ extension FlashCardTask.Templates {
                 Script(source: "/assets/js/markdown-editor.js")
                 Script(source: "/assets/js/flash-card/modify-task.js")
                 Script(source: "/assets/js/dismissable-error.js")
+                Script(source: "/assets/js/delete-task.js")
                 Script(source: "/assets/js/flash-card/json-data.js")
                 IF(context.isEditingTask) {
                     Script(source: "/assets/js/flash-card/edit.js")

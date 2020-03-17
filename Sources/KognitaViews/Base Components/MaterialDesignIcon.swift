@@ -9,7 +9,6 @@ struct MaterialDesignIcon: HTMLComponent, AttributeNode {
         case minus
         case eye
         case close
-        case save
         case delete
         case avTime = "av-time"
         case cameraTime = "camera-time"
