@@ -65,15 +65,12 @@ extension FlashCardTask.Templates {
                     }
                     InputGroup {
                         TextArea {
-                            Unwrap(context.prevAnswer) { answer in
+                            Unwrap(context.prevAnswer) { (answer: TemplateValue<FlashCardAnswer>) in
                                 answer.answer
                             }
                         }
                         .id("flash-card-answer")
                         .placeholder("Skriv et passende svar, eller trykk på *sjekk svar* for å se løsningen")
-                    }
-                    .invalidFeedback {
-                        "Du må angi et svar"
                     }
                     .margin(.two, for: .bottom)
 
@@ -136,15 +133,7 @@ extension FlashCardTask.Templates {
             .scripts {
                 Script().source("/assets/js/flash-card/submit-performance.js")
                 IF(context.hasBeenCompleted) {
-                    Unwrap(context.score) { score in
-                        Script {
-                            "knowledgeScore="
-                            score
-                        }
-                    }
-                    Script {
-                        "window.onload = presentControlls;"
-                    }
+                    context.hasCompletedScript.asScript
                 }
             }
         }
@@ -202,6 +191,28 @@ extension FlashCardTask.Templates {
                 .text(alignment: textAlignment)
                 .style(.heading5)
             }
+        }
+    }
+}
+
+extension FlashCardTask.Templates.Execute.Context {
+    fileprivate var knowledgeScoreScript: String {
+        if let score = score {
+            return "knowledgeScore=\(score)"
+        } else {
+            return ""
+        }
+    }
+
+    fileprivate var hasCompletedScript: String {
+        "\(knowledgeScoreScript);window.onload = presentControlls;"
+    }
+}
+
+extension TemplateValue where Value == String {
+    var asScript: Script {
+        Script {
+            self
         }
     }
 }
