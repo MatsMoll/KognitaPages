@@ -50,17 +50,14 @@ extension TaskDiscussion.Templates {
         var htmlBody: HTML {
             NodeList {
                 Card {
-                    Text {
-                        "Diskusjon"
-                    }
-                    .style(.heading3)
+                    Text { "Diskusjon" }
+                        .style(.heading4)
                 }
                 .footer {
 
-                    Text {
+                    Div {
                         IF(context.isEmpty) {
                             Text { "Det finnes ingen diskusjoner enda! Om det er noe du lurer på, så er det bare å spørre!" }
-                                .style(.heading4)
                         }
                         .else {
                             ForEach(in: context) { (discussion: TemplateValue<TaskDiscussion.Details>) in
@@ -106,14 +103,11 @@ extension TaskDiscussion.Templates {
                             }
                         }
 
-                        Button {
-                            "Lag diskusjon"
-                        }
-                        .toggle(modal: .id("discussion-modal"))
-                        .margin(.two, for: .top)
-                        .button(style: .light)
+                        Button { "Lag diskusjon" }
+                            .toggle(modal: .id("discussion-modal"))
+                            .margin(.two, for: .top)
+                            .button(style: .light)
                     }
-                    .style(.heading6)
                     .margin(.zero, for: .top)
                 }
                 .text(break: .break)

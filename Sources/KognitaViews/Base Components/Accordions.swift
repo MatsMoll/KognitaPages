@@ -26,27 +26,29 @@ struct Accordions<B>: HTMLComponent {
     var body: HTML {
         NodeList {
             Div {
-                ForEach(enumerated: values) { value in
-                    card(value: value)
+                Div {
+                    ForEach(enumerated: values) { value in
+                        card(value: value)
+                    }
+                    IF(footer != nil) {
+                        Div {
+                            footer ?? ""
+                        }
+                        .class("card-body")
+                    }
                 }
+                .class("card")
             }
             .class("custom-accordion mb-4")
             .id(id)
-            IF(footer != nil) {
-                Card {
-                    footer ?? ""
-                }
-            }
         }
     }
 
     func card(value: (TemplateValue<B>, index: TemplateValue<Int>)) -> HTML {
-        Div {
+        NodeList {
             heading(value: value)
             content(value: value)
         }
-        .class("card")
-        .margin(.zero, for: .bottom)
     }
 
     func heading(value: (TemplateValue<B>, index: TemplateValue<Int>)) -> HTML {
@@ -76,6 +78,7 @@ struct Accordions<B>: HTMLComponent {
         .aria(for: "labelledby", value: headingId(value.index))
         .data(for: "parent", value: "#\(id)")
         .id(bodyId(value.index))
+        .class("border-bottom border-light")
     }
 
     func bodyId(_ index: TemplateValue<Int>) -> HTML {
