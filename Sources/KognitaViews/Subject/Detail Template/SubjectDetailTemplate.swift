@@ -14,6 +14,10 @@ extension Subject.Details {
         "markAsActive(\(subject.id ?? 0))"
     }
 
+    var makeInactiveCall: String {
+        "markAsInactive(\(subject.id ?? 0))"
+    }
+
     var topicIDsJSList: String {
         "[\(topics.map { $0.id }.reduce("") { $0 + "\($1), " }.dropLast(2))]"
     }
@@ -93,6 +97,7 @@ extension Subject.Templates {
                         IF(context.details.isModerator) {
                             SubjectTestSignifier(subjectID: context.details.subject.id)
                         }
+                        MakeSubjectInactiveCard(details: context.details)
                     }
                     .column(width: .four, for: .large)
                 }
@@ -102,6 +107,7 @@ extension Subject.Templates {
                 Script().source("/assets/js/results/weekly-histogram.js")
                 Script().source("/assets/js/practice-session-create.js")
                 Script().source("/assets/js/subject/mark-as-active.js")
+                Script().source("/assets/js/subject/mark-as-inactive.js")
                 Script().source("https://cdn.jsdelivr.net/npm/marked/marked.min.js")
                 Script().source("/assets/js/markdown-renderer.js")
             }
@@ -290,6 +296,30 @@ extension Subject.Templates {
                     .href(subjectID + "/subject-tests")
                     .button(style: .light)
                     .class("btn-rounded")
+                }
+            }
+        }
+
+        struct MakeSubjectInactiveCard: HTMLComponent {
+
+            let details: TemplateValue<Subject.Details>
+
+            var body: HTML {
+                 IF(details.isActive) {
+                    Card {
+                        Text {
+                            "Ikke lenger et fag du trenger?"
+                        }
+                        .style(.heading3)
+                        .text(color: .dark)
+
+                        Button {
+                            "Gjør faget inaktivt"
+                        }
+                        .button(style: .light)
+                        .isRounded()
+                        .on(click: details.makeInactiveCall)
+                    }
                 }
             }
         }
