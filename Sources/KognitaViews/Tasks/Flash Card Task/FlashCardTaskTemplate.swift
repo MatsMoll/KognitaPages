@@ -97,76 +97,38 @@ extension FlashCardTask.Templates {
                         .id("next-task")
                         .type(.hidden)
                         .value(context.taskPreview.nextTaskIndex)
-                    Text {
-                        "Hvordan gikk det?"
-                    }
-                    .margin(.one, for: .top)
-                    .margin(.three, for: .bottom)
-                    .style(.heading4)
+
+                    Text { "Hvor bra samsvarte du med løsningsforslaget?" }
+                        .margin(.one, for: .top)
+                        .margin(.three, for: .bottom)
+                        .style(.heading4)
 
                     Row {
                         Div {
-                            Text {
-                                "Dårlig"
-                            }
-                            .text(alignment: .left)
+                            Text { "Dårlig" }
+                                .text(alignment: .left)
                         }
-                        .column(width: .six)
+                        .column(width: .four)
 
                         Div {
-                            Text {
-                                "Bra"
-                            }
-                            .text(alignment: .right)
+                           Text { "Middels" }
+                               .text(alignment: .center)
+                       }
+                       .column(width: .four)
+
+                        Div {
+                            Text { "Bra" }
+                                .text(alignment: .right)
                         }
-                        .column(width: .six)
+                        .column(width: .four)
                     }
                     .noGutters()
 
                     Row {
-                        Div {
-                            Button {
-                                "1"
-                            }
-                            .on(click: "nextTask(0)")
-                            .button(style: .light)
-                        }
-                        .column(width: .two)
-                        .offset(width: .one, for: .all)
-                        Div {
-                            Button {
-                                "2"
-                            }
-                            .on(click: "nextTask(1)")
-                            .button(style: .light)
-                        }
-                        .column(width: .two)
-                        Div {
-                            Button {
-                                "3"
-                            }
-                            .on(click: "nextTask(2)")
-                            .button(style: .light)
-                        }
-                        .column(width: .two)
-                        Div {
-                            Button {
-                                "4"
-                            }
-                            .on(click: "nextTask(3)")
-                            .button(style: .light)
-                        }
-                        .column(width: .two)
-                        Div {
-                            Button {
-                                "5"
-                            }
-                            .on(click: "nextTask(4)")
-                            .button(style: .light)
-                        }
-                        .column(width: .two)
+                        ScoreButtons(score: context.score)
                     }
                     .noGutters()
+                    .text(alignment: .center)
                 }
                 .display(.none)
                 .id("knowledge-card")
@@ -174,9 +136,52 @@ extension FlashCardTask.Templates {
             .scripts {
                 Script().source("/assets/js/flash-card/submit-performance.js")
                 IF(context.hasBeenCompleted) {
+                    Unwrap(context.score) { score in
+                        Script {
+                            "knowledgeScore="
+                            score
+                        }
+                    }
                     Script {
                         "window.onload = presentControlls;"
                     }
+                }
+            }
+        }
+
+        private struct ScoreButton: HTMLComponent {
+
+            let score: Int
+
+            var body: HTML {
+                Button { score + 1 }
+                    .on(click: "registerScore(\(score))")
+                    .id(score)
+                    .button(style: .light)
+            }
+        }
+
+        private struct ScoreButtons: HTMLComponent {
+
+            let score: TemplateValue<Double?>
+
+            var body: HTML {
+                NodeList {
+                    Div { ScoreButton(score: 0) }
+                        .column(width: .two)
+                        .offset(width: .one, for: .all)
+
+                    Div { ScoreButton(score: 1) }
+                        .column(width: .two)
+
+                    Div { ScoreButton(score: 2) }
+                        .column(width: .two)
+
+                    Div { ScoreButton(score: 3) }
+                        .column(width: .two)
+
+                    Div { ScoreButton(score: 4) }
+                        .column(width: .two)
                 }
             }
         }

@@ -100,7 +100,9 @@ public struct TaskPreviewTemplate: HTMLComponent {
         )) {
             Container {
                 PageTitle(title: Strings.exerciseMainTitle.localized() + " " + context.currentTaskIndex)
-                
+
+                PracticeSessionProgressBar(context: context)
+
                 Input().type(.hidden).value(context.task.id).id("task-id")
 
                 Input()
@@ -125,17 +127,31 @@ public struct TaskPreviewTemplate: HTMLComponent {
                     .column(width: .twelve)
                 }
 
-                ContentStructure {
-                    QuestionCard(context: context.taskContent)
-                    actionCard
-                    Div().id("solution").display(.none)
+                Row {
+                    Div {
+                        QuestionCard(context: context.taskContent)
+                        actionCard
+                    }
+                    .column(width: .seven, for: .large)
+
+                    Div {
+                        Div().id("solution").display(.none)
+                        DismissableError()
+                        underSolutionCard
+                        Div().id("discussions").display(.none)
+                    }
+                    .column(width: .five, for: .large)
                 }
-                .secondary {
-                    NavigationCard(context: context)
-                    DismissableError()
-                    underSolutionCard
-                    Div().id("discussions").display(.none)
+                .id("main-task-content")
+
+                Row {
+                    Div {
+                        NavigationCard(context: context)
+                    }
+                    .column(width: .twelve)
                 }
+                .class("fixed-bottom")
+                .id("nav-card")
             }
 
             Modal(title: "Lag et løsningsforslag", id: "create-alternative-solution") {
@@ -155,16 +171,12 @@ public struct TaskPreviewTemplate: HTMLComponent {
                             Script.solutionScore(editorName: editor)
                     }
                 }
-                .description {
-                    TaskSolution.Templates.Requmendations()
-                }
+                .description { TaskSolution.Templates.Requmendations() }
                 .margin(.four, for: .bottom)
 
-                Button {
-                    "Lag løsningsforslag"
-                }
-                .on(click: "suggestSolution()")
-                .button(style: .primary)
+                Button { "Lag løsningsforslag" }
+                    .on(click: "suggestSolution()")
+                    .button(style: .primary)
             }
 
             TaskDiscussion.Templates.CreateModal()
@@ -183,6 +195,11 @@ public struct TaskPreviewTemplate: HTMLComponent {
             Script(source: "/assets/js/task-discussion/fetch-discussions.js")
             Script(source: "/assets/js/task-solution/vote.js")
             Script(source: "/assets/js/task-solution/suggest-solution.js")
+            Script {
+"""
+$("#main-task-content").css("padding-bottom", $("#nav-card").height() + 20);
+"""
+            }
             customScripts
         }
     }
@@ -223,85 +240,100 @@ public struct TaskPreviewTemplate: HTMLComponent {
 
         var body: HTML {
             Card {
-                Text {
-                    "Navigasjon"
-                }
-                .style(.heading3)
+                Container {
+                    Form {
+                        Button {
+                            Strings.exerciseNextButton
+                                .localized()
+                            MaterialDesignIcon(.arrowRight)
+                                .margin(.one, for: .left)
 
-                Button {
-                    Strings.exerciseNextButton
-                        .localized()
-                    MaterialDesignIcon(.arrowRight)
+                        }
+                        .id("nextButton")
+                        .on(click: context.nextTaskCall)
+                        .display(.none)
+                        .float(.right)
                         .margin(.one, for: .left)
-                }
-                .id("nextButton")
-                .on(click: context.nextTaskCall)
-                .display(.none)
-                .float(.right)
-                .margin(.one, for: .left)
-                .button(style: .primary)
+                        .button(style: .primary)
+                        .type(.button)
 
-                Unwrap(context.prevTaskIndex) { prevTaskIndex in
-                    Anchor {
-                        MaterialDesignIcon(.arrowLeft)
-                            .margin(.one, for: .right)
-                        "Forrige"
-                    }
-                    .button(style: .light)
-                    .href(prevTaskIndex)
-                    .margin(.two, for: .bottom)
-                }
-
-                Form {
-                    Button(Strings.exerciseStopSessionButton)
-                        .button(style: .danger)
-                }
-                .action("/practice-sessions/" + context.session.id + "/end")
-                .method(.post)
-            }
-            .footer {
-                Text {
-                    Localized(key: Strings.exerciseSessionProgressTitle)
-                    Span {
-                        Span {
-                            context.practiceProgress + "% "
-                        }
-                        .id("goal-progress-label")
-
-                        Small {
-                            Span {
-                                context.session.numberOfTaskGoal
+                        Unwrap(context.prevTaskIndex) { prevTaskIndex in
+                            Anchor {
+                                MaterialDesignIcon(.arrowLeft)
+                                    .margin(.one, for: .right)
+                                "Forrige"
                             }
-                            .id("goal-value")
-                            " "
-                            Localized(key: Strings.exerciseSessionProgressGoal)
+                            .button(style: .light)
+                            .href(prevTaskIndex)
+                            .margin(.two, for: .bottom)
+                            .float(.left)
                         }
-                        .text(color: .muted)
-                    }
-                    .float(.right)
-                }
-                .style(.paragraph)
-                .font(style: .bold)
-                .margin(.two, for: .bottom)
 
-                ProgressBar(
-                    currentValue: context.practiceProgress,
-                    valueRange: 0...100
-                )
-                    .bar(size: .medium)
-                    .bar(id: "goal-progress-bar")
-                    .modify(if: context.practiceProgress >= 100) {
-                        $0.bar(style: .success)
+                        Div {
+                            Button(Strings.exerciseStopSessionButton)
+                                .button(style: .danger)
+                        }
+                        .text(alignment: .center)
+                    }
+                    .action("/practice-sessions/" + context.session.id + "/end")
+                    .method(.post)
                 }
-                .margin(.two, for: .bottom)
             }
+            .margin(.zero, for: .bottom)
+            .padding(.two, for: .bottom)
         }
     }
 }
 
 
 
+private struct PracticeSessionProgressBar: HTMLComponent {
 
+    let context: TemplateValue<TaskPreviewTemplateContext>
+
+    var body: HTML {
+        Row {
+            Div {
+                Card {
+                    Text {
+                        Localized(key: Strings.exerciseSessionProgressTitle)
+                        Span {
+                            Span {
+                                context.practiceProgress
+                                "% "
+                            }
+                            .id("goal-progress-label")
+
+                            Small {
+                                Span { context.session.numberOfTaskGoal }
+                                    .id("goal-value")
+                                " "
+                                Localized(key: Strings.exerciseSessionProgressGoal)
+                            }
+                            .text(color: .muted)
+                        }
+                        .float(.right)
+                    }
+                    .style(.paragraph)
+                    .font(style: .bold)
+                    .margin(.two, for: .bottom)
+
+                    ProgressBar(
+                        currentValue: context.practiceProgress,
+                        valueRange: 0...100
+                    )
+                        .bar(size: .medium)
+                        .bar(id: "goal-progress-bar")
+                        .modify(if: context.practiceProgress >= 100) {
+                            $0.bar(style: .success)
+                    }
+                    .margin(.two, for: .bottom)
+                }
+            }
+            .column(width: .twelve)
+        }
+    }
+}
 
 
 typealias StaticView = HTMLComponent
