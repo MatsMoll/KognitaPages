@@ -65,7 +65,7 @@ extension PracticeSession.Templates {
             var singleStats: [SingleStatisticCardContent] {
                 [
                     .init(
-                        title: "Nåværende nivå",
+                        title: "Snitt score på øvingen",
                         mainContent: accuracyString,
                         extraContent: nil
                     ),
@@ -124,36 +124,38 @@ extension PracticeSession.Templates {
                     title: context.title,
                     breadcrumbs: breadcrumbItems
                 )
-                Row {
-                    Div {
-                        Card {
-                            H4(Strings.histogramTitle)
-                                .class("header-title mb-4")
+
+                ContentStructure {
+                    Row {
+                        ForEach(in: context.singleStats) { statistic in
                             Div {
-                                Canvas().id("practice-time-histogram")
-                            }.class("mt-3 chartjs-chart")
+                                SingleStatisticCard(
+                                    stats: statistic
+                                )
+                            }.column(width: .six, for: .large)
                         }
-                    }.class("col-12")
+                    }
+                }
+                .secondary {
+                    Card {
+                        H4(Strings.histogramTitle)
+                            .class("header-title mb-4")
+                        Div {
+                            Canvas().id("practice-time-histogram")
+                        }.class("mt-3 chartjs-chart")
+                    }
                 }
                 Row {
                     Div {
-                        IF(context.topicResults.count > 1) {
-                            Row {
-                                ForEach(in: context.topicResults) { result in
-                                    Div {
-                                        TopicOverview(
-                                            topicId: result.topicId,
-                                            topicName: result.topicName,
-                                            topicLevel: result.topicScore,
-                                            topicTaskResults: result.tasks
-                                        )
-                                    }
-                                    .column(width: .six, for: .medium)
-                                }
-                            }
-                        }
-                        .elseIf(context.topicResults.count == 1) {
-                            Unwrap(context.topicResults.first) { result in
+                        Text { "Temaer" }
+                            .style(.heading3)
+                    }
+                    .column(width: .twelve)
+                }
+                IF(context.topicResults.count > 1) {
+                    Row {
+                        ForEach(in: context.topicResults) { result in
+                            Div {
                                 TopicOverview(
                                     topicId: result.topicId,
                                     topicName: result.topicName,
@@ -162,23 +164,26 @@ extension PracticeSession.Templates {
                                 )
                                 .isShown(true)
                             }
-                        }
-                        .else {
-                            Text {
-                                "Vi klarte ikke å finne noen oppgaver i dette øvingssettet"
-                            }
-                            .style(.lead)
+                            .column(width: .four, for: .medium)
                         }
                     }
-                    .column(width: .eight, for: .large)
-                    Div {
-                        ForEach(in: context.singleStats) { statistic in
-                            SingleStatisticCard(
-                                stats: statistic
-                            )
-                        }
+                }
+                .elseIf(context.topicResults.count == 1) {
+                    Unwrap(context.topicResults.first) { result in
+                        TopicOverview(
+                            topicId: result.topicId,
+                            topicName: result.topicName,
+                            topicLevel: result.topicScore,
+                            topicTaskResults: result.tasks
+                        )
+                        .isShown(true)
                     }
-                    .column(width: .four, for: .large)
+                }
+                .else {
+                    Text {
+                        "Vi klarte ikke å finne noen oppgaver i dette øvingssettet"
+                    }
+                    .style(.lead)
                 }
             }
             .scripts {
