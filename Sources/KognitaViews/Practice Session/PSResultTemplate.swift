@@ -27,18 +27,6 @@ extension TimeInterval {
     }
 }
 
-public protocol TaskResultable {
-    var topicId: Topic.ID { get }
-    var topicName: String { get }
-    var question: String { get }
-    var revisitTime: Int { get }
-    var resultDescription: String { get }
-    var resultScore: Double { get }
-    var timeUsed: String { get }
-    var date: Date? { get }
-    var revisitDate: Date? { get }
-}
-
 struct TopicResultContext {
     let topicId: Topic.ID
     let topicName: String
@@ -113,7 +101,7 @@ extension PracticeSession.Templates {
                 let grouped = tasks.group(by: \.topicName)
                 topicResults = grouped.map { name, tasks in
                     TopicResultContext(
-                        topicId: tasks.first?.topicId ?? 0,
+                        topicId: tasks.first?.topicID ?? 0,
                         topicName: name,
                         topicScore: tasks.reduce(0.0) { $0 + $1.resultScore } / Double(tasks.count),
                         tasks: tasks

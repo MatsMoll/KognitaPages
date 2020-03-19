@@ -38,6 +38,15 @@ private struct HotjarScript: HTMLComponent {
     }
 }
 
+struct Manifest: HTMLComponent {
+
+    let uri: String
+
+    var body: HTML {
+        Link().add(HTMLAttribute(attribute: "rel", value: "manifest")).href(uri)
+    }
+}
+
 struct BaseTemplate: HTMLComponent {
 
     let context: TemplateValue<BaseTemplateContent>
@@ -83,6 +92,7 @@ struct BaseTemplate: HTMLComponent {
                 Title { context.title + " | Kognita" }
                 Description { context.description }
                 Author { "Kognita" }
+                Manifest(uri: "/manifest.webmanifest")
 
                 Stylesheet(url: stylesheetUrl)
                 Stylesheet(url: iconsUrl)
