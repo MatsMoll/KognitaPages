@@ -259,16 +259,11 @@ extension Subject.Templates {
 
             var body: HTML {
                 Card {
-                    Text {
-                        "Statistikk"
-                    }
-                    .style(.heading3)
-                    .text(color: .dark)
-                    .margin(.two, for: .bottom)
+                    Text(Strings.histogramTitle)
+                        .style(.heading3)
+                        .text(color: .dark)
+                        .margin(.two, for: .bottom)
 
-                    Text {
-                        "Timer øvet de siste ukene:"
-                    }
                     Div {
                         Canvas().id("practice-time-histogram")
                     }
