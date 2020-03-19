@@ -47,9 +47,7 @@ extension TestSession.Templates {
                 Row {
                     Div {
                         Card {
-                            Text {
-                                "Total score"
-                            }
+                            Text { "Total score" }
                             Text {
                                 context.results.readableScorePersentage
                                 "%"
@@ -84,19 +82,22 @@ extension TestSession.Templates {
 
                 IF(context.results.shouldPresentDetails) {
                     Row {
-                        Text {
-                            "Temaer"
-                        }
-                        .style(.heading3)
-                        .column(width: .twelve)
+                        Text { "Temaer" }
+                            .style(.heading3)
+                            .column(width: .twelve)
                     }
 
                     Row {
-                        ForEach(in: context.results.topicResults) { topic in
-                            Div {
-                                TopicOverview(result: topic)
+                        IF(context.results.topicResults.count == 1) {
+                            ForEach(in: context.results.topicResults) { topic in
+                                Div { TopicOverview(result: topic) }
+                                    .column(width: .twelve)
                             }
-                            .column(width: .four, for: .large)
+                        }.else {
+                            ForEach(in: context.results.topicResults) { topic in
+                                Div { TopicOverview(result: topic) }
+                                    .column(width: .four, for: .large)
+                            }
                         }
                     }
                 }
@@ -171,6 +172,7 @@ extension TestSession.Templates {
                     .class("list-group list-group-flush")
                 }
                 .collapseId(result.collapseID)
+                .isShown(true)
             }
         }
 
@@ -179,16 +181,15 @@ extension TestSession.Templates {
             let task: TemplateValue<TestSession.Results.Task>
 
             var body: HTML {
-                NodeList {
+                Anchor {
                     KognitaProgressBadge(value: task.score.timesHundred.twoDecimals)
 
-                    Text {
-                        task.question
-                    }
-                    .text(color: .secondary)
-                    .margin(.three, for: .right)
-                    .margin(.one, for: .bottom)
+                    Text { task.question }
+                        .text(color: .secondary)
+                        .margin(.three, for: .right)
+                        .margin(.one, for: .bottom)
                 }
+                .href(task.taskResultUri)
             }
         }
 
@@ -198,22 +199,16 @@ extension TestSession.Templates {
 
             var body: HTML {
                 Card {
-                    Text {
-                        "Viste du at du kan øve med Kognita?"
-                    }
-                    .style(.heading3)
-                    .text(color: .dark)
+                    Text { "Viste du at du kan øve med Kognita?" }
+                        .style(.heading3)
+                        .text(color: .dark)
 
-                    Text {
-                        "Prøve øvefunksjonen og øv litt på temane du hadde på prøven"
-                    }
+                    Text { "Prøve øvefunksjonen og øv litt på temane du hadde på prøven" }
 
-                    Button {
-                        "Begynn og øv"
-                    }
-                    .on(click: startPracticeSessionCall)
-                    .button(style: .success)
-                    .isRounded()
+                    Button { "Begynn og øv" }
+                        .on(click: startPracticeSessionCall)
+                        .button(style: .success)
+                        .isRounded()
                 }
             }
         }
@@ -223,5 +218,11 @@ extension TestSession.Templates {
 extension TestSession.Results.Topic {
     var collapseID: String {
         name.replacingOccurrences(of: " ", with: "-")
+    }
+}
+
+extension TestSession.Results.Task {
+    var taskResultUri: String {
+        "tasks/\(pivotID)/result"
     }
 }

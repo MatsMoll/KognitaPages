@@ -40,40 +40,30 @@ extension TestSession.Templates {
                     PageTitle(title: context.overview.test.title)
 
                     ContentStructure {
-                        Text {
-                            "Oversikt"
-                        }
-                        .style(.heading3)
-                        .text(color: .dark)
+                        Text { "Oversikt" }
+                            .style(.heading3)
+                            .text(color: .dark)
 
                         IF(context.unansweredTasks.isEmpty == false) {
-                            Text {
-                                "Ubesvarte oppgaver"
-                            }
-                            .style(.heading4)
-                            .text(color: .secondary)
+                            Text { "Ubesvarte oppgaver" }
+                                .style(.heading4)
+                                .text(color: .secondary)
 
                             Row {
                                 ForEach(in: context.unansweredTasks) { task in
-                                    Div {
-                                        TaskCard(overview: task)
-                                    }
-                                    .column(width: .four, for: .large)
+                                    Div { TaskCard(overview: task) }
+                                        .column(width: .six, for: .large)
                                 }
                             }
                         }
-                        Text {
-                            "Alle oppgaver"
-                        }
-                        .style(.heading4)
-                        .text(color: .secondary)
+                        Text { "Alle oppgaver" }
+                            .style(.heading4)
+                            .text(color: .secondary)
 
                         Row {
                             ForEach(in: context.overview.tasks) { task in
-                                Div {
-                                    TaskCard(overview: task)
-                                }
-                                .column(width: .six, for: .large)
+                                Div { TaskCard(overview: task) }
+                                    .column(width: .six, for: .large)
                             }
                         }
                     }

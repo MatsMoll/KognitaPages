@@ -129,16 +129,19 @@ public struct TaskPreviewTemplate: HTMLComponent {
 
                 Row {
                     Div {
-                        QuestionCard(context: context.taskContent)
+                        QuestionCard(
+                            description: context.taskContent.task.description,
+                            question: context.taskContent.task.question
+                        )
                         actionCard
                     }
                     .column(width: .seven, for: .large)
 
                     Div {
-                        Div().id("solution").display(.none)
+                        TaskSolutionCard()
                         DismissableError()
                         underSolutionCard
-                        Div().id("discussions").display(.none)
+                        TaskDiscussionCard()
                     }
                     .column(width: .five, for: .large)
                 }
@@ -190,11 +193,6 @@ public struct TaskPreviewTemplate: HTMLComponent {
             Script(source: "/assets/js/vendor/marked.min.js")
             Script(source: "/assets/js/vendor/katex.min.js")
             Script(source: "/assets/js/markdown-renderer.js")
-            Script(source: "/assets/js/task-discussion/create.js")
-            Script(source: "/assets/js/task-discussion/create-response.js")
-            Script(source: "/assets/js/task-discussion/fetch-discussions.js")
-            Script(source: "/assets/js/task-solution/vote.js")
-            Script(source: "/assets/js/task-solution/suggest-solution.js")
             Script {
 """
 $("#main-task-content").css("padding-bottom", $("#nav-card").height() + 20);
@@ -206,26 +204,22 @@ $("#main-task-content").css("padding-bottom", $("#nav-card").height() + 20);
 
     struct QuestionCard: HTMLComponent {
 
-        let context: TemplateValue<TaskPreviewContent>
+        let description: TemplateValue<String?>
+        let question: TemplateValue<String>
 
         var body: HTML {
             Row {
                 Div {
                     Card {
-                        IF(context.task.description.isDefined) {
-                            Text {
-                                context.task.description
-                                    .escaping(.unsafeNone)
-                            }
-                            .style(.paragraph)
-                            .text(color: .secondary)
-                            .margin(.two, for: .bottom)
-                            .class("render-markdown")
+                        IF(description.isDefined) {
+                            Text { description.escaping(.unsafeNone) }
+                                .style(.paragraph)
+                                .text(color: .secondary)
+                                .margin(.two, for: .bottom)
+                                .class("render-markdown")
                         }
-                        Text {
-                            context.task.question
-                        }
-                        .style(.heading4)
+                        Text { question }
+                            .style(.heading4)
                     }
                     .display(.block)
                 }
