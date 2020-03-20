@@ -90,12 +90,12 @@ extension TestSession.Templates {
                     Row {
                         IF(context.results.topicResults.count == 1) {
                             ForEach(in: context.results.topicResults) { topic in
-                                Div { TopicOverview(result: topic) }
+                                Div { TopicOverview(testIsOpen: context.results.testIsOpen, result: topic) }
                                     .column(width: .twelve)
                             }
                         }.else {
                             ForEach(in: context.results.topicResults) { topic in
-                                Div { TopicOverview(result: topic) }
+                                Div { TopicOverview(testIsOpen: context.results.testIsOpen, result: topic) }
                                     .column(width: .four, for: .large)
                             }
                         }
@@ -138,6 +138,7 @@ extension TestSession.Templates {
 
         struct TopicOverview: HTMLComponent {
 
+            let testIsOpen: TemplateValue<Bool>
             let result: TemplateValue<TestSession.Results.Topic>
 
             var body: HTML {
@@ -164,7 +165,10 @@ extension TestSession.Templates {
                     Div {
                         ForEach(in: result.taskResults) { task in
                             Div {
-                                TaskOverview(task: task)
+                                TaskOverview(
+                                    testIsOpen: testIsOpen,
+                                    task: task
+                                )
                             }
                             .class("list-group-item")
                         }
@@ -178,6 +182,7 @@ extension TestSession.Templates {
 
         struct TaskOverview: HTMLComponent {
 
+            let testIsOpen: TemplateValue<Bool>
             let task: TemplateValue<TestSession.Results.Task>
 
             var body: HTML {
@@ -188,6 +193,17 @@ extension TestSession.Templates {
                         .text(color: .secondary)
                         .margin(.three, for: .right)
                         .margin(.one, for: .bottom)
+
+                    Button {
+                        "Se løsningsforslag"
+                        IF(testIsOpen) {
+                            Break()
+                            Small { "Dette blir tilgjengelig når alle har levert" }
+                        }
+                    }
+                    .button(style: .light)
+                    .isDisabled(testIsOpen)
+                    .float(.right)
                 }
                 .href(task.taskResultUri)
             }
