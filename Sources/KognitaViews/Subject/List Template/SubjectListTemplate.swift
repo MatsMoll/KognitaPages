@@ -193,20 +193,13 @@ $("#start-subject-test-modal").modal('show');
 
             var body: HTML {
                 Card {
-                    Text {
-                        "Statistikk"
-                    }
-                    .style(.heading3)
-                    .text(color: .dark)
-                    .margin(.two, for: .bottom)
+                    Text(Strings.histogramTitle)
+                        .style(.heading3)
+                        .text(color: .dark)
+                        .margin(.two, for: .bottom)
 
-                    Text {
-                        "Timer øvd de siste ukene:"
-                    }
-                    Div {
-                        Canvas().id("practice-time-histogram")
-                    }
-                    .class("mt-3 chartjs-chart")
+                    Div { Canvas().id("practice-time-histogram") }
+                        .class("mt-3 chartjs-chart")
                 }
             }
         }

@@ -84,9 +84,8 @@ extension TaskSolution.Templates {
                     solution.solution
                         .escaping(.unsafeNone)
 
-                    Text {
-                        "Var løsningsforslaget nyttig? Trykk på knappen og si om det hjalp"
-
+                    Small {
+                        "Var løsningsforslaget nyttig?"
                         Button {
                             IF(solution.userHasVoted) {
                                 MaterialDesignIcon(.heart)
@@ -101,21 +100,15 @@ extension TaskSolution.Templates {
                         .button(style: .light)
                         .margin(.two, for: .left)
                     }
-                    .style(.heading6)
                 }
                 .class("solutions")
             }
             .footer {
-                Text {
-                    "Vil du skrive ditt eget løsningsforslag?"
-                }
-                .style(.heading4)
+                Text { "Vil du skrive ditt eget løsningsforslag?" }
 
-                Button {
-                    "Foreslå et løsningsforslag"
-                }
-                .toggle(modal: .id("create-alternative-solution"))
-                .button(style: .light)
+                Button { "Foreslå et løsningsforslag" }
+                    .toggle(modal: .id("create-alternative-solution"))
+                    .button(style: .light)
             }
         }
 
@@ -133,20 +126,20 @@ extension TaskSolution.Templates {
                         .class("page-title")
                         Div {
                             IF(context.creatorUsername.isDefined) {
-                                "Laget av: " + context.creatorUsername
+                                "Laget av: "
+                                context.creatorUsername
                             }
                             IF(context.approvedBy.isDefined) {
                                 Badge {
-                                    "Verifisert av: " + context.approvedBy
+                                    "Verifisert av: "
+                                    context.approvedBy
                                 }
                                 .background(color: .success)
                                 .margin(.two, for: .left)
                             }.else {
-                                Badge {
-                                    "Ikke verifisert enda"
-                                }
-                                .background(color: .warning)
-                                .margin(.two, for: .left)
+                                Badge { "Ikke verifisert enda" }
+                                    .background(color: .warning)
+                                    .margin(.two, for: .left)
                             }
                         }
                     }
