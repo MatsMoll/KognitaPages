@@ -55,20 +55,7 @@ extension PracticeSession.Templates.Result {
             .content {
                 Div {
                     ForEach(in: topicTaskResults) { (result: TemplateValue<TaskResultable>) in
-                        Div {
-
-                            KognitaProgressBadge(
-                                value: result.resultScore.twoDecimals
-                            )
-
-                            Text {
-                                result.question
-                            }
-                            .text(color: .secondary)
-                            .margin(.three, for: .right)
-                            .margin(.one, for: .bottom)
-                        }
-                        .class("list-group-item")
+                        TaskCell(result: result)
                     }
                 }
                 .class("list-group list-group-flush")
@@ -85,6 +72,34 @@ extension PracticeSession.Templates.Result {
         func isShown(_ condition: Conditionable) -> PracticeSession.Templates.Result.TopicOverview {
             .init(topicId: topicId, topicName: topicName, topicLevel: topicLevel, topicTaskResults: topicTaskResults, isShownValue: condition, attributes: attributes)
         }
+    }
+}
+
+private struct TaskCell: HTMLComponent {
+
+    let result: TemplateValue<TaskResultable>
+
+    var body: HTML {
+        Div {
+            Anchor {
+                KognitaProgressBadge(
+                    value: result.resultScore.twoDecimals
+                )
+
+                Text { result.question }
+                    .text(color: .secondary)
+                    .margin(.three, for: .right)
+                    .margin(.one, for: .bottom)
+            }
+            .href(result.executedTaskUri)
+        }
+        .class("list-group-item")
+    }
+}
+
+extension TaskResultable {
+    var executedTaskUri: String {
+        "tasks/\(taskIndex)"
     }
 }
 

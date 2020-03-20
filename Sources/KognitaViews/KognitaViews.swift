@@ -51,6 +51,7 @@ public struct KognitaViews {
 
         try renderer.add(view: TestSession.Templates.Overview())
         try renderer.add(view: TestSession.Templates.Results())
+        try renderer.add(view: TestSession.Templates.TaskResult())
 
     //    // Task Overview
     //    try renderer.add(template: TaskOverviewListTemplate())
