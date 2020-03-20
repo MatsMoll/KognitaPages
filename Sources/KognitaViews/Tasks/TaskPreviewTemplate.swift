@@ -156,33 +156,6 @@ public struct TaskPreviewTemplate: HTMLComponent {
                 .class("fixed-bottom")
                 .id("nav-card")
             }
-
-            Modal(title: "Lag et løsningsforslag", id: "create-alternative-solution") {
-
-                CustomControlInput(
-                    label: "Vis brukernavnet",
-                    type: .checkbox,
-                    id: "present-user"
-                )
-                    .isChecked(true)
-                    .margin(.two, for: .bottom)
-
-                FormGroup(label: "Løsningsforslag") {
-                    MarkdownEditor(id: "suggested-solution")
-                        .placeholder("Et eller annet løsningsforslag")
-                        .onChange { editor in
-                            Script.solutionScore(editorName: editor)
-                    }
-                }
-                .description { TaskSolution.Templates.Requmendations() }
-                .margin(.four, for: .bottom)
-
-                Button { "Lag løsningsforslag" }
-                    .on(click: "suggestSolution()")
-                    .button(style: .primary)
-            }
-
-            TaskDiscussion.Templates.CreateModal()
         }
         .header {
             Link().href("/assets/css/vendor/simplemde.min.css").relationship(.stylesheet).type("text/css")
