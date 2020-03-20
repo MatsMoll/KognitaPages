@@ -8,11 +8,15 @@ struct TaskDiscussionCard: HTMLComponent {
             Script(source: "/assets/js/task-discussion/create.js")
             Script(source: "/assets/js/task-discussion/create-response.js")
             Script(source: "/assets/js/task-discussion/fetch-discussions.js")
+            body.scripts
         }
     }
 
     var body: HTML {
-        Div().id("discussions").display(.none)
+        NodeList {
+            Div().id("discussions").display(.none)
+            TaskDiscussion.Templates.CreateModal()
+        }
     }
 }
 
@@ -72,11 +76,39 @@ function taskIndex() {
 }
 """
             }
+            body.scripts
         }
     }
 
     var body: HTML {
-        Div().id("solution").display(.none)
+        NodeList {
+            Div().id("solution").display(.none)
+
+            Modal(title: "Lag et løsningsforslag", id: "create-alternative-solution") {
+
+                CustomControlInput(
+                    label: "Vis brukernavnet",
+                    type: .checkbox,
+                    id: "present-user"
+                )
+                    .isChecked(true)
+                    .margin(.two, for: .bottom)
+
+                FormGroup(label: "Løsningsforslag") {
+                    MarkdownEditor(id: "suggested-solution")
+                        .placeholder("Et eller annet løsningsforslag")
+                        .onChange { editor in
+                            Script.solutionScore(editorName: editor)
+                    }
+                }
+                .description { TaskSolution.Templates.Requmendations() }
+                .margin(.four, for: .bottom)
+
+                Button { "Lag løsningsforslag" }
+                    .on(click: "suggestSolution()")
+                    .button(style: .primary)
+            }
+        }
     }
 }
 
@@ -152,7 +184,16 @@ extension TestSession.Templates {
                     }
                     .column(width: .five)
                 }
-
+            }
+            .header {
+                Link().href("/assets/css/vendor/simplemde.min.css").relationship(.stylesheet).type("text/css")
+                Link().href("/assets/css/vendor/katex.min.css").relationship(.stylesheet)
+            }
+            .scripts {
+                Script(source: "/assets/js/vendor/simplemde.min.js")
+                Script(source: "/assets/js/vendor/marked.min.js")
+                Script(source: "/assets/js/vendor/katex.min.js")
+                Script(source: "/assets/js/markdown-renderer.js")
                 Script {
 """
 window.onload=function() {

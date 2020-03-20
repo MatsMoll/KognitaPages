@@ -83,25 +83,24 @@ extension TaskSolution.Templates {
                 Div {
                     solution.solution
                         .escaping(.unsafeNone)
-
-                    Small {
-                        "Var løsningsforslaget nyttig?"
-                        Button {
-                            IF(solution.userHasVoted) {
-                                MaterialDesignIcon(.heart)
-                                    .class("vote-button")
-                                    .text(color: .danger)
-                            }.else {
-                                MaterialDesignIcon(.heartOutline)
-                                    .class("vote-button")
-                            }
-                        }
-                        .on(click: solution.voteCall)
-                        .button(style: .light)
-                        .margin(.two, for: .left)
-                    }
                 }
                 .class("solutions")
+                Small {
+                    "Var løsningsforslaget nyttig?"
+                    Button {
+                        IF(solution.userHasVoted) {
+                            MaterialDesignIcon(.heart)
+                                .class("vote-button")
+                                .text(color: .danger)
+                        }.else {
+                            MaterialDesignIcon(.heartOutline)
+                                .class("vote-button")
+                        }
+                    }
+                    .on(click: solution.voteCall)
+                    .button(style: .light)
+                    .margin(.two, for: .left)
+                }
             }
             .footer {
                 Text { "Vil du skrive ditt eget løsningsforslag?" }

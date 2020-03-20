@@ -103,29 +103,12 @@ public struct TaskPreviewTemplate: HTMLComponent {
 
                 PracticeSessionProgressBar(context: context)
 
-                Input().type(.hidden).value(context.task.id).id("task-id")
-
                 Input()
                     .type(.hidden)
                     .value(context.task.id)
                     .id("task-id")
 
-                Row {
-                    Div {
-                        Unwrap(context.task.examPaperSemester) { exam in
-                            Badge {
-                                Strings.exerciseExam.localized()
-                                ": "
-                                exam.norwegianDescription
-                                " "
-                                context.task.examPaperYear
-                            }
-                            .margin(.three, for: .bottom)
-                            .background(color: .primary)
-                        }
-                    }
-                    .column(width: .twelve)
-                }
+                ExamBadge(task: context.task)
 
                 Row {
                     Div {
@@ -148,41 +131,12 @@ public struct TaskPreviewTemplate: HTMLComponent {
                 .id("main-task-content")
 
                 Row {
-                    Div {
-                        NavigationCard(context: context)
-                    }
-                    .column(width: .twelve)
+                    Div { NavigationCard(context: context) }
+                        .column(width: .twelve)
                 }
                 .class("fixed-bottom")
                 .id("nav-card")
             }
-
-            Modal(title: "Lag et løsningsforslag", id: "create-alternative-solution") {
-
-                CustomControlInput(
-                    label: "Vis brukernavnet",
-                    type: .checkbox,
-                    id: "present-user"
-                )
-                    .isChecked(true)
-                    .margin(.two, for: .bottom)
-
-                FormGroup(label: "Løsningsforslag") {
-                    MarkdownEditor(id: "suggested-solution")
-                        .placeholder("Et eller annet løsningsforslag")
-                        .onChange { editor in
-                            Script.solutionScore(editorName: editor)
-                    }
-                }
-                .description { TaskSolution.Templates.Requmendations() }
-                .margin(.four, for: .bottom)
-
-                Button { "Lag løsningsforslag" }
-                    .on(click: "suggestSolution()")
-                    .button(style: .primary)
-            }
-
-            TaskDiscussion.Templates.CreateModal()
         }
         .header {
             Link().href("/assets/css/vendor/simplemde.min.css").relationship(.stylesheet).type("text/css")
@@ -199,6 +153,30 @@ $("#main-task-content").css("padding-bottom", $("#nav-card").height() + 20);
 """
             }
             customScripts
+        }
+    }
+
+    struct ExamBadge: HTMLComponent {
+
+        let task: TemplateValue<Task>
+
+        var body: HTML {
+            Row {
+                Div {
+                    Unwrap(task.examPaperSemester) { (exam: TemplateValue<Task.ExamSemester>) in
+                        Badge {
+                            Strings.exerciseExam.localized()
+                            ": "
+                            exam.norwegianDescription
+                            " "
+                            task.examPaperYear
+                        }
+                        .margin(.three, for: .bottom)
+                        .background(color: .primary)
+                    }
+                }
+                .column(width: .twelve)
+            }
         }
     }
 
