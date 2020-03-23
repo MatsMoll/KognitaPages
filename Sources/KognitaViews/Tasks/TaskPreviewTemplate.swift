@@ -25,9 +25,9 @@ struct TaskPreviewTemplateContext {
     var nextTaskIndex: Int {
         currentTaskIndex + 1
     }
-    var nextTaskCall: String {
-        "navigateTo(\(nextTaskIndex))"
-    }
+    var nextTaskCall: String { "navigateTo(\(nextTaskIndex))" }
+    var extendSessionCall: String { "extendSession()" }
+    var endSessionCall: String { "endSession()" }
 
     var prevTaskIndex: Int? {
         guard currentTaskIndex > 1 else {
@@ -59,7 +59,35 @@ extension Script {
     static func solutionScore(editorName: String) -> String {
 """
 let parser = new DOMParser(); let htmlDoc = parser.parseFromString(renderMarkdown(\(editorName).value()), 'text/html');
-let hrefs = new Set(Array.from(htmlDoc.getElementsByTagName("a")).map(x => x.getAttribute("href"))); let imgs = new Set(Array.from(htmlDoc.getElementsByTagName("img")).map(x => x.getAttribute("src"))); let lists = Array.from(htmlDoc.getElementsByTagName("li")); let text = htmlDoc.getElementsByTagName("body")[0].innerText.split(/\\s+/); var totalPoints = 0; totalPoints += Math.min(hrefs.size * 3, 4); totalPoints += Math.min(imgs.size * 2, 3); totalPoints += Math.min(lists.length, 1); totalPoints += (text.length < 150 && text.length > 60) ? 3 : 0; var pointsString = totalPoints + " "; if (totalPoints >= 6) { pointsString += "💯"; } else if (totalPoints > 3) {pointsString += "🤔";} else {pointsString += "💩";} $("#solution-rating").text(pointsString);
+let hrefs = new Set(Array.from(htmlDoc.getElementsByTagName("a")).map(x => x.getAttribute("href"))); let imgs = new Set(Array.from(htmlDoc.getElementsByTagName("img")).map(x => x.getAttribute("src"))); let lists = Array.from(htmlDoc.getElementsByTagName("li")); let text = htmlDoc.getElementsByTagName("body")[0].innerText.split(/\\s+/); var totalPoints = 0; totalPoints += Math.min(hrefs.size * 3, 4); totalPoints += Math.min(imgs.size * 2, 3); totalPoints += Math.min(lists.length, 1); totalPoints += (text.length < 150 && text.length > 40) ? 3 : 0; var pointsString = totalPoints + " "; if (totalPoints >= 6) { pointsString += "💯"; } else if (totalPoints > 3) {pointsString += "🤔";} else {pointsString += "😐";} $("#solution-rating").text(pointsString);
+"""
+    }
+
+    static func extendSession() -> String {
+"""
+function extendSession() {
+    let url = "/api/practice-sessions/" + sessionID() + "/extend"
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "Accept": "application/json, text/plain, */*",
+            "Content-Type" : "application/json"
+        }
+    })
+    .then(function (response) {
+        if (response.ok) {
+            location.href = nextIndex;
+        } else {
+            throw new Error(response.statusText);
+        }
+    })
+    .catch(function (error) {
+        $("#submitButton").attr("disabled", false);
+        $("#error-massage").text(error.message);
+        $("#error-div").fadeIn();
+        $("#error-div").removeClass("d-none");
+    });
+}
 """
     }
 }
@@ -136,6 +164,31 @@ public struct TaskPreviewTemplate: HTMLComponent {
                 }
                 .class("fixed-bottom")
                 .id("nav-card")
+
+
+                Modal(title: "Bra jobba!", id: "goal-completed") {
+                    Text { "Bra jobba! 💪" }
+                        .style(.heading2)
+                        .margin(.four, for: .bottom)
+
+                    Text {
+                        "Du har fullført "
+                        context.session.numberOfTaskGoal
+                        " oppgaver!"
+                    }
+                    .style(.heading4)
+
+                    Text { "Vil du fortsette?" }.margin(.four, for: .bottom)
+
+                    Button { "Gjør 5 oppgaver til" }
+                        .button(style: .primary)
+                        .on(click: context.extendSessionCall)
+
+                    Button { "Avslutt" }
+                        .button(style: .light)
+                        .on(click: context.endSessionCall)
+                        .margin(.two, for: .left)
+                }
             }
         }
         .header {
@@ -152,6 +205,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
 $("#main-task-content").css("padding-bottom", $("#nav-card").height() + 20);
 """
             }
+            Script { Script.extendSession() }
             customScripts
         }
     }
@@ -244,15 +298,28 @@ $("#main-task-content").css("padding-bottom", $("#nav-card").height() + 20);
                         Div {
                             Button(Strings.exerciseStopSessionButton)
                                 .button(style: .danger)
+                                .on(click: context.endSessionCall)
                         }
                         .text(alignment: .center)
                     }
                     .action("/practice-sessions/" + context.session.id + "/end")
                     .method(.post)
+                    .id("end-session-form")
                 }
             }
             .margin(.zero, for: .bottom)
             .padding(.two, for: .bottom)
+        }
+
+        var scripts: HTML {
+            NodeList {
+                Script {
+"""
+function endSession() { $("#end-session-form").submit() }
+"""
+                }
+                body.scripts
+            }
         }
     }
 }
