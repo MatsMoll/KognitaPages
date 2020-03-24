@@ -13,7 +13,31 @@ import KognitaCore
 extension Subject {
     public struct Templates {}
 }
-//
+
+extension Subject.Templates {
+    struct ActiveSubjects: HTMLComponent {
+
+        let subjects: TemplateValue<[Subject.ListOverview]>
+
+        var body: HTML {
+            IF(subjects.isEmpty) {
+                Text { "Du har ingen aktive emner enda. Gå inn på et emnet for å gjøre det aktivt!" }
+                    .style(.heading3)
+                    .margin(.four, for: .vertical)
+            }.else {
+                Text { "Dine emner!" }
+                    .style(.heading3)
+                Row {
+                    ForEach(in: subjects) { subject in
+                        SubjectCard(subject: subject)
+                    }
+                }
+                .margin(.four, for: .bottom)
+            }
+        }
+    }
+}
+
 extension Subject.Templates {
     public struct ListOverview: HTMLTemplate {
 
@@ -45,15 +69,17 @@ extension Subject.Templates {
                             VerifyEmailSignifier()
                         }
                         SubjectTestList(test: context.list.openedTest)
+                        Subject.Templates.ActiveSubjects(subjects: context.list.activeSubjects)
 
 //                        ContinuePracticeSessionCard(
 //                            ongoingSessionPath: context.
 //                        )
-                        SubjectListSection(subjects: context.list.subjects)
+                        SubjectListSection(subjects: context.list.inactiveSubjects)
                     }
                     .column(width: .eight, for: .large)
                     Div {
                         StatisticsCard()
+                        User.Templates.ProfileCard(user: context.user)
                         IF(context.user.isAdmin) {
                             CreateContentCard()
                         }
@@ -89,24 +115,24 @@ $("#start-subject-test-modal").modal('show');
 
         struct SubjectListSection: HTMLComponent {
 
-            @TemplateValue([Subject].self)
+            @TemplateValue([Subject.ListOverview].self)
             var subjects
 
             var body: HTML {
-                [
-                    Text(Strings.subjectsListTitle)
-                        .style(.heading3),
-                    Row {
-                        IF(subjects.isEmpty) {
-                            Text(Strings.subjectsNoContent)
-                                .style(.heading1)
-                        }.else {
+                NodeList {
+                    Text { "Andre emner" }
+                        .style(.heading3)
+                    IF(subjects.isEmpty) {
+                        Text { "Det finnes ingen andre emner" }
+                            .style(.heading4)
+                    }.else {
+                        Row {
                             ForEach(in: subjects) { subject in
                                 SubjectCard(subject: subject)
                             }
                         }
                     }
-                ]
+                }
             }
         }
 
@@ -167,20 +193,13 @@ $("#start-subject-test-modal").modal('show');
 
             var body: HTML {
                 Card {
-                    Text {
-                        "Statistikk"
-                    }
-                    .style(.heading3)
-                    .text(color: .dark)
-                    .margin(.two, for: .bottom)
+                    Text(Strings.histogramTitle)
+                        .style(.heading3)
+                        .text(color: .dark)
+                        .margin(.two, for: .bottom)
 
-                    Text {
-                        "Timer øvd de siste ukene:"
-                    }
-                    Div {
-                        Canvas().id("practice-time-histogram")
-                    }
-                    .class("mt-3 chartjs-chart")
+                    Div { Canvas().id("practice-time-histogram") }
+                        .class("mt-3 chartjs-chart")
                 }
             }
         }
@@ -211,20 +230,21 @@ extension Subject.Templates {
 
     struct SubjectCard: HTMLComponent {
 
-        let subject: TemplateValue<Subject>
+        let subject: TemplateValue<Subject.ListOverview>
 
         var body: HTML {
             Div {
                 Anchor {
                     Div {
                         Div {
-                            H3 {
-                                subject.name
+                            H3 { subject.name }
+                            Badge { subject.category }
+                                .background(color: .light)
+                            IF(subject.isActive) {
+                                Badge { "Aktivt" }
+                                    .background(color: .light)
+                                    .margin(.one, for: .left)
                             }
-                            Badge {
-                                subject.category
-                            }
-                            .background(color: .light)
                         }
                         .class("card-header bg-" + subject.colorClass.rawValue)
                         .text(color: .white)

@@ -73,6 +73,21 @@ extension FlashCardTask.Templates.Create.Context {
     var isEditingTask: Bool {
         content.task != nil
     }
+
+    var saveCall: String {
+        if isEditingTask {
+            return "editFlashCard();"
+        } else {
+            return "createFlashCard();"
+        }
+    }
+
+    var deleteCall: String? {
+        guard let taskID = content.task?.id else {
+            return nil
+        }
+        return "deleteTask(\(taskID), \"tasks/flash-card\");"
+    }
 }
 
 extension FlashCardTask.ModifyContent {
@@ -86,10 +101,12 @@ extension FlashCardTask.Templates {
             let user: User
             let content: FlashCardTask.ModifyContent
             let wasUpdated: Bool
+            let canEdit: Bool
 
-            public init(user: User, content: FlashCardTask.ModifyContent, wasUpdated: Bool = false) {
+            public init(user: User, content: FlashCardTask.ModifyContent, canEdit: Bool, wasUpdated: Bool = false) {
                 self.user = user
                 self.content = content
+                self.canEdit = canEdit
                 self.wasUpdated = wasUpdated
             }
         }
@@ -195,13 +212,12 @@ extension FlashCardTask.Templates {
                             }
                         }
                         .id("card-description")
+                        .placeholder("Du har gitt en funksjon ...")
                     }
                     .customLabel {
-                        Text {
-                            "Oppgavetekst"
-                        }
-                        .style(.heading3)
-                        .text(color: .dark)
+                        Text { "Innledelse" }
+                            .style(.heading3)
+                            .text(color: .dark)
                     }
 
                     FormGroup {
@@ -216,72 +232,81 @@ extension FlashCardTask.Templates {
                         .required()
                     }
                     .customLabel {
-                        Text {
-                            "Spørsmål"
-                        }
-                        .style(.heading3)
-                        .text(color: .dark)
+                        Text { "Spørsmål" }
+                            .style(.heading3)
+                            .text(color: .dark)
                     }
                     .description {
-                        Div {
-                            "Kun tillatt med bokstaver, tall, mellomrom og enkelte tegn (. , : ; ! ?)"
-                        }
-                        .class("invalid-feedback")
+                        Div { "Kun tillatt med bokstaver, tall, mellomrom og enkelte tegn (. , : ; ! ?)" }
+                            .class("invalid-feedback")
                     }
 
                     FormGroup {
-                        TextArea {
+                        MarkdownEditor(id: "solution") {
                             Unwrap(context.content.task) { task in
                                 task.solution
                                     .escaping(.unsafeNone)
                             }
                         }
-                        .id("card-solution")
+                        .placeholder("Gitt at funksjonen er konveks, så fører det til at ...")
+                        .onChange { editor in
+                            Script.solutionScore(editorName: editor)
+                        }
                     }
                     .customLabel {
-                        Text {
-                            "Løsningsforslag"
-                        }
-                        .style(.heading3)
-                        .text(color: .dark)
+                        Text { "Løsningsforslag" }
+                            .style(.heading3)
+                            .text(color: .dark)
+                    }
+                    .description {
+                        TaskSolution.Templates.Requmendations()
                     }
 
                     DismissableError()
 
-                    Button {
-                        MaterialDesignIcon(icon: .save)
-                        " Lagre"
-                    }
-                    .type(.button)
-                    .button(style: .success)
-                    .margin(.three, for: .vertical)
-                    .on(click:
-                        IF(context.isEditingTask) {
-                            "editFlashCard();"
-                        }.else {
-                            "createFlashCard();"
+                    IF(context.canEdit) {
+                        Button {
+                            MaterialDesignIcon(icon: .check)
+                            " Lagre"
                         }
-                    )
+                        .type(.button)
+                        .button(style: .success)
+                        .margin(.three, for: .vertical)
+                        .on(click: context.saveCall)
+
+                        Unwrap(context.deleteCall) { deleteCall in
+
+                            Button {
+                                MaterialDesignIcon(icon: .delete)
+                                " Slett"
+                            }
+                            .type(.button)
+                            .button(style: .danger)
+                            .margin(.three, for: .vertical)
+                            .margin(.one, for: .left)
+                            .on(click: deleteCall)
+                        }
+                    }
                 }
             }
             .header {
                 Stylesheet(url: "/assets/css/vendor/simplemde.min.css")
-                Stylesheet(url: "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css")
+                Stylesheet(url: "/assets/css/vendor/katex.min.css")
             }
             .scripts {
-                Script().source("/assets/js/vendor/simplemde.min.js")
-                Script().source("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js")
-//                Script(source: "https://cdn.jsdelivr.net/npm/marked/marked.min.js")
+                Script(source: "/assets/js/vendor/simplemde.min.js")
+                Script(source: "/assets/js/vendor/marked.min.js")
+                Script(source: "/assets/js/vendor/katex.min.js")
                 Script(source: "/assets/js/markdown-renderer.js")
                 Script(source: "/assets/js/markdown-editor.js")
-                Script().source("/assets/js/flash-card/modify-task.js")
-//                Script().source("/assets/js/vendor/summernote-math.js")
-                Script().source("/assets/js/dismissable-error.js")
-                Script().source("/assets/js/flash-card/json-data.js")
+                Script(source: "/assets/js/flash-card/modify-task.js")
+                Script(source: "/assets/js/dismissable-error.js")
+                Script(source: "/assets/js/delete-task.js")
+                Script(source: "/assets/js/flash-card/json-data.js")
                 IF(context.isEditingTask) {
-                    Script().source("/assets/js/flash-card/edit.js")
+                    Script(source: "/assets/js/flash-card/edit.js")
                 }.else {
-                    Script().source("/assets/js/flash-card/create.js")
+                    Script(source: "/assets/js/flash-card/create.js")
                 }
             }
         }

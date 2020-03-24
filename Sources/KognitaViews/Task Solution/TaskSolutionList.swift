@@ -5,6 +5,29 @@ extension TaskSolution {
     public enum Templates {}
 }
 
+extension TaskSolution.Templates {
+    struct Requmendations: HTMLComponent {
+        var body: HTML {
+            NodeList {
+                Text {
+                    "Ditt løsningsforslag har fått en rating på "
+                    Span { "0" }.id("solution-rating")
+                    " av 10 mulige."
+                }
+                .style(.heading5)
+
+                Text { "For et godt løsningsforslag: " }
+                UnorderedList {
+                    ListItem { "Ha et løsningsforslag på ca. 40-150 ord. Dette for å holde løsningsforslaget direktet, men også utdypende nok." }
+                    ListItem { "Finn et bildet som kan beskrive løsningen hvis dette er mulig." }
+                    ListItem { "Finn en kilde til løsningsforslaget slik at man kan lese mer hvis nødvending. Her anbefales nettresurser for å gjøre det lettere tilgjengelig." }
+                    ListItem { "Punktlister eller annen strukturert informasjon anbefales også." }
+                }
+            }
+        }
+    }
+}
+
 extension TaskSolution.Response {
     var voteCall: String { "voteOnSolution(\(id), this)" }
     var voteID: String { "solution-\(id)" }
@@ -60,39 +83,31 @@ extension TaskSolution.Templates {
                 Div {
                     solution.solution
                         .escaping(.unsafeNone)
-
-                    Text {
-                        "Var løsningsforslaget nyttig? Trykk på knappen og si om det hjalp"
-
-                        Button {
-                            IF(solution.userHasVoted) {
-                                MaterialDesignIcon(.heart)
-                                    .class("vote-button")
-                                    .text(color: .danger)
-                            }.else {
-                                MaterialDesignIcon(.heartOutline)
-                                    .class("vote-button")
-                            }
-                        }
-                        .on(click: solution.voteCall)
-                        .button(style: .light)
-                        .margin(.two, for: .left)
-                    }
-                    .style(.heading6)
                 }
                 .class("solutions")
+                Small {
+                    "Var løsningsforslaget nyttig?"
+                    Button {
+                        IF(solution.userHasVoted) {
+                            MaterialDesignIcon(.heart)
+                                .class("vote-button")
+                                .text(color: .danger)
+                        }.else {
+                            MaterialDesignIcon(.heartOutline)
+                                .class("vote-button")
+                        }
+                    }
+                    .on(click: solution.voteCall)
+                    .button(style: .light)
+                    .margin(.two, for: .left)
+                }
             }
             .footer {
-                Text {
-                    "Vil du skrive ditt eget løsningsforslag?"
-                }
-                .style(.heading4)
+                Text { "Vil du skrive ditt eget løsningsforslag?" }
 
-                Button {
-                    "Foreslå et løsningsforslag"
-                }
-                .toggle(modal: .id("create-alternative-solution"))
-                .button(style: .light)
+                Button { "Foreslå et løsningsforslag" }
+                    .toggle(modal: .id("create-alternative-solution"))
+                    .button(style: .light)
             }
         }
 
@@ -110,20 +125,20 @@ extension TaskSolution.Templates {
                         .class("page-title")
                         Div {
                             IF(context.creatorUsername.isDefined) {
-                                "Laget av: " + context.creatorUsername
+                                "Laget av: "
+                                context.creatorUsername
                             }
                             IF(context.approvedBy.isDefined) {
                                 Badge {
-                                    "Verifisert av: " + context.approvedBy
+                                    "Verifisert av: "
+                                    context.approvedBy
                                 }
                                 .background(color: .success)
                                 .margin(.two, for: .left)
                             }.else {
-                                Badge {
-                                    "Ikke verifisert enda"
-                                }
-                                .background(color: .warning)
-                                .margin(.two, for: .left)
+                                Badge { "Ikke verifisert enda" }
+                                    .background(color: .warning)
+                                    .margin(.two, for: .left)
                             }
                         }
                     }

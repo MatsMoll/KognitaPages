@@ -65,7 +65,7 @@ extension Subject.Templates {
         var body: HTML {
             Card {
 
-                IF(task.IsMultipleChoise) {
+                IF(task.isMultipleChoise) {
                     Badge {
                         "Flervalg "
                         MaterialDesignIcon(.formatListBulleted)
@@ -133,7 +133,7 @@ extension Subject.Templates {
 
                 IF(canEdit && task.task.deletedAt.isNotDefined) {
                     Button {
-                        Italic().class("dripicons-document-delete")
+                        MaterialDesignIcon(.delete)
                         " Slett"
                     }
                     .on(click: task.deleteCall)
