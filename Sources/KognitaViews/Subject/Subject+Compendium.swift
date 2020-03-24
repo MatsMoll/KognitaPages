@@ -25,6 +25,10 @@ extension Subject.Templates {
                 Row {
                     Div {
                         Card {
+                            Text { "Innholdsfortegnelse" }
+                                .style(.heading3)
+                                .text(color: .dark)
+                                .margin(.three, for: .bottom)
                             Div {
                                 ForEach(in: context.compendium.topics) { topic in
                                     Anchor {
@@ -40,7 +44,7 @@ extension Subject.Templates {
                             .id("compendium-overview")
                         }
                     }
-                    .column(width: .twelve)
+                    .column(width: .four, for: .large)
 
                     Div {
                         Card {
@@ -53,8 +57,13 @@ extension Subject.Templates {
                                 TopicSection(topic: topic)
                             }
                         }
+                        .data("spy", value: "scroll")
+                        .data("target", value: "#compendium-overview")
+                        .data("offset", value: 0)
+                        .style(css: "overflow-y: scroll;")
+                        .id("compendium-content")
                     }
-                    .column(width: .twelve)
+                    .column(width: .eight, for: .large)
                 }
             }
             .header {
@@ -64,6 +73,12 @@ extension Subject.Templates {
                 Script(source: "https://cdn.jsdelivr.net/npm/marked/marked.min.js")
                 Script(source: "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js")
                 Script(source: "/assets/js/markdown-renderer.js")
+                Script().source("/assets/js/practice-session-create.js")
+                Script {
+"""
+$(document).ready(function() {$("#compendium-content").height($(window).height() * 0.9);})
+"""
+                }
             }
         }
     }
@@ -107,7 +122,39 @@ private struct SubtopicSection: HTMLComponent {
             ForEach(in: subtopic.questions) { question in
                 QuestionSection(question: question)
             }
+
+            PracticeCard(subtopic: subtopic)
         }
+    }
+}
+
+extension Subject.Compendium.SubtopicData {
+    fileprivate var startPracticeSessionCall: String { "startPracticeSessionWithSubtopicIDs([\(subtopicID)], \(subjectID));" }
+}
+
+private struct PracticeCard: HTMLComponent {
+
+    let subtopic: TemplateValue<Subject.Compendium.SubtopicData>
+
+    var body: HTML {
+        Card {
+            Text { "Sjekk hvor mye du husker" }
+                .style(.heading3)
+
+            Text { "Med å ta en test vil stoffet sitte bedre, ifølge kognitiv forskning." }
+
+            Button {
+                MaterialDesignIcon(icon: .testTube)
+                    .margin(.one, for: .right)
+                "Test deg selv"
+            }
+            .button(style: .light)
+            .on(click: subtopic.startPracticeSessionCall)
+            .margin(.two, for: .top)
+            .isRounded()
+        }
+        .background(color: .info)
+        .text(color: .white)
     }
 }
 
@@ -122,6 +169,7 @@ private struct QuestionSection: HTMLComponent {
 
             Div { question.solution.renderMarkdown() }
                 .margin(.four, for: .bottom)
+                .margin(.three, for: .left)
         }
     }
 }
