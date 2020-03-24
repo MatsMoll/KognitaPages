@@ -19,12 +19,14 @@ extension Subject.Details {
     }
 
     var topicIDsJSList: String {
-        "[\(topics.map { $0.id }.reduce("") { $0 + "\($1), " }.dropLast(2))]"
+        "[\(topics.map { $0.id }.reduce("") { $0 + "\($1)," }.dropLast(1))]"
     }
 
     var canCreateTasks: Bool { isModerator || canPractice }
 
     var createContentUri: String { "/creator/subjects/\(subject.id ?? 0)/overview" }
+    var compendiumUri: String { "/subjects/\(subject.id ?? 0)/compendium" }
+    var startPracticeSessionCall: String { "startPracticeSessionWithTopicIDs(\(topicIDsJSList), \(subject.id ?? 0))" }
 }
 
 extension Subject.Templates {
@@ -67,10 +69,7 @@ extension Subject.Templates {
                         }
                         UnactiveSubjectCard(details: context.details)
                         SubjectTestList(test: context.details.openTest)
-                        SubjectCard(
-                            details: context.details,
-                            topicIDs: context.details.topicIDsJSList
-                        )
+                        SubjectCard(details: context.details)
                         Row {
                             IF(context.details.topics.isEmpty) {
                                 Div {
@@ -137,9 +136,6 @@ extension Subject.Templates {
             @TemplateValue(Subject.Details.self)
             var details
 
-            @TemplateValue(String.self)
-            var topicIDs
-
             var body: HTML {
                 Card {
 //                    KognitaProgressBadge(value: userLevel.correctProsentage)
@@ -150,9 +146,7 @@ extension Subject.Templates {
                         .style(.heading2)
 
                     IF(details.canPractice == false) {
-                        Text {
-                            "Du har dessverre ikke tilgang til øvingsmodus helt enda."
-                        }
+                        Text { "Du har dessverre ikke tilgang til øvingsmodus helt enda." }
                     }
 
                     Button {
@@ -161,11 +155,18 @@ extension Subject.Templates {
                         Strings.subjectStartSession.localized()
                     }
                     .type(.button)
-                    .class("btn-rounded")
+                    .isRounded()
                     .button(style: .primary)
                     .margin(.three, for: .bottom)
-                    .on(click: "startPracticeSession(" + topicIDs + ", " + details.subject.id + ")")
+                    .on(click: details.startPracticeSessionCall)
                     .isDisabled(details.canPractice == false)
+
+                    Anchor { "Les kompendiet vårt" }
+                        .button(style: .light)
+                        .margin(.two, for: .left)
+                        .margin(.three, for: .bottom)
+                        .href(details.compendiumUri)
+                        .isRounded()
 
                     Text {
                         details.subject.description
