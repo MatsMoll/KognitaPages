@@ -30,7 +30,7 @@ extension Subject.Templates {
                                 .text(color: .dark)
                                 .margin(.three, for: .bottom)
                             Div {
-                                ForEach(in: context.compendium.topics) { topic in
+                                ForEach(in: context.compendium.topics) { (topic: TemplateValue<Subject.Compendium.TopicData>) in
                                     Anchor {
                                         topic.chapter
                                         ". "
@@ -67,13 +67,13 @@ extension Subject.Templates {
                 }
             }
             .header {
-                Link().href("https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css").relationship(.stylesheet)
+                Stylesheet(url: "/assets/css/vendor/katex.min.css")
             }
             .scripts {
-                Script(source: "https://cdn.jsdelivr.net/npm/marked/marked.min.js")
-                Script(source: "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js")
+                Script(source: "/assets/js/vendor/marked.min.js")
+                Script(source: "/assets/js/vendor/katex.min.js")
                 Script(source: "/assets/js/markdown-renderer.js")
-                Script().source("/assets/js/practice-session-create.js")
+                Script(source: "/assets/js/practice-session-create.js")
                 Script {
 """
 $(document).ready(function() {$("#compendium-content").height($(window).height() * 0.9);})
