@@ -75,6 +75,7 @@ struct ContentBaseTemplate: HTMLComponent {
     let activePath: TemplateValue<String>
     let userContext: TemplateValue<User>
     let baseContext: TemplateValue<BaseTemplateContent>
+    let scrollSpy: ScrollSpy?
 
     let content: HTML
     let header: HTML
@@ -89,9 +90,10 @@ struct ContentBaseTemplate: HTMLComponent {
         self.header = ""
         self.scripts = ""
         self.modals = ""
+        self.scrollSpy = nil
     }
 
-    private init(base: ContentBaseTemplate, activePath: TemplateValue<String>, header: HTML, scripts: HTML, modals: HTML) {
+    private init(base: ContentBaseTemplate, activePath: TemplateValue<String>, header: HTML, scripts: HTML, modals: HTML, scrollSpy: ScrollSpy?) {
         self.userContext = base.userContext
         self.baseContext = base.baseContext
         self.content = base.content
@@ -99,13 +101,13 @@ struct ContentBaseTemplate: HTMLComponent {
         self.header = header
         self.scripts = scripts
         self.modals = modals
+        self.scrollSpy = scrollSpy
     }
 
     var body: HTML {
         BaseTemplate(context: baseContext) {
             Div {
                 Div {
-//                    BetaHeader()
                     Container {
                         KognitaNavigationBar(
                             userContext: userContext,
@@ -134,23 +136,28 @@ struct ContentBaseTemplate: HTMLComponent {
         .scripts {
             scripts
         }
+        .scrollSpy(scrollSpy)
     }
 
 
     func active(path: TemplateValue<String>) -> ContentBaseTemplate {
-        ContentBaseTemplate(base: self, activePath: path, header: header, scripts: scripts, modals: modals)
+        ContentBaseTemplate(base: self, activePath: path, header: header, scripts: scripts, modals: modals, scrollSpy: scrollSpy)
     }
 
     func header(@HTMLBuilder _ header: () -> HTML) -> ContentBaseTemplate {
-        ContentBaseTemplate(base: self, activePath: activePath, header: header(), scripts: scripts, modals: modals)
+        ContentBaseTemplate(base: self, activePath: activePath, header: header(), scripts: scripts, modals: modals, scrollSpy: scrollSpy)
     }
 
     func scripts(@HTMLBuilder _ scripts: () -> HTML) -> ContentBaseTemplate {
-        ContentBaseTemplate(base: self, activePath: activePath, header: header, scripts: scripts(), modals: modals)
+        ContentBaseTemplate(base: self, activePath: activePath, header: header, scripts: scripts(), modals: modals, scrollSpy: scrollSpy)
     }
 
     func modals(@HTMLBuilder _ modals: () -> HTML) -> ContentBaseTemplate {
-        ContentBaseTemplate(base: self, activePath: activePath, header: header, scripts: scripts, modals: modals())
+        ContentBaseTemplate(base: self, activePath: activePath, header: header, scripts: scripts, modals: modals(), scrollSpy: scrollSpy)
+    }
+
+    func scrollSpy(targetID: String, offset: Int = 0) -> ContentBaseTemplate {
+        ContentBaseTemplate(base: self, activePath: activePath, header: header, scripts: scripts, modals: modals, scrollSpy: ScrollSpy(targetID: targetID, offset: offset))
     }
 
 
