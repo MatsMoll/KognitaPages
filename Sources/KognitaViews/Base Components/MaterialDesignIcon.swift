@@ -34,6 +34,7 @@ struct MaterialDesignIcon: HTMLComponent, AttributeNode {
         case heart
         case heartOutline = "heart-outline"
         case messageReplyText = "message-reply-text"
+        case testTube = "test-tube"
     }
 
     let icon: TemplateValue<Icons>

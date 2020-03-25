@@ -79,7 +79,7 @@ extension Subject.Templates.Details {
             }
             .column(width: .six, for: .medium)
             .column(width: .twelve)
-            .on(click: "startPracticeSession([" + topic.id + "], " + subjectID + ")")
+            .on(click: "startPracticeSessionWithTopicIDs([" + topic.id + "], " + subjectID + ")")
         }
     }
 

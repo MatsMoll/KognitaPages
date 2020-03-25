@@ -16,6 +16,8 @@ public struct KognitaViews {
 
         let renderer = HTMLRenderer()
 
+        renderer.timeZone = TimeZone(secondsFromGMT: -1) ?? renderer.timeZone
+
         // Starter
         try renderer.add(view: Pages.Landing())
 
@@ -42,6 +44,7 @@ public struct KognitaViews {
         try renderer.add(view: Subject.Templates.Details())
         try renderer.add(view: Subject.Templates.SelectRedirect())
         try renderer.add(view: Subject.Templates.TaskList())
+        try renderer.add(view: Subject.Templates.Compendium())
 
         try renderer.add(view: SubjectTest.Templates.Modify())
         try renderer.add(view: SubjectTest.Templates.List())

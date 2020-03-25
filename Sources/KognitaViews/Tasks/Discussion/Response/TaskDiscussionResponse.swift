@@ -8,7 +8,9 @@ import Foundation
 import BootstrapKit
 import KognitaCore
 
-
+extension TaskDiscussion.Pivot.Response.Details{
+    var fetchAResponseCall: String { "fetchADiscussionResponse(this)" }
+}
 struct DiscussionResponse: HTMLPage {
 
     let response: TemplateValue<TaskDiscussion.Pivot.Response.Details>
@@ -35,17 +37,26 @@ struct DiscussionResponse: HTMLPage {
 
                     Text {
                         response.response
+                            .escaping(.unsafeNone)
                     }
                     .style(.lead)
+                    .class("render-markdown response")
+                    
+                    Button {
+                        "Legg til kommentar"
+                    }
+                    .button(style: .light)
+                    .button(size: .extraSmall)
                     .margin(.one, for: .bottom)
                     .padding(.two, for: .bottom)
+                    .on(click: response.fetchAResponseCall)
                 }
             }
             .display(.flex)
             .margin(.two, for: .top)
         }
         .class("border-bottom border-light")
-        .enviroment(locale: "nb")
+        .enviroment(locale: "nb_NO")
     }
 }
 

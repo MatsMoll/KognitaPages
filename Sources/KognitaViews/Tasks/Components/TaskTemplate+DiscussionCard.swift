@@ -94,8 +94,6 @@ extension TaskDiscussion.Templates {
                                         "Spurt av: "
                                         discussion.username
                                     }
-
-
                                 }
                                 .class("border-bottom border-light")
                                 .padding(.two, for: .bottom)
@@ -128,9 +126,8 @@ extension TaskDiscussion.Templates {
 
 
                     FormGroup(label: "Skriv en respons") {
-                        TextArea()
-                            .id("create-discussion-response")
-                            .placeholder("En eller annen respons")
+                        MarkdownEditor(id: "create-discussion-response")
+                            .placeholder("Skriv inn et svar!")
                     }
                     .margin(.four, for: .top)
 

@@ -18,7 +18,7 @@ extension TaskSolution.Templates {
 
                 Text { "For et godt løsningsforslag: " }
                 UnorderedList {
-                    ListItem { "Ha et løsningsforslag på ca. 60-150 ord. Dette for å holde løsningsforslaget direktet, men også utdypende nok." }
+                    ListItem { "Ha et løsningsforslag på ca. 40-150 ord. Dette for å holde løsningsforslaget direktet, men også utdypende nok." }
                     ListItem { "Finn et bildet som kan beskrive løsningen hvis dette er mulig." }
                     ListItem { "Finn en kilde til løsningsforslaget slik at man kan lese mer hvis nødvending. Her anbefales nettresurser for å gjøre det lettere tilgjengelig." }
                     ListItem { "Punktlister eller annen strukturert informasjon anbefales også." }
