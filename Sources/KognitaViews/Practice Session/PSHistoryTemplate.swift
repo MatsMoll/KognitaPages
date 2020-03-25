@@ -175,7 +175,6 @@ extension PracticeSession.Templates {
                         .style(.lead)
                     }
                 }
-                .enviroment(locale: "nb")
             }
             .scripts {
                 Script().source("/assets/js/vendor/Chart.bundle.min.js")

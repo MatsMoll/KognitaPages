@@ -45,9 +45,8 @@ struct DiscussionResponse: HTMLPage {
                     Button {
                         "Legg til kommentar"
                     }
-                    .button(style: .muted)
+                    .button(style: .light)
                     .button(size: .extraSmall)
-                    .text(color: .muted)
                     .margin(.one, for: .bottom)
                     .padding(.two, for: .bottom)
                     .on(click: response.fetchAResponseCall)
@@ -57,7 +56,7 @@ struct DiscussionResponse: HTMLPage {
             .margin(.two, for: .top)
         }
         .class("border-bottom border-light")
-        .enviroment(locale: "nb")
+        .enviroment(locale: "nb_NO")
     }
 }
 
