@@ -28,8 +28,9 @@ struct TaskSolutionCard: HTMLComponent {
             Script(source: "/assets/js/task-solution/suggest-solution.js")
             Script {
 """
-function fetchSolutions(sessionType) {
-    fetch("/" + sessionType + "-sessions/" + sessionID() + "/tasks/" + taskIndex() + "/solutions", {
+function fetchSolutions() {
+    let sessionType = window.location.pathname.split('/')[1];
+    fetch("/" + sessionType + "/" + sessionID() + "/tasks/" + taskIndex() + "/solutions", {
         method: "GET",
         headers: {
             "Accept": "application/html, text/plain, */*",
@@ -197,7 +198,7 @@ extension TestSession.Templates {
                 Script {
 """
 window.onload=function() {
-    fetchSolutions("test");
+    fetchSolutions();
     fetchDiscussions($("#task-id").val());
 };
 """
