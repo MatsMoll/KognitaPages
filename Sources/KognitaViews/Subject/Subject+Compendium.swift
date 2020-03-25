@@ -15,37 +15,51 @@ extension Subject.Templates {
             }
         }
 
+        var breadcrumbItems: [BreadcrumbItem] {
+            [
+                BreadcrumbItem(link: "/subjects", title: "Fagoversikt"),
+                BreadcrumbItem(link: ViewWrapper(view: "/subjects/" + context.compendium.subjectID), title: ViewWrapper(view: context.compendium.subjectName))
+            ]
+        }
+
         public var body: HTML {
 
             ContentBaseTemplate(
                 userContext: context.user,
                 baseContext: .constant(.init(title: "Kompendie", description: ""))
             ) {
-                PageTitle(title: "Kompendie")
-                Row {
-                    Div {
-                        Card {
-                            Text { "Innholdsfortegnelse" }
-                                .style(.heading3)
-                                .text(color: .dark)
-                                .margin(.three, for: .bottom)
-                            Div {
-                                ForEach(in: context.compendium.topics) { (topic: TemplateValue<Subject.Compendium.TopicData>) in
-                                    Anchor {
-                                        topic.chapter
-                                        ". "
-                                        topic.name
+                PageTitle(title: "Kompendie", breadcrumbs: breadcrumbItems)
+                Container {
+                    Row {
+                        Div {
+                            Card {
+                                Text { "Innholdsfortegnelse" }
+                                    .style(.heading3)
+                                    .text(color: .dark)
+                                    .margin(.three, for: .bottom)
+                                Div {
+                                    ForEach(in: context.compendium.topics) { (topic: TemplateValue<Subject.Compendium.TopicData>) in
+                                        Anchor {
+                                            topic.chapter
+                                            ". "
+                                            topic.name
+                                        }
+                                            .href("#" + topic.nameID)
+                                            .class("list-group-item list-group-item-action")
                                     }
-                                        .href("#" + topic.nameID)
-                                        .class("list-group-item list-group-item-action")
                                 }
+                                .class("list-group")
+                                .id("compendium-overview")
                             }
-                            .class("list-group")
-                            .id("compendium-overview")
                         }
+                        .column(width: .four, for: .large)
                     }
-                    .column(width: .four, for: .large)
-
+                }
+                .id("compendium-toc")
+                .class("position-lg-fixed")
+                .padding(.zero)
+                
+                Row {
                     Div {
                         Card {
                             Text { context.compendium.subjectName }
@@ -57,13 +71,10 @@ extension Subject.Templates {
                                 TopicSection(topic: topic)
                             }
                         }
-                        .data("spy", value: "scroll")
-                        .data("target", value: "#compendium-overview")
-                        .data("offset", value: 0)
-                        .style(css: "overflow-y: scroll;")
-                        .id("compendium-content")
                     }
                     .column(width: .eight, for: .large)
+                    .offset(width: .four, for: .large)
+                    .id("compendium-content")
                 }
             }
             .header {
@@ -76,10 +87,19 @@ extension Subject.Templates {
                 Script(source: "/assets/js/practice-session-create.js")
                 Script {
 """
-$(document).ready(function() {$("#compendium-content").height($(window).height() * 0.9);})
+$(document).scroll(function() {
+let contentTop = $("#compendium-content").offset().top;
+let contentHeight = $("#compendium-content").height();
+let scrollTop = Math.min(Math.max($(document).scrollTop(), 0), $(document).height() - $(window).height());
+let tocHeight = $("#compendium-toc").height();
+let potensialTop = Math.max(contentTop - scrollTop, 40);
+let newContentTop = Math.min(potensialTop, contentTop + contentHeight - scrollTop - tocHeight);
+$("#compendium-toc").css("top", newContentTop);
+})
 """
                 }
             }
+            .scrollSpy(targetID: "compendium-overview")
         }
     }
 }
@@ -153,7 +173,7 @@ private struct PracticeCard: HTMLComponent {
             .margin(.two, for: .top)
             .isRounded()
         }
-        .background(color: .info)
+        .background(color: .primary)
         .text(color: .white)
     }
 }
