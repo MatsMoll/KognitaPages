@@ -279,7 +279,6 @@ $("#main-task-content").css("padding-bottom", $("#nav-card").height() + 20);
                         .on(click: context.nextTaskCall)
                         .display(.none)
                         .float(.right)
-                        .margin(.one, for: .left)
                         .button(style: .primary)
                         .type(.button)
 
@@ -291,7 +290,6 @@ $("#main-task-content").css("padding-bottom", $("#nav-card").height() + 20);
                             }
                             .button(style: .light)
                             .href(prevTaskIndex)
-                            .margin(.two, for: .bottom)
                             .float(.left)
                         }
 
@@ -306,9 +304,9 @@ $("#main-task-content").css("padding-bottom", $("#nav-card").height() + 20);
                     .method(.post)
                     .id("end-session-form")
                 }
+                .padding(.zero, for: .horizontal)
             }
             .margin(.zero, for: .bottom)
-            .padding(.two, for: .bottom)
         }
 
         var scripts: HTML {

@@ -1,6 +1,12 @@
 import BootstrapKit
 import KognitaCore
 
+extension AttributeNode {
+    func dismissModal() -> Self {
+        self.data("dismiss", value: "modal")
+    }
+}
+
 struct TaskDiscussionCard: HTMLComponent {
 
     var scripts: HTML {
@@ -131,7 +137,6 @@ throw new Error(response.statusText);
     var body: HTML {
         NodeList {
             Div().id("solution").display(.none)
-            
             CreateModal()
             EditModal()
             DeleteModal()
@@ -204,14 +209,24 @@ extension TaskSolutionCard {
 
                 Input().type(.hidden).id("delete-solution-id")
 
-                Text { "Er du sikker på at du vil slette løsningsforslaget?" }
+                Text { "Er du sikker på at du vil slette løsningsforslaget?" }.style(.heading4)
 
-                Button { "Slett" }
-                    .on(click: "deleteSolution()")
-                    .button(style: .danger)
-                Button { "Avbryt" }
-                    .button(style: .primary)
-                    .margin(.one, for: .left)
+                Button {
+                    MaterialDesignIcon(.delete)
+                        .margin(.one, for: .right)
+                    "Slett"
+                }
+                .on(click: "deleteSolution()")
+                .button(style: .danger)
+
+                Button {
+                    MaterialDesignIcon(.close)
+                        .margin(.one, for: .right)
+                    "Avbryt"
+                }
+                .button(style: .primary)
+                .margin(.one, for: .left)
+                .dismissModal()
             }
             .set(data: "solutionID", type: .input, to: "delete-solution-id")
         }
