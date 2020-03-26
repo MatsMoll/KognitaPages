@@ -56,10 +56,10 @@ struct TaskPreviewTemplateContext {
 }
 
 extension Script {
-    static func solutionScore(editorName: String) -> String {
+    static func solutionScore(divID: String, editorName: String) -> String {
 """
 let parser = new DOMParser(); let htmlDoc = parser.parseFromString(renderMarkdown(\(editorName).value()), 'text/html');
-let hrefs = new Set(Array.from(htmlDoc.getElementsByTagName("a")).map(x => x.getAttribute("href"))); let imgs = new Set(Array.from(htmlDoc.getElementsByTagName("img")).map(x => x.getAttribute("src"))); let lists = Array.from(htmlDoc.getElementsByTagName("li")); let text = htmlDoc.getElementsByTagName("body")[0].innerText.split(/\\s+/); var totalPoints = 0; totalPoints += Math.min(hrefs.size * 3, 4); totalPoints += Math.min(imgs.size * 2, 3); totalPoints += Math.min(lists.length, 1); totalPoints += (text.length < 150 && text.length > 40) ? 3 : 0; var pointsString = totalPoints + " "; if (totalPoints >= 6) { pointsString += "💯"; } else if (totalPoints > 3) {pointsString += "🤔";} else {pointsString += "😐";} $("#solution-rating").text(pointsString);
+let hrefs = new Set(Array.from(htmlDoc.getElementsByTagName("a")).map(x => x.getAttribute("href"))); let imgs = new Set(Array.from(htmlDoc.getElementsByTagName("img")).map(x => x.getAttribute("src"))); let lists = Array.from(htmlDoc.getElementsByTagName("li")); let text = htmlDoc.getElementsByTagName("body")[0].innerText.split(/\\s+/); var totalPoints = 0; totalPoints += Math.min(hrefs.size * 3, 4); totalPoints += Math.min(imgs.size * 2, 3); totalPoints += Math.min(lists.length, 1); totalPoints += (text.length < 150 && text.length > 40) ? 3 : 0; var pointsString = totalPoints + " "; if (totalPoints >= 6) { pointsString += "💯"; } else if (totalPoints > 3) {pointsString += "🤔";} else {pointsString += "😐";} $("#\(divID)").find(".solution-rating").text(pointsString);
 """
     }
 

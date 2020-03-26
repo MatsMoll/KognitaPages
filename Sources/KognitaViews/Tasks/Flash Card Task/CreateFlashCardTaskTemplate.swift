@@ -205,13 +205,12 @@ extension FlashCardTask.Templates {
                     }
 
                     FormGroup {
-                        TextArea {
+                        MarkdownEditor(id: "description") {
                             Unwrap(context.content.task) {
                                 $0.description
                                     .escaping(.unsafeNone)
                             }
                         }
-                        .id("card-description")
                         .placeholder("Du har gitt en funksjon ...")
                     }
                     .customLabel {
@@ -250,7 +249,7 @@ extension FlashCardTask.Templates {
                         }
                         .placeholder("Gitt at funksjonen er konveks, så fører det til at ...")
                         .onChange { editor in
-                            Script.solutionScore(editorName: editor)
+                            Script.solutionScore(divID: "solution-req", editorName: editor)
                         }
                     }
                     .customLabel {
@@ -259,7 +258,7 @@ extension FlashCardTask.Templates {
                             .text(color: .dark)
                     }
                     .description {
-                        TaskSolution.Templates.Requmendations()
+                        TaskSolution.Templates.Requmendations().id("solution-req")
                     }
 
                     DismissableError()

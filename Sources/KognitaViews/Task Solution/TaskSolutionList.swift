@@ -6,12 +6,28 @@ extension TaskSolution {
 }
 
 extension TaskSolution.Templates {
-    struct Requmendations: HTMLComponent {
+    struct Requmendations: HTMLComponent, AttributeNode {
+        
+        func copy(with attributes: [HTMLAttribute]) -> TaskSolution.Templates.Requmendations {
+            .init(attributes: attributes)
+        }
+
+
+        var attributes: [HTMLAttribute]
+
+        public init() {
+            attributes = []
+        }
+
+        private init(attributes: [HTMLAttribute]) {
+            self.attributes = attributes
+        }
+
         var body: HTML {
-            NodeList {
+            Div {
                 Text {
                     "Ditt løsningsforslag har fått en rating på "
-                    Span { "0" }.id("solution-rating")
+                    Span { "0" }.class("solution-rating")
                     " av 10 mulige."
                 }
                 .style(.heading5)
@@ -24,6 +40,7 @@ extension TaskSolution.Templates {
                     ListItem { "Punktlister eller annen strukturert informasjon anbefales også." }
                 }
             }
+            .add(attributes: attributes)
         }
     }
 }
@@ -56,10 +73,8 @@ extension TaskSolution.Templates {
 
                 Text {
                     "Nytting for "
-                    Span {
-                        solution.numberOfVotes
-                    }
-                    .id(solution.voteID)
+                    Span { solution.numberOfVotes }
+                        .id(solution.voteID)
                     " personer"
 
                     Small {
@@ -80,6 +95,18 @@ extension TaskSolution.Templates {
                     }
                 }
             }) { (solution: TemplateValue<TaskSolution.Response>, index: TemplateValue<Int>) in
+
+                MoreDropdown {
+                    Anchor { "Rediger" }
+                        .toggle(modal: .id("edit-solution"))
+                        .data("markdown", value: solution.solution.escaping(.unsafeNone))
+                        .data("solutionID", value: solution.id)
+                    Anchor { "Slett" }
+                        .toggle(modal: .id("delete-solution"))
+                        .data("solutionID", value: solution.id)
+                }
+                .float(.right)
+
                 Div {
                     solution.solution
                         .escaping(.unsafeNone)
