@@ -6,7 +6,7 @@ import Foundation
 
 var dependencies: [Package.Dependency] = [
     // 💧 A server-side Swift web framework.
-    .package(url: "https://github.com/MatsMoll/BootstrapKit.git", from: "1.0.0-beta.5.1")
+    .package(url: "https://github.com/MatsMoll/BootstrapKit.git", from: "1.0.0-beta.5.3")
 ]
 
 switch ProcessInfo.processInfo.environment["BUILD_TYPE"] {

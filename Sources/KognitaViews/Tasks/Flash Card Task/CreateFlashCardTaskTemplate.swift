@@ -298,7 +298,6 @@ extension FlashCardTask.Templates {
                 Script(source: "/assets/js/vendor/katex.min.js")
                 Script(source: "/assets/js/markdown-renderer.js")
                 Script(source: "/assets/js/markdown-editor.js")
-                Script(source: "/assets/js/flash-card/modify-task.js")
                 Script(source: "/assets/js/dismissable-error.js")
                 Script(source: "/assets/js/delete-task.js")
                 Script(source: "/assets/js/flash-card/json-data.js")
