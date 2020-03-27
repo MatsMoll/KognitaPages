@@ -15,7 +15,7 @@ struct DismissableError: HTMLComponent {
             Bold { "En Feil Oppstod - " }
             Span().id("error-massage")
         }
-        .isDismissable(true)
+        .isDismissable(false)
         .background(color: .danger)
         .text(color: .white)
         .display(.none)

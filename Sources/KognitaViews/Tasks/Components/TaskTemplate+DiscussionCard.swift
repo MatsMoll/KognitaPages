@@ -138,9 +138,9 @@ extension TaskDiscussion.Templates {
                     .on(click: "createResponse()")
                 }
                 .text(break: .break)
-                .set(data: "dID", to: "disc-id")
-                .set(data: "dDesc", to: "disc-description")
-                .set(data: "dUname", to: "disc-username")
+                .set(data: "dID", type: .input, to: "disc-id")
+                .set(data: "dDesc", type: .textArea, to: "disc-description")
+                .set(data: "dUname", type: .node, to: "disc-username")
             }
         }
 

@@ -1,6 +1,12 @@
 import BootstrapKit
 import KognitaCore
 
+extension AttributeNode {
+    func dismissModal() -> Self {
+        self.data("dismiss", value: "modal")
+    }
+}
+
 struct TaskDiscussionCard: HTMLComponent {
 
     var scripts: HTML {
@@ -58,7 +64,6 @@ function fetchSolutions() {
         $("#error-div").removeClass("d-none");
     });
 }
-
 function sessionID() {
     let path = window.location.pathname;
     let splitURI = "sessions/"
@@ -75,6 +80,54 @@ function taskIndex() {
         path.length
     ));
 }
+function saveSolution() {
+let solutionID = $("#edit-solution-id").val();
+if (solutionID == 0 || isNaN(solutionID)) { return; }
+let uri = "/api/task-solutions/" + solutionID;
+let data = JSON.stringify({
+"solution": updatedsolution.value()
+})
+fetch(uri, {
+    method: "PUT",
+    headers: {
+        "Accept": "application/json, text/plain, */*",
+        "Content-Type" : "application/json"
+    },
+    body: data
+})
+.then(function (response) {
+if (response.ok) {
+fetchSolutions();
+$("#edit-solution").modal("hide");
+} else {
+throw new Error(response.statusText);
+}
+})
+.catch(function (error) {$("#submitButton").attr("disabled", false);$("#error-massage").text(error.message);$("#error-div").fadeIn();$("#error-div").removeClass("d-none");
+});
+}
+function deleteSolution() {
+let solutionID = $("#delete-solution-id").val();
+if (solutionID == 0 || isNaN(solutionID)) { return; }
+let uri = "/api/task-solutions/" + solutionID;
+fetch(uri, {
+    method: "DELETE",
+    headers: {
+        "Accept": "application/json, text/plain, */*",
+        "Content-Type" : "application/json"
+    }
+})
+.then(function (response) {
+if (response.ok) {
+fetchSolutions();
+$("#delete-solution").modal("hide");
+} else {
+throw new Error(response.statusText);
+}
+})
+.catch(function (error) {$("#submitButton").attr("disabled", false);$("#error-massage").text(error.message);$("#error-div").fadeIn();$("#error-div").removeClass("d-none");
+});
+}
 """
             }
             body.scripts
@@ -84,7 +137,18 @@ function taskIndex() {
     var body: HTML {
         NodeList {
             Div().id("solution").display(.none)
+            CreateModal()
+            EditModal()
+            DeleteModal()
+        }
+    }
+}
 
+extension TaskSolutionCard {
+
+    struct CreateModal: HTMLComponent {
+
+        var body: HTML {
             Modal(title: "Lag et løsningsforslag", id: "create-alternative-solution") {
 
                 CustomControlInput(
@@ -99,16 +163,72 @@ function taskIndex() {
                     MarkdownEditor(id: "suggested-solution")
                         .placeholder("Et eller annet løsningsforslag")
                         .onChange { editor in
-                            Script.solutionScore(editorName: editor)
+                            Script.solutionScore(divID: "new-solution-req", editorName: editor)
                     }
                 }
-                .description { TaskSolution.Templates.Requmendations() }
+                .description { TaskSolution.Templates.Requmendations().id("new-solution-req") }
                 .margin(.four, for: .bottom)
 
                 Button { "Lag løsningsforslag" }
                     .on(click: "suggestSolution()")
                     .button(style: .primary)
             }
+        }
+    }
+
+    struct EditModal: HTMLComponent {
+
+        var body: HTML {
+            Modal(title: "Rediger et løsningsforslag", id: "edit-solution") {
+
+                Input().type(.hidden).id("edit-solution-id")
+
+                FormGroup(label: "Løsningsforslag") {
+                    MarkdownEditor(id: "updated-solution")
+                        .placeholder("Et eller annet løsningsforslag")
+                        .onChange { editor in
+                            Script.solutionScore(divID: "update-solution-req", editorName: editor)
+                    }
+                }
+                .description { TaskSolution.Templates.Requmendations().id("update-solution-req") }
+                .margin(.four, for: .bottom)
+
+                Button { "Lagre løsningsforslag" }
+                    .on(click: "saveSolution()")
+                    .button(style: .primary)
+            }
+            .set(data: "markdown", type: .markdown, to: "updated-solution")
+            .set(data: "solutionID", type: .input, to: "edit-solution-id")
+        }
+    }
+
+    struct DeleteModal: HTMLComponent {
+
+        var body: HTML {
+            Modal(title: "Slett løsningsforslag", id: "delete-solution") {
+
+                Input().type(.hidden).id("delete-solution-id")
+
+                Text { "Er du sikker på at du vil slette løsningsforslaget?" }.style(.heading4)
+
+                Button {
+                    MaterialDesignIcon(.delete)
+                        .margin(.one, for: .right)
+                    "Slett"
+                }
+                .on(click: "deleteSolution()")
+                .button(style: .danger)
+
+                Button {
+                    MaterialDesignIcon(.close)
+                        .margin(.one, for: .right)
+                    "Avbryt"
+                }
+                .button(style: .primary)
+                .margin(.one, for: .left)
+                .dismissModal()
+            }
+            .set(data: "solutionID", type: .input, to: "delete-solution-id")
         }
     }
 }
@@ -197,10 +317,7 @@ extension TestSession.Templates {
                 Script(source: "/assets/js/markdown-renderer.js")
                 Script {
 """
-window.onload=function() {
-    fetchSolutions();
-    fetchDiscussions($("#task-id").val());
-};
+window.onload=function() {fetchSolutions();fetchDiscussions($("#task-id").val());};
 """
                 }
             }
