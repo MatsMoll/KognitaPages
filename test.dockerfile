@@ -1,4 +1,4 @@
-FROM swift:5.1.2-bionic
+FROM swift:5.2-bionic
 
 WORKDIR /package
 

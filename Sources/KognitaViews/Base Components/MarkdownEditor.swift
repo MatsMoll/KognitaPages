@@ -54,7 +54,7 @@ struct MarkdownEditor: HTMLComponent, AttributeNode, PlaceholderAttribute, FormI
 \(jsId) = new SimpleMDE({
     element: document.getElementById("\(id)"),
     spellChecker: false,
-    toolbar: ["bold","italic","heading","|","code","quote","unordered-list","ordered-list","|","link","image",{name: "LaTeX",action: function (editor) {var text = editor.value();text += "$$$$";editor.value(text);},className: "fa fa-calculator",title: "LaTeX",},"|","preview","guide"],
+    toolbar: ["bold","italic","heading","|","code","quote","unordered-list","ordered-list","|","link","image",{name: "LaTeX",action: function (editor) {var text = editor.value();text += "$$\\\\frac{1}{2}$$";editor.value(text);},className: "fa fa-calculator",title: "LaTeX",},"|","preview","guide"],
     renderingConfig: { codeSyntaxHighlighting: true,},
     status: [{ className: "ord", defaultValue: function(e){this.words=0;e.innerHTML="0 ord";}, onUpdate: function(e){e.innerHTML=\(jsId).value().split(/\\s+/).length;} }],
     promptURLs: true,

@@ -43,7 +43,7 @@ extension PracticeSession.Templates {
     public struct Result: HTMLTemplate {
 
         public struct Context {
-            let locale = "nb"
+            let locale = "nb_NO"
             let user: User
 
             let tasks: [TaskResultable]
@@ -180,10 +180,8 @@ extension PracticeSession.Templates {
                     }
                 }
                 .else {
-                    Text {
-                        "Vi klarte ikke å finne noen oppgaver i dette øvingssettet"
-                    }
-                    .style(.lead)
+                    Text { "Vi klarte ikke å finne noen oppgaver i dette øvingssettet" }
+                        .style(.lead)
                 }
             }
             .scripts {

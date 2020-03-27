@@ -134,8 +134,6 @@ extension TaskDiscussion.Templates {
                                         "Spurt av: "
                                         discussion.username
                                     }
-
-
                                 }
                                 .class("border-bottom border-light")
                                 .padding(.two, for: .bottom)

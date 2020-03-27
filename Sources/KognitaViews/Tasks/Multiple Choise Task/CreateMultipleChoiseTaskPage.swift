@@ -170,13 +170,12 @@ extension MultipleChoiseTask.Templates {
                     }
 
                     FormGroup {
-                        TextArea {
+                        MarkdownEditor(id: "description") {
                             Unwrap(context.content.task) {
                                 $0.description
                                     .escaping(.unsafeNone)
                             }
                         }
-                        .id("create-multiple-description")
                         .placeholder("Du har gitt en funksjon ...")
                     }
                     .customLabel {
@@ -204,12 +203,6 @@ extension MultipleChoiseTask.Templates {
                         }
                         .style(.heading3)
                         .text(color: .dark)
-                    }
-                    .description {
-                        Div {
-                            "Kun tillatt med bokstaver, tall, mellomrom og enkelte tegn (. , : ; ! ?)"
-                        }
-                        .class("invalid-feedback")
                     }
 
                     Text {
@@ -241,7 +234,7 @@ extension MultipleChoiseTask.Templates {
 
                     FormRow {
                         FormGroup(label: "Legg til et alternativ") {
-                            TextArea().id("create-multiple-choise")
+                            MarkdownEditor(id: "create-multiple-choise")
                         }
                         .column(width: .eleven)
 
@@ -284,7 +277,7 @@ extension MultipleChoiseTask.Templates {
                         }
                         .placeholder("Gitt at funksjonen er konveks, så fører det til at ...")
                         .onChange { editor in
-                            Script.solutionScore(editorName: editor)
+                            Script.solutionScore(divID: "solution-req", editorName: editor)
                         }
                     }
                     .customLabel {
@@ -295,7 +288,7 @@ extension MultipleChoiseTask.Templates {
                         .text(color: .dark)
                     }
                     .description {
-                        TaskSolution.Templates.Requmendations()
+                        TaskSolution.Templates.Requmendations().id("solution-req")
                     }
 
                     DismissableError()
