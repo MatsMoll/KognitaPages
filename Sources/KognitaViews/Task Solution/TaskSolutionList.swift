@@ -54,10 +54,20 @@ extension TaskSolution.Templates {
 
     public struct List: HTMLTemplate {
 
-        public typealias Context = [TaskSolution.Response]
+        public struct Context {
+            let user: User
+            let solutions: [TaskSolution.Response]
+
+            var userID: User.ID { user.id ?? 0 }
+
+            public init(user: User, solutions: [TaskSolution.Response]) {
+                self.user = user
+                self.solutions = solutions
+            }
+        }
 
         public var body: HTML {
-            Accordions(values: context, title: { (solution: TemplateValue<TaskSolution.Response>, index: TemplateValue<Int>) in
+            Accordions(values: context.solutions, title: { (solution: TemplateValue<TaskSolution.Response>, index: TemplateValue<Int>) in
 
                 Text {
                     "Løsningsforslag av "
@@ -96,16 +106,18 @@ extension TaskSolution.Templates {
                 }
             }) { (solution: TemplateValue<TaskSolution.Response>, index: TemplateValue<Int>) in
 
-                MoreDropdown {
-                    Anchor { "Rediger" }
-                        .toggle(modal: .id("edit-solution"))
-                        .data("markdown", value: solution.solution.escaping(.unsafeNone))
-                        .data("solutionID", value: solution.id)
-                    Anchor { "Slett" }
-                        .toggle(modal: .id("delete-solution"))
-                        .data("solutionID", value: solution.id)
+                IF(self.context.userID == solution.creatorID) {
+                    MoreDropdown {
+                        Anchor { "Rediger" }
+                            .toggle(modal: .id("edit-solution"))
+                            .data("markdown", value: solution.solution.escaping(.unsafeNone))
+                            .data("solutionID", value: solution.id)
+                        Anchor { "Slett" }
+                            .toggle(modal: .id("delete-solution"))
+                            .data("solutionID", value: solution.id)
+                    }
+                    .float(.right)
                 }
-                .float(.right)
 
                 Div {
                     solution.solution

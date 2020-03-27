@@ -206,6 +206,7 @@ $("#main-task-content").css("padding-bottom", $("#nav-card").height() + 20);
 """
             }
             Script { Script.extendSession() }
+            Script { Script.autoResizeTextAreas }
             customScripts
         }
     }
