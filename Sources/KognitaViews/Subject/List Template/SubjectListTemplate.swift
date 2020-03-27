@@ -80,6 +80,7 @@ extension Subject.Templates {
                     Div {
                         StatisticsCard()
                         User.Templates.ProfileCard(user: context.user)
+                        UserDiscussionCard()
                         IF(context.user.isAdmin) {
                             CreateContentCard()
                         }
@@ -371,6 +372,26 @@ extension Subject.Templates {
                     $0.background(color: .danger)
                         .text(color: .white)
                 }
+            }
+        }
+    }
+
+    struct UserDiscussionCard: HTMLComponent {
+
+        var body: HTML {
+            Card {
+                Text {
+                    "Dine diskusjoner"
+                }
+                .style(.heading3)
+                .text(color: .dark)
+
+                Anchor {
+                    "Se diskusjoner!"
+                }
+                .href("/task-discussion/user")
+                .button(style: .light)
+                .class("btn-rounded")
             }
         }
     }

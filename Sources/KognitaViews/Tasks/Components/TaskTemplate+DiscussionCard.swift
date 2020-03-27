@@ -35,6 +35,48 @@ extension TaskDiscussion.Templates {
 
 extension TaskDiscussion.Templates {
 
+    public struct ShowResponsesModal: HTMLComponent {
+        
+        public var body: HTML {
+
+            Modal(title: "Svar", id: "response") {
+
+                Input().id("disc-id").type(.hidden)
+
+                Text { "" }.style(.heading3).id("disc-description")
+
+                Small {
+                    "Spurt av: "
+                }
+                .id("disc-username")
+
+
+                Div().id("disc-responses").display(.none)
+
+
+                FormGroup(label: "Skriv en respons") {
+                    TextArea()
+                        .id("create-discussion-response")
+                        .placeholder("En eller annen respons")
+                }
+                .margin(.four, for: .top)
+
+                Button {
+                    "Svar"
+                }
+                .button(style: .primary)
+                .on(click: "createResponse()")
+            }
+            .text(break: .break)
+            .set(data: "dID", to: "disc-id")
+            .set(data: "dDesc", to: "disc-description")
+            .set(data: "dUname", to: "disc-username")
+        }
+    }
+}
+
+extension TaskDiscussion.Templates {
+
     public struct DiscussionCard: HTMLTemplate {
 
         public typealias Context = [TaskDiscussion.Details]
@@ -79,13 +121,11 @@ extension TaskDiscussion.Templates {
 
                                     Div {
                                         Div {
-
                                             Text {
                                                 discussion.description
                                             }
                                             .style(.heading4)
                                             .margin(.zero, for: .top)
-
                                         }
                                         .display(.flex)
                                     }
@@ -111,39 +151,6 @@ extension TaskDiscussion.Templates {
                     .margin(.zero, for: .top)
                 }
                 .text(break: .break)
-
-                Modal(title: "Svar", id: "response") {
-
-                    Input().id("disc-id").type(.hidden)
-
-                    Text { "" }.style(.heading3).id("disc-description")
-
-                    Small {
-                        "Spurt av: "
-                    }
-                    .id("disc-username")
-
-
-                    Div().id("disc-responses").display(.none)
-
-
-                    FormGroup(label: "Skriv en respons") {
-                        TextArea()
-                            .id("create-discussion-response")
-                            .placeholder("En eller annen respons")
-                    }
-                    .margin(.four, for: .top)
-
-                    Button {
-                        "Svar"
-                    }
-                    .button(style: .primary)
-                    .on(click: "createResponse()")
-                }
-                .text(break: .break)
-                .set(data: "dID", to: "disc-id")
-                .set(data: "dDesc", to: "disc-description")
-                .set(data: "dUname", to: "disc-username")
             }
         }
 
