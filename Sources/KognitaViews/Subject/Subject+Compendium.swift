@@ -1,6 +1,18 @@
 import BootstrapKit
 import KognitaCore
 
+extension Subject.Compendium {
+    fileprivate var subjectUri: String { "/subjects/\(subjectID)" }
+}
+
+extension Subject.Compendium.TopicData {
+    fileprivate var nameID: String { "topic-\(chapter)" }
+}
+
+extension Subject.Compendium.SubtopicData {
+    fileprivate var hrefID: String { "subtopic-\(subtopicID)" }
+}
+
 extension Subject.Templates {
 
     public struct Compendium: HTMLTemplate {
@@ -18,7 +30,7 @@ extension Subject.Templates {
         var breadcrumbItems: [BreadcrumbItem] {
             [
                 BreadcrumbItem(link: "/subjects", title: "Fagoversikt"),
-                BreadcrumbItem(link: ViewWrapper(view: "/subjects/" + context.compendium.subjectID), title: ViewWrapper(view: context.compendium.subjectName))
+                BreadcrumbItem(link: ViewWrapper(view: context.compendium.subjectUri), title: ViewWrapper(view: context.compendium.subjectName))
             ]
         }
 
@@ -32,31 +44,13 @@ extension Subject.Templates {
                 Container {
                     Row {
                         Div {
-                            Card {
-                                Text { "Innholdsfortegnelse" }
-                                    .style(.heading3)
-                                    .text(color: .dark)
-                                    .margin(.three, for: .bottom)
-                                Div {
-                                    ForEach(in: context.compendium.topics) { (topic: TemplateValue<Subject.Compendium.TopicData>) in
-                                        Anchor {
-                                            topic.chapter
-                                            ". "
-                                            topic.name
-                                        }
-                                            .href("#" + topic.nameID)
-                                            .class("list-group-item list-group-item-action")
-                                    }
-                                }
-                                .class("list-group")
-                                .id("compendium-overview")
-                            }
+                            TableOfContent(topics: context.compendium.topics)
                         }
                         .column(width: .four, for: .large)
                     }
                 }
                 .id("compendium-toc")
-                .class("position-lg-fixed")
+                .class("position-lg-fixed scrollable-toc")
                 .padding(.zero)
                 
                 Row {
@@ -105,6 +99,53 @@ $("#compendium-toc").css("top", newContentTop);
 }
 
 
+private struct TableOfContent: HTMLComponent {
+
+    let topics: TemplateValue<[Subject.Compendium.TopicData]>
+
+    var body: HTML {
+        Card {
+            Text { "Innholdsfortegnelse" }
+                .style(.heading3)
+                .text(color: .dark)
+                .margin(.three, for: .bottom)
+            Div {
+                ForEach(in: topics) { (topic: TemplateValue<Subject.Compendium.TopicData>) in
+                    Anchor {
+                        topic.chapter
+                        ". "
+                        topic.name
+                    }
+                        .href("#" + topic.nameID)
+                        .class("list-group-item list-group-item-action")
+
+                    Div {
+                        ForEach(in: topic.subtopics) { subtopic in
+                            Subtopics(subtopic: subtopic)
+                        }
+                    }
+                    .class("nav")
+                    .padding(.three, for: .left)
+                }
+            }
+            .class("list-group")
+            .id("compendium-overview")
+        }
+    }
+
+
+    struct Subtopics: HTMLComponent {
+
+        let subtopic: TemplateValue<Subject.Compendium.SubtopicData>
+
+        var body: HTML {
+            Anchor { subtopic.name }
+                .href("#" + subtopic.hrefID)
+                .class("list-group-item list-group-item-action")
+        }
+    }
+}
+
 private struct TopicSection: HTMLComponent {
 
     let topic: TemplateValue<Subject.Compendium.TopicData>
@@ -138,6 +179,7 @@ private struct SubtopicSection: HTMLComponent {
                 .style(.heading3)
                 .text(color: .dark)
                 .margin(.three, for: .vertical)
+                .id(subtopic.hrefID)
 
             ForEach(in: subtopic.questions) { question in
                 QuestionSection(question: question)
