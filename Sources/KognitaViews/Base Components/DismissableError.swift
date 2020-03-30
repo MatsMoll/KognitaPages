@@ -8,17 +8,34 @@
 import HTMLKit
 import BootstrapKit
 
-struct DismissableError: HTMLComponent {
+struct DismissableError: HTMLComponent, AttributeNode {
+
+    var attributes: [HTMLAttribute]
+    let messageID: String
+
+    init(divID: String = "error-div", messageID: String = "error-massage") {
+        self.messageID = messageID
+        self.attributes = [HTMLAttribute(attribute: "id", value: divID)]
+    }
+
+    private init(attributes: [HTMLAttribute], messageID: String) {
+        self.attributes = attributes
+        self.messageID = messageID
+    }
 
     var body: HTML {
         Alert {
             Bold { "En Feil Oppstod - " }
-            Span().id("error-massage")
+            Span().id(messageID)
         }
         .isDismissable(false)
         .background(color: .danger)
         .text(color: .white)
         .display(.none)
-        .id("error-div")
+        .add(attributes: attributes)
+    }
+
+    func copy(with attributes: [HTMLAttribute]) -> DismissableError {
+        .init(attributes: attributes, messageID: messageID)
     }
 }

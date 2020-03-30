@@ -103,8 +103,7 @@ $("#edit-solution").modal("hide");
 throw new Error(response.statusText);
 }
 })
-.catch(function (error) {$("#submitButton").attr("disabled", false);$("#error-massage").text(error.message);$("#error-div").fadeIn();$("#error-div").removeClass("d-none");
-});
+.catch(function (error) {$("#edit-solution-error-message").text(error.message);$("#edit-solution-error-div").fadeIn();$("#edit-solution-error-div").removeClass("d-none");});
 }
 function deleteSolution() {
 let solutionID = $("#delete-solution-id").val();
@@ -125,8 +124,7 @@ $("#delete-solution").modal("hide");
 throw new Error(response.statusText);
 }
 })
-.catch(function (error) {$("#submitButton").attr("disabled", false);$("#error-massage").text(error.message);$("#error-div").fadeIn();$("#error-div").removeClass("d-none");
-});
+.catch(function (error) {$("#delete-solution-error-message").text(error.message);$("#delete-solution-error-div").fadeIn();$("#delete-solution-error-div").removeClass("d-none");});
 }
 """
             }
@@ -150,6 +148,8 @@ extension TaskSolutionCard {
 
         var body: HTML {
             Modal(title: "Lag et løsningsforslag", id: "create-alternative-solution") {
+
+                DismissableError(divID: "create-solution-error-div", messageID: "create-solution-error-message")
 
                 CustomControlInput(
                     label: "Vis brukernavnet",
@@ -183,6 +183,8 @@ extension TaskSolutionCard {
 
                 Input().type(.hidden).id("edit-solution-id")
 
+                DismissableError(divID: "edit-solution-error-div", messageID: "edit-solution-error-message")
+
                 FormGroup(label: "Løsningsforslag") {
                     MarkdownEditor(id: "updated-solution")
                         .placeholder("Et eller annet løsningsforslag")
@@ -208,6 +210,8 @@ extension TaskSolutionCard {
             Modal(title: "Slett løsningsforslag", id: "delete-solution") {
 
                 Input().type(.hidden).id("delete-solution-id")
+
+                DismissableError(divID: "delete-solution-error-div", messageID: "delete-solution-error-message")
 
                 Text { "Er du sikker på at du vil slette løsningsforslaget?" }.style(.heading4)
 
