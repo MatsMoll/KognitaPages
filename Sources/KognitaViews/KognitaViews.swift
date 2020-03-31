@@ -16,7 +16,7 @@ public struct KognitaViews {
 
         let renderer = HTMLRenderer()
 
-        renderer.timeZone = TimeZone(secondsFromGMT: -1) ?? renderer.timeZone
+        renderer.timeZone = TimeZone(abbreviation: "CET") ?? renderer.timeZone
 
         // Starter
         try renderer.add(view: Pages.Landing())
