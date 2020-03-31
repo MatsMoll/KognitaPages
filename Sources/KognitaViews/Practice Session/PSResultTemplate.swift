@@ -39,21 +39,31 @@ struct BreadcrumbItem {
     let title: ViewWrapper
 }
 
+extension PracticeSession {
+    public enum Templates {}
+}
+
 extension PracticeSession.Templates {
     public struct Result: HTMLTemplate {
 
         public struct Context {
-            let locale = "nb_NO"
             let user: User
 
             let tasks: [TaskResultable]
 
-            let topicResults: [TopicResultContext]
+            let topicResults: [TopicResultContext] 
 
-            let progress: Int
             let timeUsed: TimeInterval
             let maxScore: Double
             let achievedScore: Double
+            
+            var startedAt: Date {
+                guard let now = tasks.first?.date else {
+                    return .now
+                }
+                let startedAt = now.addingTimeInterval(-timeUsed)
+                return startedAt
+            }
 
             var accuracyScore: Double {
                 guard maxScore != 0 else {
@@ -62,27 +72,43 @@ extension PracticeSession.Templates {
                 return achievedScore / maxScore
             }
 
+            var timeUsedString: String { return timeUsed.timeString }
+
+            var averageTimePerTaskString: String {
+                let timeUsedPerTask = timeUsed / TimeInterval(tasks.count)
+                var timeString = timeUsedPerTask.timeString + " per oppgave"
+
+                if timeUsedPerTask >= 20 {
+                    timeString += " 💪"
+                } else if timeUsedPerTask >= 10 {
+                    timeString += " 🤩"
+                } else {
+                    timeString += " 🏃‍♂️💨"
+                }
+                return timeString
+            }
+
             var singleStats: [SingleStatisticCardContent] {
                 [
                     .init(
                         title: "Snitt score på øvingen",
                         mainContent: accuracyString,
-                        extraContent: nil
+                        details: nil
                     ),
                     .init(
                         title: "Antall oppgaver utført",
                         mainContent: numberOfTasks,
-                        extraContent: nil
+                        details: nil
                     ),
                     .init(
-                        title: "Tid øvet",
-                        mainContent: timeUsed.timeString,
-                        extraContent: nil
+                        title: "Øvingstid",
+                        mainContent: timeUsedString,
+                        details: averageTimePerTaskString
                     ),
                 ]
             }
 
-            public init(user: User, tasks: [TaskResultable], progress: Int, timeUsed: TimeInterval) {
+            public init(user: User, tasks: [TaskResultable]) {
 
                 var maxScore: Double = 0
                 var achievedScore: Double = 0
@@ -93,8 +119,7 @@ extension PracticeSession.Templates {
 
                 self.user = user
                 self.tasks = tasks
-                self.progress = progress
-                self.timeUsed = timeUsed
+                self.timeUsed = tasks.map(\.timeUsed).reduce(0, +)
                 self.maxScore = maxScore
                 self.achievedScore = achievedScore
 
@@ -130,10 +155,19 @@ extension PracticeSession.Templates {
                         ForEach(in: context.singleStats) { statistic in
                             Div {
                                 SingleStatisticCard(
-                                    stats: statistic
+                                    title: statistic.title,
+                                    mainContent: statistic.mainContent,
+                                    moreDetails: statistic.details
                                 )
                             }.column(width: .six, for: .large)
                         }
+                        Div {
+                            SingleStatisticCard(
+                                title: "Tidspunkt øvingen startet",
+                                mainContent: context.startedAt.style(date: .long, time: .short),
+                                moreDetails: .constant(nil)
+                            )
+                        }.column(width: .six, for: .large)
                     }
                 }
                 .secondary {
@@ -193,20 +227,35 @@ extension PracticeSession.Templates {
 }
 
 extension PracticeSession.Templates.Result.Context {
-    var numberOfTasks: String { "\(tasks.count)" }
-    var goalProgress: String { "\(progress)%" }
+    var numberOfTasks: String {
+        let taskCount = tasks.count
+        var taskCountString = "\(taskCount)"
+
+        if taskCount >= 20 {
+            taskCountString += " 🔥"
+        } else if taskCount >= 10 {
+            taskCountString += " 🤩"
+        } else if taskCount >= 5 {
+            taskCountString += " 😎"
+        }
+        return taskCountString
+    }
     var readableAccuracy: Double { (10000 * accuracyScore).rounded() / 100 }
     var accuracyString: String {
         var text = "\(readableAccuracy)%"
-        if readableAccuracy > 90 {
+        if readableAccuracy >= 100 {
+            text += " 💯"
+        } else if readableAccuracy > 80 {
             text += " 🏆"
-        } else if readableAccuracy > 70 {
+        } else if readableAccuracy > 60 {
             text += " 🔥"
+        } else if readableAccuracy > 30 {
+            text += " 😎"
         }
         return text
     }
     var date: Date { tasks.first?.date ?? .now }
     var title: String {
-        "Øving \(date.formatted(dateStyle: .short, timeStyle: .short))"
+        "Øving"
     }
 }

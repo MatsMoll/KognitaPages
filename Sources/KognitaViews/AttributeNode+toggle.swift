@@ -7,4 +7,3 @@ extension AttributeNode {
             .data(for: "target", value: id)
     }
 }
-

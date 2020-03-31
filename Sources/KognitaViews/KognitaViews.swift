@@ -16,7 +16,7 @@ public struct KognitaViews {
 
         let renderer = HTMLRenderer()
 
-        renderer.timeZone = TimeZone(secondsFromGMT: -1) ?? renderer.timeZone
+        renderer.timeZone = TimeZone(abbreviation: "CET") ?? renderer.timeZone
 
         // Starter
         try renderer.add(view: Pages.Landing())
@@ -77,8 +77,8 @@ public struct KognitaViews {
         try renderer.add(view: MultipleChoiseTask.Templates.Create())
     //
     //    // Practice Session
-        try renderer.add(view: PracticeSession.Templates.History())
         try renderer.add(view: PracticeSession.Templates.Result())
+        try renderer.add(view: TaskSession.Templates.History())
 
     //    // Creator pages
         try renderer.add(view: Subject.Templates.ContentOverview())

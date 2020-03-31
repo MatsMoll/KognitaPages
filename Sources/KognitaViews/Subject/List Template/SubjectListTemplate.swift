@@ -246,8 +246,15 @@ extension Subject.Templates {
                                     .margin(.one, for: .left)
                             }
                         }
-                        .class("card-header bg-" + subject.colorClass.rawValue)
+                        .class("card-header")
                         .text(color: .white)
+                        .modify(if: subject.isActive) { card in
+                            card.background(color: .primary)
+                        }
+                        .modify(if: subject.isActive == false) { card in
+                            card.background(color: .success)
+                        }
+
                         Div {
                             P {
                                 subject.description
@@ -256,7 +263,13 @@ extension Subject.Templates {
                             .class("render-markdown")
 
                             Button(Strings.subjectExploreButton)
-                                .class("btn btn-" + subject.colorClass.rawValue + " btn-rounded")
+                                .isRounded()
+                                .modify(if: subject.isActive) { card in
+                                    card.button(style: .primary)
+                                }
+                                .modify(if: subject.isActive == false) { card in
+                                    card.button(style: .success)
+                                }
                         }
                         .class("card-body position-relative")
                     }
