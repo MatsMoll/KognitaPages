@@ -47,12 +47,19 @@ extension PracticeSession.Templates {
 
             let tasks: [TaskResultable]
 
-            let topicResults: [TopicResultContext]
+            let topicResults: [TopicResultContext] 
 
-            let progress: Int
             let timeUsed: TimeInterval
             let maxScore: Double
             let achievedScore: Double
+            
+            var startedAt: Date {
+                guard let now = tasks.first?.date else {
+                    return .now
+                }
+                let startedAt = now.addingTimeInterval(-timeUsed)
+                return startedAt
+            }
 
             var accuracyScore: Double {
                 guard maxScore != 0 else {
@@ -65,23 +72,20 @@ extension PracticeSession.Templates {
                 [
                     .init(
                         title: "Snitt score på øvingen",
-                        mainContent: accuracyString,
-                        extraContent: nil
+                        mainContent: accuracyString
                     ),
                     .init(
                         title: "Antall oppgaver utført",
-                        mainContent: numberOfTasks,
-                        extraContent: nil
+                        mainContent: numberOfTasks
                     ),
                     .init(
-                        title: "Tid øvet",
-                        mainContent: timeUsed.timeString,
-                        extraContent: nil
+                        title: "Øvingstid",
+                        mainContent: timeUsed.timeString
                     ),
                 ]
             }
 
-            public init(user: User, tasks: [TaskResultable], progress: Int, timeUsed: TimeInterval) {
+            public init(user: User, tasks: [TaskResultable]) {
 
                 var maxScore: Double = 0
                 var achievedScore: Double = 0
@@ -92,8 +96,7 @@ extension PracticeSession.Templates {
 
                 self.user = user
                 self.tasks = tasks
-                self.progress = progress
-                self.timeUsed = timeUsed
+                self.timeUsed = tasks.map(\.timeUsed).reduce(0, +)
                 self.maxScore = maxScore
                 self.achievedScore = achievedScore
 
@@ -129,10 +132,17 @@ extension PracticeSession.Templates {
                         ForEach(in: context.singleStats) { statistic in
                             Div {
                                 SingleStatisticCard(
-                                    stats: statistic
+                                    title: statistic.title,
+                                    mainContent: statistic.mainContent
                                 )
                             }.column(width: .six, for: .large)
                         }
+                        Div {
+                            SingleStatisticCard(
+                                title: "Tidspunkt øvingen startet",
+                                mainContent: context.startedAt.style(date: .long, time: .short)
+                            )
+                        }.column(width: .six, for: .large)
                     }
                 }
                 .secondary {
@@ -193,7 +203,6 @@ extension PracticeSession.Templates {
 
 extension PracticeSession.Templates.Result.Context {
     var numberOfTasks: String { "\(tasks.count)" }
-    var goalProgress: String { "\(progress)%" }
     var readableAccuracy: Double { (10000 * accuracyScore).rounded() / 100 }
     var accuracyString: String {
         var text = "\(readableAccuracy)%"
