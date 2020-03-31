@@ -39,11 +39,14 @@ struct BreadcrumbItem {
     let title: ViewWrapper
 }
 
+extension PracticeSession {
+    public enum Templates {}
+}
+
 extension PracticeSession.Templates {
     public struct Result: HTMLTemplate {
 
         public struct Context {
-            let locale = "nb_NO"
             let user: User
 
             let tasks: [TaskResultable]

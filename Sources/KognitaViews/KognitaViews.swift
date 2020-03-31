@@ -77,8 +77,8 @@ public struct KognitaViews {
         try renderer.add(view: MultipleChoiseTask.Templates.Create())
     //
     //    // Practice Session
-        try renderer.add(view: PracticeSession.Templates.History())
         try renderer.add(view: PracticeSession.Templates.Result())
+        try renderer.add(view: TaskSession.Templates.History())
 
     //    // Creator pages
         try renderer.add(view: Subject.Templates.ContentOverview())
