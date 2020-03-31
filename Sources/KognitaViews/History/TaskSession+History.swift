@@ -21,7 +21,7 @@ extension PracticeSession.HighOverview: SessionRepresentable {
     public var title: String { "Øving i \(subjectName)" }
     public var sessionUri: String { "/practice-sessions/\(id)/result" }
     public var executionDate: Date { createdAt }
-    public var duration: TimeInterval { executionDate.distance(to: endedAt) }
+    public var duration: TimeInterval { endedAt.timeIntervalSince(executionDate) }
     public var isTest: Bool { false }
 }
 
@@ -30,7 +30,7 @@ extension TestSession.HighOverview: SessionRepresentable {
     public var title: String { testTitle }
     public var sessionUri: String { "/test-sessions/\(id)/results" }
     public var executionDate: Date { createdAt }
-    public var duration: TimeInterval { executionDate.distance(to: endedAt) }
+    public var duration: TimeInterval { endedAt.timeIntervalSince(executionDate) }
     public var isTest: Bool { true }
 }
 

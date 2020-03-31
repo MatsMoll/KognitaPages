@@ -27,7 +27,7 @@ extension TestSession.Results {
         "startPracticeSession(\(topicResults.map { $0.id }), \(subjectID));"
     }
 
-    var timeUsed: TimeInterval { executedAt.distance(to: endedAt) }
+    var timeUsed: TimeInterval { endedAt.timeIntervalSince(executedAt) }
 }
 
 extension TestSession.Templates {
