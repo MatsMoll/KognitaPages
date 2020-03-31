@@ -130,7 +130,7 @@ struct BaseTemplate: HTMLComponent {
             customScripts
             content.scripts
         }
-        .enviroment(locale: "nb_NO")
+        .enviroment(locale: "nb")
     }
 }
 

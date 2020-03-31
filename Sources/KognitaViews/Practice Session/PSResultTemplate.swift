@@ -43,7 +43,6 @@ extension PracticeSession.Templates {
     public struct Result: HTMLTemplate {
 
         public struct Context {
-            let locale = "nb_NO"
             let user: User
 
             let tasks: [TaskResultable]
@@ -207,6 +206,6 @@ extension PracticeSession.Templates.Result.Context {
     }
     var date: Date { tasks.first?.date ?? .now }
     var title: String {
-        "Øving \(date.formatted(dateStyle: .short, timeStyle: .short))"
+        "Øving"
     }
 }

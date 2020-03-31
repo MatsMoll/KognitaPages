@@ -20,10 +20,7 @@ public protocol SessionRepresentable: Codable {
 extension PracticeSession.HighOverview: SessionRepresentable {
 
     public var title: String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .short
-        return "Øving: " + formatter.string(from: executionDate)
+        return "Øving"
     }
 
     public var sessionUri: String {
