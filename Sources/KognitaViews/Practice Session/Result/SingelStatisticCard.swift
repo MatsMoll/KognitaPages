@@ -23,10 +23,6 @@ struct SingleStatisticCard: HTMLComponent, AttributeNode {
                 .style(.lead)
                 .font(style: .bold)
 
-//            IF(extraContent != nil) {
-//                Text { extraContent ?? "" }
-//                    .text(color: .muted)
-//            }
         }
         .add(attributes: attributes)
     }
