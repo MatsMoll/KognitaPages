@@ -39,6 +39,10 @@ struct BreadcrumbItem {
     let title: ViewWrapper
 }
 
+extension PracticeSession {
+    public enum Templates {}
+}
+
 extension PracticeSession.Templates {
     public struct Result: HTMLTemplate {
 

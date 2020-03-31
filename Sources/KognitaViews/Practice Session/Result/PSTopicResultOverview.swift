@@ -82,9 +82,7 @@ private struct TaskCell: HTMLComponent {
     var body: HTML {
         Div {
             Anchor {
-                KognitaProgressBadge(
-                    value: result.resultScore.twoDecimals
-                )
+                KognitaProgressBadge(value: result.resultScore.twoDecimals)
 
                 Text { result.question }
                     .text(color: .secondary)
