@@ -104,7 +104,7 @@ extension Subject.Templates {
 
         var breadcrumbs: [BreadcrumbItem]  {
             [
-                BreadcrumbItem(link: "/subjects", title: "Fag oversikt"),
+                BreadcrumbItem(link: "/subjects", title: "Fagoversikt"),
                 BreadcrumbItem(link: ViewWrapper(view: "/subjects/" + context.subject.id), title: ViewWrapper(view: context.subject.name))
             ]
         }
@@ -117,7 +117,7 @@ extension Subject.Templates {
                     description: "Innholdsoversikt")
                 )
             ) {
-                PageTitle(title: "Innholds oversikt", breadcrumbs: breadcrumbs)
+                PageTitle(title: "Innholdsoversikt", breadcrumbs: breadcrumbs)
                 Row {
                     Div {
                         Card {

@@ -15,7 +15,7 @@ extension TimeInterval {
         let sec = self.truncatingRemainder(dividingBy: 60)
         let min = (self / 60).truncatingRemainder(dividingBy: 60).rounded(.down)
         let hour = (self / 3600).rounded(.down)
-
+        
         var timeString = ""
         if hour > 0 {
             timeString += "\(Int(hour)) t, "
@@ -24,6 +24,12 @@ extension TimeInterval {
             timeString += "\(Int(min)) min, "
         }
         return timeString + "\(Int(sec)) sek"
+    }
+}
+
+extension Subject.Overview {
+    var subjectDetailUri: String {
+        "/subjects/\(id)"
     }
 }
 
@@ -39,19 +45,32 @@ struct BreadcrumbItem {
     let title: ViewWrapper
 }
 
+public struct Divider: DatableNode {
+    
+    public var attributes: [HTMLAttribute]
+    
+    public var name: String { "hr" }
+    
+    public init(attributes: [HTMLAttribute] = []) {
+        self.attributes = attributes
+    }
+}
+
 extension PracticeSession.Templates {
     public struct Result: HTMLTemplate {
-
+        
         public struct Context {
             let user: User
-
+            
             let tasks: [TaskResultable]
-
-            let topicResults: [TopicResultContext] 
-
+            
+            let topicResults: [TopicResultContext]
+            
             let timeUsed: TimeInterval
             let maxScore: Double
             let achievedScore: Double
+            
+            let subject: Subject.Overview
             
             var startedAt: Date {
                 guard let now = tasks.first?.date else {
@@ -60,14 +79,14 @@ extension PracticeSession.Templates {
                 let startedAt = now.addingTimeInterval(-timeUsed)
                 return startedAt
             }
-
+            
             var accuracyScore: Double {
                 guard maxScore != 0 else {
                     return 0
                 }
                 return achievedScore / maxScore
             }
-
+            
             var singleStats: [SingleStatisticCardContent] {
                 [
                     .init(
@@ -84,22 +103,25 @@ extension PracticeSession.Templates {
                     ),
                 ]
             }
-
-            public init(user: User, tasks: [TaskResultable]) {
-
+            
+            public init(user: User, result: PracticeSession.Result) {
+                
+                let tasks = result.results
+                
                 var maxScore: Double = 0
                 var achievedScore: Double = 0
                 for task in tasks {
                     maxScore += 100
                     achievedScore += task.resultScore.clamped(to: 0...100)
                 }
-
+                
                 self.user = user
                 self.tasks = tasks
                 self.timeUsed = tasks.map(\.timeUsed).reduce(0, +)
                 self.maxScore = maxScore
                 self.achievedScore = achievedScore
-
+                self.subject = result.subject
+                
                 let grouped = tasks.group(by: \.topicName)
                 topicResults = grouped.map { name, tasks in
                     TopicResultContext(
@@ -112,11 +134,11 @@ extension PracticeSession.Templates {
                 .sorted(by: { $0.topicScore > $1.topicScore })
             }
         }
-
+        
         public init() {}
-
+        
         let breadcrumbItems: [BreadcrumbItem] = [.init(link: "../history", title: .init(view: Localized(key: Strings.historyTitle)))]
-
+        
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
@@ -126,7 +148,7 @@ extension PracticeSession.Templates {
                     title: context.title,
                     breadcrumbs: breadcrumbItems
                 )
-
+                
                 ContentStructure {
                     Row {
                         ForEach(in: context.singleStats) { statistic in
@@ -153,7 +175,84 @@ extension PracticeSession.Templates {
                             Canvas().id("practice-time-histogram")
                         }.class("mt-3 chartjs-chart")
                     }
+                    
+                    
                 }
+                
+//                Div {
+//                    Divider()
+//                }
+//                .column(width: .twelve)
+                
+                Text { "Handlinger" }
+                    .style(.heading3)
+                
+                Row {
+                    Div {
+                        Card {
+                            Row {
+                                Div {
+                                    Text {
+                                        "Vil du øve mer på dette?"
+                                    }
+                                    .style(.cardTitle)
+                                    
+                                    Button {
+                                        "Start ny øving"
+                                    }
+                                    .isRounded()
+                                    .on(click: context.startPractiseSessionCall)
+                                    .button(style: .primary)
+                                    
+                                }
+                                .column(width: .four, for: .large)
+                                .margin(.zero, for: .vertical, sizeClass: .large)
+                                .margin(.three, for: .vertical)
+                                .class("text-center")
+                                
+                                Div {
+                                    Text {
+                                        "Vil du gjøre noe annet i emnet?"
+                                    }
+                                    .style(.cardTitle)
+                                    
+                                    Anchor {
+                                        "Gå tilbake til faget"
+                                    }
+                                    .isRounded()
+                                    .href(context.subject.subjectDetailUri)
+                                    .button(style: .light)
+                                }
+                                .column(width: .four, for: .large)
+                                .margin(.zero, for: .vertical, sizeClass: .large)
+                                .margin(.three, for: .vertical)
+                                .class("text-center")
+                                
+                                Div {
+                                    Text {
+                                        "Vil du lese pensumstoff?"
+                                    }
+                                    .style(.cardTitle)
+                                    
+                                    Anchor {
+                                        "Gå til kompendiumet"
+                                    }
+                                    .isRounded()
+                                    .href(context.subject.subjectDetailUri)
+                                    .button(style: .light)
+                                }
+                                .column(width: .four, for: .large)
+                                .margin(.zero, for: .vertical, sizeClass: .large)
+                                .margin(.three, for: .vertical)
+                                .class("text-center")
+                            }
+                        }
+                    }
+                    .column(width: .twelve)
+                    
+                }
+                //                .class("text-center")
+                
                 Row {
                     Div {
                         Text { "Temaer" }
@@ -171,7 +270,7 @@ extension PracticeSession.Templates {
                                     topicLevel: result.topicScore,
                                     topicTaskResults: result.tasks
                                 )
-                                .isShown(true)
+                                    .isShown(true)
                             }
                             .column(width: .four, for: .medium)
                         }
@@ -185,7 +284,7 @@ extension PracticeSession.Templates {
                             topicLevel: result.topicScore,
                             topicTaskResults: result.tasks
                         )
-                        .isShown(true)
+                            .isShown(true)
                     }
                 }
                 .else {
@@ -196,6 +295,7 @@ extension PracticeSession.Templates {
             .scripts {
                 Script().source("/assets/js/vendor/Chart.bundle.min.js")
                 Script().source("/assets/js/practice-session-histogram.js")
+                Script().source("/assets/js/practice-session-create.js")
             }
         }
     }
@@ -216,5 +316,8 @@ extension PracticeSession.Templates.Result.Context {
     var date: Date { tasks.first?.date ?? .now }
     var title: String {
         "Øving"
+    }
+    var startPractiseSessionCall: String {
+        "startPracticeSessionWithTopicIDs(\(topicResults.map(\.topicId)), \(subject.id))"
     }
 }
