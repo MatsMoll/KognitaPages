@@ -74,7 +74,8 @@ extension PracticeSession.Templates {
 
             var timeUsedString: String { return timeUsed.timeString }
 
-            var averageTimePerTaskString: String {
+            var averageTimePerTaskString: String? {
+                guard tasks.isEmpty == false else { return nil }
                 let timeUsedPerTask = timeUsed / TimeInterval(tasks.count)
                 var timeString = timeUsedPerTask.timeString + " per oppgave"
 
