@@ -179,19 +179,19 @@ extension PracticeSession.Templates {
                     
                 }
                 
-//                Div {
-//                    Divider()
-//                }
-//                .column(width: .twelve)
+                //                Div {
+                //                    Divider()
+                //                }
+                //                .column(width: .twelve)
                 
                 Text { "Handlinger" }
                     .style(.heading3)
                 
                 Row {
                     Div {
-                        Card {
-                            Row {
-                                Div {
+                        Row {
+                            Div {
+                                Card {
                                     Text {
                                         "Vil du øve mer på dette?"
                                     }
@@ -203,14 +203,15 @@ extension PracticeSession.Templates {
                                     .isRounded()
                                     .on(click: context.startPractiseSessionCall)
                                     .button(style: .primary)
-                                    
                                 }
-                                .column(width: .four, for: .large)
-                                .margin(.zero, for: .vertical, sizeClass: .large)
-                                .margin(.three, for: .vertical)
-                                .class("text-center")
-                                
-                                Div {
+                            }
+                            .column(width: .four, for: .large)
+                                //                        .margin(.zero, for: .vertical, sizeClass: .large)
+                                //                        .margin(.three, for: .vertical)
+//                                .class("text-center")
+                            
+                            Div {
+                                Card {
                                     Text {
                                         "Vil du gjøre noe annet i emnet?"
                                     }
@@ -223,14 +224,16 @@ extension PracticeSession.Templates {
                                     .href(context.subject.subjectDetailUri)
                                     .button(style: .light)
                                 }
-                                .column(width: .four, for: .large)
-                                .margin(.zero, for: .vertical, sizeClass: .large)
-                                .margin(.three, for: .vertical)
-                                .class("text-center")
-                                
-                                Div {
+                            }
+                            .column(width: .four, for: .large)
+                                //                        .margin(.zero, for: .vertical, sizeClass: .large)
+                                //                        .margin(.three, for: .vertical)
+//                                .class("text-center")
+                            
+                            Div {
+                                Card {
                                     Text {
-                                        "Vil du lese pensumstoff?"
+                                        "Trenger du lesestoff?"
                                     }
                                     .style(.cardTitle)
                                     
@@ -241,12 +244,13 @@ extension PracticeSession.Templates {
                                     .href(context.subject.subjectDetailUri)
                                     .button(style: .light)
                                 }
-                                .column(width: .four, for: .large)
-                                .margin(.zero, for: .vertical, sizeClass: .large)
-                                .margin(.three, for: .vertical)
-                                .class("text-center")
                             }
+                            .column(width: .four, for: .large)
+                                //                        .margin(.zero, for: .vertical, sizeClass: .large)
+                                //                        .margin(.three, for: .vertical)
+//                                .class("text-center")
                         }
+                        
                     }
                     .column(width: .twelve)
                     
