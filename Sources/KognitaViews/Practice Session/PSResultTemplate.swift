@@ -45,17 +45,6 @@ struct BreadcrumbItem {
     let title: ViewWrapper
 }
 
-public struct Divider: DatableNode {
-    
-    public var attributes: [HTMLAttribute]
-    
-    public var name: String { "hr" }
-    
-    public init(attributes: [HTMLAttribute] = []) {
-        self.attributes = attributes
-    }
-}
-
 extension PracticeSession.Templates {
     public struct Result: HTMLTemplate {
         
@@ -168,94 +157,10 @@ extension PracticeSession.Templates {
                     }
                 }
                 .secondary {
-                    Card {
-                        H4(Strings.histogramTitle)
-                            .class("header-title mb-4")
-                        Div {
-                            Canvas().id("practice-time-histogram")
-                        }.class("mt-3 chartjs-chart")
-                    }
-                    
-                    
+                    PractiseSessionResultActionPanel.init(
+                        context: context
+                    )
                 }
-                
-                //                Div {
-                //                    Divider()
-                //                }
-                //                .column(width: .twelve)
-                
-                Text { "Handlinger" }
-                    .style(.heading3)
-                
-                Row {
-                    Div {
-                        Row {
-                            Div {
-                                Card {
-                                    Text {
-                                        "Vil du øve mer på dette?"
-                                    }
-                                    .style(.cardTitle)
-                                    
-                                    Button {
-                                        "Start ny øving"
-                                    }
-                                    .isRounded()
-                                    .on(click: context.startPractiseSessionCall)
-                                    .button(style: .primary)
-                                }
-                            }
-                            .column(width: .four, for: .large)
-                                //                        .margin(.zero, for: .vertical, sizeClass: .large)
-                                //                        .margin(.three, for: .vertical)
-//                                .class("text-center")
-                            
-                            Div {
-                                Card {
-                                    Text {
-                                        "Vil du gjøre noe annet i emnet?"
-                                    }
-                                    .style(.cardTitle)
-                                    
-                                    Anchor {
-                                        "Gå tilbake til faget"
-                                    }
-                                    .isRounded()
-                                    .href(context.subject.subjectDetailUri)
-                                    .button(style: .light)
-                                }
-                            }
-                            .column(width: .four, for: .large)
-                                //                        .margin(.zero, for: .vertical, sizeClass: .large)
-                                //                        .margin(.three, for: .vertical)
-//                                .class("text-center")
-                            
-                            Div {
-                                Card {
-                                    Text {
-                                        "Trenger du lesestoff?"
-                                    }
-                                    .style(.cardTitle)
-                                    
-                                    Anchor {
-                                        "Gå til kompendiumet"
-                                    }
-                                    .isRounded()
-                                    .href(context.subject.subjectDetailUri)
-                                    .button(style: .light)
-                                }
-                            }
-                            .column(width: .four, for: .large)
-                                //                        .margin(.zero, for: .vertical, sizeClass: .large)
-                                //                        .margin(.three, for: .vertical)
-//                                .class("text-center")
-                        }
-                        
-                    }
-                    .column(width: .twelve)
-                    
-                }
-                //                .class("text-center")
                 
                 Row {
                     Div {
@@ -321,7 +226,7 @@ extension PracticeSession.Templates.Result.Context {
     var title: String {
         "Øving"
     }
-    var startPractiseSessionCall: String {
-        "startPracticeSessionWithTopicIDs(\(topicResults.map(\.topicId)), \(subject.id))"
-    }
+//    var startPractiseSessionCall: String {
+//        "startPracticeSessionWithTopicIDs(\(topicResults.map(\.topicId)), \(subject.id))"
+//    }
 }
