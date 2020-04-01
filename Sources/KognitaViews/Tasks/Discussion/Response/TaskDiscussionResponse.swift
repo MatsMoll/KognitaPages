@@ -45,7 +45,7 @@ struct DiscussionResponse: HTMLPage {
                     Button {
                         "Legg til kommentar"
                     }
-                    .button(style: .light)
+                    .button(style: .muted)
                     .button(size: .extraSmall)
                     .margin(.one, for: .bottom)
                     .padding(.two, for: .bottom)

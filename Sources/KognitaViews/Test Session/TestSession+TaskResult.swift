@@ -12,7 +12,6 @@ struct TaskDiscussionCard: HTMLComponent {
     var scripts: HTML {
         NodeList {
             Script(source: "/assets/js/task-discussion/create.js")
-            Script(source: "/assets/js/task-discussion/create-response.js")
             Script(source: "/assets/js/task-discussion/fetch-discussions.js")
             body.scripts
         }

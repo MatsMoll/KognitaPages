@@ -27,7 +27,7 @@ extension TaskDiscussion.Templates {
             ) {
 
 
-                Text { "Dine diskusjoner!" }
+                Text { "Dine diskusjoner" }
                     .style(.heading4)
                     .margin(.four, for: .top)
 
@@ -35,10 +35,20 @@ extension TaskDiscussion.Templates {
 
                 ForEach(in: context.discussion) { (discussion: TemplateValue<TaskDiscussion.Details>) in
                     Card {
-                        Text { discussion.description }
-                            .style(.heading4)
+                        Div {
+                            Text { discussion.description }
+                                .style(.heading4)
 
-                        Button { "Se diskusjon!" }
+                            Text {
+                                "Laget: " 
+                                Unwrap(discussion.createdAt) { (createdAt: TemplateValue<Date>) in
+                                    Small { createdAt.style(date: .short, time: .none) }
+                                        .margin(.one, for: .left)
+                                }
+                            }
+                        }
+
+                        Button { "Se diskusjon" }
                             .float(.left)
                             .text(color: .dark)
                             .button(style: .light)
@@ -51,9 +61,15 @@ extension TaskDiscussion.Templates {
                     }
                     .margin(.four)
                 }
+
+                ShowResponsesModal()
+                Stylesheet(url: "/assets/css/vendor/simplemde.min.css")
             }
-            .scripts{
-                Script().source("/assets/js/task-discussion/fetch-responses.js")
+            .scripts {
+                Script(source: "/assets/js/vendor/simplemde.min.js")
+                Script(source: "/assets/js/markdown-renderer.js")
+                Script().source("/assets/js/task-discussion/fetch-discussions.js")
+                Script(source: "/assets/js/vendor/marked.min.js")
             }
         }
     }

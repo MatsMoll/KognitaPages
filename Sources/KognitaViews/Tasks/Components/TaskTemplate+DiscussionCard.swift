@@ -35,10 +35,17 @@ extension TaskDiscussion.Templates {
 
 extension TaskDiscussion.Templates {
 
-    public struct ShowResponsesModal: HTMLComponent {
-        
-        public var body: HTML {
+    struct ShowResponsesModal: HTMLComponent {
 
+        var scripts: HTML {
+            NodeList {
+                body.scripts
+                Script().source("/assets/js/task-discussion/fetch-responses.js")
+                Script(source: "/assets/js/task-discussion/create-response.js")
+            }
+        }
+        
+        var body: HTML {
             Modal(title: "Svar", id: "response") {
 
                 Input().id("disc-id").type(.hidden)
@@ -55,8 +62,7 @@ extension TaskDiscussion.Templates {
 
 
                 FormGroup(label: "Skriv en respons") {
-                    TextArea()
-                        .id("create-discussion-response")
+                    MarkdownEditor(id: "create-discussion-response")
                         .placeholder("En eller annen respons")
                 }
                 .margin(.four, for: .top)
@@ -68,9 +74,9 @@ extension TaskDiscussion.Templates {
                 .on(click: "createResponse()")
             }
             .text(break: .break)
-            .set(data: "dID", to: "disc-id")
-            .set(data: "dDesc", to: "disc-description")
-            .set(data: "dUname", to: "disc-username")
+            .set(data: "dID", type: .input, to: "disc-id")
+            .set(data: "dDesc", type: .textArea, to: "disc-description")
+            .set(data: "dUname", type: .node, to: "disc-username")
         }
     }
 }
@@ -83,10 +89,7 @@ extension TaskDiscussion.Templates {
 
 
         public var scripts: HTML {
-            NodeList {
-                htmlBody.scripts
-                Script(source: "/assets/js/task-discussion/fetch-responses.js")
-            }
+            htmlBody.scripts
         }
 
         var htmlBody: HTML {
@@ -149,6 +152,8 @@ extension TaskDiscussion.Templates {
                     .margin(.zero, for: .top)
                 }
                 .text(break: .break)
+
+                ShowResponsesModal()
             }
         }
 
