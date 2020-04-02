@@ -40,7 +40,7 @@ struct DiscussionResponse: HTMLPage {
                             .escaping(.unsafeNone)
                     }
                     .style(.lead)
-                    .class("render-markdown response")
+                    .class("render-markdown")
                     
                     Button {
                         "Legg til kommentar"

@@ -8,7 +8,7 @@ extension TestSession {
 
 extension TestSession.Overview {
 
-    var finnishUri: String {
+    var finishUri: String {
         "/test-sessions/\(sessionID)/finnish"
     }
 }
@@ -131,7 +131,7 @@ extension TestSession.Templates {
                         .button(style: .primary)
                         .type(.submit)
                     }
-                    .action(overview.finnishUri)
+                    .action(overview.finishUri)
                     .method(.post)
                 }
             }
