@@ -20,6 +20,21 @@ extension Subject.Templates {
                 self.user = user
                 self.subjectInfo = subjectInfo
             }
+            
+            var baseContent: BaseTemplateContent {
+                .init(
+                    title: title,
+                    description: title
+                )
+            }
+            
+            var title: String {
+                if subjectInfo != nil {
+                    return "Rediger faget"
+                } else {
+                    return "Lag et nytt fag"
+                }
+            }
         }
 
         public init() {}
@@ -27,7 +42,8 @@ extension Subject.Templates {
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Lag et fag", description: "Lag et fag"))
+                baseContext: context.baseContent
+//                .constant(.init(title: "Lag et fag", description: "Lag et fag"))
             ) {
                 Row {
                     Div {
@@ -35,7 +51,8 @@ extension Subject.Templates {
                         Div {
                             Div {
                                 H4 {
-                                    "Lag et nytt fag"
+                                    context.baseContent.title
+//                                    "Lag et nytt fag"
                                 }
                                 .class("modal-title")
                                 .id("create-modal-label")
@@ -48,6 +65,9 @@ extension Subject.Templates {
                                 Div {
                                     CreateForm(
                                         context: context.subjectInfo
+                                    )
+                                    ActionButtons(
+                                        subject: context.subjectInfo
                                     )
                                 }
                                 .class("p-2")
@@ -66,9 +86,50 @@ extension Subject.Templates {
                 Script().source("/assets/js/vendor/simplemde.min.js")
                 Script(source: "/assets/js/markdown-renderer.js")
                 Script(source: "/assets/js/markdown-editor.js")
-                Script().source("/assets/js/subject/create.js")
+                IF(context.subjectInfo.isDefined) {
+                    Script().source("/assets/js/subject/edit.js")
+//                    Script().source("/assets/js/subject/delete.js") // Might add later
+                }.else {
+                    Script().source("/assets/js/subject/create.js")
+                }
             }
         }
+        
+        struct ActionButtons: HTMLComponent {
+
+            @TemplateValue(Subject?.self)
+            var subject
+
+            var body: HTML {
+                Unwrap(subject) { subject in
+                    Button {
+                        " Lagre endringer"
+                    }
+                    .type(.button)
+                    .on(click: "editSubject(" + subject.id + ")")
+                    .button(style: .success)
+                    .isRounded()
+                    .margin(.two, for: .right)
+
+                    Button {
+                        " Slett"
+                    }
+                    .type(.button)
+                    .on(click: "deleteSubject(" + subject.id + ")")
+                    .button(style: .danger)
+                    .isRounded()
+                }.else {
+                    Button {
+                        " Lagre"
+                    }
+                    .type(.button)
+                    .on(click: "createSubject()")
+                    .button(style: .success)
+                    .isRounded()
+                }
+            }
+        }
+        
     }
 }
 
@@ -106,24 +167,6 @@ struct CreateForm: HTMLComponent {
                     .required()
             }
 
-            Div {
-                Label {
-                    "Fargekode"
-                }
-                .for("create-subject-color-class")
-                .class("col-form-label")
-
-                ColorCodePicker()
-            }
-            .class("form-group")
-
-            Button {
-                " Lagre"
-            }
-            .type(.button)
-            .on(click: "createSubject()")
-            .class("btn-rounded mb-3")
-            .button(style: .success)
         }
     }
 

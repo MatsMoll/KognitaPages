@@ -38,9 +38,9 @@ extension Subject.Templates {
 
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Kompendie", description: ""))
+                baseContext: .constant(.init(title: "Kompendium", description: ""))
             ) {
-                PageTitle(title: "Kompendie", breadcrumbs: breadcrumbItems)
+                PageTitle(title: "Kompendium", breadcrumbs: breadcrumbItems)
                 Container {
                     Row {
                         Div {

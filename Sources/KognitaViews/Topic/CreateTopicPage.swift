@@ -33,11 +33,26 @@ extension Topic.Templates {
                 self.subject = subject
                 self.topicInfo = topicInfo
             }
+            
+            var baseContent: BaseTemplateContent {
+                .init(
+                    title: title,
+                    description: title
+                )
+            }
+            
+            var title: String {
+                if topicInfo != nil {
+                    return "Rediger undertema"
+                } else {
+                    return "Lag et undertema"
+                }
+            }
         }
 
         var breadcrumbs: [BreadcrumbItem] {
             [
-                BreadcrumbItem(link: "/subjects", title: "Fag oversikt"),
+                BreadcrumbItem(link: "/subjects", title: "Fagoversikt"),
                 BreadcrumbItem(link: ViewWrapper(view: context.subject.subjectUri), title: ViewWrapper(view: context.subject.name))
             ]
         }
@@ -45,9 +60,9 @@ extension Topic.Templates {
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Lag temaer", description: "Lag temaer"))
+                baseContext: context.baseContent
             ) {
-                PageTitle(title: "Lag et tema", breadcrumbs: breadcrumbs)
+                PageTitle(title: context.baseContent.title, breadcrumbs: breadcrumbs)
                 Card {
                     DismissableError()
                     Form {
@@ -55,7 +70,7 @@ extension Topic.Templates {
                             Input()
                                 .type(.text)
                                 .id("create-topic-name")
-                                .placeholder("Sannsynlighet")
+                                .placeholder("Likninger med en ukjent")
                                 .required()
                                 .value(Unwrap(context.topicInfo) { $0.name })
                         }
@@ -108,7 +123,7 @@ extension Topic.Templates {
             var body: HTML {
                 Unwrap(topic) { topic in
                     Button {
-                        " Lagre"
+                        " Lagre endringer"
                     }
                     .type(.button)
                     .on(click: "editTopic(" + topic.id + ")")
