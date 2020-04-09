@@ -33,6 +33,20 @@ extension Subtopic.Templates {
                 self.selectedTopicId = subtopicInfo?.topicId
 //                self.topics = .init(topics: topics, selectedSubtopicId: subtopicInfo?.topicId)
             }
+            
+            var baseContent: BaseTemplateContent {
+                .init(
+                    title: title,
+                    description: title
+                )
+            }
+            var title: String {
+                if subtopicInfo != nil {
+                    return "Rediger undertema"
+                } else {
+                    return "Lag et undertema"
+                }
+            }
         }
 
         public init() {}
@@ -42,17 +56,13 @@ extension Subtopic.Templates {
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Lag undertema", description: "Lag undertema"))
+                baseContext: context.baseContent
             ) {
                 Div {
                     Div {
                         H4 {
                             context.subject.name
-                            IF(context.subtopicInfo.isDefined) {
-                                " | Lag nytt undertema"
-                            }.else {
-                                " | Rediger undertema"
-                            }
+                            " | " + context.baseContent.title
                         }
                         .class("modal-title")
                         .id("create-modal-label")
@@ -116,7 +126,7 @@ extension Subtopic.Templates {
                         .type(.text)
                         .class("form-control")
                         .id("subtopic-name")
-                        .placeholder("Sannsynlighet")
+                        .placeholder("Multiplikasjon")
                         .value(Unwrap(subtopicInfo) { $0.name })
                         .required()
                     Small {
