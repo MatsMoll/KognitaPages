@@ -21,11 +21,11 @@ extension Subject.Templates {
 
         var body: HTML {
             IF(subjects.isEmpty) {
-                Text { "Du har ingen aktive emner enda. Gå inn på et emnet for å gjøre det aktivt!" }
+                Text { "Du har ingen aktive emner ennå. Gå inn på et emnet for å gjøre det aktivt!" }
                     .style(.heading3)
                     .margin(.four, for: .vertical)
             }.else {
-                Text { "Dine emner!" }
+                Text { "Dine emner" }
                     .style(.heading3)
                 Row {
                     ForEach(in: subjects) { subject in
