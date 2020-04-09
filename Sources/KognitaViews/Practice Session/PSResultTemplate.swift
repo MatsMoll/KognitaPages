@@ -45,6 +45,10 @@ struct BreadcrumbItem {
     let title: ViewWrapper
 }
 
+extension PracticeSession {
+    public enum Templates {}
+}
+
 extension PracticeSession.Templates {
     public struct Result: HTMLTemplate {
         
@@ -75,20 +79,40 @@ extension PracticeSession.Templates {
                 }
                 return achievedScore / maxScore
             }
-            
+
+            var timeUsedString: String { return timeUsed.timeString }
+
+            var averageTimePerTaskString: String? {
+                guard tasks.isEmpty == false else { return nil }
+                let timeUsedPerTask = timeUsed / TimeInterval(tasks.count)
+                var timeString = timeUsedPerTask.timeString + " per oppgave"
+
+                if timeUsedPerTask >= 20 {
+                    timeString += " 💪"
+                } else if timeUsedPerTask >= 10 {
+                    timeString += " 🤩"
+                } else {
+                    timeString += " 🏃‍♂️💨"
+                }
+                return timeString
+            }
+
             var singleStats: [SingleStatisticCardContent] {
                 [
                     .init(
                         title: "Snitt score på øvingen",
-                        mainContent: accuracyString
+                        mainContent: accuracyString,
+                        details: nil
                     ),
                     .init(
                         title: "Antall oppgaver utført",
-                        mainContent: numberOfTasks
+                        mainContent: numberOfTasks,
+                        details: nil
                     ),
                     .init(
                         title: "Øvingstid",
-                        mainContent: timeUsed.timeString
+                        mainContent: timeUsedString,
+                        details: averageTimePerTaskString
                     ),
                 ]
             }
@@ -144,14 +168,16 @@ extension PracticeSession.Templates {
                             Div {
                                 SingleStatisticCard(
                                     title: statistic.title,
-                                    mainContent: statistic.mainContent
+                                    mainContent: statistic.mainContent,
+                                    moreDetails: statistic.details
                                 )
                             }.column(width: .six, for: .large)
                         }
                         Div {
                             SingleStatisticCard(
                                 title: "Tidspunkt øvingen startet",
-                                mainContent: context.startedAt.style(date: .long, time: .short)
+                                mainContent: context.startedAt.style(date: .long, time: .short),
+                                moreDetails: .constant(nil)
                             )
                         }.column(width: .six, for: .large)
                     }
@@ -211,14 +237,30 @@ extension PracticeSession.Templates {
 }
 
 extension PracticeSession.Templates.Result.Context {
-    var numberOfTasks: String { "\(tasks.count)" }
+    var numberOfTasks: String {
+        let taskCount = tasks.count
+        var taskCountString = "\(taskCount)"
+
+        if taskCount >= 20 {
+            taskCountString += " 🔥"
+        } else if taskCount >= 10 {
+            taskCountString += " 🤩"
+        } else if taskCount >= 5 {
+            taskCountString += " 😎"
+        }
+        return taskCountString
+    }
     var readableAccuracy: Double { (10000 * accuracyScore).rounded() / 100 }
     var accuracyString: String {
         var text = "\(readableAccuracy)%"
-        if readableAccuracy > 90 {
+        if readableAccuracy >= 100 {
+            text += " 💯"
+        } else if readableAccuracy > 80 {
             text += " 🏆"
-        } else if readableAccuracy > 70 {
+        } else if readableAccuracy > 60 {
             text += " 🔥"
+        } else if readableAccuracy > 30 {
+            text += " 😎"
         }
         return text
     }
@@ -226,7 +268,4 @@ extension PracticeSession.Templates.Result.Context {
     var title: String {
         "Øving"
     }
-//    var startPractiseSessionCall: String {
-//        "startPracticeSessionWithTopicIDs(\(topicResults.map(\.topicId)), \(subject.id))"
-//    }
 }

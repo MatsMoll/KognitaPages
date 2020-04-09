@@ -395,7 +395,7 @@ struct SearchFetch: HTMLComponent {
         """
         var lastFetch = new Date();
         function \(functionName)() {
-          if (Math.abs(lastFetch - new Date()) < 1000) { return; }
+          if (Math.abs(lastFetch - new Date()) < 100) { return; }
           lastFetch = new Date(); let query = $("#\(request.formID)").serializeArray().reduce(function (r, v) { return r + v.name + "=" + encodeURI(v.value) + "&"; }, "").slice(0, -1)
           fetch("\(request.url)?" + query, {
               method: "GET",
@@ -414,6 +414,7 @@ struct SearchFetch: HTMLComponent {
             $("#\(request.resultID)").html(html);
           });
         }
+        $(document).ready(function () { $('#\(request.formID) input[type=checkbox]').change(function () { \(functionName)() }); });
         """
         return NodeList {
 //            form.scripts
