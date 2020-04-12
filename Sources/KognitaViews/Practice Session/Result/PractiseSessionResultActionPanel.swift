@@ -65,7 +65,7 @@ public struct PractiseSessionResultActionPanel: HTMLComponent {
 
 extension PracticeSession.Templates.Result.Context {
     var startPractiseSessionCall: String {
-        "startPracticeSessionWithTopicIDs(\(topicResults.map(\.topicId)), \(subject.id)"
+        "startPracticeSessionWithTopicIDs(\(topicResults.map(\.topicId)), \(subject.id))"
     }
     
     var goToCompendium: String {
