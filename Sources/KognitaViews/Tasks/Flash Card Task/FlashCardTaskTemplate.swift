@@ -88,7 +88,24 @@ extension FlashCardTask.Templates {
                     .on(click: "revealSolution();")
                 }
             }
+            .overSolutionCard {
+                Card {
+                    Text { "Vi estimerer ..." }
+                        .style(.heading5)
+
+                    Span().id("estimate-spinner")
+
+                    Text { "" }
+                        .id("answer-estimate")
+                        .display(.none)
+                        .style(.heading4)
+                }
+                .id("estimated-score-card")
+                .display(.none)
+
+            }
             .underSolutionCard {
+
                 Card {
                     Input()
                         .id("next-task")
