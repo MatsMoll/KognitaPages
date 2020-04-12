@@ -22,10 +22,10 @@ struct KognitaProgressBar: HTMLComponent, AttributeNode {
         )
             .bar(size: .medium)
             .add(attributes: attributes)
-        .modify(if: 0.0..<50.0 ~= value) {
+        .modify(if: 0.0..<40.0 ~= value) {
             $0.bar(style: .danger)
         }
-        .modify(if: 50.0..<75.0 ~= value) {
+        .modify(if: 40.0..<75.0 ~= value) {
             $0.bar(style: .warning)
         }
         .modify(if: 75.0...100.0 ~= value) {
