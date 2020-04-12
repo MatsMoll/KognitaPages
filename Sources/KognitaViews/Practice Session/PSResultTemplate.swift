@@ -183,9 +183,7 @@ extension PracticeSession.Templates {
                     }
                 }
                 .secondary {
-                    PractiseSessionResultActionPanel.init(
-                        context: context
-                    )
+                    PractiseSessionResultActionPanel(context: context)
                 }
                 
                 Row {
