@@ -124,7 +124,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
     public var body: HTML {
         BaseTemplate(context: .init(
             title: "Oppgave",
-            description: "Lær ved å øve"
+            description: "Lær mer ved å øve"
         )) {
             Container {
                 PageTitle(title: Strings.exerciseMainTitle.localized() + " " + context.currentTaskIndex)

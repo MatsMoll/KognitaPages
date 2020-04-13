@@ -67,7 +67,7 @@ extension Pages {
             .init(
                 title: "1. Introduksjon",
                 details: """
-                kognita.no (heretter «Nettsiden») drives av AlphaDev, organisasjonsnummer 923022333 (heretter «Tjenestetilbyder»). På nettstedet kan du som bruker delta i et nasjonalt samfunn for kompetanseutvikling i enkeltemner ved universiteter. Tjenesten gir brukere tilgang til ulike utdaninngstjenester, slik som å øve på og lage innhold i forskjellige enkeltemner og utføre eksisterende eksamensoppgaver.
+                kognita.no (heretter «Nettsiden») drives av AlphaDev, organisasjonsnummer 923022333 (heretter «Tjenestetilbyder»). På nettstedet kan du som bruker delta i et nasjonalt samfunn for kompetanseutvikling i enkeltemner ved universiteter. Tjenesten gir brukere tilgang til ulike utdanningstjenester, som å øve på og lage innhold i forskjellige enkeltemner og utføre eksisterende eksamensoppgaver.
                 Gjennom å ha tilgang til, besøke og bruke Tjenesten, samtykker du i de til enhver tid gjeldende brukervilkårene. Dersom du er under 15 år må du be en av dine foreldre eller foresatte om å gå igjennom disse vilkårene sammen med deg, slik at dere sammen kan godkjenne disse.
                 Tjenestetilbyders kundeservice er tilgjengelig på: Kundeservice@Kognita.no.
                 """
@@ -76,7 +76,7 @@ extension Pages {
                 title: "2. Våre forpliktelser",
                 details:  """
                 Når du oppretter en bruker hos Tjenestetilbyder vil du deretter få tilgang til våre utdanningstjenester. Du kan til enhver tid logge deg inn på Nettsiden og få tilgang. Tjenesten har som mål å ha en oppetid på 99,9%, men Tjenestetilbyder gir ingen garantier knyttet til dette.
-                Du kan når som helst velge å avslutte din tilgang til Tjenesten. Kontakt i så tilfelle vår kundeservice, som vil bistå deg å slette din brukerprofil.
+                Du kan når som helst velge å avslutte din tilgang til Tjenesten. Kontakt i så tilfelle vår kundeservice, som vil bistå deg med å slette din brukerprofil.
                 """
             ),
             .init(
@@ -94,7 +94,7 @@ extension Pages {
 //                title: "4. Angrerett og refusjon",
 //                details: """
 //                Når du kjøper tilgang til tjenesten får du tilgang til de digitale tjenestene umiddelbart. Du samtykker til at leveringen påbegynnes umiddelbart og at du derfor ikke har angrerett på kjøpet, jf. angrerettlovens § 22 bokstav n.
-//                Dersom det er noe galt med levering av tjenestene vil vi naturligvis ordne dette ved å utbedre problemet. Ved feil ber vi deg ta kontakt med oss på kundeservice raskest mulig slik at vi kan løse problemet
+//                Dersom det er noe galt med levering av tjenestene vil vi naturligvis ordne dette ved å utbedre problemet. Ved feil ber vi deg ta kontakt med oss på kundeservice raskest mulig slik at vi kan løse problemet.
 //                """
 //            ),
             .init(

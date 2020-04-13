@@ -220,7 +220,7 @@ extension SubjectTest.Templates {
                                 Card {
                                     KognitaProgressBadge(value: result.percentage.timesHundred.twoDecimals)
                                     Text {
-                                        "Antall poenge: "
+                                        "Antall poeng: "
                                         result.score.twoDecimals
                                     }
                                     Text {

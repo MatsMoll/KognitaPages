@@ -17,7 +17,7 @@ extension User.Templates {
             public init(token: User.VerifyEmail.EmailContent) {
                 self.authBase = .init(
                     title: "Verifiser eposten din | Kognita",
-                    description: "Verifiser eposten din, og få tilgang til alle våre funksjoner",
+                    description: "Verifiser eposten din og få tilgang til alle våre funksjoner",
                     errorMessage: nil
                 )
                 self.token = token

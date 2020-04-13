@@ -64,7 +64,7 @@ extension User.Templates {
                             .value(Unwrap(context.submittedForm) { $0.username })
                     }
                     .invalidFeedback {
-                        "Brukernavnet må være lengre enn tre bokstaver og bare inneholde bokstaver og tall."
+                        "Brukernavnet må være lengre enn tre bokstaver og kan bare inneholde bokstaver og tall."
                     }
 
                     FormGroup(label: Strings.mailTitle.localized()) {

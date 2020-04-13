@@ -70,7 +70,7 @@ extension FlashCardTask.Templates {
                             }
                         }
                         .id("flash-card-answer")
-                        .placeholder("Skriv et passende svar, eller trykk på *sjekk svar* for å se løsningen")
+                        .placeholder("Skriv et passende svar eller trykk på *sjekk svar* for å se løsningen")
                     }
                     .margin(.two, for: .bottom)
 
