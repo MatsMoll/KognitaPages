@@ -11,9 +11,12 @@ import KognitaCore
 extension TaskDiscussion.Pivot.Response.Details{
     var fetchAResponseCall: String { "fetchADiscussionResponse(this)" }
 }
-struct DiscussionResponse: HTMLPage {
+
+
+struct DiscussionResponse: HTMLComponent {
 
     let response: TemplateValue<TaskDiscussion.Pivot.Response.Details>
+
 
     public var body: HTML {
         Div {
@@ -31,17 +34,21 @@ struct DiscussionResponse: HTMLPage {
                             Small { createdAt.style(date: .short, time: .short) }
                                 .margin(.one, for: .left)
                         }
+
+                        IF(response.isNew) {
+                            Span { "New " }.class("badge badge-primary")
+                        }
                     }
                     .style(.heading5)
                     .margin(.zero, for: .top)
-
+                    
                     Text {
                         response.response
                             .escaping(.unsafeNone)
                     }
                     .style(.lead)
                     .class("render-markdown")
-                    
+
                     Button {
                         "Legg til kommentar"
                     }
