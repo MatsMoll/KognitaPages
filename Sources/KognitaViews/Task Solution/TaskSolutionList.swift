@@ -34,9 +34,9 @@ extension TaskSolution.Templates {
 
                 Text { "For et godt løsningsforslag: " }
                 UnorderedList {
-                    ListItem { "Ha et løsningsforslag på ca. 40-150 ord. Dette for å holde løsningsforslaget direktet, men også utdypende nok." }
-                    ListItem { "Finn et bildet som kan beskrive løsningen hvis dette er mulig." }
-                    ListItem { "Finn en kilde til løsningsforslaget slik at man kan lese mer hvis nødvending. Her anbefales nettresurser for å gjøre det lettere tilgjengelig." }
+                    ListItem { "Ha et løsningsforslag på ca. 40-150 ord. Dette sørger for å holde løsningsforslaget direkte samtidig som det er utdypende nok." }
+                    ListItem { "Legg til et bilde som kan beskrive løsningen hvis det er mulig." }
+                    ListItem { "Legg ved en kilde til løsningsforslaget slik at man kan lese mer hvis nødvending. Vi anbefaler nettresurser for å gjøre fagstoffet lettere tilgjengelig." }
                     ListItem { "Punktlister eller annen strukturert informasjon anbefales også." }
                 }
             }
@@ -97,7 +97,7 @@ extension TaskSolution.Templates {
                             .margin(.two, for: .left)
                         }.else {
                             Badge {
-                                "Ikke verifisert enda"
+                                "Ikke verifisert ennå"
                             }
                             .background(color: .warning)
                             .margin(.two, for: .left)

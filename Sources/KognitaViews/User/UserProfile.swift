@@ -99,7 +99,7 @@ extension User.Templates {
                         }
 
                         Text {
-                            "Dine emner!"
+                            "Dine emner"
                         }
                         .style(.heading2)
 

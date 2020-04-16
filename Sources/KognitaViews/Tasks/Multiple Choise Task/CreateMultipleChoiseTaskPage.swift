@@ -161,7 +161,7 @@ extension MultipleChoiseTask.Templates {
                         .text(color: .dark)
 
                         CustomControlInput(
-                            label: "Ved å velge denne kan man bruke oppgaven på prøver, men ikke til å øve",
+                            label: "Ved å velge denne kan man bruke oppgaven på prøver men ikke til å øve",
                             type: .checkbox,
                             id: "create-multiple-testable"
                         )

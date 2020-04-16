@@ -59,7 +59,7 @@ struct FormCard: HTMLComponent {
 }
 
 extension FlashCardTask.Templates.Create.Context {
-    var modalTitle: String { content.subject.name + " | Lag tekst oppgave"}
+    var modalTitle: String { content.subject.name + " | Lag tekstoppgave"}
     var subjectUri: String { "/subjects/\(content.subject.id)" }
     var subjectContentOverviewUri: String { "/creator/subjects/\(content.subject.id)/overview" }
 
@@ -113,18 +113,18 @@ extension FlashCardTask.Templates {
 
         var breadcrumbs: [BreadcrumbItem] {
             [
-                BreadcrumbItem(link: "/subjects", title: "Fag oversikt"),
+                BreadcrumbItem(link: "/subjects", title: "Fagoversikt"),
                 BreadcrumbItem(link: ViewWrapper(view: context.subjectUri), title: ViewWrapper(view: context.content.subjectName)),
-                BreadcrumbItem(link: ViewWrapper(view: context.subjectContentOverviewUri), title: "Innholds oversikt")
+                BreadcrumbItem(link: ViewWrapper(view: context.subjectContentOverviewUri), title: "Innholdsoversikt")
             ]
         }
 
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Lag Oppgave", description: "Lag Oppgave"))
+                baseContext: .constant(.init(title: "Lag oppgave", description: "Lag oppgave"))
             ) {
-                PageTitle(title: "Lag tekst oppgave", breadcrumbs: breadcrumbs)
+                PageTitle(title: "Lag tekstoppgave", breadcrumbs: breadcrumbs)
                 IF(context.wasUpdated) {
                     Alert {
                         "Endringene ble lagret"
@@ -164,7 +164,7 @@ extension FlashCardTask.Templates {
                     }
 
                     Text {
-                        "Eksamens oppgave?"
+                        "Eksamensoppgave?"
                     }
                     .style(.heading3)
                     .text(color: .dark)
@@ -214,7 +214,7 @@ extension FlashCardTask.Templates {
                         .placeholder("Du har gitt en funksjon ...")
                     }
                     .customLabel {
-                        Text { "Innledelse" }
+                        Text { "Innledning" }
                             .style(.heading3)
                             .text(color: .dark)
                     }
@@ -247,7 +247,7 @@ extension FlashCardTask.Templates {
                                     .escaping(.unsafeNone)
                             }
                         }
-                        .placeholder("Gitt at funksjonen er konveks, så fører det til at ...")
+                        .placeholder("Gitt at funksjonen er konveks, fører det til at ...")
                         .onChange { editor in
                             Script.solutionScore(divID: "solution-req", editorName: editor)
                         }

@@ -162,7 +162,7 @@ extension TaskSession.Templates.History {
                 }
                 .else {
                     Text {
-                        "Du har ikke fullført noen øvinger enda. Gå inn på et fag for å starte 🔥"
+                        "Du har ikke fullført noen øvinger ennå. Gå inn på et fag for å starte! 🔥"
                     }
                     .style(.lead)
                 }

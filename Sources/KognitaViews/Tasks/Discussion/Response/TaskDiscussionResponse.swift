@@ -43,7 +43,7 @@ struct DiscussionResponse: HTMLPage {
                     .class("render-markdown response")
                     
                     Button {
-                        "Legg til kommentar"
+                        "Legg til en kommentar"
                     }
                     .button(style: .light)
                     .button(size: .extraSmall)

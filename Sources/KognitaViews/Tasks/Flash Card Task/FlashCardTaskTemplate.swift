@@ -70,7 +70,7 @@ extension FlashCardTask.Templates {
                             }
                         }
                         .id("flash-card-answer")
-                        .placeholder("Skriv et passende svar, eller trykk på *sjekk svar* for å se løsningen")
+                        .placeholder("Skriv et passende svar eller trykk på *sjekk svar* for å se løsningen")
                     }
                     .margin(.two, for: .bottom)
 
@@ -88,7 +88,24 @@ extension FlashCardTask.Templates {
                     .on(click: "revealSolution();")
                 }
             }
+            .overSolutionCard {
+                Card {
+                    Text { "Vi estimerer ..." }
+                        .style(.heading5)
+
+                    Span().id("estimate-spinner")
+
+                    Text { "" }
+                        .id("answer-estimate")
+                        .display(.none)
+                        .style(.heading4)
+                }
+                .id("estimated-score-card")
+                .display(.none)
+
+            }
             .underSolutionCard {
+
                 Card {
                     Input()
                         .id("next-task")

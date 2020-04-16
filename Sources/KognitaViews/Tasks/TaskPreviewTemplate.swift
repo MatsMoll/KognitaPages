@@ -97,6 +97,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
     let context: TemplateValue<TaskPreviewTemplateContext>
     let actionCard: HTML
     var underSolutionCard: HTML = ""
+    private var overSolutionCard: HTML = ""
     var customScripts: HTML = ""
 
     init(context: TemplateValue<TaskPreviewTemplateContext>, @HTMLBuilder actionCard: () -> HTML) {
@@ -106,25 +107,30 @@ public struct TaskPreviewTemplate: HTMLComponent {
         self.customScripts = ""
     }
 
-    init(context: TemplateValue<TaskPreviewTemplateContext>, actionCard: HTML, underSolutionCard: HTML, customScripts: HTML) {
+    init(context: TemplateValue<TaskPreviewTemplateContext>, actionCard: HTML, overSolutionCard: HTML, underSolutionCard: HTML, customScripts: HTML) {
         self.context = context
         self.actionCard = actionCard
+        self.overSolutionCard = overSolutionCard
         self.underSolutionCard = underSolutionCard
         self.customScripts = customScripts
     }
 
     func underSolutionCard(@HTMLBuilder _ card: () -> HTML) -> TaskPreviewTemplate {
-        TaskPreviewTemplate(context: context, actionCard: actionCard, underSolutionCard: card(), customScripts: customScripts)
+        TaskPreviewTemplate(context: context, actionCard: actionCard, overSolutionCard: overSolutionCard, underSolutionCard: card(), customScripts: customScripts)
+    }
+
+    func overSolutionCard(@HTMLBuilder _ card: () -> HTML) -> TaskPreviewTemplate {
+        TaskPreviewTemplate(context: context, actionCard: actionCard, overSolutionCard: card(), underSolutionCard: underSolutionCard, customScripts: customScripts)
     }
 
     func scripts(@HTMLBuilder _ scripts: () -> HTML) -> TaskPreviewTemplate {
-        TaskPreviewTemplate(context: context, actionCard: actionCard, underSolutionCard: underSolutionCard, customScripts: scripts())
+        TaskPreviewTemplate(context: context, actionCard: actionCard, overSolutionCard: overSolutionCard, underSolutionCard: underSolutionCard, customScripts: scripts())
     }
 
     public var body: HTML {
         BaseTemplate(context: .init(
             title: "Oppgave",
-            description: "Lær ved å øve"
+            description: "Lær mer ved å øve"
         )) {
             Container {
                 PageTitle(title: Strings.exerciseMainTitle.localized() + " " + context.currentTaskIndex)
@@ -149,6 +155,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
                     .column(width: .seven, for: .large)
 
                     Div {
+                        overSolutionCard
                         TaskSolutionCard()
                         DismissableError()
                         underSolutionCard

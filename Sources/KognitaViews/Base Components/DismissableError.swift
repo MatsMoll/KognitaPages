@@ -25,7 +25,7 @@ struct DismissableError: HTMLComponent, AttributeNode {
 
     var body: HTML {
         Alert {
-            Bold { "En Feil Oppstod - " }
+            Bold { "En feil oppstod - " }
             Span().id(messageID)
         }
         .isDismissable(false)

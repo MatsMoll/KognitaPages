@@ -46,7 +46,7 @@ extension Pages {
                                     .style(.heading1)
 
                                     Text {
-                                        "Men dette er ikke din feil."
+                                        "Dette er ikke din feil."
                                     }
                                     .style(.heading4)
                                     .text(color: .muted)

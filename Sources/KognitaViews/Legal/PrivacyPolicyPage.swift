@@ -36,7 +36,7 @@ extension Pages {
         public var body: HTML {
 
             BaseTemplate(
-                context: .init(title: "Personværn", description: "Personværn")
+                context: .init(title: "Personvern", description: "Personvern")
             ) {
                 KognitaNavigationBar()
                 Container {
@@ -74,8 +74,8 @@ extension Pages {
             .init(
                 title: "1. Hvilke opplysninger behandles og hvordan brukes opplysningene",
                 details: """
-                Vi samler bare inn personopplysninger som er nødvendige for at du skal kunne bruke Tjenesten. Dette betyr at vi ikke selger noen personopplysninger videre til tredjeparter, og alt holdes internt i Tjenesten med mindre vi er lovpålagt til å dele. Opplysningene som blir samlet inn er e-postadresse, og brukeraktiviteten i Tjenesten.
-                For å kunne identifisere de forskjellige brukerene ved innlogging, så bruker Tjenesten informasjonskapsler («cookies») som er en liten tekstfil tilpasset din datamskin, mobiltelefon eller nettbrett.
+                Vi samler bare inn personopplysninger som er nødvendige for at du skal kunne bruke Tjenesten. Dette betyr at vi ikke selger noen personopplysninger videre til tredjeparter, og alt holdes internt i Tjenesten med mindre vi er lovpålagt til å dele. Opplysningene som blir samlet inn er e-postadresse og brukeraktiviteten i Tjenesten.
+                For å kunne identifisere de forskjellige brukerene ved innlogging, bruker Tjenesten informasjonskapsler («cookies») som er en liten tekstfil tilpasset din datamskin, mobiltelefon eller nettbrett.
                 """
             ),
             .init(
@@ -105,7 +105,7 @@ extension Pages {
                 title: "5. Rutiner for arkivering og sletting",
                 details: """
                 Vi lagrer dine personopplysninger hos oss så lenge det er nødvendig for det formål personopplysningene ble samlet inn for.
-                Dette betyr for eksempel at personopplysninger som vi behandler på grunnlag av ditt samtykke slettes hvis du trekker ditt samtykke. Personopplysninger vi behandler for å oppfylle en avtale med deg slettes når avtalen er oppfylt og alle plikter som følger av avtaleforholdet er oppfylt. Noen opplysninger har vi lovmessig plikt til å oppbevare i en viss periode, som f eks regnskapsmateriale. Opplysningene slettes da når fristen for oppbevaringsplikten har utløpt.
+                Dette betyr for eksempel at personopplysninger som vi behandler på grunnlag av ditt samtykke slettes hvis du trekker ditt samtykke. Personopplysninger vi behandler for å oppfylle en avtale med deg slettes når avtalen er oppfylt og alle plikter som følger av avtaleforholdet er oppfylt. Noen opplysninger har vi lovmessig plikt til å oppbevare i en viss periode, som f.eks regnskapsmateriale. Opplysningene slettes når fristen for oppbevaringsplikten har utløpt.
                 """
             ),
             .init(
@@ -123,7 +123,7 @@ extension Pages {
                 For å ta i bruk dine rettigheter må du ta skriftlig kontakt med oss. Vi vil svare på din henvendelse til oss så fort som mulig.
                 Vi vil kunne be deg om å bekrefte identiteten din eller å oppgi ytterligere informasjon før vi lar deg ta i bruk dine rettigheter overfor oss. Dette gjør vi for å være sikre på at vi kun gir tilgang til dine personopplysninger til deg - og ikke noen som gir seg ut for å være deg.
                 Du kan til enhver tid trekke tilbake ditt samtykke, dersom du har avgitt dette, for behandling av personopplysninger hos oss. Den enkleste måten å gjøre dette på, er å ta skriftlig kontakt med oss på kontakt@kognita.no.
-                Dersom du mener at vår behandling av personopplysninger ikke stemmer med det vi har beskrevet her eller at vi på andre måter bryter personvernlovgivningen, så kan du klage til Datatilsynet.
+                Dersom du mener at vår behandling av personopplysninger ikke stemmer med det vi har beskrevet her eller at vi på andre måter bryter personvernlovgivningen, kan du klage til Datatilsynet.
                 Du finner informasjon om hvordan kontakte Datatilsynet på Datatilsynets nettsider: www.datatilsynet.no.
                 """
             ),
@@ -136,7 +136,7 @@ extension Pages {
             .init(
                 title: "9. Kontaktinformasjon",
                 details: """
-                Du kan når som helst stille oss spørsmål om hvordan vi behandler dine brukerdata og gjøre dine ovennevnte rettigheter gjeldende, ved å kontakte vår Kundeservice på e- post: kontakt@kognita.no.
+                Du kan når som helst stille oss spørsmål om hvordan vi behandler dine brukerdata og gjøre dine ovennevnte rettigheter gjeldende, ved å kontakte vår Kundeservice på e-post: kontakt@kognita.no.
                 """
             )
         ]
