@@ -305,7 +305,7 @@ public struct MultipleChoiseTaskTestMode: HTMLTemplate {
         var body: HTML {
             Card {
                 Text {
-                    "Oppgave liste"
+                    "Oppgaveliste"
                 }
                 .style(.heading4)
                 .text(color: .dark)

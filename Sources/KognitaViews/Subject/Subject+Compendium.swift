@@ -203,7 +203,7 @@ private struct PracticeCard: HTMLComponent {
             Text { "Sjekk hvor mye du husker" }
                 .style(.heading3)
 
-            Text { "Med å ta en test vil stoffet sitte bedre, ifølge kognitiv forskning." }
+            Text { "Ved å ta en test vil stoffet sitte bedre ifølge kognitiv forskning." }
 
             Button {
                 MaterialDesignIcon(icon: .testTube)

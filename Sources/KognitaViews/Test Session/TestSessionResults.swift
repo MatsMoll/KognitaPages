@@ -234,13 +234,13 @@ extension TestSession.Templates {
 
             var body: HTML {
                 Card {
-                    Text { "Viste du at du kan øve med Kognita?" }
+                    Text { "Visste du at du kan øve med Kognita?" }
                         .style(.heading3)
                         .text(color: .dark)
 
-                    Text { "Prøve øvefunksjonen og øv litt på temane du hadde på prøven" }
+                    Text { "Prøv øvefunksjonen for å øve litt på temaene du hadde på denne prøven" }
 
-                    Button { "Begynn og øv" }
+                    Button { "Begynn å øve" }
                         .on(click: startPracticeSessionCall)
                         .button(style: .success)
                         .isRounded()

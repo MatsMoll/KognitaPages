@@ -44,7 +44,7 @@ extension SubjectTest.Templates {
 
         var breadcrumbs: [BreadcrumbItem] {
             [
-                BreadcrumbItem(link: "/subjects", title: "Fag oversikt")
+                BreadcrumbItem(link: "/subjects", title: "Fagoversikt")
             ]
         }
 
@@ -86,7 +86,7 @@ extension SubjectTest.Templates {
                                             .isChecked(test.isTeamBasedLearning)
                                     }
                                     .description {
-                                        "Ved å velge team based learning, så kan studentene ikke se detaliert resultat rett etter prøven men bare det totale resultatet"
+                                        "Ved å velge team based learning, kan ikke studentene se detaliert resultat rett etter prøven. Ved gjennomført prøve ser studentene kun antall riktige de oppnådde."
                                     }
 
                                     FormGroup(label: "Planlagt dato") {
@@ -102,7 +102,7 @@ extension SubjectTest.Templates {
                                             .id("create-is-tbl")
                                     }
                                     .description {
-                                        "Ved å velge team based learning, så kan studentene ikke se detaliert resultat rett etter prøven men bare det totale resultatet"
+                                        "Ved å velge team based learning, kan ikke studentene se detaliert resultat rett etter prøven. Ved gjennomført prøve ser studentene kun antall riktige de oppnådde."
                                     }
 
                                     FormGroup(label: "Planlagt dato") {

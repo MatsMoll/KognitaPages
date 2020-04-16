@@ -57,7 +57,7 @@ extension TaskDiscussion.Templates {
 
                     Div {
                         IF(context.isEmpty) {
-                            Text { "Det finnes ingen diskusjoner enda! Om det er noe du lurer på, så er det bare å spørre!" }
+                            Text { "Det finnes ingen diskusjoner ennå! Om det er noe du lurer på er det bare å spørre!" }
                         }
                         .else {
                             ForEach(in: context) { (discussion: TemplateValue<TaskDiscussion.Details>) in
@@ -91,7 +91,7 @@ extension TaskDiscussion.Templates {
                                     }
 
                                     Small {
-                                        "Spurt av: "
+                                        "Forfatter: "
                                         discussion.username
                                     }
                                 }
@@ -117,7 +117,7 @@ extension TaskDiscussion.Templates {
                     Text { "" }.style(.heading3).id("disc-description")
 
                     Small {
-                        "Spurt av: "
+                        "Forfatter: "
                     }
                     .id("disc-username")
 

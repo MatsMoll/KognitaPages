@@ -20,7 +20,7 @@ extension User.Templates.ResetPassword {
                     base = .init(
                         title: "Gjenopprett passord",
                         description: "Gjenopprett passord",
-                        alertMessage: "Du skal snart få en email med en link for å gjenopprette passordet ditt",
+                        alertMessage: "Du skal snart få en mail med en link for å gjenopprette passordet ditt",
                         alertStyle: .success
                     )
                 case .start:
