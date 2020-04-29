@@ -1,12 +1,10 @@
 import BootstrapKit
 
-
 protocol PageItemRepresentable {
     var url: String { get }
     var title: String { get }
     var isActive: Bool { get }
 }
-
 
 extension Array where Element: PageItemRepresentable {
     var lastPageItem: Element? {
@@ -120,7 +118,6 @@ struct Pagination<T: PageItemRepresentable>: HTMLComponent, AttributeNode {
         }
     }
 
-
     func isRounded(_ condition: Conditionable) -> Pagination {
         .init(items: items, isRounded: condition, attributes: attributes)
     }
@@ -196,4 +193,3 @@ struct Pagination<T: PageItemRepresentable>: HTMLComponent, AttributeNode {
         }
     }
 }
-

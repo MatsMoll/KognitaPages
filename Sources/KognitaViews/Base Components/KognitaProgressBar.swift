@@ -37,4 +37,3 @@ struct KognitaProgressBar: HTMLComponent, AttributeNode {
         .init(value: value, attributes: attributes)
     }
 }
-

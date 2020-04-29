@@ -17,7 +17,6 @@ struct TaskPreviewTemplateContext {
     let taskPath: String
     let currentTaskIndex: Int
 
-
     var subject: Subject { return taskContent.subject }
     var topic: Topic { return taskContent.topic }
     var task: Task { return taskContent.task }
@@ -171,7 +170,6 @@ public struct TaskPreviewTemplate: HTMLComponent {
                 }
                 .class("fixed-bottom")
                 .id("nav-card")
-
 
                 Modal(title: "Bra jobba!", id: "goal-completed") {
                     Text { "Bra jobba! 💪" }
@@ -330,8 +328,6 @@ function endSession() { $("#end-session-form").submit() }
     }
 }
 
-
-
 private struct PracticeSessionProgressBar: HTMLComponent {
 
     let context: TemplateValue<TaskPreviewTemplateContext>
@@ -379,7 +375,6 @@ private struct PracticeSessionProgressBar: HTMLComponent {
         }
     }
 }
-
 
 typealias StaticView = HTMLComponent
 typealias TemplateView = HTMLTemplate

@@ -4,7 +4,6 @@
 //
 //  Created by Mats Mollestad on 26/02/2019.
 //
-// swiftlint:disable line_length nesting
 
 import HTMLKit
 import BootstrapKit
@@ -36,7 +35,6 @@ struct CopyrightFooter: HTMLComponent {
         }.class("footer")
     }
 }
-
 
 struct KognitaFooter: HTMLComponent, AttributeNode {
 
@@ -79,7 +77,6 @@ struct KognitaFooter: HTMLComponent, AttributeNode {
                         .modify(if: !isDark) {
                             $0.text(color: .dark)
                         }
-
 
                         UnorderedList {
                             ForEach(in: itemLinks) { item in
@@ -124,11 +121,11 @@ struct KognitaFooter: HTMLComponent, AttributeNode {
     }
 
     let itemLinks: [ListItemLink.Context] = [
-        .init(title: "Om oss",          url: "#"),
-        .init(title: "Hjelp",           url: "#"),
-        .init(title: "Brukervilkår",    url: "/terms-of-service"),
-        .init(title: "Personvern",      url: "/privacy-policy"),
-        .init(title: "Kontakt oss",     url: "mailto:kontakt@kognita.no")
+        .init(title: "Om oss", url: "#"),
+        .init(title: "Hjelp", url: "#"),
+        .init(title: "Brukervilkår", url: "/terms-of-service"),
+        .init(title: "Personvern", url: "/privacy-policy"),
+        .init(title: "Kontakt oss", url: "mailto:kontakt@kognita.no")
     ]
 
     struct ListItemLink: HTMLComponent {

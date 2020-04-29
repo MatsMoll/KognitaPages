@@ -1,6 +1,5 @@
 import BootstrapKit
 
-
 struct Accordions<B>: HTMLComponent {
 
     let values: TemplateValue<[B]>
@@ -94,7 +93,6 @@ struct Accordions<B>: HTMLComponent {
     }
 }
 
-
 struct Accordion: HTMLComponent {
 
     let title: TemplateValue<String>
@@ -175,4 +173,3 @@ struct Accordion: HTMLComponent {
         .init(title: title, content: content, footer: footer())
     }
 }
-

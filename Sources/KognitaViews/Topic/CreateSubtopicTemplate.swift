@@ -33,7 +33,7 @@ extension Subtopic.Templates {
                 self.selectedTopicId = subtopicInfo?.topicId
 //                self.topics = .init(topics: topics, selectedSubtopicId: subtopicInfo?.topicId)
             }
-            
+
             var baseContent: BaseTemplateContent {
                 .init(
                     title: title,

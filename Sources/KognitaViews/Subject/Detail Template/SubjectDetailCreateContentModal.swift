@@ -49,8 +49,6 @@ extension Subject.Templates {
                                     "Gå inn på et tema og se hva som allerede finnes."
                                 }
 
-
-
                                 IF(isModerator) {
                                     Text {
                                         "Lag et tema"
@@ -73,8 +71,6 @@ extension Subject.Templates {
                                     }
                                 }
 
-
-
                                 Text {
                                     "Lag flervalgsoppgave"
                                 }
@@ -94,8 +90,6 @@ extension Subject.Templates {
                                 Text {
                                     "Dette passer bra for automatisk testing, men også for å teste grunnleggende teori som ikke inneholder mellomregning."
                                 }
-
-
 
                                 Text {
                                     "Lag innskrivingsoppgave"

@@ -1,6 +1,5 @@
 import BootstrapKit
 
-
 public struct FormGroup: HTMLComponent {
 
     public var attributes: [HTMLAttribute] = []
@@ -64,7 +63,6 @@ public struct FormGroup: HTMLComponent {
         .class("form-group")
         .add(attributes: attributes)
     }
-
 
     func description(@HTMLBuilder content: () -> HTML) -> FormGroup {
         .init(label: label, input: input, optionalContent: content(), invalidFeedback: invalidFeedback, validFeedback: validFeedback, attributes: attributes)
