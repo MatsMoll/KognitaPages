@@ -2,7 +2,6 @@ import Foundation
 import KognitaCore
 import BootstrapKit
 
-
 extension Task: MultipleSelectItemRepresentable {
     var itemName: String { question }
     var idRepresentable: String { String(id ?? 0) }
@@ -13,7 +12,6 @@ extension SubjectTest.ModifyResponse {
         Int(duration / 60)
     }
 }
-
 
 extension SubjectTest.Templates {
 
@@ -196,4 +194,3 @@ extension SubjectTest.Templates {
         }
     }
 }
-

@@ -177,7 +177,7 @@ extension MultipleChoiseTask.Templates {
                             }
                         }
                         .placeholder("Du har en gitt funksjon ...")
-                        
+
                     }
                     .customLabel {
                         Text {
@@ -304,7 +304,7 @@ extension MultipleChoiseTask.Templates {
                         .class("mb-3 mt-3")
                         .button(style: .success)
 
-                        Unwrap(context.deleteCall) { deleteCall in
+                        Unwrap(context.deleteCall) { _ in
 
                             Button {
                                 MaterialDesignIcon(icon: .delete)

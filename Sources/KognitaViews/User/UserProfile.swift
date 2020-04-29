@@ -113,7 +113,7 @@ extension User.Templates {
                     .column(width: .twelve)
                 }
             }
-            .scripts{
+            .scripts {
                 Script().source("https://cdn.jsdelivr.net/npm/marked/marked.min.js")
                 Script().source("/assets/js/markdown-renderer.js")
             }

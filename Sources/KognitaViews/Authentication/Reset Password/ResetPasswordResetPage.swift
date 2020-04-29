@@ -51,7 +51,7 @@ extension User.Templates.ResetPassword {
                         .type(.hidden)
                         .name("token")
                         .value(context.token)
-                    
+
                     FormGroup(label: Strings.passwordTitle.localized()) {
                         Input()
                             .type(.password)
@@ -68,7 +68,7 @@ extension User.Templates.ResetPassword {
                             .minLength(6)
                             .required()
                     }
-                    
+
                     Div {
                         Button {
                             "Endre passord"

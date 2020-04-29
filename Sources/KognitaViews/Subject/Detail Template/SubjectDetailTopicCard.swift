@@ -3,13 +3,12 @@
 //  KognitaViews
 //
 //  Created by Mats Mollestad on 10/12/2019.
-// swiftlint:disable line_length nesting
 
 import BootstrapKit
 import KognitaCore
 
 extension Subject.Templates.Details {
-    
+
     struct TopicList: HTMLComponent {
 
         @TemplateValue([Topic.UserOverview].self)

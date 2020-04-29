@@ -13,7 +13,6 @@ struct CustomControlInput: HTMLComponent, AttributeNode {
     let identifier: HTML
     private let isChecked: Conditionable
 
-
     public init(label: HTML, type: Input.Types, id: HTML) {
         self.label = Label { label }
         self.type = type

@@ -1,4 +1,3 @@
-
 import BootstrapKit
 
 struct SingleStatisticCardContent {
@@ -12,7 +11,7 @@ struct SingleStatisticCard: HTMLComponent, AttributeNode {
     let title: HTML
     let mainContent: HTML
     let moreDetails: TemplateValue<String?>
-    
+
     var attributes: [HTMLAttribute] = []
 
     var body: HTML {

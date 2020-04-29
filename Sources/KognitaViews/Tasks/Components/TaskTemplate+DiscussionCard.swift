@@ -39,7 +39,6 @@ extension TaskDiscussion.Templates {
 
         public typealias Context = [TaskDiscussion.Details]
 
-
         public var scripts: HTML {
             NodeList {
                 htmlBody.scripts
@@ -121,9 +120,7 @@ extension TaskDiscussion.Templates {
                     }
                     .id("disc-username")
 
-
                     Div().id("disc-responses").display(.none)
-
 
                     FormGroup(label: "Skriv en respons") {
                         MarkdownEditor(id: "create-discussion-response")

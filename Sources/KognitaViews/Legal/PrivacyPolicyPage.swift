@@ -1,6 +1,5 @@
 import BootstrapKit
 
-
 extension Pages {
     public struct PrivacyPolicy: HTMLPage {
 

@@ -17,7 +17,6 @@ struct CollapsingCard: HTML, AttributeNode {
         try body.prerender(formula)
     }
 
-
     private let id: HTML
     private let header: HTML
     private let contentNode: AddableAttributeNode

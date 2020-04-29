@@ -25,7 +25,7 @@ extension User.Templates {
         }
 
         let rootUrl: String
-        
+
         public init(rootUrl: String) {
             self.rootUrl = rootUrl
         }

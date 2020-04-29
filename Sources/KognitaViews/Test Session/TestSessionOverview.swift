@@ -1,7 +1,6 @@
 import BootstrapKit
 import KognitaCore
 
-
 extension TestSession {
     public enum Templates {}
 }

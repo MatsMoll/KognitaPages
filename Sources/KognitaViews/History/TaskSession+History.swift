@@ -143,7 +143,6 @@ extension TaskSession.Templates {
     }
 }
 
-
 extension TaskSession.Templates.History {
 
     struct SessionSection: HTMLComponent {

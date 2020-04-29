@@ -5,7 +5,7 @@ extension Script {
         self.init()
         attributes = [
             HTMLAttribute(attribute: "src", value: source),
-            HTMLAttribute(attribute: "type", value: "text/javascript"),
+            HTMLAttribute(attribute: "type", value: "text/javascript")
         ]
     }
 }
@@ -27,8 +27,12 @@ else {
 function initTextArea() {
 Array.from(document.getElementsByTagName("textarea")).forEach(function (text, index) {
     function resize () {
+        let doc = document.documentElement;
+        let left = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
+        let top = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
         text.style.height = 'auto';
         text.style.height = text.scrollHeight+'px';
+        window.scrollTo(left, top);
     }
     /* 0-timeout to get the already changed text */
     function delayedResize () {

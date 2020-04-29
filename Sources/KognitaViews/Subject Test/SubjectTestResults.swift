@@ -41,7 +41,7 @@ extension SubjectTest.Templates {
             }
         }
 
-        var breadcrumbs: [BreadcrumbItem]  {
+        var breadcrumbs: [BreadcrumbItem] {
             [
                 BreadcrumbItem(
                     link: "/subjects",
@@ -127,7 +127,6 @@ extension SubjectTest.Templates {
             }
         }
 
-
         struct MultipleChoiseTaskResult: HTMLComponent {
 
             let result: TemplateValue<SubjectTest.Results.MultipleChoiseTaskResult>
@@ -169,7 +168,7 @@ extension SubjectTest.Templates {
                         }
                         .class("render-markdown")
                         .style(.lead)
-                        
+
                         Text {
                             choise.numberOfSubmissions
                             " svar"
@@ -201,7 +200,6 @@ extension SubjectTest.Templates {
                 }
             }
         }
-
 
         struct UserResultSection: HTMLComponent {
 

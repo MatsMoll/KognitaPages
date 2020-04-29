@@ -24,11 +24,10 @@ extension HTMLRenderable {
     /// - Parameter type: The view type to render
     /// - Returns: Returns a rendered view in a `HTTPResponse`
     /// - Throws: If the formula do not exists, or if the rendering process fails
-    func render<T>(_ type: T.Type) throws -> HTTPResponse where T : HTMLPage {
+    func render<T>(_ type: T.Type) throws -> HTTPResponse where T: HTMLPage {
         return try HTTPResponse(headers: .init([("content-type", "text/html; charset=utf-8")]), body: render(raw: type))
     }
 }
-
 
 /// Captures all errors and transforms them into an internal server error.
 public final class HTMLKitErrorMiddleware<F: HTMLPage, S: HTMLTemplate>: Middleware, Service where S.Context == HTTPStatus {
@@ -49,7 +48,7 @@ public final class HTMLKitErrorMiddleware<F: HTMLPage, S: HTMLTemplate>: Middlew
                     return try res.encode(for: req)
                 }
                 }.catchFlatMap { error in
-                    switch (error) {
+                    switch error {
                     case let abort as AbortError:
                         return try self.handleError(for: req, status: abort.status)
                     default:
