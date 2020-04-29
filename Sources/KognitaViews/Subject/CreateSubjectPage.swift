@@ -20,14 +20,14 @@ extension Subject.Templates {
                 self.user = user
                 self.subjectInfo = subjectInfo
             }
-            
+
             var baseContent: BaseTemplateContent {
                 .init(
                     title: title,
                     description: title
                 )
             }
-            
+
             var title: String {
                 if subjectInfo != nil {
                     return "Rediger faget"
@@ -94,7 +94,7 @@ extension Subject.Templates {
                 }
             }
         }
-        
+
         struct ActionButtons: HTMLComponent {
 
             @TemplateValue(Subject?.self)
@@ -129,7 +129,7 @@ extension Subject.Templates {
                 }
             }
         }
-        
+
     }
 }
 

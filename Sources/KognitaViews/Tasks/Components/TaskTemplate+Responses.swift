@@ -14,7 +14,6 @@ extension GlobalAttributes {
     }
 }
 
-
 extension TaskPreviewTemplate {
 
     public struct Responses: HTMLTemplate {

@@ -17,7 +17,6 @@ extension AttributeNode {
     }
 }
 
-
 public struct Pages {}
 
 extension Pages {
@@ -38,7 +37,7 @@ extension Pages {
                 icon: .trophyOutline,
                 title: "Relevant innhold",
                 description: "Gjør eksamensoppgaver og innhold som er godkjent av faglærere"
-            ),
+            )
         ]
 
         public init() {}

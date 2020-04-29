@@ -139,7 +139,6 @@ struct ContentBaseTemplate: HTMLComponent {
         .scrollSpy(scrollSpy)
     }
 
-
     func active(path: TemplateValue<String>) -> ContentBaseTemplate {
         ContentBaseTemplate(base: self, activePath: path, header: header, scripts: scripts, modals: modals, scrollSpy: scrollSpy)
     }
@@ -160,7 +159,6 @@ struct ContentBaseTemplate: HTMLComponent {
         ContentBaseTemplate(base: self, activePath: activePath, header: header, scripts: scripts, modals: modals, scrollSpy: ScrollSpy(targetID: targetID, offset: offset))
     }
 
-
     struct KognitaNavigationBar: HTMLComponent {
 
         let userContext: TemplateValue<User>
@@ -176,7 +174,7 @@ struct ContentBaseTemplate: HTMLComponent {
                 link: "/practice-sessions/history",
                 icon: .history,
                 title: ViewWrapper(view: Strings.menuPracticeHistory.localized())
-            ),
+            )
         ]
 
         private let creatorTab = TabContent(
@@ -239,4 +237,3 @@ struct ContentBaseTemplate: HTMLComponent {
         }
     }
 }
-

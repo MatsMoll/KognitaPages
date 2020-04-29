@@ -33,14 +33,14 @@ extension Topic.Templates {
                 self.subject = subject
                 self.topicInfo = topicInfo
             }
-            
+
             var baseContent: BaseTemplateContent {
                 .init(
                     title: title,
                     description: title
                 )
             }
-            
+
             var title: String {
                 if topicInfo != nil {
                     return "Rediger undertema"

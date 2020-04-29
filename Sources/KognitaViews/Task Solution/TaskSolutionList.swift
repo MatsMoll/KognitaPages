@@ -1,3 +1,5 @@
+// swiftlint:disable multiple_closures_with_trailing_closure
+
 import BootstrapKit
 import KognitaCore
 
@@ -7,11 +9,10 @@ extension TaskSolution {
 
 extension TaskSolution.Templates {
     struct Requmendations: HTMLComponent, AttributeNode {
-        
+
         func copy(with attributes: [HTMLAttribute]) -> TaskSolution.Templates.Requmendations {
             .init(attributes: attributes)
         }
-
 
         var attributes: [HTMLAttribute]
 
@@ -67,7 +68,7 @@ extension TaskSolution.Templates {
         }
 
         public var body: HTML {
-            Accordions(values: context.solutions, title: { (solution: TemplateValue<TaskSolution.Response>, index: TemplateValue<Int>) in
+            Accordions(values: context.solutions, title: { (solution: TemplateValue<TaskSolution.Response>, _: TemplateValue<Int>) in
 
                 Text {
                     "Løsningsforslag av "
@@ -88,7 +89,7 @@ extension TaskSolution.Templates {
                     " personer"
 
                     Small {
-                        Unwrap(solution.approvedBy) { approvedBy in
+                        Unwrap(solution.approvedBy) { _ in
                             Badge {
                                 "Verifisert"
                                 MaterialDesignIcon(icon: .check)
@@ -104,7 +105,7 @@ extension TaskSolution.Templates {
                         }
                     }
                 }
-            }) { (solution: TemplateValue<TaskSolution.Response>, index: TemplateValue<Int>) in
+            }) { (solution: TemplateValue<TaskSolution.Response>, _: TemplateValue<Int>) in
 
                 IF(self.context.userID == solution.creatorID) {
                     MoreDropdown {

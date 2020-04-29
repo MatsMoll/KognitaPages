@@ -4,6 +4,7 @@
 //
 //  Created by Mats Mollestad on 20/10/2019.
 //
+// swiftlint:disable multiple_closures_with_trailing_closure
 
 import BootstrapKit
 
@@ -20,7 +21,7 @@ struct PageTitle: HTMLComponent, LocalizableNode {
         title = Localized(key: localizedKey)
     }
 
-    init<B>(_ localizedKey: String, with context: TemplateValue<B>) where B : Encodable {
+    init<B>(_ localizedKey: String, with context: TemplateValue<B>) where B: Encodable {
         title = Localized(key: localizedKey, context: context)
     }
 
@@ -34,7 +35,10 @@ struct PageTitle: HTMLComponent, LocalizableNode {
             Div {
                 Div {
                     Div {
-                        Breadcrumb(items: breadcrumbItems, isActive: { !$0.link.isDefined }) { item in
+                        Breadcrumb(
+                            items: breadcrumbItems,
+                            isActive: { !$0.link.isDefined }
+                        ) { item in
                             IF(item.link.isDefined) {
                                 Anchor {
                                     item.title

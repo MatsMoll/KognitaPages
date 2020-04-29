@@ -1,4 +1,3 @@
-
 import BootstrapKit
 import KognitaCore
 
@@ -61,8 +60,7 @@ public struct Dropdown: HTMLComponent, AttributeNode {
     }
 }
 
-
-fileprivate struct TopicTasks {
+private struct TopicTasks {
     let topic: Topic
     let tasks: [CreatorTaskContent]
 }
@@ -102,7 +100,7 @@ extension Subject.Templates {
             }
         }
 
-        var breadcrumbs: [BreadcrumbItem]  {
+        var breadcrumbs: [BreadcrumbItem] {
             [
                 BreadcrumbItem(link: "/subjects", title: "Fagoversikt"),
                 BreadcrumbItem(link: ViewWrapper(view: "/subjects/" + context.subject.id), title: ViewWrapper(view: context.subject.name))
@@ -299,7 +297,6 @@ struct FormCheck: HTMLComponent, AttributeNode {
     }
 }
 
-
 struct SearchCard: HTMLComponent {
 
     let context: TemplateValue<Subject.Templates.ContentOverview.Context>
@@ -366,7 +363,6 @@ struct SearchCard: HTMLComponent {
     }
 }
 
-
 extension Form {
     func fetch(url: String, queryFormID formID: String, resultTagID: String) -> SearchFetch {
         SearchFetch(request: .init(url: url, formID: formID, resultID: resultTagID), form: self)
@@ -422,6 +418,5 @@ struct SearchFetch: HTMLComponent {
         }
     }
 }
-
 
 extension SearchFetch: InputGroupAddons {}

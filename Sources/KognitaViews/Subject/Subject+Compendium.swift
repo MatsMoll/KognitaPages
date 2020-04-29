@@ -52,7 +52,7 @@ extension Subject.Templates {
                 .id("compendium-toc")
                 .class("position-lg-fixed scrollable-toc")
                 .padding(.zero)
-                
+
                 Row {
                     Div {
                         Card {
@@ -98,7 +98,6 @@ $("#compendium-toc").css("top", newContentTop);
     }
 }
 
-
 private struct TableOfContent: HTMLComponent {
 
     let topics: TemplateValue<[Subject.Compendium.TopicData]>
@@ -132,7 +131,6 @@ private struct TableOfContent: HTMLComponent {
             .id("compendium-overview")
         }
     }
-
 
     struct Subtopics: HTMLComponent {
 
@@ -235,7 +233,6 @@ private struct QuestionSection: HTMLComponent {
         }
     }
 }
-
 
 struct MarkdownRendering: HTMLComponent {
 

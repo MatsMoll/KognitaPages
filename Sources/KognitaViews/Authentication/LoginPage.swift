@@ -4,7 +4,6 @@
 //
 //  Created by Mats Mollestad on 26/02/2019.
 //
-// swiftlint:disable line_length nesting
 
 import BootstrapKit
 
