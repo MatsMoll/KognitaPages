@@ -139,7 +139,7 @@ extension Pages {
                                     Text { MaterialDesignIcon(.starOutline) }
                                         .style(.heading1)
 
-                                    Text { "Some text with an icon" }
+                                    Text { "Hva tilbyr Kognita?" }
                                         .style(.heading3)
                                 }
                                 .text(alignment: .center)
