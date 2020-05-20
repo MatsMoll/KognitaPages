@@ -4,7 +4,6 @@
 //
 //  Created by Mats Mollestad on 06/02/2019.
 //
-// swiftlint:disable line_length nesting
 
 import HTMLKit
 import BootstrapKit
@@ -130,7 +129,7 @@ struct BaseTemplate: HTMLComponent {
             customScripts
             content.scripts
         }
-        .enviroment(locale: "nb_NO")
+        .enviroment(locale: "nb")
     }
 }
 

@@ -1,7 +1,6 @@
 import BootstrapKit
 import KognitaCore
 
-
 extension User.Templates {
     public struct VerifiedConfirmation: HTMLPage {
 
@@ -30,7 +29,7 @@ extension User.Templates {
                                     .margin(.zero, for: .top)
 
                                     Text {
-                                        "Du har nå fullført verifiseringa og kan nå begynne å bruke Kognita"
+                                        "Du har nå fullført verifiseringen og kan begynne å bruke Kognita"
                                     }
 
                                     Div {

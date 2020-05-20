@@ -41,7 +41,7 @@ extension SubjectTest.Templates {
             }
         }
 
-        var breadcrumbs: [BreadcrumbItem]  {
+        var breadcrumbs: [BreadcrumbItem] {
             [
                 BreadcrumbItem(
                     link: "/subjects",
@@ -127,7 +127,6 @@ extension SubjectTest.Templates {
             }
         }
 
-
         struct MultipleChoiseTaskResult: HTMLComponent {
 
             let result: TemplateValue<SubjectTest.Results.MultipleChoiseTaskResult>
@@ -169,7 +168,7 @@ extension SubjectTest.Templates {
                         }
                         .class("render-markdown")
                         .style(.lead)
-                        
+
                         Text {
                             choise.numberOfSubmissions
                             " svar"
@@ -202,7 +201,6 @@ extension SubjectTest.Templates {
             }
         }
 
-
         struct UserResultSection: HTMLComponent {
 
             let results: TemplateValue<[SubjectTest.UserResult]>
@@ -220,7 +218,7 @@ extension SubjectTest.Templates {
                                 Card {
                                     KognitaProgressBadge(value: result.percentage.timesHundred.twoDecimals)
                                     Text {
-                                        "Antall poenge: "
+                                        "Antall poeng: "
                                         result.score.twoDecimals
                                     }
                                     Text {

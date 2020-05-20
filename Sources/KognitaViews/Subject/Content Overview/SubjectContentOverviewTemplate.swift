@@ -1,4 +1,3 @@
-
 import BootstrapKit
 import KognitaCore
 
@@ -61,8 +60,7 @@ public struct Dropdown: HTMLComponent, AttributeNode {
     }
 }
 
-
-fileprivate struct TopicTasks {
+private struct TopicTasks {
     let topic: Topic
     let tasks: [CreatorTaskContent]
 }
@@ -102,9 +100,9 @@ extension Subject.Templates {
             }
         }
 
-        var breadcrumbs: [BreadcrumbItem]  {
+        var breadcrumbs: [BreadcrumbItem] {
             [
-                BreadcrumbItem(link: "/subjects", title: "Fag oversikt"),
+                BreadcrumbItem(link: "/subjects", title: "Fagoversikt"),
                 BreadcrumbItem(link: ViewWrapper(view: "/subjects/" + context.subject.id), title: ViewWrapper(view: context.subject.name))
             ]
         }
@@ -117,7 +115,7 @@ extension Subject.Templates {
                     description: "Innholdsoversikt")
                 )
             ) {
-                PageTitle(title: "Innholds oversikt", breadcrumbs: breadcrumbs)
+                PageTitle(title: "Innholdsoversikt", breadcrumbs: breadcrumbs)
                 Row {
                     Div {
                         Card {
@@ -299,7 +297,6 @@ struct FormCheck: HTMLComponent, AttributeNode {
     }
 }
 
-
 struct SearchCard: HTMLComponent {
 
     let context: TemplateValue<Subject.Templates.ContentOverview.Context>
@@ -366,7 +363,6 @@ struct SearchCard: HTMLComponent {
     }
 }
 
-
 extension Form {
     func fetch(url: String, queryFormID formID: String, resultTagID: String) -> SearchFetch {
         SearchFetch(request: .init(url: url, formID: formID, resultID: resultTagID), form: self)
@@ -395,7 +391,7 @@ struct SearchFetch: HTMLComponent {
         """
         var lastFetch = new Date();
         function \(functionName)() {
-          if (Math.abs(lastFetch - new Date()) < 1000) { return; }
+          if (Math.abs(lastFetch - new Date()) < 100) { return; }
           lastFetch = new Date(); let query = $("#\(request.formID)").serializeArray().reduce(function (r, v) { return r + v.name + "=" + encodeURI(v.value) + "&"; }, "").slice(0, -1)
           fetch("\(request.url)?" + query, {
               method: "GET",
@@ -414,6 +410,7 @@ struct SearchFetch: HTMLComponent {
             $("#\(request.resultID)").html(html);
           });
         }
+        $(document).ready(function () { $('#\(request.formID) input[type=checkbox]').change(function () { \(functionName)() }); });
         """
         return NodeList {
 //            form.scripts
@@ -421,6 +418,5 @@ struct SearchFetch: HTMLComponent {
         }
     }
 }
-
 
 extension SearchFetch: InputGroupAddons {}

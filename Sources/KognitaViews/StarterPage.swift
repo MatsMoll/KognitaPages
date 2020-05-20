@@ -17,7 +17,6 @@ extension AttributeNode {
     }
 }
 
-
 public struct Pages {}
 
 extension Pages {
@@ -38,7 +37,7 @@ extension Pages {
                 icon: .trophyOutline,
                 title: "Relevant innhold",
                 description: "Gjør eksamensoppgaver og innhold som er godkjent av faglærere"
-            ),
+            )
         ]
 
         public init() {}
@@ -97,17 +96,15 @@ extension Pages {
                     Container {
                         Row {
                             Div {
-                                Text {
-                                    "Bruk mindre tid på pensum"
-                                }
+                                Text { "Bruk mindre tid på pensum" }
                                     .class("hero-title")
                                     .text(color: .white)
                                     .style(.heading2)
                                     .font(style: .regular)
-                                Text {
-                                    "Kognita baserer seg på effektive læringsteknikker som er vitenskapelig bevist. I tillegg er Kognita designet for å gjøre øvingen mer motiverende ved å gjøre opplevelsen mer spill-aktig."
-                                }
-                                .class("text-white-50")
+
+                                Text { "Kognita baserer seg på effektive læringsteknikker som er vitenskapelig bevist. I tillegg er Kognita designet for å gjøre øvingen mer motiverende ved å gjøre opplevelsen mer spill-aktig." }
+                                    .class("text-white-50")
+
                                 Anchor(Strings.starterPageMoreButton)
                                     .href("/signup")
                                     .class("rounded-pill")
@@ -136,23 +133,19 @@ extension Pages {
                 Section {
                     Container {
                         Row {
+
                             Div {
                                 Div {
-                                    Text {
-                                        MaterialDesignIcon(.starOutline)
-                                    }
-                                    .style(.heading1)
-                                    Text {
-                                        "Hva er målet til Kognita"
-                                    }
-                                    .style(.heading3)
-                                    Text {
-                                        " "
-                                    }
+                                    Text { MaterialDesignIcon(.starOutline) }
+                                        .style(.heading1)
+
+                                    Text { "Hva tilbyr Kognita?" }
+                                        .style(.heading3)
                                 }
                                 .text(alignment: .center)
                             }
                             .column(width: .twelve, for: .large)
+
                         }
                         .padding(.four, for: .vertical)
 
@@ -167,33 +160,6 @@ extension Pages {
                     }
                 }
                 .padding(.five, for: .vertical)
-
-//                Section {
-//                    Container {
-//                        Row {
-//                            Div {
-//                                Div {
-//                                    Text {
-//                                        "Kom i gang nå"
-//                                    }
-//                                    .style(.heading3)
-//                                    Text {
-//                                        "Det er helt gratis å registrere deg"
-//                                    }
-//                                    Anchor {
-//                                        Strings.registerButton.localized()
-//                                    }
-//                                    .href("/signup")
-//                                    .button(style: .primary)
-//                                }
-//                                .text(alignment: .center)
-//                            }
-//                            .column(width: .twelve)
-//                        }
-//                    }
-//                }
-//                .padding(.five, for: .vertical)
-//                .class("border-top border-light bg-light-lighten")
 
                 KognitaFooter(isDark: false)
             }

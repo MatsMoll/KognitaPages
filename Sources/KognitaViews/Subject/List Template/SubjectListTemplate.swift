@@ -1,15 +1,14 @@
-////
-////  SubjectListTemplate.swift
-////  App
-////
-////  Created by Mats Mollestad on 26/02/2019.
-////
-//// swiftlint:disable line_length nesting
 //
+//  SubjectListTemplate.swift
+//  App
+//
+//  Created by Mats Mollestad on 26/02/2019.
+//
+
 import Foundation
 import BootstrapKit
 import KognitaCore
-//
+
 extension Subject {
     public struct Templates {}
 }
@@ -21,11 +20,11 @@ extension Subject.Templates {
 
         var body: HTML {
             IF(subjects.isEmpty) {
-                Text { "Du har ingen aktive emner enda. Gå inn på et emnet for å gjøre det aktivt!" }
+                Text { "Du har ingen aktive emner ennå. Gå inn på et emnet for å gjøre det aktivt!" }
                     .style(.heading3)
                     .margin(.four, for: .vertical)
             }.else {
-                Text { "Dine emner!" }
+                Text { "Dine emner" }
                     .style(.heading3)
                 Row {
                     ForEach(in: subjects) { subject in
@@ -249,8 +248,15 @@ extension Subject.Templates {
                                     .margin(.one, for: .left)
                             }
                         }
-                        .class("card-header bg-" + subject.colorClass.rawValue)
+                        .class("card-header")
                         .text(color: .white)
+                        .modify(if: subject.isActive) { card in
+                            card.background(color: .primary)
+                        }
+                        .modify(if: subject.isActive == false) { card in
+                            card.background(color: .success)
+                        }
+
                         Div {
                             P {
                                 subject.description
@@ -259,7 +265,13 @@ extension Subject.Templates {
                             .class("render-markdown")
 
                             Button(Strings.subjectExploreButton)
-                                .class("btn btn-" + subject.colorClass.rawValue + " btn-rounded")
+                                .isRounded()
+                                .modify(if: subject.isActive) { card in
+                                    card.button(style: .primary)
+                                }
+                                .modify(if: subject.isActive == false) { card in
+                                    card.button(style: .success)
+                                }
                         }
                         .class("card-body position-relative")
                     }

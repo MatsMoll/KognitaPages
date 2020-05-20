@@ -41,7 +41,7 @@ struct SubtopicPicker: HTMLComponent, AttributeNode {
                     }
                 }
                 .label("Velg undertema")
-                
+
                 ForEach(in: topics) { topic in
                     OptionGroup {
                         ForEach(in: topic.subtopics) { subtopic in
@@ -76,7 +76,7 @@ struct TopicPicker: HTMLComponent {
 
     let topics: TemplateValue<[Topic]>
     let selectedTopicId: TemplateValue<Topic.ID?>
-    var idPrefix: String? = nil
+    var idPrefix: String?
 
     var body: HTML {
         Label { "Tema" }

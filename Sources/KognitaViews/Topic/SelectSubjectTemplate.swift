@@ -34,7 +34,7 @@ extension Subject.Templates {
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Velg Fag", description: "Velg Fag"))
+                baseContext: .constant(.init(title: "Velg fag", description: "Velg fag"))
             ) {
                 Row {
                     Div {
@@ -111,4 +111,3 @@ extension Subject.Templates {
         }
     }
 }
-

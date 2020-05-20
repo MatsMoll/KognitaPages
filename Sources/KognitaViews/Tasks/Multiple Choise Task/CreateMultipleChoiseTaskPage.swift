@@ -9,7 +9,7 @@ import BootstrapKit
 import KognitaCore
 
 extension MultipleChoiseTask.Templates.Create.Context {
-    var modalTitle: String { content.subject.name + " | Lag flervalgs oppgave"}
+    var modalTitle: String { content.subject.name + " | Lag flervalgsoppgave"}
     var subjectUri: String { "/subjects/\(content.subject.id)" }
     var subjectContentOverviewUri: String { "/creator/subjects/\(content.subject.id)/overview" }
 
@@ -63,9 +63,9 @@ extension MultipleChoiseTask.Templates {
 
         var breadcrumbs: [BreadcrumbItem] {
             [
-                BreadcrumbItem(link: "/subjects", title: "Fag oversikt"),
+                BreadcrumbItem(link: "/subjects", title: "Fagoversikt"),
                 BreadcrumbItem(link: ViewWrapper(view: context.subjectUri), title: ViewWrapper(view: context.subjectName)),
-                BreadcrumbItem(link: ViewWrapper(view: context.subjectContentOverviewUri), title: "Innholds oversikt")
+                BreadcrumbItem(link: ViewWrapper(view: context.subjectContentOverviewUri), title: "Innholdsoversikt")
             ]
         }
 
@@ -76,7 +76,7 @@ extension MultipleChoiseTask.Templates {
                 baseContext: .constant(.init(title: "Lag oppgave", description: "Lag oppgave"))
             ) {
 
-                PageTitle(title: "Lag flervalgs oppgave", breadcrumbs: breadcrumbs)
+                PageTitle(title: "Lag flervalgsoppgave", breadcrumbs: breadcrumbs)
                 IF(context.wasUpdated) {
                     Alert {
                         "Endringene ble lagret"
@@ -110,7 +110,7 @@ extension MultipleChoiseTask.Templates {
                     }
 
                     Text {
-                        "Eksamens oppgave?"
+                        "Eksamensoppgave?"
                     }
                     .style(.heading3)
                     .text(color: .dark)
@@ -161,7 +161,7 @@ extension MultipleChoiseTask.Templates {
                         .text(color: .dark)
 
                         CustomControlInput(
-                            label: "Ved å velge denne kan man bruke oppgaven på prøver, men ikke til å øve",
+                            label: "Ved å velge denne kan man bruke oppgaven på prøver men ikke til å øve",
                             type: .checkbox,
                             id: "create-multiple-testable"
                         )
@@ -176,11 +176,12 @@ extension MultipleChoiseTask.Templates {
                                     .escaping(.unsafeNone)
                             }
                         }
-                        .placeholder("Du har gitt en funksjon ...")
+                        .placeholder("Du har en gitt funksjon ...")
+
                     }
                     .customLabel {
                         Text {
-                            "Innledelse"
+                            "Innledning"
                         }
                         .style(.heading3)
                         .text(color: .dark)
@@ -218,7 +219,7 @@ extension MultipleChoiseTask.Templates {
                             .id("create-multiple-select")
                             .isChecked(context.content.isMultipleSelect)
                         Label {
-                            "Ved å ha på dette kan man velge flere riktige svar"
+                            "Ved å huke av denne kan man velge flere riktige svar"
                         }
                         .class("custom-control-label")
                         .for("create-multiple-select")
@@ -275,14 +276,14 @@ extension MultipleChoiseTask.Templates {
                                     .escaping(.unsafeNone)
                             }
                         }
-                        .placeholder("Gitt at funksjonen er konveks, så fører det til at ...")
+                        .placeholder("Gitt at funksjonen er konveks, fører det til at ...")
                         .onChange { editor in
                             Script.solutionScore(divID: "solution-req", editorName: editor)
                         }
                     }
                     .customLabel {
                         Text {
-                            "Løsningsforslag"
+                            "Begrunnelse til korrekt svar"
                         }
                         .style(.heading3)
                         .text(color: .dark)
@@ -303,7 +304,7 @@ extension MultipleChoiseTask.Templates {
                         .class("mb-3 mt-3")
                         .button(style: .success)
 
-                        Unwrap(context.deleteCall) { deleteCall in
+                        Unwrap(context.deleteCall) { _ in
 
                             Button {
                                 MaterialDesignIcon(icon: .delete)

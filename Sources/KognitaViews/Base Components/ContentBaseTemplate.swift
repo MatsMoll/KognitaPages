@@ -135,47 +135,9 @@ struct ContentBaseTemplate: HTMLComponent {
         }
         .scripts {
             scripts
-            Script {
-"""
-var observe;
-if (window.attachEvent) {
-    observe = function (element, event, handler) {
-        element.attachEvent('on'+event, handler);
-    };
-}
-else {
-    observe = function (element, event, handler) {
-        element.addEventListener(event, handler, false);
-    };
-}
-function initTextArea() {
-Array.from(document.getElementsByTagName("textarea")).forEach(function (text, index) {
-    function resize () {
-        text.style.height = 'auto';
-        text.style.height = text.scrollHeight+'px';
-    }
-    /* 0-timeout to get the already changed text */
-    function delayedResize () {
-        window.setTimeout(resize, 0);
-    }
-    observe(text, 'change',  resize);
-    observe(text, 'cut',     delayedResize);
-    observe(text, 'paste',   delayedResize);
-    observe(text, 'drop',    delayedResize);
-    observe(text, 'keydown', delayedResize);
-
-    text.focus();
-    text.select();
-    resize();
-})
-}
-initTextArea();
-"""
-            }
         }
         .scrollSpy(scrollSpy)
     }
-
 
     func active(path: TemplateValue<String>) -> ContentBaseTemplate {
         ContentBaseTemplate(base: self, activePath: path, header: header, scripts: scripts, modals: modals, scrollSpy: scrollSpy)
@@ -197,7 +159,6 @@ initTextArea();
         ContentBaseTemplate(base: self, activePath: activePath, header: header, scripts: scripts, modals: modals, scrollSpy: ScrollSpy(targetID: targetID, offset: offset))
     }
 
-
     struct KognitaNavigationBar: HTMLComponent {
 
         let userContext: TemplateValue<User>
@@ -213,7 +174,7 @@ initTextArea();
                 link: "/practice-sessions/history",
                 icon: .history,
                 title: ViewWrapper(view: Strings.menuPracticeHistory.localized())
-            ),
+            )
         ]
 
         private let creatorTab = TabContent(
@@ -276,4 +237,3 @@ initTextArea();
         }
     }
 }
-

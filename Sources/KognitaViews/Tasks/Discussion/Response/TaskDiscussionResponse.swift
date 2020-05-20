@@ -8,7 +8,7 @@ import Foundation
 import BootstrapKit
 import KognitaCore
 
-extension TaskDiscussion.Pivot.Response.Details{
+extension TaskDiscussion.Pivot.Response.Details {
     var fetchAResponseCall: String { "fetchADiscussionResponse(this)" }
 }
 
@@ -47,10 +47,10 @@ struct DiscussionResponse: HTMLComponent {
                             .escaping(.unsafeNone)
                     }
                     .style(.lead)
-                    .class("render-markdown")
+                    .class("render-markdown response")
 
                     Button {
-                        "Legg til kommentar"
+                        "Legg til en kommentar"
                     }
                     .button(style: .muted)
                     .button(size: .extraSmall)
@@ -66,4 +66,3 @@ struct DiscussionResponse: HTMLComponent {
         .enviroment(locale: "nb_NO")
     }
 }
-

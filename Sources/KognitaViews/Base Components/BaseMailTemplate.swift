@@ -1,6 +1,5 @@
 import BootstrapKit
 
-
 struct FavIcon: HTMLComponent {
 
     let url: String

@@ -99,7 +99,7 @@ extension User.Templates {
                         }
 
                         Text {
-                            "Dine emner!"
+                            "Dine emner"
                         }
                         .style(.heading2)
 
@@ -113,7 +113,7 @@ extension User.Templates {
                     .column(width: .twelve)
                 }
             }
-            .scripts{
+            .scripts {
                 Script().source("https://cdn.jsdelivr.net/npm/marked/marked.min.js")
                 Script().source("/assets/js/markdown-renderer.js")
             }

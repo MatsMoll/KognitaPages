@@ -46,7 +46,7 @@ extension SubjectTest.Templates {
             [
                 BreadcrumbItem(
                     link: "/subjects",
-                    title: "Fag oversikt"
+                    title: "Fagoversikt"
                 ),
                 BreadcrumbItem(
                     link: ViewWrapper(view: "/subjects/" + context.list.subject.id),
@@ -68,7 +68,7 @@ extension SubjectTest.Templates {
                         SubjectTestList(list: context.list)
                     }.else {
                         Text {
-                            "Det finnes ingen prøver enda."
+                            "Det finnes ingen prøver ennå."
                         }
                     }
                 }
@@ -169,7 +169,7 @@ extension SubjectTest.Templates {
                         }
 
                         Anchor {
-                            "Se sanntid status"
+                            "Se status i sanntid"
                         }
                         .href(test.monitorUri)
                         .button(style: .light)

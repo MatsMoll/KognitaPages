@@ -17,7 +17,6 @@ struct CollapsingCard: HTML, AttributeNode {
         try body.prerender(formula)
     }
 
-
     private let id: HTML
     private let header: HTML
     private let contentNode: AddableAttributeNode
@@ -37,11 +36,11 @@ struct CollapsingCard: HTML, AttributeNode {
             }
             .class("card-body")
             .data(for: "toggle", value: "collapse")
-            .data(for: "target", value: "#".append(html: id))
+            .data(for: "target", value: id)
             .aria(for: "controls", value: id)
 
             contentNode
-                .class("collapse".append(html: IF(isShown) { " show" }))
+                .class("collapse" + IF(isShown) { " show" })
                 .id(id)
         }
         .class("card")

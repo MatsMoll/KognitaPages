@@ -1,6 +1,5 @@
 import BootstrapKit
 
-
 struct MaterialDesignIcon: HTMLComponent, AttributeNode {
     enum Icons: String {
         case infinity

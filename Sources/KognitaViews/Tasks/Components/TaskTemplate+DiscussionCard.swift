@@ -87,7 +87,6 @@ extension TaskDiscussion.Templates {
 
         public typealias Context = [TaskDiscussion.Details]
 
-
         public var scripts: HTML {
             htmlBody.scripts
         }
@@ -102,7 +101,7 @@ extension TaskDiscussion.Templates {
 
                     Div {
                         IF(context.isEmpty) {
-                            Text { "Det finnes ingen diskusjoner enda! Om det er noe du lurer på, så er det bare å spørre!" }
+                            Text { "Det finnes ingen diskusjoner ennå! Om det er noe du lurer på er det bare å spørre!" }
                         }
                         .else {
                             ForEach(in: context) { (discussion: TemplateValue<TaskDiscussion.Details>) in
@@ -134,7 +133,7 @@ extension TaskDiscussion.Templates {
                                     }
 
                                     Small {
-                                        "Spurt av: "
+                                        "Forfatter: "
                                         discussion.username
                                     }
                                 }

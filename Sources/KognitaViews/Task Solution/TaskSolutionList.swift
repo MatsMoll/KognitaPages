@@ -1,3 +1,5 @@
+// swiftlint:disable multiple_closures_with_trailing_closure
+
 import BootstrapKit
 import KognitaCore
 
@@ -7,11 +9,10 @@ extension TaskSolution {
 
 extension TaskSolution.Templates {
     struct Requmendations: HTMLComponent, AttributeNode {
-        
+
         func copy(with attributes: [HTMLAttribute]) -> TaskSolution.Templates.Requmendations {
             .init(attributes: attributes)
         }
-
 
         var attributes: [HTMLAttribute]
 
@@ -34,9 +35,9 @@ extension TaskSolution.Templates {
 
                 Text { "For et godt løsningsforslag: " }
                 UnorderedList {
-                    ListItem { "Ha et løsningsforslag på ca. 40-150 ord. Dette for å holde løsningsforslaget direktet, men også utdypende nok." }
-                    ListItem { "Finn et bildet som kan beskrive løsningen hvis dette er mulig." }
-                    ListItem { "Finn en kilde til løsningsforslaget slik at man kan lese mer hvis nødvending. Her anbefales nettresurser for å gjøre det lettere tilgjengelig." }
+                    ListItem { "Ha et løsningsforslag på ca. 40-150 ord. Dette sørger for å holde løsningsforslaget direkte samtidig som det er utdypende nok." }
+                    ListItem { "Legg til et bilde som kan beskrive løsningen hvis det er mulig." }
+                    ListItem { "Legg ved en kilde til løsningsforslaget slik at man kan lese mer hvis nødvending. Vi anbefaler nettresurser for å gjøre fagstoffet lettere tilgjengelig." }
                     ListItem { "Punktlister eller annen strukturert informasjon anbefales også." }
                 }
             }
@@ -54,10 +55,20 @@ extension TaskSolution.Templates {
 
     public struct List: HTMLTemplate {
 
-        public typealias Context = [TaskSolution.Response]
+        public struct Context {
+            let user: User
+            let solutions: [TaskSolution.Response]
+
+            var userID: User.ID { user.id ?? 0 }
+
+            public init(user: User, solutions: [TaskSolution.Response]) {
+                self.user = user
+                self.solutions = solutions
+            }
+        }
 
         public var body: HTML {
-            Accordions(values: context, title: { (solution: TemplateValue<TaskSolution.Response>, index: TemplateValue<Int>) in
+            Accordions(values: context.solutions, title: { (solution: TemplateValue<TaskSolution.Response>, _: TemplateValue<Int>) in
 
                 Text {
                     "Løsningsforslag av "
@@ -78,7 +89,7 @@ extension TaskSolution.Templates {
                     " personer"
 
                     Small {
-                        Unwrap(solution.approvedBy) { approvedBy in
+                        Unwrap(solution.approvedBy) { _ in
                             Badge {
                                 "Verifisert"
                                 MaterialDesignIcon(icon: .check)
@@ -87,25 +98,27 @@ extension TaskSolution.Templates {
                             .margin(.two, for: .left)
                         }.else {
                             Badge {
-                                "Ikke verifisert enda"
+                                "Ikke verifisert ennå"
                             }
                             .background(color: .warning)
                             .margin(.two, for: .left)
                         }
                     }
                 }
-            }) { (solution: TemplateValue<TaskSolution.Response>, index: TemplateValue<Int>) in
+            }) { (solution: TemplateValue<TaskSolution.Response>, _: TemplateValue<Int>) in
 
-                MoreDropdown {
-                    Anchor { "Rediger" }
-                        .toggle(modal: .id("edit-solution"))
-                        .data("markdown", value: solution.solution.escaping(.unsafeNone))
-                        .data("solutionID", value: solution.id)
-                    Anchor { "Slett" }
-                        .toggle(modal: .id("delete-solution"))
-                        .data("solutionID", value: solution.id)
+                IF(self.context.userID == solution.creatorID) {
+                    MoreDropdown {
+                        Anchor { "Rediger" }
+                            .toggle(modal: .id("edit-solution"))
+                            .data("markdown", value: solution.solution.escaping(.unsafeNone))
+                            .data("solutionID", value: solution.id)
+                        Anchor { "Slett" }
+                            .toggle(modal: .id("delete-solution"))
+                            .data("solutionID", value: solution.id)
+                    }
+                    .float(.right)
                 }
-                .float(.right)
 
                 Div {
                     solution.solution

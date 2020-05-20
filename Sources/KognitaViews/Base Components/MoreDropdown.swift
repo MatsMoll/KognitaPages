@@ -1,8 +1,12 @@
 import BootstrapKit
 
-
 @_functionBuilder
+/// Builds a list of `AddabeAttributeNode`
 public class AttributeBuilder {
+
+    /// Builds a list
+    /// - Parameter children: The nodes to build
+    /// - Returns: A list of the nodes
     public static func buildBlock(_ children: AddableAttributeNode...) -> [AddableAttributeNode] {
         return children
     }

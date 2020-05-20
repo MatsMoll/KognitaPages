@@ -1,9 +1,22 @@
 import KognitaCore
 import BootstrapKit
+import Foundation
 
 extension TestSession.Results {
     var readableScorePersentage: Double {
         (scoreProsentage * 10000).rounded() / 100
+    }
+
+    var scoreString: String {
+        var string = "\(readableScorePersentage)%"
+        if scoreProsentage >= 1 {
+            string += " 💯"
+        } else if scoreProsentage >= 0.8 {
+            string += " 🔥"
+        } else if scoreProsentage >= 0.5 {
+            string += " 😎"
+        }
+        return string
     }
 
     var readableScore: Double {
@@ -13,6 +26,8 @@ extension TestSession.Results {
     var startPracticeCall: String {
         "startPracticeSession(\(topicResults.map { $0.id }), \(subjectID));"
     }
+
+    var timeUsed: TimeInterval { endedAt.timeIntervalSince(executedAt) }
 }
 
 extension TestSession.Templates {
@@ -48,17 +63,21 @@ extension TestSession.Templates {
                     Div {
                         Card {
                             Text { "Total score" }
-                            Text {
-                                context.results.readableScorePersentage
-                                "%"
-                            }
-                            .style(.heading3)
-                            .text(color: .dark)
+                            Text { context.results.scoreString }
+                                .style(.heading3)
+                                .text(color: .dark)
 
                             Text {
                                 context.results.readableScore
                                 " poeng"
                             }
+                        }
+
+                        Card {
+                            Text { "Tid brukt" }
+                            Text { context.results.timeUsed.timeString }
+                                .style(.heading3)
+                                .text(color: .dark)
                         }
                     }
                     .column(width: .four, for: .large)
@@ -215,13 +234,13 @@ extension TestSession.Templates {
 
             var body: HTML {
                 Card {
-                    Text { "Viste du at du kan øve med Kognita?" }
+                    Text { "Visste du at du kan øve med Kognita?" }
                         .style(.heading3)
                         .text(color: .dark)
 
-                    Text { "Prøve øvefunksjonen og øv litt på temane du hadde på prøven" }
+                    Text { "Prøv øvefunksjonen for å øve litt på temaene du hadde på denne prøven" }
 
-                    Button { "Begynn og øv" }
+                    Button { "Begynn å øve" }
                         .on(click: startPracticeSessionCall)
                         .button(style: .success)
                         .isRounded()
