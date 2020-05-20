@@ -35,15 +35,60 @@ extension TaskDiscussion.Templates {
 
 extension TaskDiscussion.Templates {
 
+    struct ShowResponsesModal: HTMLComponent {
+
+        var scripts: HTML {
+            NodeList {
+                body.scripts
+                Script().source("/assets/js/task-discussion/fetch-responses.js")
+                Script(source: "/assets/js/task-discussion/create-response.js")
+            }
+        }
+        
+        var body: HTML {
+            Modal(title: "Svar", id: "response") {
+
+                Input().id("disc-id").type(.hidden)
+
+                Text { "" }.style(.heading3).id("disc-description")
+
+                Small {
+                    "Spurt av: "
+                }
+                .id("disc-username")
+
+
+                Div().id("disc-responses").display(.none)
+
+
+                FormGroup(label: "Skriv en respons") {
+                    MarkdownEditor(id: "create-discussion-response")
+                        .placeholder("En eller annen respons")
+                }
+                .margin(.four, for: .top)
+
+                Button {
+                    "Svar"
+                }
+                .button(style: .primary)
+                .on(click: "createResponse()")
+            }
+            .text(break: .break)
+            .set(data: "dID", type: .input, to: "disc-id")
+            .set(data: "dDesc", type: .textArea, to: "disc-description")
+            .set(data: "dUname", type: .node, to: "disc-username")
+        }
+    }
+}
+
+extension TaskDiscussion.Templates {
+
     public struct DiscussionCard: HTMLTemplate {
 
         public typealias Context = [TaskDiscussion.Details]
 
         public var scripts: HTML {
-            NodeList {
-                htmlBody.scripts
-                Script(source: "/assets/js/task-discussion/fetch-responses.js")
-            }
+            htmlBody.scripts
         }
 
         var htmlBody: HTML {
@@ -78,13 +123,11 @@ extension TaskDiscussion.Templates {
 
                                     Div {
                                         Div {
-
                                             Text {
                                                 discussion.description
                                             }
                                             .style(.heading4)
                                             .margin(.zero, for: .top)
-
                                         }
                                         .display(.flex)
                                     }
@@ -109,35 +152,7 @@ extension TaskDiscussion.Templates {
                 }
                 .text(break: .break)
 
-                Modal(title: "Svar", id: "response") {
-
-                    Input().id("disc-id").type(.hidden)
-
-                    Text { "" }.style(.heading3).id("disc-description")
-
-                    Small {
-                        "Forfatter: "
-                    }
-                    .id("disc-username")
-
-                    Div().id("disc-responses").display(.none)
-
-                    FormGroup(label: "Skriv en respons") {
-                        MarkdownEditor(id: "create-discussion-response")
-                            .placeholder("Skriv inn et svar!")
-                    }
-                    .margin(.four, for: .top)
-
-                    Button {
-                        "Svar"
-                    }
-                    .button(style: .primary)
-                    .on(click: "createResponse()")
-                }
-                .text(break: .break)
-                .set(data: "dID", type: .input, to: "disc-id")
-                .set(data: "dDesc", type: .textArea, to: "disc-description")
-                .set(data: "dUname", type: .node, to: "disc-username")
+                ShowResponsesModal()
             }
         }
 

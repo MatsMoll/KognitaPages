@@ -44,11 +44,13 @@ extension Subject.Templates {
             let user: User
             let list: Subject.ListContent
             let wasIncorrectPassword: Bool
+            let recentlyActiveDiscussions: Bool
 
-            public init(user: User, list: Subject.ListContent, wasIncorrectPassword: Bool) {
+            public init(user: User, list: Subject.ListContent, wasIncorrectPassword: Bool, recentlyActiveDiscussions: Bool) {
                 self.user = user
                 self.list = list
                 self.wasIncorrectPassword = wasIncorrectPassword
+                self.recentlyActiveDiscussions = recentlyActiveDiscussions
             }
         }
 
@@ -70,15 +72,16 @@ extension Subject.Templates {
                         SubjectTestList(test: context.list.openedTest)
                         Subject.Templates.ActiveSubjects(subjects: context.list.activeSubjects)
 
-//                        ContinuePracticeSessionCard(
-//                            ongoingSessionPath: context.
-//                        )
+                        //                        ContinuePracticeSessionCard(
+                        //                            ongoingSessionPath: context.
+                        //                        )
                         SubjectListSection(subjects: context.list.inactiveSubjects)
                     }
                     .column(width: .eight, for: .large)
                     Div {
                         StatisticsCard()
                         User.Templates.ProfileCard(user: context.user)
+                        UserDiscussionCard(recentlyActiveDiscussions: context.recentlyActiveDiscussions)
                         IF(context.user.isAdmin) {
                             CreateContentCard()
                         }
@@ -94,7 +97,7 @@ extension Subject.Templates {
                 Script().source("/assets/js/markdown-renderer.js")
                 IF(context.wasIncorrectPassword) {
                     Script {
-"""
+                        """
 $("#start-subject-test-modal").modal('show');
 """
                     }
@@ -172,7 +175,7 @@ $("#start-subject-test-modal").modal('show');
                             Button {
                                 Italic().class("mdi mdi-book-open-variant")
                                 " " +
-                                Localized(key: Strings.subjectRepeatStart)
+                                    Localized(key: Strings.subjectRepeatStart)
                             }
                             .type(.button)
                             .button(style: .primary)
@@ -383,6 +386,32 @@ extension Subject.Templates {
                     $0.background(color: .danger)
                         .text(color: .white)
                 }
+            }
+        }
+    }
+
+    struct UserDiscussionCard: HTMLComponent {
+
+        let recentlyActiveDiscussions: TemplateValue<Bool>
+
+        var body: HTML {
+            Card {
+
+                Text { "Dine diskusjoner"
+                    IF(recentlyActiveDiscussions == true) {
+                        Span { "New" }
+                            .class("badge badge-primary")
+                            .margin(.one, for: .left)
+                    }
+
+                }
+                .style(.heading3)
+                .text(color: .dark)
+
+                Anchor { "Se diskusjoner" }
+                    .href("/task-discussion/user")
+                    .button(style: .light)
+                    .class("btn-rounded")
             }
         }
     }
