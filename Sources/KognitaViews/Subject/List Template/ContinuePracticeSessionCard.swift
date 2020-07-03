@@ -1,5 +1,4 @@
 import BootstrapKit
-import KognitaCore
 
 extension Subject.Templates.ListOverview {
 

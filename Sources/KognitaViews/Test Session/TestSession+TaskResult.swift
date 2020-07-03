@@ -1,5 +1,4 @@
 import BootstrapKit
-import KognitaCore
 
 extension AttributeNode {
     func dismissModal() -> Self {
@@ -238,7 +237,7 @@ extension TaskSolutionCard {
 
 extension TestSession.DetailedTaskResult {
 
-    var choiseContext: [MultipleChoiseTask.Templates.Execute.ChoiseContext] {
+    var choiseContext: [MultipleChoiceTask.Templates.Execute.ChoiseContext] {
         choises.map {
             .init(choise: $0, selectedChoises: selectedChoises)
         }
@@ -292,8 +291,8 @@ extension TestSession.Templates {
                                 .style(.heading5)
                                 .margin(.zero, for: .top)
 
-                            ForEach(in: context.result.choiseContext) { (choise: TemplateValue<MultipleChoiseTask.Templates.Execute.ChoiseContext>) in
-                                MultipleChoiseTask.Templates.Execute.ChoiseOption(
+                            ForEach(in: context.result.choiseContext) { (choise: TemplateValue<MultipleChoiceTask.Templates.Execute.ChoiseContext>) in
+                                MultipleChoiceTask.Templates.Execute.ChoiseOption(
                                     hasBeenAnswered: true,
                                     canSelectMultiple: context.result.isMultipleSelect,
                                     choise: choise

@@ -1,14 +1,13 @@
 //
-//  CreateMultipleChoiseTaskPage.swift
+//  CreateMultipleChoiceTaskPage.swift
 //  App
 //
 //  Created by Mats Mollestad on 27/02/2019.
 //
 
 import BootstrapKit
-import KognitaCore
 
-extension MultipleChoiseTask.Templates.Create.Context {
+extension MultipleChoiceTask.Templates.Create.Context {
     var modalTitle: String { content.subject.name + " | Lag flervalgsoppgave"}
     var subjectUri: String { "/subjects/\(content.subject.id)" }
     var subjectContentOverviewUri: String { "/creator/subjects/\(content.subject.id)/overview" }
@@ -35,24 +34,24 @@ extension MultipleChoiseTask.Templates.Create.Context {
     }
 }
 
-extension MultipleChoiseTask.Templates {
+extension MultipleChoiceTask.Templates {
     public struct Create: TemplateView {
 
         public struct Context {
             let user: User
-            let content: MultipleChoiseTask.ModifyContent
+            let content: MultipleChoiceTask.ModifyContent
             let wasUpdated: Bool
             let isTestable: Bool
             let isModerator: Bool
             let canEdit: Bool
 
-            public init(user: User, content: MultipleChoiseTask.ModifyContent, isModerator: Bool, wasUpdated: Bool = false, isTestable: Bool = false) {
+            public init(user: User, content: MultipleChoiceTask.ModifyContent, isModerator: Bool, wasUpdated: Bool = false, isTestable: Bool = false) {
                 self.user = user
                 self.content = content
                 self.wasUpdated = wasUpdated
                 self.isModerator = isModerator
                 if let task = content.task {
-                    self.canEdit = isModerator ? true : (user.id ?? 0) == content.task?.id
+                    self.canEdit = isModerator ? true : user.id == content.task?.id
                     self.isTestable = task.isTestable
                 } else {
                     self.canEdit = true
@@ -140,16 +139,16 @@ extension MultipleChoiseTask.Templates {
                         }
                         .column(width: .six, for: .medium)
 
-                        FormGroup(label: "År") {
-                            Input()
-                                .type(.number)
-                                .class("form-control")
-                                .id("create-multiple-exam-year")
-                                .placeholder("2019")
-                                .value(Unwrap(context.content.task) { $0.examPaperYear })
-                                .required()
-                        }
-                        .column(width: .six, for: .medium)
+//                        FormGroup(label: "År") {
+//                            Input()
+//                                .type(.number)
+//                                .class("form-control")
+//                                .id("create-multiple-exam-year")
+//                                .placeholder("2019")
+//                                .value(Unwrap(context.content.task) { $0.examPaperYear })
+//                                .required()
+//                        }
+//                        .column(width: .six, for: .medium)
                     }
                     .class("form-row")
 
@@ -345,7 +344,7 @@ extension MultipleChoiseTask.Templates {
         struct ChoiseRow: HTMLComponent {
 
             let canSelectMultiple: TemplateValue<Bool>
-            let choise: TemplateValue<MultipleChoiseTaskChoise.Data>
+            let choise: TemplateValue<MultipleChoiceTaskChoice>
 
             var body: HTML {
                 Card {
@@ -363,7 +362,7 @@ extension MultipleChoiseTask.Templates {
                                     $0.type(.radio)
                                 }
                             Label {
-                                choise.choise
+                                choise.choice
                                     .escaping(.unsafeNone)
                             }
                             .class("custom-control-label")
@@ -397,7 +396,7 @@ extension MultipleChoiseTask.Templates {
     }
 }
 
-extension MultipleChoiseTaskChoise.Data {
+extension MultipleChoiceTaskChoice {
     var htmlChoiseID: String { "choise--\(id)" }
     var deleteCall: String { "deleteChoise(-\(id));" }
 }

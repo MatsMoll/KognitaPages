@@ -6,7 +6,6 @@
 //
 
 import BootstrapKit
-import KognitaCore
 
 struct FormCard: HTMLComponent {
 
@@ -58,7 +57,11 @@ struct FormCard: HTMLComponent {
     }
 }
 
-extension FlashCardTask.Templates.Create.Context {
+extension TypingTask.ModifyContent {
+    var topics: [Topic.WithSubtopics] { [] }
+}
+
+extension TypingTask.Templates.Create.Context {
     var modalTitle: String { content.subject.name + " | Lag tekstoppgave"}
     var subjectUri: String { "/subjects/\(content.subject.id)" }
     var subjectContentOverviewUri: String { "/creator/subjects/\(content.subject.id)/overview" }
@@ -90,20 +93,20 @@ extension FlashCardTask.Templates.Create.Context {
     }
 }
 
-extension FlashCardTask.ModifyContent {
+extension TypingTask.ModifyContent {
     var subjectName: String { subject.name }
 }
 
-extension FlashCardTask.Templates {
+extension TypingTask.Templates {
     public struct Create: TemplateView {
 
         public struct Context {
             let user: User
-            let content: FlashCardTask.ModifyContent
+            let content: TypingTask.ModifyContent
             let wasUpdated: Bool
             let canEdit: Bool
 
-            public init(user: User, content: FlashCardTask.ModifyContent, canEdit: Bool, wasUpdated: Bool = false) {
+            public init(user: User, content: TypingTask.ModifyContent, canEdit: Bool, wasUpdated: Bool = false) {
                 self.user = user
                 self.content = content
                 self.canEdit = canEdit
@@ -170,38 +173,39 @@ extension FlashCardTask.Templates {
                     .text(color: .dark)
 
                     FormRow {
-                        FormGroup(label: "Eksamensett semester") {
-                            Select {
-                                Unwrap(context.content.task) { taskInfo in
-                                    Unwrap(taskInfo.examPaperSemester) { exam in
-                                        Option {
-                                            exam.rawValue
-                                        }
-                                        .value(exam.rawValue)
-                                    }
-                                }
-                                Option { "Ikke eksamensoppgave" }
-                                    .value("")
-                                Option { "Høst" }
-                                    .value("fall")
-                                Option { "Vår" }
-                                    .value("spring")
-                            }
-                            .id("card-exam-semester")
-                            .class("select2")
-                            .data(for: "toggle", value: "select2")
-                            .data(for: "placeholder", value: "Velg ...")
-                        }
-                        .column(width: .six, for: .medium)
+                        ""
+//                        FormGroup(label: "Eksamensett semester") {
+//                            Select {
+//                                Unwrap(context.content.task) { taskInfo in
+//                                    Unwrap(taskInfo.examPaperSemester) { exam in
+//                                        Option {
+//                                            exam.rawValue
+//                                        }
+//                                        .value(exam.rawValue)
+//                                    }
+//                                }
+//                                Option { "Ikke eksamensoppgave" }
+//                                    .value("")
+//                                Option { "Høst" }
+//                                    .value("fall")
+//                                Option { "Vår" }
+//                                    .value("spring")
+//                            }
+//                            .id("card-exam-semester")
+//                            .class("select2")
+//                            .data(for: "toggle", value: "select2")
+//                            .data(for: "placeholder", value: "Velg ...")
+//                        }
+//                        .column(width: .six, for: .medium)
 
-                        FormGroup(label: "År") {
-                            Input()
-                                .type(.number)
-                                .id("card-exam-year")
-                                .placeholder("2019")
-                                .value(Unwrap(context.content.task) { $0.examPaperYear })
-                        }
-                        .column(width: .six, for: .medium)
+//                        FormGroup(label: "År") {
+//                            Input()
+//                                .type(.number)
+//                                .id("card-exam-year")
+//                                .placeholder("2019")
+//                                .value(Unwrap(context.content.task) { $0.examPaperYear })
+//                        }
+//                        .column(width: .six, for: .medium)
                     }
 
                     FormGroup {

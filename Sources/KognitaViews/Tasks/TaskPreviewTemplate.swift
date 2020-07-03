@@ -6,14 +6,14 @@
 //
 
 import BootstrapKit
-import KognitaCore
 
 struct TaskPreviewTemplateContext {
     let practiceProgress: Int
-    let session: PracticeSessionRepresentable
+    let sessionID: PracticeSession.ID
+    let numberOfTaskGoal: Int
     let taskContent: TaskPreviewContent
-    let lastResult: TaskResultContent?
-    let user: UserContent
+    let lastResult: TaskResult?
+    let user: User
     let taskPath: String
     let currentTaskIndex: Int
 
@@ -37,20 +37,22 @@ struct TaskPreviewTemplateContext {
 
     public init(
         task: TaskPreviewContent,
-        user: UserContent,
+        user: User,
         practiceProgress: Int,
-        session: PracticeSessionRepresentable,
+        sessionID: PracticeSession.ID,
         taskPath: String,
         currentTaskIndex: Int,
-        lastResult: TaskResultContent?
+        lastResult: TaskResult?,
+        numberOfTaskGoal: Int
     ) {
         self.practiceProgress = practiceProgress
-        self.session = session
+        self.sessionID = sessionID
         self.taskContent = task
         self.user = user
         self.taskPath = taskPath
         self.currentTaskIndex = currentTaskIndex
         self.lastResult = lastResult
+        self.numberOfTaskGoal = numberOfTaskGoal
     }
 }
 
@@ -141,7 +143,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
                     .value(context.task.id)
                     .id("task-id")
 
-                ExamBadge(task: context.task)
+//                ExamBadge(task: context.task)
 
                 Row {
                     Div {
@@ -178,7 +180,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
 
                     Text {
                         "Du har fullført "
-                        context.session.numberOfTaskGoal
+                        context.numberOfTaskGoal
                         " oppgaver!"
                     }
                     .style(.heading4)
@@ -216,29 +218,29 @@ $("#main-task-content").css("padding-bottom", $("#nav-card").height() + 20);
         }
     }
 
-    struct ExamBadge: HTMLComponent {
-
-        let task: TemplateValue<Task>
-
-        var body: HTML {
-            Row {
-                Div {
-                    Unwrap(task.examPaperSemester) { (exam: TemplateValue<Task.ExamSemester>) in
-                        Badge {
-                            Strings.exerciseExam.localized()
-                            ": "
-                            exam.norwegianDescription
-                            " "
-                            task.examPaperYear
-                        }
-                        .margin(.three, for: .bottom)
-                        .background(color: .primary)
-                    }
-                }
-                .column(width: .twelve)
-            }
-        }
-    }
+//    struct ExamBadge: HTMLComponent {
+//
+//        let task: TemplateValue<Task>
+//
+//        var body: HTML {
+//            Row {
+//                Div {
+//                    Unwrap(task.examPaperSemester) { (exam: TemplateValue<Task.ExamSemester>) in
+//                        Badge {
+//                            Strings.exerciseExam.localized()
+//                            ": "
+//                            exam.norwegianDescription
+//                            " "
+//                            task.examPaperYear
+//                        }
+//                        .margin(.three, for: .bottom)
+//                        .background(color: .primary)
+//                    }
+//                }
+//                .column(width: .twelve)
+//            }
+//        }
+//    }
 
     struct QuestionCard: HTMLComponent {
 
@@ -306,7 +308,7 @@ $("#main-task-content").css("padding-bottom", $("#nav-card").height() + 20);
                         }
                         .text(alignment: .center)
                     }
-                    .action("/practice-sessions/" + context.session.id + "/end")
+                    .action("/practice-sessions/" + context.sessionID + "/end")
                     .method(.post)
                     .id("end-session-form")
                 }
@@ -346,7 +348,7 @@ private struct PracticeSessionProgressBar: HTMLComponent {
                             .id("goal-progress-label")
 
                             Small {
-                                Span { context.session.numberOfTaskGoal }
+                                Span { context.numberOfTaskGoal }
                                     .id("goal-value")
                                 " "
                                 Localized(key: Strings.exerciseSessionProgressGoal)

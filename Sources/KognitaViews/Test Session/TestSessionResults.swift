@@ -1,6 +1,5 @@
-import KognitaCore
-import BootstrapKit
 import Foundation
+import BootstrapKit
 
 extension TestSession.Results {
     var readableScorePersentage: Double {

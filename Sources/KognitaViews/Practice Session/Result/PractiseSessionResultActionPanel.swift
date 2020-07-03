@@ -1,5 +1,4 @@
 import BootstrapKit
-import KognitaCore
 
 public struct PractiseSessionResultActionPanel: HTMLComponent {
 

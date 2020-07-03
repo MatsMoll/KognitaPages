@@ -6,7 +6,6 @@
 //
 
 import BootstrapKit
-import KognitaCore
 
 extension Topic {
     public struct Templates {}

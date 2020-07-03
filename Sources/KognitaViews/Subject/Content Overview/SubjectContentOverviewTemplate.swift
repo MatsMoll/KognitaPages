@@ -1,5 +1,4 @@
 import BootstrapKit
-import KognitaCore
 
 protocol DropdownItemable: AddableAttributeNode {}
 
@@ -208,15 +207,12 @@ private struct UnverifiedSolutionsSection: HTMLComponent {
 
 extension Subject.Templates.ContentOverview.Context {
     var searchUrl: String {
-        guard let subjectID = subject.id else {
-            return ""
-        }
-        return "subjects/\(subjectID)/search"
+        return "subjects/\(subject.id)/search"
     }
 }
 
 extension TopicTasks {
-    var editUrl: String { "/creator/subjects/\(topic.subjectId)/topics/\(topic.id ?? 0)/edit" }
+    var editUrl: String { "/creator/subjects/\(topic.subjectID)/topics/\(topic.id)/edit" }
 }
 
 //private struct TopicCard: HTMLComponent {
@@ -252,8 +248,8 @@ extension TopicTasks {
 //}
 
 extension CreatorTaskContent {
-    var editUri: String { "/creator/\(taskTypePath)/\(task.id ?? 0)/edit" }
-    var deleteCall: String { "deleteTask(\(task.id ?? 0), \"\(taskTypePath)\");" }
+    var editUri: String { "/creator/\(taskTypePath)/\(task.id)/edit" }
+    var deleteCall: String { "deleteTask(\(task.id), \"\(taskTypePath)\");" }
 }
 
 struct FormCheck: HTMLComponent, AttributeNode {

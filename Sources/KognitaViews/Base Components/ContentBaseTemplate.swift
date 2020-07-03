@@ -1,5 +1,4 @@
 import BootstrapKit
-import KognitaCore
 
 struct ContentBaseTemplateContent {
     let base: BaseTemplateContent

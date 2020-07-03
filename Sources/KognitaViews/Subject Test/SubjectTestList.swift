@@ -1,8 +1,7 @@
 import BootstrapKit
-import KognitaCore
 import Foundation
 
-extension SubjectTest.OverviewResponse {
+extension SubjectTest.UserOverview {
     var openCall: String {
         "openTest(\(id))"
     }
@@ -130,7 +129,7 @@ extension SubjectTest.Templates {
 
     struct SubjectTestCard: HTMLComponent {
 
-        @TemplateValue(SubjectTest.OverviewResponse.self)
+        @TemplateValue(SubjectTest.UserOverview.self)
         var test
 
         var body: HTML {
@@ -158,7 +157,7 @@ extension SubjectTest.Templates {
 
         struct SubjectTestCardActions: HTMLComponent {
 
-            let test: TemplateValue<SubjectTest.OverviewResponse>
+            let test: TemplateValue<SubjectTest.UserOverview>
 
             var body: HTML {
                 Unwrap(test.endsAt) { (endsAt: TemplateValue<Date>) in

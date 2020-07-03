@@ -1,5 +1,4 @@
 import BootstrapKit
-import KognitaCore
 
 extension SubjectTest.Templates {
     public struct StatusSection: HTMLTemplate {

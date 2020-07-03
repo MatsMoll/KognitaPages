@@ -1,7 +1,6 @@
 // swiftlint:disable multiple_closures_with_trailing_closure
 
 import BootstrapKit
-import KognitaCore
 
 extension TaskSolution {
     public enum Templates {}

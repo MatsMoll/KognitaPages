@@ -1,10 +1,9 @@
 import Foundation
-import KognitaCore
 import BootstrapKit
 
-extension Task: MultipleSelectItemRepresentable {
+extension GenericTask: MultipleSelectItemRepresentable {
     var itemName: String { question }
-    var idRepresentable: String { String(id ?? 0) }
+    var idRepresentable: String { String(id) }
 }
 
 extension SubjectTest.ModifyResponse {
@@ -25,14 +24,14 @@ extension SubjectTest.Templates {
 
             let subjectID: Subject.ID
             let user: User
-            let tasks: [Task]
+            let tasks: [GenericTask]
             let test: SubjectTest.ModifyResponse?
 
             var selectedTaskIDs: [String] {
                 test?.taskIDs.map { String($0) } ?? []
             }
 
-            public init(subjectID: Subject.ID, user: User, tasks: [Task], test: SubjectTest.ModifyResponse? = nil) {
+            public init(subjectID: Subject.ID, user: User, tasks: [GenericTask], test: SubjectTest.ModifyResponse? = nil) {
                 self.subjectID = subjectID
                 self.user = user
                 self.tasks = tasks

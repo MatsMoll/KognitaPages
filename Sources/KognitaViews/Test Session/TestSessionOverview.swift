@@ -1,11 +1,10 @@
 import BootstrapKit
-import KognitaCore
 
 extension TestSession {
     public enum Templates {}
 }
 
-extension TestSession.Overview {
+extension TestSession.PreSubmitOverview {
 
     var finishUri: String {
         "/test-sessions/\(sessionID)/finnish"
@@ -17,13 +16,13 @@ extension TestSession.Templates {
 
         public struct Context {
             let user: User
-            let overview: TestSession.Overview
+            let overview: TestSession.PreSubmitOverview
 
-            var unansweredTasks: [TestSession.Overview.Task] {
+            var unansweredTasks: [TestSession.PreSubmitOverview.TaskStatus] {
                 overview.tasks.filter({ $0.isAnswered == false })
             }
 
-            public init(user: User, overview: TestSession.Overview) {
+            public init(user: User, overview: TestSession.PreSubmitOverview) {
                 self.user = user
                 self.overview = overview
             }
@@ -77,7 +76,7 @@ extension TestSession.Templates {
 
         struct TaskCard: HTMLComponent {
 
-            let overview: TemplateValue<TestSession.Overview.Task>
+            let overview: TemplateValue<TestSession.PreSubmitOverview.TaskStatus>
 
             var body: HTML {
                 Card {
@@ -113,7 +112,7 @@ extension TestSession.Templates {
 
         struct SubmitCard: HTMLComponent {
 
-            let overview: TemplateValue<TestSession.Overview>
+            let overview: TemplateValue<TestSession.PreSubmitOverview>
 
             var body: HTML {
                 Card {

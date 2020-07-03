@@ -6,13 +6,10 @@
 //
 
 import HTMLKit
-import Vapor
 import BootstrapKit
 
 extension Pages {
-    public struct ServerError: HTMLTemplate {
-
-        public typealias Context = HTTPStatus
+    public struct ServerError: HTMLPage {
 
         public init() {}
 

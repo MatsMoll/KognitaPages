@@ -1,12 +1,11 @@
 import BootstrapKit
-import KognitaCore
 
 extension Subject.Templates {
 
     public struct TaskList: HTMLTemplate {
 
         public struct Context {
-            let userID: User.ID?
+            let userID: User.ID
             let isModerator: Bool
             let tasks: [CreatorTaskContent]
 
@@ -47,7 +46,7 @@ extension Subject.Templates {
                 ForEach(in: context.tasks) { (task: TemplateValue<CreatorTaskContent>) in
                     Div {
                         TaskCell(
-                            canEdit: context.isModerator || context.userID == task.creator.id,
+                            canEdit: context.isModerator || task.creator.id == context.userID,
                             task: task
                         )
                     }
@@ -79,14 +78,14 @@ extension Subject.Templates {
                     .background(color: .info)
                 }
 
-                Unwrap(task.task.deletedAt) { deletedAt in
-                    Badge {
-                        "Slettet: "
-                        deletedAt.style(date: .short, time: .none)
-                    }
-                    .background(color: .danger)
-                    .margin(.one, for: .left)
-                }
+//                Unwrap(task.task.deletedAt) { deletedAt in
+//                    Badge {
+//                        "Slettet: "
+//                        deletedAt.style(date: .short, time: .none)
+//                    }
+//                    .background(color: .danger)
+//                    .margin(.one, for: .left)
+//                }
 
                 IF(task.task.isTestable) {
                     Badge {
@@ -96,16 +95,16 @@ extension Subject.Templates {
                     .margin(.one, for: .left)
                 }
 
-                Unwrap(task.task.examPaperYear) { examYear in
-                    Unwrap(task.task.examPaperSemester) { examSemester in
-                        Badge {
-                            "Eksamen: "
-                            examSemester.rawValue
-                            " "
-                            examYear
-                        }
-                    }
-                }
+//                Unwrap(task.task.examPaperYear) { examYear in
+//                    Unwrap(task.task.examPaperSemester) { examSemester in
+//                        Badge {
+//                            "Eksamen: "
+//                            examSemester.rawValue
+//                            " "
+//                            examYear
+//                        }
+//                    }
+//                }
 
                 Text {
                     "Tema: "
@@ -131,7 +130,7 @@ extension Subject.Templates {
                     .button(style: .light)
                 }
 
-                IF(canEdit && task.task.deletedAt.isNotDefined) {
+                IF(canEdit) {
                     Button {
                         MaterialDesignIcon(.delete)
                         " Slett"

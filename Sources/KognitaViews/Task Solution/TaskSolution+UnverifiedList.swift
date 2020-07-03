@@ -1,5 +1,4 @@
 import BootstrapKit
-import KognitaCore
 
 extension TaskSolution.Unverified {
     fileprivate var approveButtonID: String { "solution-\(solutionID)" }
@@ -27,7 +26,7 @@ extension TaskSolution.Templates {
                         Text { "Valg:" }
                             .font(style: .italic)
 
-                        ForEach(in: solution.choises) { (choise: TemplateValue<MultipleChoiseTaskChoise.Data>) in
+                        ForEach(in: solution.choises) { (choise: TemplateValue<MultipleChoiceTaskChoice>) in
                             ChoiseView(choise: choise)
                         }
                     }
@@ -80,7 +79,7 @@ function approveSolution(id) {
 
         private struct ChoiseView: HTMLComponent {
 
-            let choise: TemplateValue<MultipleChoiseTaskChoise.Data>
+            let choise: TemplateValue<MultipleChoiceTaskChoice>
 
             var body: HTML {
                 Div {
@@ -94,7 +93,7 @@ function approveSolution(id) {
                             .float(.right)
                         }
 
-                        Div { choise.choise.escaping(.unsafeNone) }
+                        Div { choise.choice.escaping(.unsafeNone) }
                             .class("render-markdown")
                     }
                 }

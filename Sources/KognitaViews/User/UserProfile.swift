@@ -6,7 +6,6 @@
 //
 
 import BootstrapKit
-import KognitaCore
 
 extension User.Templates {
     struct ProfileCard: HTMLComponent {

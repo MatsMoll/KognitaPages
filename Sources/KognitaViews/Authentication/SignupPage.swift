@@ -7,7 +7,6 @@
 // swiftlint:disable line_length nesting
 
 import BootstrapKit
-import KognitaCore
 
 extension User.Templates {
     public struct Signup: HTMLTemplate {

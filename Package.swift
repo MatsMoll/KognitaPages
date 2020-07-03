@@ -12,7 +12,7 @@ var dependencies: [Package.Dependency] = [
 switch ProcessInfo.processInfo.environment["BUILD_TYPE"] {
 case "LOCAL":
     dependencies.append(contentsOf: [
-            .package(path: "../KognitaCore"),
+            .package(path: "../KognitaContent"),
         ]
     )
 case "DEV":
@@ -44,7 +44,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "KognitaViews",
-            dependencies: ["BootstrapKit", "KognitaCore"]),
+            dependencies: ["BootstrapKit", "KognitaContent"]),
         .testTarget(
             name: "KognitaViewsTests",
             dependencies: ["KognitaViews"]),

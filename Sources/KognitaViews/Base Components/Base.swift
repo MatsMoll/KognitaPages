@@ -7,7 +7,6 @@
 
 import HTMLKit
 import BootstrapKit
-import KognitaCore
 
 struct BaseTemplateContent {
     let title: String
@@ -112,7 +111,7 @@ struct BaseTemplate: HTMLComponent {
                 FavIcon(url: faviconUrl)
 
                 customHeader
-                HotjarScript()
+//                HotjarScript()
             }
             Body {
                 content

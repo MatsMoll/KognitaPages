@@ -1,5 +1,4 @@
 import BootstrapKit
-import KognitaCore
 
 extension User.Templates {
     public struct VerifiedConfirmation: HTMLPage {
