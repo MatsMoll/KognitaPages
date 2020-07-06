@@ -12,17 +12,19 @@ var dependencies: [Package.Dependency] = [
 switch ProcessInfo.processInfo.environment["BUILD_TYPE"] {
 case "LOCAL":
     dependencies.append(contentsOf: [
-            .package(path: "../KognitaContent"),
+            .package(path: "../KognitaModels"),
         ]
     )
 case "DEV":
+    let branch = ProcessInfo.processInfo.environment["KOGNITA_MODELS"] ?? "develop"
     dependencies.append(contentsOf: [
-            .package(url: "https://Kognita:dyjdov-bupgev-goffY8@github.com/MatsMoll/KognitaCore", .branch("develop")),
+        .package(name: "KognitaModels", url: "https://Kognita:dyjdov-bupgev-goffY8@github.com/MatsMoll/KognitaModels", .branch(branch)),
         ]
     )
 default:
+    let version = ProcessInfo.processInfo.environment["KOGNITA_MODELS"] ?? "1.0.0"
     dependencies.append(contentsOf: [
-        .package(url: "https://Kognita:dyjdov-bupgev-goffY8@github.com/MatsMoll/KognitaCore", from: "2.0.0"),
+        .package(name: "KognitaModels", url: "https://Kognita:dyjdov-bupgev-goffY8@github.com/MatsMoll/KognitaModels", from: .init(stringLiteral: version)),
         ]
     )
 }
@@ -44,7 +46,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "KognitaViews",
-            dependencies: ["BootstrapKit", "KognitaContent"]),
+            dependencies: ["BootstrapKit", "KognitaModels"]),
         .testTarget(
             name: "KognitaViewsTests",
             dependencies: ["KognitaViews"]),

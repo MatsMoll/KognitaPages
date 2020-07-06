@@ -1,6 +1,5 @@
 import BootstrapKit
 import Foundation
-import KognitaContent
 
 extension Sessions {
     public enum Templates {}

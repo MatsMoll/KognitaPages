@@ -1,5 +1,5 @@
 import BootstrapKit
-@_exported import KognitaContent
+@_exported import KognitaModels
 
 extension User {
     public struct Templates {}
