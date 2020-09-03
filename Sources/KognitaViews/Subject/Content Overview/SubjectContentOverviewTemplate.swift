@@ -65,9 +65,9 @@ private struct TopicTasks {
 }
 
 extension Subject {
-    var createMultipleTaskUri: String { "/creator/subjects/\(id ?? 0)/task/multiple/create" }
-    var createFlashCardTaskUri: String { "/creator/subjects/\(id ?? 0)/task/flash-card/create" }
-    var createTopicUri: String { "/creator/subjects/\(id ?? 0)/topics/create" }
+    var createMultipleTaskUri: String { "/creator/subjects/\(id)/task/multiple/create" }
+    var createFlashCardTaskUri: String { "/creator/subjects/\(id)/task/flash-card/create" }
+    var createTopicUri: String { "/creator/subjects/\(id)/topics/create" }
 }
 
 extension Subject.Templates {
@@ -88,7 +88,7 @@ extension Subject.Templates {
                 self.subject = subject
                 self.totalNumberOfTasks = tasks.count
                 self.listContext = .init(
-                    userID: user.id ?? 0,
+                    userID: user.id,
                     isModerator: isModerator,
                     tasks: tasks
                 )
@@ -158,6 +158,30 @@ extension Subject.Templates {
                                 .href(context.subject.createTopicUri)
                                 .button(style: .primary)
                                 .margin(.two, for: .left)
+                            }
+
+                            Form {
+                                Text { "Importer QTI" }
+                                Input(type: .file, id: "files")
+                                    .add(.init(attribute: "multiple", value: "multiple"))
+                                    .name("files")
+
+                                Button { "Importer" }.type(.button).on(click: "importFiles()")
+                            }
+
+                            Script {
+"""
+function importFiles() {
+var fd = new FormData();
+var ins = document.getElementById('files').files.length;
+for (var x = 0; x < ins; x++) {
+    fd.append("files[]", document.getElementById('files').files[x]);
+}
+var xhr = new XMLHttpRequest();
+xhr.open("POST", "import-qti");
+xhr.send();
+}
+"""
                             }
                         }
                     }

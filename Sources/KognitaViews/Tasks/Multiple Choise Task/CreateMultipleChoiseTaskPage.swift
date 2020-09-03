@@ -35,7 +35,7 @@ extension MultipleChoiceTask.Templates.Create.Context {
 }
 
 extension MultipleChoiceTask.Templates {
-    public struct Create: TemplateView {
+    public struct Create: HTMLTemplate {
 
         public struct Context {
             let user: User
@@ -139,16 +139,16 @@ extension MultipleChoiceTask.Templates {
                         }
                         .column(width: .six, for: .medium)
 
-//                        FormGroup(label: "År") {
-//                            Input()
-//                                .type(.number)
-//                                .class("form-control")
-//                                .id("create-multiple-exam-year")
-//                                .placeholder("2019")
-//                                .value(Unwrap(context.content.task) { $0.examPaperYear })
-//                                .required()
-//                        }
-//                        .column(width: .six, for: .medium)
+                        FormGroup(label: "År") {
+                            Input()
+                                .type(.number)
+                                .class("form-control")
+                                .id("create-multiple-exam-year")
+                                .placeholder("2019")
+                                .value(Unwrap(context.content.task) { $0.examYear })
+                                .required()
+                        }
+                        .column(width: .six, for: .medium)
                     }
                     .class("form-row")
 

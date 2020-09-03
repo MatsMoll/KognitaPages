@@ -21,15 +21,11 @@ extension Subject.Templates {
         public var body: HTML {
             IF(context.tasks.isEmpty) {
                 Div {
-                    Text {
-                        "Vi finner ingen oppgaver"
-                    }
-                    .style(.heading5)
+                    Text { "Vi finner ingen oppgaver" }
+                        .style(.heading5)
 
-                    Text {
-                        "Kanskje du skal lage en?"
-                    }
-                    .style(.heading4)
+                    Text { "Kanskje du skal lage en?" }
+                        .style(.heading4)
                 }
                 .column(width: .twelve)
             }.else {
@@ -50,7 +46,7 @@ extension Subject.Templates {
                             task: task
                         )
                     }
-                    .column(width: .twelve)
+                    .column(width: .six)
                 }
             }
         }
@@ -78,14 +74,14 @@ extension Subject.Templates {
                     .background(color: .info)
                 }
 
-//                Unwrap(task.task.deletedAt) { deletedAt in
-//                    Badge {
-//                        "Slettet: "
-//                        deletedAt.style(date: .short, time: .none)
-//                    }
-//                    .background(color: .danger)
-//                    .margin(.one, for: .left)
-//                }
+                Unwrap(task.task.deletedAt) { deletedAt in
+                    Badge {
+                        "Slettet: "
+                        deletedAt.style(date: .short, time: .none)
+                    }
+                    .background(color: .danger)
+                    .margin(.one, for: .left)
+                }
 
                 IF(task.task.isTestable) {
                     Badge {
@@ -130,7 +126,7 @@ extension Subject.Templates {
                     .button(style: .light)
                 }
 
-                IF(canEdit) {
+                IF(canEdit && task.task.deletedAt == nil) {
                     Button {
                         MaterialDesignIcon(.delete)
                         " Slett"

@@ -57,10 +57,6 @@ struct FormCard: HTMLComponent {
     }
 }
 
-extension TypingTask.ModifyContent {
-    var topics: [Topic.WithSubtopics] { [] }
-}
-
 extension TypingTask.Templates.Create.Context {
     var modalTitle: String { content.subject.name + " | Lag tekstoppgave"}
     var subjectUri: String { "/subjects/\(content.subject.id)" }
@@ -105,6 +101,7 @@ extension TypingTask.Templates {
             let content: TypingTask.ModifyContent
             let wasUpdated: Bool
             let canEdit: Bool
+            var topics: [Topic.WithSubtopics] { [] }
 
             public init(user: User, content: TypingTask.ModifyContent, canEdit: Bool, wasUpdated: Bool = false) {
                 self.user = user
@@ -144,11 +141,9 @@ extension TypingTask.Templates {
                         }
                     }
 
-                    Text {
-                        "Velg Tema"
-                    }
-                    .style(.heading3)
-                    .text(color: .dark)
+                    Text { "Velg Tema" }
+                        .style(.heading3)
+                        .text(color: .dark)
 
                     Unwrap(context.content.task) { task in
                         SubtopicPicker(
@@ -173,39 +168,38 @@ extension TypingTask.Templates {
                     .text(color: .dark)
 
                     FormRow {
-                        ""
-//                        FormGroup(label: "Eksamensett semester") {
-//                            Select {
-//                                Unwrap(context.content.task) { taskInfo in
-//                                    Unwrap(taskInfo.examPaperSemester) { exam in
-//                                        Option {
-//                                            exam.rawValue
-//                                        }
-//                                        .value(exam.rawValue)
-//                                    }
-//                                }
-//                                Option { "Ikke eksamensoppgave" }
-//                                    .value("")
-//                                Option { "Høst" }
-//                                    .value("fall")
-//                                Option { "Vår" }
-//                                    .value("spring")
-//                            }
-//                            .id("card-exam-semester")
-//                            .class("select2")
-//                            .data(for: "toggle", value: "select2")
-//                            .data(for: "placeholder", value: "Velg ...")
-//                        }
-//                        .column(width: .six, for: .medium)
+                        FormGroup(label: "Eksamensett semester") {
+                            Select {
+                                Unwrap(context.content.task) { taskInfo in
+                                    Unwrap(taskInfo.examType) { exam in
+                                        Option {
+                                            exam.rawValue
+                                        }
+                                        .value(exam.rawValue)
+                                    }
+                                }
+                                Option { "Ikke eksamensoppgave" }
+                                    .value("")
+                                Option { "Høst" }
+                                    .value("fall")
+                                Option { "Vår" }
+                                    .value("spring")
+                            }
+                            .id("card-exam-semester")
+                            .class("select2")
+                            .data(for: "toggle", value: "select2")
+                            .data(for: "placeholder", value: "Velg ...")
+                        }
+                        .column(width: .six, for: .medium)
 
-//                        FormGroup(label: "År") {
-//                            Input()
-//                                .type(.number)
-//                                .id("card-exam-year")
-//                                .placeholder("2019")
-//                                .value(Unwrap(context.content.task) { $0.examPaperYear })
-//                        }
-//                        .column(width: .six, for: .medium)
+                        FormGroup(label: "År") {
+                            Input()
+                                .type(.number)
+                                .id("card-exam-year")
+                                .placeholder("2019")
+                                .value(Unwrap(context.content.task) { $0.examYear })
+                        }
+                        .column(width: .six, for: .medium)
                     }
 
                     FormGroup {
