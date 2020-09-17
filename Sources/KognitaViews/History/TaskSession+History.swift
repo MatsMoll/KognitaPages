@@ -133,9 +133,8 @@ extension Sessions.Templates {
                     }
                     .column(width: .four, for: .large)
                 }
-                Row {
-                    SessionSection(sessions: context.sessions)
-                }
+
+                SessionSection(sessions: context.sessions)
             }
             .scripts {
                 Script().source("/assets/js/vendor/Chart.bundle.min.js")
@@ -151,23 +150,26 @@ extension Sessions.Templates.History {
         let sessions: TemplateValue<[SessionRepresentable]>
 
         var body: HTML {
-            Div {
-                Text { "Aktiviteter" }
-                    .style(.heading3)
+            Row {
+                Div {
+                    Text { "Aktiviteter" }
+                        .style(.heading3)
+                }
+                .column(width: .twelve)
 
                 IF(sessions.count > 1) {
                     ForEach(in: sessions) { session in
-                        SessionCard(session: session)
+                        Div {
+                            SessionCard(session: session)
+                        }
+                        .column(width: .six)
                     }
                 }
                 .else {
-                    Text {
-                        "Du har ikke fullført noen øvinger ennå. Gå inn på et fag for å starte! 🔥"
-                    }
-                    .style(.lead)
+                    Text { "Du har ikke fullført noen øvinger ennå. Gå inn på et fag for å starte! 🔥" }
+                        .style(.lead)
                 }
             }
-            .column(width: .twelve)
         }
     }
 

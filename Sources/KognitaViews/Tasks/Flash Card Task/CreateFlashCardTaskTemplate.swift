@@ -101,7 +101,6 @@ extension TypingTask.Templates {
             let content: TypingTask.ModifyContent
             let wasUpdated: Bool
             let canEdit: Bool
-            var topics: [Topic.WithSubtopics] { [] }
 
             public init(user: User, content: TypingTask.ModifyContent, canEdit: Bool, wasUpdated: Bool = false) {
                 self.user = user
@@ -141,67 +140,6 @@ extension TypingTask.Templates {
                         }
                     }
 
-                    Text { "Velg Tema" }
-                        .style(.heading3)
-                        .text(color: .dark)
-
-                    Unwrap(context.content.task) { task in
-                        SubtopicPicker(
-                            label: "Undertema",
-                            idPrefix: "card-",
-                            topics: context.content.topics
-                        )
-                        .selected(id: task.subtopicID)
-                    }
-                    .else {
-                        SubtopicPicker(
-                            label: "Undertema",
-                            idPrefix: "card-",
-                            topics: context.content.topics
-                        )
-                    }
-
-                    Text {
-                        "Eksamensoppgave?"
-                    }
-                    .style(.heading3)
-                    .text(color: .dark)
-
-                    FormRow {
-                        FormGroup(label: "Eksamensett semester") {
-                            Select {
-                                Unwrap(context.content.task) { taskInfo in
-                                    Unwrap(taskInfo.examType) { exam in
-                                        Option {
-                                            exam.rawValue
-                                        }
-                                        .value(exam.rawValue)
-                                    }
-                                }
-                                Option { "Ikke eksamensoppgave" }
-                                    .value("")
-                                Option { "Høst" }
-                                    .value("fall")
-                                Option { "Vår" }
-                                    .value("spring")
-                            }
-                            .id("card-exam-semester")
-                            .class("select2")
-                            .data(for: "toggle", value: "select2")
-                            .data(for: "placeholder", value: "Velg ...")
-                        }
-                        .column(width: .six, for: .medium)
-
-                        FormGroup(label: "År") {
-                            Input()
-                                .type(.number)
-                                .id("card-exam-year")
-                                .placeholder("2019")
-                                .value(Unwrap(context.content.task) { $0.examYear })
-                        }
-                        .column(width: .six, for: .medium)
-                    }
-
                     FormGroup {
                         MarkdownEditor(id: "description") {
                             Unwrap(context.content.task) {
@@ -238,25 +176,75 @@ extension TypingTask.Templates {
                             .class("invalid-feedback")
                     }
 
-                    FormGroup {
-                        MarkdownEditor(id: "solution") {
-                            Unwrap(context.content.task) { task in
-                                task.solution
-                                    .escaping(.unsafeNone)
+                    Unwrap(context.content.task) { task in
+                        IF(task.solutions.count > 1) {
+                            TaskSolutionCard(fetchUrl: Script.fetchSolutionEditorUrl)
+                        }.else {
+                            Unwrap(task.solutions.first) { solution in
+                                solutionForm(solution)
                             }
                         }
-                        .placeholder("Gitt at funksjonen er konveks, fører det til at ...")
-                        .onChange { editor in
-                            Script.solutionScore(divID: "solution-req", editorName: editor)
+                    }.else {
+                        solutionForm()
+                    }
+
+                    Text { "Velg Tema" }
+                        .style(.heading3)
+                        .text(color: .dark)
+
+                    Unwrap(context.content.task) { task in
+                        SubtopicPicker(
+                            label: "Undertema",
+                            idPrefix: "card-",
+                            topics: context.content.topics
+                        )
+                        .selected(id: task.subtopicID)
+                    }
+                    .else {
+                        SubtopicPicker(
+                            label: "Undertema",
+                            idPrefix: "card-",
+                            topics: context.content.topics
+                        )
+                    }
+
+                    Text { "Eksamensoppgave?" }
+                    .style(.heading3)
+                    .text(color: .dark)
+
+                    FormRow {
+                        FormGroup(label: "Eksamensett semester") {
+                            Select {
+                                Unwrap(context.content.task) { taskInfo in
+                                    Unwrap(taskInfo.examType) { exam in
+                                        Option {
+                                            exam.rawValue
+                                        }
+                                        .value(exam.rawValue)
+                                    }
+                                }
+                                Option { "Ikke eksamensoppgave" }
+                                    .value("")
+                                Option { "Høst" }
+                                    .value("fall")
+                                Option { "Vår" }
+                                    .value("spring")
+                            }
+                            .id("card-exam-semester")
+                            .class("select2")
+                            .data(for: "toggle", value: "select2")
+                            .data(for: "placeholder", value: "Velg ...")
                         }
-                    }
-                    .customLabel {
-                        Text { "Løsningsforslag" }
-                            .style(.heading3)
-                            .text(color: .dark)
-                    }
-                    .description {
-                        TaskSolution.Templates.Requmendations().id("solution-req")
+                        .column(width: .six, for: .medium)
+
+                        FormGroup(label: "År") {
+                            Input()
+                                .type(.number)
+                                .id("card-exam-year")
+                                .placeholder("2019")
+                                .value(Unwrap(context.content.task) { $0.examYear })
+                        }
+                        .column(width: .six, for: .medium)
                     }
 
                     DismissableError()
@@ -305,6 +293,28 @@ extension TypingTask.Templates {
                     Script(source: "/assets/js/flash-card/create.js")
                 }
             }
+        }
+
+        private func solutionForm(content: HTML = "", id: HTML = "solution") -> HTML {
+            FormGroup {
+                MarkdownEditor(id: id) { content }
+                    .placeholder("Gitt at funksjonen er konveks, fører det til at ...")
+                    .onChange { editor in
+                        Script.solutionScore(divID: "solution-req", editorName: editor)
+                }
+            }
+            .customLabel {
+                Text { "Løsningsforslag" }
+                    .style(.heading3)
+                    .text(color: .dark)
+            }
+            .description {
+                TaskSolution.Templates.Requmendations().id("solution-req")
+            }
+        }
+
+        private func solutionForm(_ solution: TemplateValue<TaskSolution>) -> HTML {
+            solutionForm(content: solution.solution.escaping(.unsafeNone))
         }
     }
 }

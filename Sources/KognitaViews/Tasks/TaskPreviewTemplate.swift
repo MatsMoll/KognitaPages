@@ -157,7 +157,10 @@ public struct TaskPreviewTemplate: HTMLComponent {
 
                     Div {
                         overSolutionCard
-                        TaskSolutionCard()
+                        TaskSolutionCard(
+                            fetchUrl: Script.fetchSolutionSessionUrl,
+                            extraScripts: Script.practiceSessionIDFromUri + Script.practiceSessionTaskIndexFromUri
+                        )
                         DismissableError()
                         underSolutionCard
                         TaskDiscussionCard()

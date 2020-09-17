@@ -60,23 +60,33 @@ extension Subject.Templates {
         var body: HTML {
             Card {
 
+                IF(task.task.isDraft) {
+                    Badge {
+                        MaterialDesignIcon(.note)
+                        " Notat"
+                    }
+                    .background(color: .warning)
+                    .margin(.one, for: .right)
+                }
+
                 IF(task.isMultipleChoise) {
                     Badge {
-                        "Flervalg "
                         MaterialDesignIcon(.formatListBulleted)
+                        " Flervalg"
                     }
                     .background(color: .light)
                 }.else {
                     Badge {
-                        "Innskriving "
                         MaterialDesignIcon(.messageReplyText)
+                        " Innskriving"
                     }
                     .background(color: .info)
                 }
 
                 Unwrap(task.task.deletedAt) { deletedAt in
                     Badge {
-                        "Slettet: "
+                        MaterialDesignIcon(.delete)
+                        " Slettet: "
                         deletedAt.style(date: .short, time: .none)
                     }
                     .background(color: .danger)
@@ -84,11 +94,9 @@ extension Subject.Templates {
                 }
 
                 IF(task.task.isTestable) {
-                    Badge {
-                        "Prøve"
-                    }
-                    .background(color: .warning)
-                    .margin(.one, for: .left)
+                    Badge { "Prøve" }
+                        .background(color: .warning)
+                        .margin(.one, for: .left)
                 }
 
 //                Unwrap(task.task.examPaperYear) { examYear in

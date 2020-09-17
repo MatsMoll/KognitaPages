@@ -3,6 +3,9 @@ import BootstrapKit
 struct MaterialDesignIcon: HTMLComponent, AttributeNode {
     enum Icons: String {
         case infinity
+        case note
+        case multipleNotes = "note-multiple"
+        case noteWithText = "note-text"
         case check
         case checkAll = "check-all"
         case minus
@@ -35,6 +38,8 @@ struct MaterialDesignIcon: HTMLComponent, AttributeNode {
         case messageReplyText = "message-reply-text"
         case testTube = "test-tube"
         case dotsVertical = "dots-vertical"
+        case reorderHorizontal = "reorder-horizontal"
+        case reorderVertical = "reorder-vertical"
     }
 
     let icon: TemplateValue<Icons>

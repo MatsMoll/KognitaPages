@@ -67,7 +67,8 @@ private struct TopicTasks {
 extension Subject {
     var createMultipleTaskUri: String { "/creator/subjects/\(id)/task/multiple/create" }
     var createFlashCardTaskUri: String { "/creator/subjects/\(id)/task/flash-card/create" }
-    var createTopicUri: String { "/creator/subjects/\(id)/topics/create" }
+    var createTopicUri: String { "/subjects/\(id)/topics" }
+    var createDraftUri: String { "/subjects/\(id)/tasks/draft" }
 }
 
 extension Subject.Templates {
@@ -144,6 +145,14 @@ extension Subject.Templates {
                             .button(style: .success)
 
                             Anchor {
+                                "Lag notat "
+                                MaterialDesignIcon(.note)
+                            }
+                            .href(context.subject.createDraftUri)
+                            .button(style: .success)
+                            .margin(.two, for: .left)
+
+                            Anchor {
                                 "Lag innskrivingsoppgave "
                                 MaterialDesignIcon(.messageReplyText)
                             }
@@ -152,37 +161,13 @@ extension Subject.Templates {
                             .margin(.two, for: .left)
 
                             IF(context.isModerator) {
-                                Anchor {
-                                    "Lag et tema"
-                                }
-                                .href(context.subject.createTopicUri)
-                                .button(style: .primary)
-                                .margin(.two, for: .left)
+                                Anchor { "Rediger temaer" }
+                                    .href(context.subject.createTopicUri)
+                                    .button(style: .primary)
+                                    .margin(.two, for: .left)
                             }
 
-                            Form {
-                                Text { "Importer QTI" }
-                                Input(type: .file, id: "files")
-                                    .add(.init(attribute: "multiple", value: "multiple"))
-                                    .name("files")
-
-                                Button { "Importer" }.type(.button).on(click: "importFiles()")
-                            }
-
-                            Script {
-"""
-function importFiles() {
-var fd = new FormData();
-var ins = document.getElementById('files').files.length;
-for (var x = 0; x < ins; x++) {
-    fd.append("files[]", document.getElementById('files').files[x]);
-}
-var xhr = new XMLHttpRequest();
-xhr.open("POST", "import-qti");
-xhr.send();
-}
-"""
-                            }
+//                            QTIImportButton()
                         }
                     }
                     .column(width: .twelve)

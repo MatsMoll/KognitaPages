@@ -86,88 +86,6 @@ extension MultipleChoiceTask.Templates {
                 }
                 FormCard(title: context.modalTitle) {
 
-                    Text {
-                        "Velg tema"
-                    }
-                    .style(.heading3)
-                    .text(color: .dark)
-
-                    Unwrap(context.content.task) { task in
-                        SubtopicPicker(
-                            label: "Undertema",
-                            idPrefix: "create-multiple-",
-                            topics: context.content.topics
-                        )
-                        .selected(id: task.subtopicID)
-                    }
-                    .else {
-                        SubtopicPicker(
-                            label: "Undertema",
-                            idPrefix: "create-multiple-",
-                            topics: context.content.topics
-                        )
-                    }
-
-                    Text {
-                        "Eksamensoppgave?"
-                    }
-                    .style(.heading3)
-                    .text(color: .dark)
-
-                    Div {
-                        FormGroup(label: "Eksamensett semester") {
-                            Select {
-                                Option {
-                                    "Ikke eksamensoppgave"
-                                }
-                                .value("")
-
-                                Option {
-                                    "Høst"
-                                }
-                                .value("fall")
-
-                                Option {
-                                    "Vår"
-                                }
-                                .value("spring")
-                            }
-                            .id("create-multiple-exam-semester")
-                            .class("select2 form-control select2")
-                            .data(for: "toggle", value: "select2")
-                            .data(for: "placeholder", value: "Velg ...")
-                        }
-                        .column(width: .six, for: .medium)
-
-                        FormGroup(label: "År") {
-                            Input()
-                                .type(.number)
-                                .class("form-control")
-                                .id("create-multiple-exam-year")
-                                .placeholder("2019")
-                                .value(Unwrap(context.content.task) { $0.examYear })
-                                .required()
-                        }
-                        .column(width: .six, for: .medium)
-                    }
-                    .class("form-row")
-
-                    IF(context.isModerator) {
-                        Text {
-                            "Bruk på prøver"
-                        }
-                        .style(.heading3)
-                        .text(color: .dark)
-
-                        CustomControlInput(
-                            label: "Ved å velge denne kan man bruke oppgaven på prøver men ikke til å øve",
-                            type: .checkbox,
-                            id: "create-multiple-testable"
-                        )
-                            .margin(.three, for: .bottom)
-                            .isChecked(context.isTestable)
-                    }
-
                     FormGroup {
                         MarkdownEditor(id: "description") {
                             Unwrap(context.content.task) {
@@ -268,27 +186,96 @@ extension MultipleChoiceTask.Templates {
                     }
                     .id("create-multiple-choises")
 
-                    FormGroup {
-                        MarkdownEditor(id: "solution") {
-                            Unwrap(context.content.task) { task in
-                                task.solution
-                                    .escaping(.unsafeNone)
+                    Unwrap(context.content.task) { task in
+                        IF(task.solutions.count > 1) {
+                            TaskSolutionCard(fetchUrl: Script.fetchSolutionEditorUrl)
+                        }.else {
+                            Unwrap(task.solutions.first) { solution in
+                                solutionForm(solution)
                             }
                         }
-                        .placeholder("Gitt at funksjonen er konveks, fører det til at ...")
-                        .onChange { editor in
-                            Script.solutionScore(divID: "solution-req", editorName: editor)
-                        }
+                    }.else {
+                        solutionForm()
                     }
-                    .customLabel {
+
+                    Text {
+                        "Velg tema"
+                    }
+                    .style(.heading3)
+                    .text(color: .dark)
+
+                    Unwrap(context.content.task) { task in
+                        SubtopicPicker(
+                            label: "Undertema",
+                            idPrefix: "create-multiple-",
+                            topics: context.content.topics
+                        )
+                        .selected(id: task.subtopicID)
+                    }
+                    .else {
+                        SubtopicPicker(
+                            label: "Undertema",
+                            idPrefix: "create-multiple-",
+                            topics: context.content.topics
+                        )
+                    }
+
+                    Text { "Eksamensoppgave?" }
+                    .style(.heading3)
+                    .text(color: .dark)
+
+                    Div {
+                        FormGroup(label: "Eksamensett semester") {
+                            Select {
+                                Option {
+                                    "Ikke eksamensoppgave"
+                                }
+                                .value("")
+
+                                Option {
+                                    "Høst"
+                                }
+                                .value("fall")
+
+                                Option {
+                                    "Vår"
+                                }
+                                .value("spring")
+                            }
+                            .id("create-multiple-exam-semester")
+                            .class("select2 form-control select2")
+                            .data(for: "toggle", value: "select2")
+                            .data(for: "placeholder", value: "Velg ...")
+                        }
+                        .column(width: .six, for: .medium)
+
+                        FormGroup(label: "År") {
+                            Input()
+                                .type(.number)
+                                .class("form-control")
+                                .id("create-multiple-exam-year")
+                                .placeholder("2019")
+                                .value(Unwrap(context.content.task) { $0.examYear })
+                                .required()
+                        }
+                        .column(width: .six, for: .medium)
+                    }
+                    .class("form-row")
+
+                    IF(context.isModerator) {
                         Text {
-                            "Begrunnelse til korrekt svar"
+                            "Bruk på prøver"
                         }
                         .style(.heading3)
                         .text(color: .dark)
-                    }
-                    .description {
-                        TaskSolution.Templates.Requmendations().id("solution-req")
+
+                        CustomControlInput(
+                            label: "Ved å velge denne kan man bruke oppgaven på prøver men ikke til å øve",
+                            type: .checkbox,
+                            id: "create-multiple-testable"
+                        )
+                            .margin(.three, for: .bottom)
+                            .isChecked(context.isTestable)
                     }
 
                     DismissableError()
@@ -339,6 +326,28 @@ extension MultipleChoiceTask.Templates {
                     Script().source("/assets/js/multiple-choise/create.js")
                 }
             }
+        }
+
+        private func solutionForm(content: HTML = "", id: HTML = "solution") -> HTML {
+            FormGroup {
+                MarkdownEditor(id: id) { content }
+                    .placeholder("Gitt at funksjonen er konveks, fører det til at ...")
+                    .onChange { editor in
+                        Script.solutionScore(divID: "solution-req", editorName: editor)
+                }
+            }
+            .customLabel {
+                Text { "Løsningsforslag" }
+                    .style(.heading3)
+                    .text(color: .dark)
+            }
+            .description {
+                TaskSolution.Templates.Requmendations().id("solution-req")
+            }
+        }
+
+        private func solutionForm(_ solution: TemplateValue<TaskSolution>) -> HTML {
+            solutionForm(content: solution.solution.escaping(.unsafeNone))
         }
 
         struct ChoiseRow: HTMLComponent {

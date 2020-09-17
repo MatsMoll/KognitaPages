@@ -1,4 +1,4 @@
-import HTMLKit
+@_exported import BootstrapKit
 import Foundation
 
 public struct KognitaViews {
@@ -61,10 +61,12 @@ public struct KognitaViews {
     //    // Create Content
         try renderer.add(view: Subject.Templates.Create())
         try renderer.add(view: Topic.Templates.Create())
+        try renderer.add(view: Topic.Templates.Modify())
         try renderer.add(view: Subtopic.Templates.Create())
     //
     //    // Create Task Templates
         try renderer.add(view: TypingTask.Templates.Create())
+        try renderer.add(view: TypingTask.Templates.CreateDraft())
         try renderer.add(view: MultipleChoiceTask.Templates.Create())
         try renderer.add(view: MultipleChoiceTask.Templates.ImportQTI())
     //
