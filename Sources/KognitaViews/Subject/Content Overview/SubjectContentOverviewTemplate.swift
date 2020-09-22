@@ -419,5 +419,3 @@ struct SearchFetch: HTMLComponent {
         }
     }
 }
-
-extension SearchFetch: InputGroupAddons {}
