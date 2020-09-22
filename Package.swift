@@ -22,7 +22,7 @@ case "DEV":
         ]
     )
 default:
-    let version = ProcessInfo.processInfo.environment["KOGNITA_MODELS"] ?? "1.0.0"
+    let version = ProcessInfo.processInfo.environment["KOGNITA_MODELS"] ?? "1.0.3"
     dependencies.append(contentsOf: [
         .package(name: "KognitaModels", url: "https://Kognita:dyjdov-bupgev-goffY8@github.com/MatsMoll/KognitaModels", from: .init(stringLiteral: version)),
         ]
