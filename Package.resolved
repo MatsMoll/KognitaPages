@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/MatsMoll/BootstrapKit.git",
         "state": {
           "branch": null,
-          "revision": "fd21094f4e80996d6b30227f89aa50104a68a0b9",
-          "version": "1.0.0-beta.5.3"
+          "revision": "14276dd4203bd214b3f58ea748994e4e2e519ddf",
+          "version": "1.0.0"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/vapor-community/HTMLKit",
         "state": {
           "branch": null,
-          "revision": "c20beeedf4e7d62141baa74d615a039d07dd2e9c",
-          "version": "2.0.0-beta.3.4"
+          "revision": "c2eccd1a3275b2d479e66bb00734da217d4f618e",
+          "version": "2.0.0"
         }
       },
       {

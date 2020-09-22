@@ -60,7 +60,7 @@ extension Subject.Templates {
         var body: HTML {
             Card {
 
-                IF(task.task.isDraft) {
+                IF(task.isNote) {
                     Badge {
                         MaterialDesignIcon(.note)
                         " Notat"
@@ -91,6 +91,7 @@ extension Subject.Templates {
                     }
                     .background(color: .danger)
                     .margin(.one, for: .left)
+                    .title("Oppgaven vil ikke bli brukt i øvingsesjoner")
                 }
 
                 IF(task.task.isTestable) {

@@ -32,6 +32,15 @@ extension MultipleChoiceTask.Templates.Create.Context {
         }
         return "deleteTask(\(taskID), \"tasks/multiple-choise\");"
     }
+
+    var forceDeleteCall: String? {
+        guard let taskID = content.task?.id else {
+            return nil
+        }
+        return "forceDelete(\(taskID), \"tasks/multiple-choise\");"
+    }
+
+    var isDeleted: Bool { content.task?.isDeleted == true }
 }
 
 extension MultipleChoiceTask.Templates {
@@ -84,6 +93,24 @@ extension MultipleChoiceTask.Templates {
                     .text(color: .white)
                     .isDismissable(true)
                 }
+
+                Unwrap(context.content.task) { task in
+                    IF(task.isDeleted) {
+                        Alert {
+                            Text { "Denne oppgaven brukes ikke i øvingsett. For å bruke den i øvingsett kan man lagre / redigere oppgaven. Skulle man heller slette den permanent, så er det mulig med å trykke på \"Slett permanent\"" }
+                            Button {
+                                "Slett permanent"
+                                MaterialDesignIcon(.delete)
+                                    .margin(.one, for: .left)
+                            }
+                            .button(style: .danger)
+                            .on(click: context.forceDeleteCall)
+                        }
+                        .isDismissable(false)
+                        .background(color: .light)
+                    }
+                }
+
                 FormCard(title: context.modalTitle) {
 
                     FormGroup {
@@ -290,17 +317,18 @@ extension MultipleChoiceTask.Templates {
                         .class("mb-3 mt-3")
                         .button(style: .success)
 
-                        Unwrap(context.deleteCall) { _ in
-
-                            Button {
-                                MaterialDesignIcon(icon: .delete)
-                                " Slett"
+                        IF(context.isDeleted == false) {
+                            Unwrap(context.deleteCall) { _ in
+                                Button {
+                                    MaterialDesignIcon(icon: .delete)
+                                    " Slett"
+                                }
+                                .type(.button)
+                                .on(click: context.saveCall)
+                                .margin(.three, for: .vertical)
+                                .margin(.one, for: .left)
+                                .button(style: .danger)
                             }
-                            .type(.button)
-                            .on(click: context.saveCall)
-                            .margin(.three, for: .vertical)
-                            .margin(.one, for: .left)
-                            .button(style: .danger)
                         }
                     }
                 }

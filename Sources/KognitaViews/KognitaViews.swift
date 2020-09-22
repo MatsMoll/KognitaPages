@@ -68,7 +68,7 @@ public struct KognitaViews {
         try renderer.add(view: TypingTask.Templates.Create())
         try renderer.add(view: TypingTask.Templates.CreateDraft())
         try renderer.add(view: MultipleChoiceTask.Templates.Create())
-        try renderer.add(view: MultipleChoiceTask.Templates.ImportQTI())
+//        try renderer.add(view: MultipleChoiceTask.Templates.ImportQTI())
     //
     //    // Practice Session
         try renderer.add(view: PracticeSession.Templates.Result())

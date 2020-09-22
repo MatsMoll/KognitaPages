@@ -40,6 +40,7 @@ struct MaterialDesignIcon: HTMLComponent, AttributeNode {
         case dotsVertical = "dots-vertical"
         case reorderHorizontal = "reorder-horizontal"
         case reorderVertical = "reorder-vertical"
+        case email = "telegram"
     }
 
     let icon: TemplateValue<Icons>

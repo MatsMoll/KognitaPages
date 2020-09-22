@@ -58,7 +58,7 @@ extension TaskSolution.Templates {
             let user: User
             let solutions: [TaskSolution.Response]
 
-            var userID: User.ID { user.id ?? 0 }
+            var userID: User.ID { user.id }
 
             public init(user: User, solutions: [TaskSolution.Response]) {
                 self.user = user

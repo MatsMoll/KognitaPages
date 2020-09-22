@@ -128,6 +128,7 @@ struct BaseTemplate: HTMLComponent {
             customScripts
             content.scripts
         }
+        .lang("nb")
         .enviroment(locale: "nb")
     }
 }

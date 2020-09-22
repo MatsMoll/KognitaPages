@@ -138,17 +138,17 @@ extension Subject.Templates {
                             .margin(.two, for: .bottom)
 
                             Anchor {
-                                "Lag flervalgsoppgave "
-                                MaterialDesignIcon(.formatListBulleted)
-                            }
-                            .href(context.subject.createMultipleTaskUri)
-                            .button(style: .success)
-
-                            Anchor {
                                 "Lag notat "
                                 MaterialDesignIcon(.note)
                             }
                             .href(context.subject.createDraftUri)
+                            .button(style: .info)
+
+                            Anchor {
+                                "Lag flervalgsoppgave "
+                                MaterialDesignIcon(.formatListBulleted)
+                            }
+                            .href(context.subject.createMultipleTaskUri)
                             .button(style: .success)
                             .margin(.two, for: .left)
 
@@ -310,6 +310,8 @@ struct SearchCard: HTMLComponent {
         Div {
             Card {
                 Form {
+                    Label { "Søk i innholdet" }
+                        .for("taskQuestion")
                     InputGroup {
                         Input()
                             .type(.text)
@@ -318,20 +320,16 @@ struct SearchCard: HTMLComponent {
                             .name("taskQuestion")
                     }
                     .append {
-                        Button {
-                            "Søk"
-                        }
-                        .button(style: .primary)
-                        .type(.submit)
+                        Button { "Søk" }
+                            .button(style: .primary)
+                            .type(.submit)
                     }
                     .margin(.three, for: .bottom)
 
                     Row {
                         Div {
-                            Text {
-                                "Filterer på tema"
-                            }
-                            .style(.heading4)
+                            Text { "Filterer på tema" }
+                                .style(.heading4)
                         }
                         .column(width: .twelve)
                     }
@@ -347,11 +345,9 @@ struct SearchCard: HTMLComponent {
                                         .name("topics[]")
                                         .value(topic.id)
                                         .id(topic.id)
-                                    Label {
-                                        topic.name
-                                    }
-                                    .class("custom-control-label")
-                                    .for(topic.id)
+                                    Label { topic.name }
+                                        .class("custom-control-label")
+                                        .for(topic.id)
                                 }
                                 .class("custom-control custom-checkbox")
                             }

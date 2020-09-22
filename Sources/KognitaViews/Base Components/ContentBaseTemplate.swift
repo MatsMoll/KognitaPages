@@ -117,9 +117,7 @@ struct ContentBaseTemplate: HTMLComponent {
                 .class("topnav")
 
                 Div {
-                    Container {
-                        content
-                    }
+                    Container { content }
                 }
                 .class("content")
 
@@ -129,12 +127,8 @@ struct ContentBaseTemplate: HTMLComponent {
 
             modals
         }
-        .header {
-            header
-        }
-        .scripts {
-            scripts
-        }
+        .header { header }
+        .scripts { scripts }
         .scrollSpy(scrollSpy)
     }
 

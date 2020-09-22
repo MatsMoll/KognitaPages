@@ -4,7 +4,7 @@
 //
 //  Created by Mats Mollestad on 03/09/2020.
 //
-
+import Foundation
 import BootstrapKit
 
 extension TypingTask.Templates.CreateDraft.Context {
@@ -13,8 +13,6 @@ extension TypingTask.Templates.CreateDraft.Context {
     var subjectContentOverviewUri: String { "/creator/subjects/\(content.subject.id)/overview" }
 
     var isEditingTask: Bool { content.task != nil }
-
-    var saveCall: String { "createDraft();" }
 
     var deleteCall: String? {
         guard let taskID = content.task?.id else {
@@ -52,83 +50,31 @@ extension TypingTask.Templates {
                 baseContext: .constant(.init(title: "Lag oppgave", description: "Lag oppgave"))
             ) {
                 PageTitle(title: "Lag tekstoppgave", breadcrumbs: breadcrumbs)
-                FormCard(title: context.modalTitle) {
 
-                    FormGroup {
-                        TextArea {
-                            Unwrap(context.content.task) {
-                                $0.question
-                            }
-                        }
-                        .class("form-control")
-                        .id("card-question")
-                        .placeholder("Noe å svare på her")
-                        .required()
-                    }
-                    .customLabel {
-                        Text { "Spørsmål" }
-                            .style(.heading3)
-                            .text(color: .dark)
-                    }
-                    .description {
-                        Div { "Kun tillatt med bokstaver, tall, mellomrom og enkelte tegn (. , : ; ! ?)" }
-                            .class("invalid-feedback")
-                    }
+                Input()
+                    .type(.hidden)
+                    .value(UUID())
+                    .id("note-session")
 
-                    FormGroup {
-                        MarkdownEditor(id: "solution")
-                            .placeholder("Gitt at funksjonen er konveks, fører det til at ...")
-                    }
-                    .customLabel {
-                        Text { "Notater for løsningsforslag" }
-                            .style(.heading3)
-                            .text(color: .dark)
-                    }
-
-                    Text { "Velg Tema" }
-                        .style(.heading3)
-                        .text(color: .dark)
-
-                    Unwrap(context.content.task) { task in
-                        SubtopicPicker(
-                            label: "Undertema",
-                            idPrefix: "card-",
-                            topics: context.content.topics
-                        )
-                        .selected(id: task.subtopicID)
-                    }
-                    .else {
-                        SubtopicPicker(
-                            label: "Undertema",
-                            idPrefix: "card-",
-                            topics: context.content.topics
-                        )
-                    }
-
-                    DismissableError()
-
-                    Button {
-                        MaterialDesignIcon(icon: .check)
-                        " Lagre"
-                    }
-                    .type(.button)
-                    .button(style: .success)
-                    .margin(.three, for: .vertical)
-                    .on(click: context.saveCall)
-
-                    Unwrap(context.deleteCall) { deleteCall in
+                ContentStructure {
+                    Div().id("notes")
+                }
+                .secondary {
+                    Card {
+                        Text { "Handlinger" }.style(.heading3)
 
                         Button {
-                            MaterialDesignIcon(icon: .delete)
-                            " Slett"
+                            "Nytt notat"
+                            MaterialDesignIcon(.note)
+                                .margin(.one, for: .left)
                         }
-                        .type(.button)
-                        .button(style: .danger)
-                        .margin(.three, for: .vertical)
-                        .margin(.one, for: .left)
-                        .on(click: deleteCall)
+                        .button(style: .success)
+                        .toggle(modal: .id(LectureNoteModal.identifier))
                     }
                 }
+
+                LectureNoteModal(topics: context.content.topics)
+                UpdateModel(topics: context.content.topics)
             }
             .header {
                 Stylesheet(url: "/assets/css/vendor/simplemde.min.css")
@@ -149,6 +95,144 @@ extension TypingTask.Templates {
                     Script(source: "/assets/js/flash-card/draft/create.js")
                 }
             }
+        }
+    }
+
+    struct LectureNoteModal: HTMLComponent {
+
+        static let identifier = "lecture-note-modal"
+
+        let topics: TemplateValue<[Topic.WithSubtopics]>
+
+        var body: HTML {
+            Modal(title: "Nytt notat", id: LectureNoteModal.identifier) {
+
+                FormGroup {
+                    Input()
+                        .type(.text)
+                        .class("form-control")
+                        .id("card-question")
+                        .placeholder("Noe å svare på her")
+                        .required()
+                }
+                .customLabel {
+                    Text { "Spørsmål" }
+                        .style(.heading3)
+                        .text(color: .dark)
+                }
+                .description {
+                    Div { "Kun tillatt med bokstaver, tall, mellomrom og enkelte tegn (. , : ; ! ?)" }
+                        .class("invalid-feedback")
+                }
+
+                FormGroup {
+                    MarkdownEditor(id: "solution")
+                        .placeholder("Gitt at funksjonen er konveks, fører det til at ...")
+                }
+                .customLabel {
+                    Text { "Notater for løsningsforslag" }
+                        .style(.heading3)
+                        .text(color: .dark)
+                }
+
+                Text { "Velg Tema" }
+                    .style(.heading3)
+                    .text(color: .dark)
+
+                SubtopicPicker(
+                    label: "Undertema",
+                    idPrefix: "card-",
+                    topics: topics
+                )
+
+                DismissableError()
+
+                Button {
+                    MaterialDesignIcon(icon: .check)
+                    " Lagre"
+                }
+                .type(.button)
+                .button(style: .success)
+                .margin(.three, for: .top)
+                .on(click: "createDraft();")
+            }
+        }
+    }
+
+    struct UpdateModel: HTMLComponent {
+
+        static let identifier = "note-update-modal"
+
+        let topics: TemplateValue<[Topic.WithSubtopics]>
+
+        var body: HTML {
+            Modal(title: "Rediger notat", id: UpdateModel.identifier) {
+
+                Input().type(.hidden).id("update-id")
+
+                FormGroup {
+                    Input()
+                        .type(.text)
+                        .class("form-control")
+                        .id("update-question")
+                        .placeholder("Noe å svare på her")
+                        .required()
+                }
+                .customLabel {
+                    Text { "Spørsmål" }
+                        .style(.heading3)
+                        .text(color: .dark)
+                }
+                .description {
+                    Div { "Kun tillatt med bokstaver, tall, mellomrom og enkelte tegn (. , : ; ! ?)" }
+                        .class("invalid-feedback")
+                }
+
+                FormGroup {
+                    MarkdownEditor(id: "update-solution")
+                        .placeholder("Gitt at funksjonen er konveks, fører det til at ...")
+                }
+                .customLabel {
+                    Text { "Notater for løsningsforslag" }
+                        .style(.heading3)
+                        .text(color: .dark)
+                }
+
+                Text { "Velg Tema" }
+                    .style(.heading3)
+                    .text(color: .dark)
+
+                SubtopicPicker(
+                    label: "Undertema",
+                    idPrefix: "update-",
+                    topics: topics
+                )
+
+                DismissableError()
+
+                Button {
+                    MaterialDesignIcon(icon: .check)
+                    " Lagre"
+                }
+                .button(style: .success)
+                .type(.button)
+                .button(style: .success)
+                .margin(.three, for: .top)
+                .on(click: "updateNote();")
+
+                Button {
+                    MaterialDesignIcon(.close)
+                    " Lukk"
+                }
+                .button(style: .danger)
+                .margin(.three, for: .top)
+                .dismissModal()
+                .margin(.one, for: .left)
+            }
+            .set(data: "id", type: .input, to: "update-id")
+            .set(data: "question", type: .input, to: "update-question")
+            .set(data: "solution", type: .markdown, to: "update-solution")
+            .set(data: "subtopic-id", type: .input, to: "update-topic-id")
         }
     }
 }
