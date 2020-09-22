@@ -1,51 +1,52 @@
 //
-//  MultipleChoiseTask.swift
+//  MultipleChoiceTask.swift
 //  App
 //
 //  Created by Mats Mollestad on 27/02/2019.
 //
 
 import BootstrapKit
-import KognitaCore
 
-extension MultipleChoiseTask {
+extension MultipleChoiceTask {
     public struct Templates {}
 }
 
-extension MultipleChoiseTask.Templates {
+extension MultipleChoiceTask.Templates {
     public struct Execute: TemplateView {
 
         public struct Context {
             let previewContext: TaskPreviewTemplateContext
             let choises: [ChoiseContext]
-            let multipleChoiseTask: MultipleChoiseTask.Data
+            let multipleChoiceTask: MultipleChoiceTask
 
             let isResult: Bool
-            var hasBeenCompleted: Bool { return previewContext.lastResult?.sessionId == (try? session?.requireID()) }
+            var hasBeenCompleted: Bool { return previewContext.lastResult?.sessionID == sessionID }
 
             var task: Task { return previewContext.task }
-            var session: PracticeSessionRepresentable? { return previewContext.session }
+            var sessionID: PracticeSession.ID { previewContext.sessionID }
 
             public init(
-                multiple: MultipleChoiseTask.Data,
+                multiple: MultipleChoiceTask,
                 taskContent: TaskPreviewContent,
-                user: UserContent,
+                user: User,
                 currentTaskIndex: Int,
-                session: PracticeSessionRepresentable,
-                lastResult: TaskResultContent?,
+                sessionID: PracticeSession.ID,
+                lastResult: TaskResult?,
                 practiceProgress: Int,
-                selectedChoises: [MultipleChoiseTaskChoise.ID] = []
+                selectedChoises: [MultipleChoiceTaskChoice.ID] = [],
+                numberOfTaskGoal: Int
             ) {
                 self.previewContext = .init(
                     task: taskContent,
                     user: user,
                     practiceProgress: practiceProgress,
-                    session: session,
+                    sessionID: sessionID,
                     taskPath: "multiple-choise",
                     currentTaskIndex: currentTaskIndex,
-                    lastResult: lastResult
+                    lastResult: lastResult,
+                    numberOfTaskGoal: numberOfTaskGoal
                 )
-                self.multipleChoiseTask = multiple
+                self.multipleChoiceTask = multiple
                 self.isResult = !selectedChoises.isEmpty
                 self.choises = multiple.choises.map { .init(choise: $0, selectedChoises: selectedChoises) }
             }
@@ -68,7 +69,7 @@ extension MultipleChoiseTask.Templates {
                     ForEach(in: context.choises) { choise in
                         ChoiseOption(
                             hasBeenAnswered: context.hasBeenCompleted,
-                            canSelectMultiple: context.multipleChoiseTask.isMultipleSelect,
+                            canSelectMultiple: context.multipleChoiceTask.isMultipleSelect,
                             choise: choise
                         )
                     }
@@ -99,10 +100,10 @@ extension MultipleChoiseTask.Templates {
         struct ChoiseContext {
             let isSelected: Bool
             var isCorrect: Bool { choise.isCorrect }
-            let choise: MultipleChoiseTaskChoise
+            let choise: MultipleChoiceTaskChoice
 
-            init(choise: MultipleChoiseTaskChoise, selectedChoises: [MultipleChoiseTaskChoise.ID] = []) {
-                self.isSelected = selectedChoises.contains(choise.id ?? 0)
+            init(choise: MultipleChoiceTaskChoice, selectedChoises: [MultipleChoiceTaskChoice.ID] = []) {
+                self.isSelected = selectedChoises.contains(choise.id)
                 self.choise = choise
             }
         }
@@ -132,7 +133,7 @@ extension MultipleChoiseTask.Templates {
                                     $0.type(.radio)
                                 }
                             Label {
-                                choise.choise.choise
+                                choise.choise.choice
                                     .escaping(.unsafeNone)
                             }
                             .class("custom-control-label")

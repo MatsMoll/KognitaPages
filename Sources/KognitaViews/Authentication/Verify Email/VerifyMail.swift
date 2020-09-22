@@ -1,5 +1,4 @@
 import BootstrapKit
-import KognitaCore
 
 extension User.VerifyEmail.EmailContent {
     var verifyUri: String {

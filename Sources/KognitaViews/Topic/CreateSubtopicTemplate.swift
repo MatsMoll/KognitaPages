@@ -6,7 +6,6 @@
 //
 
 import BootstrapKit
-import KognitaCore
 
 extension Subtopic {
     public struct Templates {}
@@ -30,7 +29,7 @@ extension Subtopic.Templates {
                 self.subject = subject
                 self.subtopicInfo = subtopicInfo
                 self.topics = topics
-                self.selectedTopicId = subtopicInfo?.topicId
+                self.selectedTopicId = subtopicInfo?.topicID
 //                self.topics = .init(topics: topics, selectedSubtopicId: subtopicInfo?.topicId)
             }
 
@@ -67,7 +66,7 @@ extension Subtopic.Templates {
                         .class("modal-title")
                         .id("create-modal-label")
                     }
-                    .class("modal-header text-white bg-" + context.subject.colorClass.rawValue)
+                    .class("modal-header text-white")
 
                     Div {
                         Div {
@@ -163,9 +162,9 @@ extension Subtopic.Templates {
 
 extension Subtopic {
     var editCall: String {
-        "editSubtopic(\(id ?? 0))"
+        "editSubtopic(\(id))"
     }
     var deleteCall: String {
-        "deleteSubtopic(\(id ?? 0))"
+        "deleteSubtopic(\(id))"
     }
 }

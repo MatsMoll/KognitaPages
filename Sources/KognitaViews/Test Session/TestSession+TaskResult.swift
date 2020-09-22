@@ -1,5 +1,4 @@
 import BootstrapKit
-import KognitaCore
 
 extension AttributeNode {
     func dismissModal() -> Self {
@@ -27,105 +26,17 @@ struct TaskDiscussionCard: HTMLComponent {
 
 struct TaskSolutionCard: HTMLComponent {
 
+    let fetchUrl: String
+    var extraScripts: String = ""
+
     var scripts: HTML {
         NodeList {
             Script(source: "/assets/js/task-solution/vote.js")
             Script(source: "/assets/js/task-solution/suggest-solution.js")
             Script {
-"""
-function fetchSolutions() {
-    let sessionType = window.location.pathname.split('/')[1];
-    fetch("/" + sessionType + "/" + sessionID() + "/tasks/" + taskIndex() + "/solutions", {
-        method: "GET",
-        headers: {
-            "Accept": "application/html, text/plain, */*",
-        }
-    })
-    .then(function (response) {
-        if (response.ok) {
-            return response.text();
-        } else {
-            throw new Error(response.statusText);
-        }
-    })
-    .then(function (html) {
-        $("#solution").html(html);
-        $("#solution").fadeIn();
-        $("#solution").removeClass("d-none");
-        $(".solutions").each(function () {
-            this.innerHTML = renderMarkdown(this.innerHTML);
-        });
-    })
-    .catch(function (error) {
-        $("#submitButton").attr("disabled", false);
-        $("#error-massage").text(error.message);
-        $("#error-div").fadeIn();
-        $("#error-div").removeClass("d-none");
-    });
-}
-function sessionID() {
-    let path = window.location.pathname;
-    let splitURI = "sessions/"
-    return parseInt(path.substring(
-        path.indexOf(splitURI) + splitURI.length,
-        path.lastIndexOf("/tasks")
-    ));
-}
-function taskIndex() {
-    let path = window.location.pathname;
-    let splitURI = "tasks/";
-    return parseInt(path.substring(
-        path.indexOf(splitURI) + splitURI.length,
-        path.length
-    ));
-}
-function saveSolution() {
-let solutionID = $("#edit-solution-id").val();
-if (solutionID == 0 || isNaN(solutionID)) { return; }
-let uri = "/api/task-solutions/" + solutionID;
-let data = JSON.stringify({
-"solution": updatedsolution.value()
-})
-fetch(uri, {
-    method: "PUT",
-    headers: {
-        "Accept": "application/json, text/plain, */*",
-        "Content-Type" : "application/json"
-    },
-    body: data
-})
-.then(function (response) {
-if (response.ok) {
-fetchSolutions();
-$("#edit-solution").modal("hide");
-} else {
-throw new Error(response.statusText);
-}
-})
-.catch(function (error) {$("#edit-solution-error-message").text(error.message);$("#edit-solution-error-div").fadeIn();$("#edit-solution-error-div").removeClass("d-none");});
-}
-function deleteSolution() {
-let solutionID = $("#delete-solution-id").val();
-if (solutionID == 0 || isNaN(solutionID)) { return; }
-let uri = "/api/task-solutions/" + solutionID;
-fetch(uri, {
-    method: "DELETE",
-    headers: {
-        "Accept": "application/json, text/plain, */*",
-        "Content-Type" : "application/json"
-    }
-})
-.then(function (response) {
-if (response.ok) {
-fetchSolutions();
-$("#delete-solution").modal("hide");
-} else {
-throw new Error(response.statusText);
-}
-})
-.catch(function (error) {$("#delete-solution-error-message").text(error.message);$("#delete-solution-error-div").fadeIn();$("#delete-solution-error-div").removeClass("d-none");});
-}
-"""
+                Script.fetchSolutions(url: fetchUrl)
+                Script.saveSolution
+                extraScripts
             }
             body.scripts
         }
@@ -238,7 +149,7 @@ extension TaskSolutionCard {
 
 extension TestSession.DetailedTaskResult {
 
-    var choiseContext: [MultipleChoiseTask.Templates.Execute.ChoiseContext] {
+    var choiseContext: [MultipleChoiceTask.Templates.Execute.ChoiseContext] {
         choises.map {
             .init(choise: $0, selectedChoises: selectedChoises)
         }
@@ -292,8 +203,8 @@ extension TestSession.Templates {
                                 .style(.heading5)
                                 .margin(.zero, for: .top)
 
-                            ForEach(in: context.result.choiseContext) { (choise: TemplateValue<MultipleChoiseTask.Templates.Execute.ChoiseContext>) in
-                                MultipleChoiseTask.Templates.Execute.ChoiseOption(
+                            ForEach(in: context.result.choiseContext) { (choise: TemplateValue<MultipleChoiceTask.Templates.Execute.ChoiseContext>) in
+                                MultipleChoiceTask.Templates.Execute.ChoiseOption(
                                     hasBeenAnswered: true,
                                     canSelectMultiple: context.result.isMultipleSelect,
                                     choise: choise
@@ -303,7 +214,10 @@ extension TestSession.Templates {
                     }
                     .column(width: .seven)
                     Div {
-                        TaskSolutionCard()
+                        TaskSolutionCard(
+                            fetchUrl: Script.fetchSolutionSessionUrl,
+                            extraScripts: Script.practiceSessionIDFromUri + Script.practiceSessionTaskIndexFromUri
+                        )
                         TaskDiscussionCard()
                     }
                     .column(width: .five)

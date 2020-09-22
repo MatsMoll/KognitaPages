@@ -6,7 +6,6 @@
 //
 
 import BootstrapKit
-import KognitaCore
 import Foundation
 
 extension TimeInterval {
@@ -46,6 +45,42 @@ struct BreadcrumbItem {
 
 extension PracticeSession {
     public enum Templates {}
+}
+
+extension Date {
+    static var now: Date { Date() }
+}
+
+extension Comparable {
+    public func clamped(to limits: ClosedRange<Self>) -> Self {
+        return min(max(self, limits.lowerBound), limits.upperBound)
+    }
+}
+
+extension Strideable where Stride: SignedInteger {
+    public func clamped(to limits: CountableClosedRange<Self>) -> Self {
+        return min(max(self, limits.lowerBound), limits.upperBound)
+    }
+}
+
+extension Sequence {
+
+    public func group<P>(by path: KeyPath<Element, P>) -> [P: [Element]] where P: Hashable {
+        return Dictionary(grouping: self) { $0[keyPath: path] }
+    }
+
+    public func count<T>(equal path: KeyPath<Element, T>) -> [T: Int] where T: Hashable {
+        var counts = [T: Int]()
+        for object in self {
+            let value = object[keyPath: path]
+            if let count = counts[value] {
+                counts[value] = count + 1
+            } else {
+                counts[value] = 1
+            }
+        }
+        return counts
+    }
 }
 
 extension PracticeSession.Templates {
@@ -118,6 +153,8 @@ extension PracticeSession.Templates {
 
             public init(user: User, result: PracticeSession.Result) {
 
+                // FIXME: -- Do it correct
+
                 let tasks = result.results
 
                 var maxScore: Double = 0
@@ -132,7 +169,8 @@ extension PracticeSession.Templates {
                 self.timeUsed = tasks.map(\.timeUsed).reduce(0, +)
                 self.maxScore = maxScore
                 self.achievedScore = achievedScore
-                self.subject = result.subject
+                self.subject = Subject.Overview(id: result.subject.id, name: result.subject.name, description: result.subject.description, category: result.subject.category, topics: [])
+//                self.subject = result.subject
 
                 let grouped = tasks.group(by: \.topicName)
                 topicResults = grouped.map { name, tasks in

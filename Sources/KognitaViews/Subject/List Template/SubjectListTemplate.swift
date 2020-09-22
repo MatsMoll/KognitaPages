@@ -7,7 +7,6 @@
 
 import Foundation
 import BootstrapKit
-import KognitaCore
 
 extension Subject {
     public struct Templates {}
@@ -42,11 +41,11 @@ extension Subject.Templates {
 
         public struct Context {
             let user: User
-            let list: Subject.ListContent
+            let list: Dashboard
             let wasIncorrectPassword: Bool
             let recentlyActiveDiscussions: Bool
 
-            public init(user: User, list: Subject.ListContent, wasIncorrectPassword: Bool, recentlyActiveDiscussions: Bool) {
+            public init(user: User, list: Dashboard, wasIncorrectPassword: Bool, recentlyActiveDiscussions: Bool) {
                 self.user = user
                 self.list = list
                 self.wasIncorrectPassword = wasIncorrectPassword
@@ -138,58 +137,58 @@ $("#start-subject-test-modal").modal('show');
             }
         }
 
-        struct RevisitCard: HTMLComponent {
-
-            let context: TemplateValue<TopicResultContent>
-
-            var practiceFunction: HTML { "startPracticeSession([" + context.topic.id + "], " + context.subject.id + ");" }
-
-            var body: HTML {
-                Div {
-                    Card {
-                        Badge {
-                            Localized(
-                                key: Strings.subjectRepeatDays,
-                                context: context
-                            )
-                        }
-                        .float(.right)
-                        .background(color: .warning)
-
-                        Text {
-                            Anchor {
-                                context.topic.name
-                            }
-                            .on(click: practiceFunction)
-                            .href("#")
-                            .text(color: .dark)
-                        }
-                        .style(.heading4)
-                        .class("mt-0")
-
-                        Text(Strings.subjectRepeatDescription, with: context)
-                            .text(color: .muted)
-                            .class("font-13 mb-3")
-
-                        Anchor {
-                            Button {
-                                Italic().class("mdi mdi-book-open-variant")
-                                " " +
-                                    Localized(key: Strings.subjectRepeatStart)
-                            }
-                            .type(.button)
-                            .button(style: .primary)
-                            .class("btn-rounded mb-1")
-                        }
-                        .on(click: practiceFunction)
-                        .href("#")
-                        .text(color: .dark)
-                    }
-                    .display(.block)
-                }
-                .class("col-md-6 col-lg-4")
-            }
-        }
+//        struct RevisitCard: HTMLComponent {
+//
+//            let context: TemplateValue<TopicResultContent>
+//
+//            var practiceFunction: HTML { "startPracticeSession([" + context.topic.id + "], " + context.subject.id + ");" }
+//
+//            var body: HTML {
+//                Div {
+//                    Card {
+//                        Badge {
+//                            Localized(
+//                                key: Strings.subjectRepeatDays,
+//                                context: context
+//                            )
+//                        }
+//                        .float(.right)
+//                        .background(color: .warning)
+//
+//                        Text {
+//                            Anchor {
+//                                context.topic.name
+//                            }
+//                            .on(click: practiceFunction)
+//                            .href("#")
+//                            .text(color: .dark)
+//                        }
+//                        .style(.heading4)
+//                        .class("mt-0")
+//
+//                        Text(Strings.subjectRepeatDescription, with: context)
+//                            .text(color: .muted)
+//                            .class("font-13 mb-3")
+//
+//                        Anchor {
+//                            Button {
+//                                Italic().class("mdi mdi-book-open-variant")
+//                                " " +
+//                                    Localized(key: Strings.subjectRepeatStart)
+//                            }
+//                            .type(.button)
+//                            .button(style: .primary)
+//                            .class("btn-rounded mb-1")
+//                        }
+//                        .on(click: practiceFunction)
+//                        .href("#")
+//                        .text(color: .dark)
+//                    }
+//                    .display(.block)
+//                }
+//                .class("col-md-6 col-lg-4")
+//            }
+//        }
 
         struct StatisticsCard: HTMLComponent {
 
@@ -316,7 +315,7 @@ extension Subject.Templates {
 
     struct SubjectTestList: HTMLComponent {
 
-        @TemplateValue(SubjectTest.OverviewResponse?.self)
+        @TemplateValue(SubjectTest.UserOverview?.self)
         var test
 
         var body: HTML {
@@ -337,7 +336,7 @@ extension Subject.Templates {
 
     struct SubjectTestCard: HTMLComponent {
 
-        var test: TemplateValue<SubjectTest.OverviewResponse>
+        var test: TemplateValue<SubjectTest.UserOverview>
 
         var body: HTML {
             Card {
@@ -417,7 +416,7 @@ extension Subject.Templates {
     }
 }
 
-extension SubjectTest.OverviewResponse {
+extension SubjectTest.UserOverview {
     var testResultUri: String {
         guard let sessionID = testSessionID else {
             return ""

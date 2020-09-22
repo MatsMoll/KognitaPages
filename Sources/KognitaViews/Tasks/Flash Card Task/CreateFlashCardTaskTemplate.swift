@@ -6,7 +6,6 @@
 //
 
 import BootstrapKit
-import KognitaCore
 
 struct FormCard: HTMLComponent {
 
@@ -58,7 +57,7 @@ struct FormCard: HTMLComponent {
     }
 }
 
-extension FlashCardTask.Templates.Create.Context {
+extension TypingTask.Templates.Create.Context {
     var modalTitle: String { content.subject.name + " | Lag tekstoppgave"}
     var subjectUri: String { "/subjects/\(content.subject.id)" }
     var subjectContentOverviewUri: String { "/creator/subjects/\(content.subject.id)/overview" }
@@ -88,22 +87,33 @@ extension FlashCardTask.Templates.Create.Context {
         }
         return "deleteTask(\(taskID), \"tasks/flash-card\");"
     }
+
+    var forceDeleteCall: String? {
+        guard let taskID = content.task?.id else {
+            return nil
+        }
+        return "forceDelete(\(taskID), \"tasks/flash-card\");"
+    }
+
+    var isDeleted: Bool {
+        content.task?.isDeleted == true
+    }
 }
 
-extension FlashCardTask.ModifyContent {
+extension TypingTask.ModifyContent {
     var subjectName: String { subject.name }
 }
 
-extension FlashCardTask.Templates {
+extension TypingTask.Templates {
     public struct Create: TemplateView {
 
         public struct Context {
             let user: User
-            let content: FlashCardTask.ModifyContent
+            let content: TypingTask.ModifyContent
             let wasUpdated: Bool
             let canEdit: Bool
 
-            public init(user: User, content: FlashCardTask.ModifyContent, canEdit: Bool, wasUpdated: Bool = false) {
+            public init(user: User, content: TypingTask.ModifyContent, canEdit: Bool, wasUpdated: Bool = false) {
                 self.user = user
                 self.content = content
                 self.canEdit = canEdit
@@ -133,76 +143,25 @@ extension FlashCardTask.Templates {
                     .text(color: .white)
                     .isDismissable(true)
                 }
-                FormCard(title: context.modalTitle) {
-                    Unwrap(context.content.task) { task in
-                        IF(task.isDeleted) {
-                            Badge { "Slettet" }
-                                .background(color: .danger)
-                        }
-                    }
 
-                    Text {
-                        "Velg Tema"
-                    }
-                    .style(.heading3)
-                    .text(color: .dark)
-
-                    Unwrap(context.content.task) { task in
-                        SubtopicPicker(
-                            label: "Undertema",
-                            idPrefix: "card-",
-                            topics: context.content.topics
-                        )
-                        .selected(id: task.subtopicID)
-                    }
-                    .else {
-                        SubtopicPicker(
-                            label: "Undertema",
-                            idPrefix: "card-",
-                            topics: context.content.topics
-                        )
-                    }
-
-                    Text {
-                        "Eksamensoppgave?"
-                    }
-                    .style(.heading3)
-                    .text(color: .dark)
-
-                    FormRow {
-                        FormGroup(label: "Eksamensett semester") {
-                            Select {
-                                Unwrap(context.content.task) { taskInfo in
-                                    Unwrap(taskInfo.examPaperSemester) { exam in
-                                        Option {
-                                            exam.rawValue
-                                        }
-                                        .value(exam.rawValue)
-                                    }
-                                }
-                                Option { "Ikke eksamensoppgave" }
-                                    .value("")
-                                Option { "Høst" }
-                                    .value("fall")
-                                Option { "Vår" }
-                                    .value("spring")
+                Unwrap(context.content.task) { task in
+                    IF(task.isDeleted) {
+                        Alert {
+                            Text { "Denne oppgaven brukes ikke i øvingsett. For å bruke den i øvingsett kan man lagre / redigere oppgaven. Skulle man heller slette den permanent, så er det mulig med å trykke på \"Slett permanent\"" }
+                            Button {
+                                "Slett permanent"
+                                MaterialDesignIcon(.delete)
+                                    .margin(.one, for: .left)
                             }
-                            .id("card-exam-semester")
-                            .class("select2")
-                            .data(for: "toggle", value: "select2")
-                            .data(for: "placeholder", value: "Velg ...")
+                            .button(style: .danger)
+                            .on(click: context.forceDeleteCall)
                         }
-                        .column(width: .six, for: .medium)
-
-                        FormGroup(label: "År") {
-                            Input()
-                                .type(.number)
-                                .id("card-exam-year")
-                                .placeholder("2019")
-                                .value(Unwrap(context.content.task) { $0.examPaperYear })
-                        }
-                        .column(width: .six, for: .medium)
+                        .isDismissable(false)
+                        .background(color: .light)
                     }
+                }
+
+                FormCard(title: context.modalTitle) {
 
                     FormGroup {
                         MarkdownEditor(id: "description") {
@@ -240,25 +199,75 @@ extension FlashCardTask.Templates {
                             .class("invalid-feedback")
                     }
 
-                    FormGroup {
-                        MarkdownEditor(id: "solution") {
-                            Unwrap(context.content.task) { task in
-                                task.solution
-                                    .escaping(.unsafeNone)
+                    Unwrap(context.content.task) { task in
+                        IF(task.solutions.count > 1) {
+                            TaskSolutionCard(fetchUrl: Script.fetchSolutionEditorUrl)
+                        }.else {
+                            Unwrap(task.solutions.first) { solution in
+                                solutionForm(solution)
                             }
                         }
-                        .placeholder("Gitt at funksjonen er konveks, fører det til at ...")
-                        .onChange { editor in
-                            Script.solutionScore(divID: "solution-req", editorName: editor)
+                    }.else {
+                        solutionForm()
+                    }
+
+                    Text { "Velg Tema" }
+                        .style(.heading3)
+                        .text(color: .dark)
+
+                    Unwrap(context.content.task) { task in
+                        SubtopicPicker(
+                            label: "Undertema",
+                            idPrefix: "card-",
+                            topics: context.content.topics
+                        )
+                        .selected(id: task.subtopicID)
+                    }
+                    .else {
+                        SubtopicPicker(
+                            label: "Undertema",
+                            idPrefix: "card-",
+                            topics: context.content.topics
+                        )
+                    }
+
+                    Text { "Eksamensoppgave?" }
+                    .style(.heading3)
+                    .text(color: .dark)
+
+                    FormRow {
+                        FormGroup(label: "Eksamensett semester") {
+                            Select {
+                                Unwrap(context.content.task) { taskInfo in
+                                    Unwrap(taskInfo.examType) { exam in
+                                        Option {
+                                            exam.rawValue
+                                        }
+                                        .value(exam.rawValue)
+                                    }
+                                }
+                                Option { "Ikke eksamensoppgave" }
+                                    .value("")
+                                Option { "Høst" }
+                                    .value("fall")
+                                Option { "Vår" }
+                                    .value("spring")
+                            }
+                            .id("card-exam-semester")
+                            .class("select2")
+                            .data(for: "toggle", value: "select2")
+                            .data(for: "placeholder", value: "Velg ...")
                         }
-                    }
-                    .customLabel {
-                        Text { "Løsningsforslag" }
-                            .style(.heading3)
-                            .text(color: .dark)
-                    }
-                    .description {
-                        TaskSolution.Templates.Requmendations().id("solution-req")
+                        .column(width: .six, for: .medium)
+
+                        FormGroup(label: "År") {
+                            Input()
+                                .type(.number)
+                                .id("card-exam-year")
+                                .placeholder("2019")
+                                .value(Unwrap(context.content.task) { $0.examYear })
+                        }
+                        .column(width: .six, for: .medium)
                     }
 
                     DismissableError()
@@ -273,17 +282,18 @@ extension FlashCardTask.Templates {
                         .margin(.three, for: .vertical)
                         .on(click: context.saveCall)
 
-                        Unwrap(context.deleteCall) { deleteCall in
-
-                            Button {
-                                MaterialDesignIcon(icon: .delete)
-                                " Slett"
+                        IF(context.isDeleted == false) {
+                            Unwrap(context.deleteCall) { deleteCall in
+                                Button {
+                                    MaterialDesignIcon(icon: .delete)
+                                    " Slett"
+                                }
+                                .type(.button)
+                                .button(style: .danger)
+                                .margin(.three, for: .vertical)
+                                .margin(.one, for: .left)
+                                .on(click: deleteCall)
                             }
-                            .type(.button)
-                            .button(style: .danger)
-                            .margin(.three, for: .vertical)
-                            .margin(.one, for: .left)
-                            .on(click: deleteCall)
                         }
                     }
                 }
@@ -307,6 +317,28 @@ extension FlashCardTask.Templates {
                     Script(source: "/assets/js/flash-card/create.js")
                 }
             }
+        }
+
+        private func solutionForm(content: HTML = "", id: HTML = "solution") -> HTML {
+            FormGroup {
+                MarkdownEditor(id: id) { content }
+                    .placeholder("Gitt at funksjonen er konveks, fører det til at ...")
+                    .onChange { editor in
+                        Script.solutionScore(divID: "solution-req", editorName: editor)
+                }
+            }
+            .customLabel {
+                Text { "Løsningsforslag" }
+                    .style(.heading3)
+                    .text(color: .dark)
+            }
+            .description {
+                TaskSolution.Templates.Requmendations().id("solution-req")
+            }
+        }
+
+        private func solutionForm(_ solution: TemplateValue<TaskSolution>) -> HTML {
+            solutionForm(content: solution.solution.escaping(.unsafeNone))
         }
     }
 }

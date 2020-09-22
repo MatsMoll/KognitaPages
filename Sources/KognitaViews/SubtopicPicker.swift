@@ -6,17 +6,16 @@
 //
 
 import BootstrapKit
-import KognitaCore
 
 struct SubtopicPicker: HTMLComponent, AttributeNode {
 
     var attributes: [HTMLAttribute]
     let label: String
     let idPrefix: HTML
-    let topics: TemplateValue<[Topic.Response]>
+    let topics: TemplateValue<[Topic.WithSubtopics]>
     private let selectedID: TemplateValue<Subtopic.ID>
 
-    init(label: String, idPrefix: HTML, topics: TemplateValue<[Topic.Response]>) {
+    init(label: String, idPrefix: HTML, topics: TemplateValue<[Topic.WithSubtopics]>) {
         self.label = label
         self.idPrefix = idPrefix
         self.attributes = []
@@ -24,7 +23,7 @@ struct SubtopicPicker: HTMLComponent, AttributeNode {
         self.selectedID = .constant(-1)
     }
 
-    private init(label: String, idPrefix: HTML, topics: TemplateValue<[Topic.Response]>, selectedID: TemplateValue<Subtopic.ID>, attributes: [HTMLAttribute]) {
+    private init(label: String, idPrefix: HTML, topics: TemplateValue<[Topic.WithSubtopics]>, selectedID: TemplateValue<Subtopic.ID>, attributes: [HTMLAttribute]) {
         self.label = label
         self.idPrefix = idPrefix
         self.attributes = []
@@ -46,13 +45,13 @@ struct SubtopicPicker: HTMLComponent, AttributeNode {
                     OptionGroup {
                         ForEach(in: topic.subtopics) { subtopic in
                             Option {
-                                subtopic.name + " - " + topic.topic.name
+                                subtopic.name + " - " + topic.name
                             }
                             .value(subtopic.id)
                             .isSelected(subtopic.id == selectedID)
                         }
                     }
-                    .label(topic.topic.name)
+                    .label(topic.name)
                 }
             }
             .id(idPrefix + "topic-id")
@@ -84,11 +83,9 @@ struct TopicPicker: HTMLComponent {
             .class("col-form-label") +
         Select {
             ForEach(in: topics) { topic in
-                Option {
-                    topic.name
-                }
-                .value(topic.id)
-                .isSelected(topic.id == selectedTopicId)
+                Option { topic.name }
+                    .value(topic.id)
+//                    .isSelected(topic.id == selectedTopicId) // FIXME: -- Fix is selected
             }
             "TopicSelect"
         }

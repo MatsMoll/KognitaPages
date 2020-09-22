@@ -7,7 +7,6 @@
 // swiftlint:disable line_length nesting
 
 import BootstrapKit
-import KognitaCore
 
 extension User.Templates {
     public struct Signup: HTMLTemplate {
@@ -109,7 +108,7 @@ extension User.Templates {
                             Input()
                                 .type(.checkbox)
                                 .class("custom-control-input")
-                                .name("acceptedTermsInput")
+                                .name("acceptedTerms")
                                 .id("checkbox-signup")
                                 .required()
                             Label {

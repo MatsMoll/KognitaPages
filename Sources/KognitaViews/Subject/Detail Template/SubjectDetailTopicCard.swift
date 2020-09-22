@@ -5,7 +5,6 @@
 //  Created by Mats Mollestad on 10/12/2019.
 
 import BootstrapKit
-import KognitaCore
 
 extension Subject.Templates.Details {
 
@@ -14,7 +13,7 @@ extension Subject.Templates.Details {
         @TemplateValue([Topic.UserOverview].self)
         var topics
 
-        @TemplateValue(Subject.ID?.self)
+        @TemplateValue(Subject.ID.self)
         var subjectID
 
         @TemplateValue(Bool.self)
@@ -36,7 +35,7 @@ extension Subject.Templates.Details {
         @TemplateValue(Topic.UserOverview.self)
         var topic
 
-        @TemplateValue(Subject.ID?.self)
+        @TemplateValue(Subject.ID.self)
         var subjectID
 
         @TemplateValue(Bool.self)
@@ -69,7 +68,7 @@ extension Subject.Templates.Details {
                     .isDisabled(canPractice == false)
                 }
                 .footer {
-                    Competence(competence: topic.competence)
+                    Competence(competence: topic.userLevel)
                 }
                 .modifyFooter {
                     $0.padding(.zero)
@@ -84,22 +83,22 @@ extension Subject.Templates.Details {
 
     struct Competence: HTMLComponent {
 
-        @TemplateValue(CompetenceData.self)
+        @TemplateValue(Topic.UserLevel.self)
         var competence
 
         var body: HTML {
             UnorderedList {
                 ListItem {
                     Text {
-                        competence.percentage + "%"
-                        Small { competence.userScore + " riktig" }
+                        competence.correctProsentage + "%"
+                        Small { competence.correctScoreInteger + " riktig" }
                             .margin(.one, for: .left)
 
                     }
                     .font(style: .bold)
                     .margin(.two, for: .bottom)
 
-                    KognitaProgressBar(value: competence.percentage)
+                    KognitaProgressBar(value: competence.correctProsentage)
                 }
                 .class("list-group-item")
                 .padding(.three)

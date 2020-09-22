@@ -7,7 +7,6 @@
 // swiftlint:disable line_length nesting
 
 import BootstrapKit
-import KognitaCore
 
 extension Subject.Templates {
     public struct Create: HTMLTemplate {
@@ -167,38 +166,6 @@ struct CreateForm: HTMLComponent {
                     .required()
             }
 
-        }
-    }
-
-    struct ColorCodePicker: HTMLComponent {
-
-        var body: HTML {
-            Div {
-                Subject.ColorClass.allCases.htmlForEach { option in
-                    optionHTML(option)
-                }
-            }
-            .class("mt-1")
-        }
-
-        func optionHTML(_ option: TemplateValue<Subject.ColorClass>) -> HTML {
-            Div {
-                Input()
-                    .type(.radio)
-                    .id(option.rawValue)
-                    .class("custom-contol-input mr-2")
-                    .name("color-class")
-                Label {
-                    H4 {
-                        Div {
-                            option.rawValue
-                        }
-                        .class("badge badge-" + option.rawValue)
-                    }
-                }
-                .for(option.rawValue)
-            }
-            .class("custom-control custom-radio")
         }
     }
 }

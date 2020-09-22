@@ -6,48 +6,48 @@
 //
 
 import BootstrapKit
-import KognitaCore
 
-extension FlashCardTask {
+extension TypingTask {
     public struct Templates {}
 }
 
-extension FlashCardTask.Templates {
+extension TypingTask.Templates {
     public struct Execute: HTMLTemplate {
 
         public struct Context {
             let taskPreview: TaskPreviewTemplateContext
 
-            var session: PracticeSessionRepresentable? { return taskPreview.session }
+            var sessionID: PracticeSession.ID { taskPreview.sessionID }
             var task: Task { return taskPreview.task }
             var topic: Topic { return taskPreview.topic }
-            var hasBeenCompleted: Bool { return taskPreview.lastResult?.sessionId == (try? session?.requireID()) }
+            var hasBeenCompleted: Bool { return taskPreview.lastResult?.sessionID == sessionID }
             var score: Double? {
-                if let score = taskPreview.lastResult?.result.resultScore {
+                if let score = taskPreview.lastResult?.resultScore {
                     return score * 4
                 } else {
                     return nil
                 }
             }
-            var prevAnswer: FlashCardAnswer?
+            var prevAnswer: TypingTask.Answer?
 
             public init(
                 taskPreview: TaskPreviewContent,
-                user: UserContent,
+                user: User,
                 currentTaskIndex: Int,
                 practiceProgress: Int,
-                session: PracticeSessionRepresentable,
-                lastResult: TaskResultContent? = nil,
-                prevAnswer: FlashCardAnswer?
+                sessionID: PracticeSession.ID,
+                lastResult: TaskResult? = nil,
+                prevAnswer: TypingTask.Answer?
             ) {
                 self.taskPreview = .init(
                     task: taskPreview,
                     user: user,
                     practiceProgress: practiceProgress,
-                    session: session,
+                    sessionID: sessionID,
                     taskPath: "flash-card",
                     currentTaskIndex: currentTaskIndex,
-                    lastResult: lastResult
+                    lastResult: lastResult,
+                    numberOfTaskGoal: 0
                 )
                 self.prevAnswer = prevAnswer
             }
@@ -65,7 +65,7 @@ extension FlashCardTask.Templates {
                     }
                     InputGroup {
                         TextArea {
-                            Unwrap(context.prevAnswer) { (answer: TemplateValue<FlashCardAnswer>) in
+                            Unwrap(context.prevAnswer) { (answer: TemplateValue<TypingTask.Answer>) in
                                 answer.answer
                             }
                         }
@@ -212,7 +212,7 @@ extension FlashCardTask.Templates {
     }
 }
 
-extension FlashCardTask.Templates.Execute.Context {
+extension TypingTask.Templates.Execute.Context {
     fileprivate var knowledgeScoreScript: String {
         if let score = score {
             return "knowledgeScore=\(score)"
