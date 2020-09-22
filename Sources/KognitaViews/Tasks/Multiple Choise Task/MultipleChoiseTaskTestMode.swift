@@ -1,5 +1,4 @@
 import BootstrapKit
-import KognitaCore
 import Foundation
 
 extension Date {
@@ -32,7 +31,7 @@ struct Spinner: HTMLComponent, AttributeNode {
     }
 }
 
-extension SubjectTest.TestTask {
+extension SubjectTest.AssignedTask {
 
     var url: String { "\(testTaskID)" }
 
@@ -45,7 +44,7 @@ extension SubjectTest.TestTask {
 
 extension SubjectTest.MultipleChoiseTaskContent {
 
-    var prevTask: SubjectTest.TestTask? {
+    var prevTask: SubjectTest.AssignedTask? {
         guard
             let currentIndex = testTasks.firstIndex(where: { $0.isCurrent }),
             currentIndex > 0
@@ -55,7 +54,7 @@ extension SubjectTest.MultipleChoiseTaskContent {
         return testTasks[currentIndex - 1]
     }
 
-    var nextTask: SubjectTest.TestTask? {
+    var nextTask: SubjectTest.AssignedTask? {
         guard
             let currentIndex = testTasks.firstIndex(where: { $0.isCurrent }),
             currentIndex < testTasks.count - 1
@@ -66,17 +65,17 @@ extension SubjectTest.MultipleChoiseTaskContent {
     }
 }
 
-extension Array where Element == SubjectTest.TestTask {
-    var pageItems: [SubjectTest.TestTask.PageItem] {
+extension Array where Element == SubjectTest.AssignedTask {
+    var pageItems: [SubjectTest.AssignedTask.PageItem] {
         enumerated()
             .map { index, item in
-                SubjectTest.TestTask.PageItem(
+                SubjectTest.AssignedTask.PageItem(
                     title: "\(index + 1)",
                     url: item.url,
                     isActive: item.isCurrent
                 )
         } + [
-            SubjectTest.TestTask.PageItem(
+            SubjectTest.AssignedTask.PageItem(
                 title: "Oversikt",
                 url: "overview",
                 isActive: false
@@ -138,7 +137,7 @@ public struct MultipleChoiseTaskTestMode: HTMLTemplate {
 
     struct QuestionCard: HTMLComponent {
 
-        let task: TemplateValue<Task>
+        let task: TemplateValue<MultipleChoiceTask>
 
         var body: HTML {
             Row {
@@ -195,7 +194,7 @@ public struct MultipleChoiseTaskTestMode: HTMLTemplate {
                 }
                 ForEach(in: task.choises) { choise in
                     ChoiseOption(
-                        canSelectMultiple: task.isMultipleSelect,
+                        canSelectMultiple: task.task.isMultipleSelect,
                         choise: choise
                     )
                 }
@@ -299,7 +298,7 @@ public struct MultipleChoiseTaskTestMode: HTMLTemplate {
 
     struct TaskNavigation: HTMLComponent {
 
-        let tasksIDs: TemplateValue<[SubjectTest.TestTask]>
+        let tasksIDs: TemplateValue<[SubjectTest.AssignedTask]>
 
         var body: HTML {
             Card {

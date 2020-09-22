@@ -1,6 +1,5 @@
 import Foundation
 import BootstrapKit
-import KognitaCore
 
 // A condition that evaluates a greater then expression between a variable and a constant value
 public struct GreaterThenTemplates<Value>: Conditionable where Value: Comparable {
@@ -23,14 +22,13 @@ extension TaskDiscussion.Templates {
 
         public struct Context {
             let user: User
-            let discussions: [TaskDiscussion.Details]
+            let discussions: [TaskDiscussion]
 
-            public init(user: User, discussions: [TaskDiscussion.Details]) {
+            public init(user: User, discussions: [TaskDiscussion]) {
                 self.discussions = discussions
                 self.user = user
             }
         }
-        
 
         public var body: HTML {
 
@@ -39,33 +37,28 @@ extension TaskDiscussion.Templates {
                 baseContext: .constant(.init(title: "Diskusjoner", description: "Diskusjoner en bruker har laget"))
             ) {
 
-
                 Text { "Dine diskusjoner" }
                     .style(.heading4)
                     .margin(.four, for: .top)
 
                 Text { "Antall diskusjoner: " + context.discussions.count }
 
-                ForEach(in: context.discussions) { (discussion: TemplateValue<TaskDiscussion.Details>) in
+                ForEach(in: context.discussions) { (discussion: TemplateValue<TaskDiscussion>) in
                     Card {
                         Div {
                             Text {
                                 discussion.description
 
-                                Unwrap(context.user.viewedNotificationsAt) { (viewedNotificationsAt: TemplateValue<Date>) in
-                                    IF(discussion.newestResponseCreatedAt > viewedNotificationsAt) {
-                                        Badge{ "new" }
-                                            .background(color: .primary)
-                                            .margin(.two, for: .left)
-                                    }
-                                }.else {
-                                    Badge{ "new" }.background(color: .primary)
+                                IF(discussion.isNew) {
+                                    Badge { "Ny" }
+                                        .background(color: .primary)
+                                        .margin(.two, for: .left)
                                 }
                             }
                             .style(.heading4)
 
                             Text {
-                                "Laget: " 
+                                "Laget: "
                                 Unwrap(discussion.createdAt) { (createdAt: TemplateValue<Date>) in
                                     Small { createdAt.style(date: .short, time: .none) }
                                         .margin(.one, for: .left)

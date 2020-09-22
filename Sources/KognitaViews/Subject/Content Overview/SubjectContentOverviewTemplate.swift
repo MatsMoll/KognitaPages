@@ -1,5 +1,4 @@
 import BootstrapKit
-import KognitaCore
 
 protocol DropdownItemable: AddableAttributeNode {}
 
@@ -66,9 +65,10 @@ private struct TopicTasks {
 }
 
 extension Subject {
-    var createMultipleTaskUri: String { "/creator/subjects/\(id ?? 0)/task/multiple/create" }
-    var createFlashCardTaskUri: String { "/creator/subjects/\(id ?? 0)/task/flash-card/create" }
-    var createTopicUri: String { "/creator/subjects/\(id ?? 0)/topics/create" }
+    var createMultipleTaskUri: String { "/creator/subjects/\(id)/task/multiple/create" }
+    var createFlashCardTaskUri: String { "/creator/subjects/\(id)/task/flash-card/create" }
+    var createTopicUri: String { "/subjects/\(id)/topics" }
+    var createDraftUri: String { "/subjects/\(id)/tasks/draft" }
 }
 
 extension Subject.Templates {
@@ -89,7 +89,7 @@ extension Subject.Templates {
                 self.subject = subject
                 self.totalNumberOfTasks = tasks.count
                 self.listContext = .init(
-                    userID: user.id ?? 0,
+                    userID: user.id,
                     isModerator: isModerator,
                     tasks: tasks
                 )
@@ -138,11 +138,19 @@ extension Subject.Templates {
                             .margin(.two, for: .bottom)
 
                             Anchor {
+                                "Lag notat "
+                                MaterialDesignIcon(.note)
+                            }
+                            .href(context.subject.createDraftUri)
+                            .button(style: .info)
+
+                            Anchor {
                                 "Lag flervalgsoppgave "
                                 MaterialDesignIcon(.formatListBulleted)
                             }
                             .href(context.subject.createMultipleTaskUri)
                             .button(style: .success)
+                            .margin(.two, for: .left)
 
                             Anchor {
                                 "Lag innskrivingsoppgave "
@@ -153,13 +161,13 @@ extension Subject.Templates {
                             .margin(.two, for: .left)
 
                             IF(context.isModerator) {
-                                Anchor {
-                                    "Lag et tema"
-                                }
-                                .href(context.subject.createTopicUri)
-                                .button(style: .primary)
-                                .margin(.two, for: .left)
+                                Anchor { "Rediger temaer" }
+                                    .href(context.subject.createTopicUri)
+                                    .button(style: .primary)
+                                    .margin(.two, for: .left)
                             }
+
+//                            QTIImportButton()
                         }
                     }
                     .column(width: .twelve)
@@ -208,15 +216,12 @@ private struct UnverifiedSolutionsSection: HTMLComponent {
 
 extension Subject.Templates.ContentOverview.Context {
     var searchUrl: String {
-        guard let subjectID = subject.id else {
-            return ""
-        }
-        return "subjects/\(subjectID)/search"
+        return "subjects/\(subject.id)/search"
     }
 }
 
 extension TopicTasks {
-    var editUrl: String { "/creator/subjects/\(topic.subjectId)/topics/\(topic.id ?? 0)/edit" }
+    var editUrl: String { "/creator/subjects/\(topic.subjectID)/topics/\(topic.id)/edit" }
 }
 
 //private struct TopicCard: HTMLComponent {
@@ -252,8 +257,8 @@ extension TopicTasks {
 //}
 
 extension CreatorTaskContent {
-    var editUri: String { "/creator/\(taskTypePath)/\(task.id ?? 0)/edit" }
-    var deleteCall: String { "deleteTask(\(task.id ?? 0), \"\(taskTypePath)\");" }
+    var editUri: String { "/creator/\(taskTypePath)/\(task.id)/edit" }
+    var deleteCall: String { "deleteTask(\(task.id), \"\(taskTypePath)\");" }
 }
 
 struct FormCheck: HTMLComponent, AttributeNode {
@@ -305,6 +310,8 @@ struct SearchCard: HTMLComponent {
         Div {
             Card {
                 Form {
+                    Label { "Søk i innholdet" }
+                        .for("taskQuestion")
                     InputGroup {
                         Input()
                             .type(.text)
@@ -313,20 +320,16 @@ struct SearchCard: HTMLComponent {
                             .name("taskQuestion")
                     }
                     .append {
-                        Button {
-                            "Søk"
-                        }
-                        .button(style: .primary)
-                        .type(.submit)
+                        Button { "Søk" }
+                            .button(style: .primary)
+                            .type(.submit)
                     }
                     .margin(.three, for: .bottom)
 
                     Row {
                         Div {
-                            Text {
-                                "Filterer på tema"
-                            }
-                            .style(.heading4)
+                            Text { "Filterer på tema" }
+                                .style(.heading4)
                         }
                         .column(width: .twelve)
                     }
@@ -342,11 +345,9 @@ struct SearchCard: HTMLComponent {
                                         .name("topics[]")
                                         .value(topic.id)
                                         .id(topic.id)
-                                    Label {
-                                        topic.name
-                                    }
-                                    .class("custom-control-label")
-                                    .for(topic.id)
+                                    Label { topic.name }
+                                        .class("custom-control-label")
+                                        .for(topic.id)
                                 }
                                 .class("custom-control custom-checkbox")
                             }

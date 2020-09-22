@@ -1,7 +1,6 @@
 import BootstrapKit
-import KognitaCore
 
-extension User.ResetPassword.Token.Data {
+extension User.ResetPassword.Token {
     var changeUri: String {
         "/reset-password?token=\(token)"
     }
@@ -13,9 +12,9 @@ extension User.Templates.ResetPassword {
 
         public struct Context {
             let user: User
-            let token: User.ResetPassword.Token.Data
+            let token: User.ResetPassword.Token
 
-            public init(user: User, token: User.ResetPassword.Token.Data) {
+            public init(user: User, token: User.ResetPassword.Token) {
                 self.user = user
                 self.token = token
             }

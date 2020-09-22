@@ -1,5 +1,4 @@
 import BootstrapKit
-import KognitaCore
 import Foundation
 
 public enum TextBreak: String {
@@ -20,13 +19,12 @@ public extension TaskPreviewTemplate {
     struct Responses: HTMLTemplate {
 
         public struct Context {
-            public let responses: [TaskDiscussion.Pivot.Response.Details]
+            public let responses: [TaskDiscussionResponse]
 
-            public init(responses: [TaskDiscussion.Pivot.Response.Details]) {
+            public init(responses: [TaskDiscussionResponse]) {
                 self.responses = responses
             }
         }
-
 
         public var body: HTML {
             Div {
@@ -38,7 +36,7 @@ public extension TaskPreviewTemplate {
                 .margin(.two, for: .bottom)
                 .class("border-bottom border-light")
 
-                ForEach(in: context.responses) { (response: TemplateValue<TaskDiscussion.Pivot.Response.Details>) in
+                ForEach(in: context.responses) { (response: TemplateValue<TaskDiscussionResponse>) in
                     DiscussionResponse(response: response)
 
                     IF(response.isNew) {

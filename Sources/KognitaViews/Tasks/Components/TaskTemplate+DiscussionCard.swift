@@ -1,8 +1,7 @@
 import BootstrapKit
-import KognitaCore
 import Foundation
 
-extension TaskDiscussion.Details {
+extension TaskDiscussion {
     var fetchResponsesCall: String { "fetchDiscussionResponses(\(id))" }
 }
 
@@ -44,7 +43,7 @@ extension TaskDiscussion.Templates {
                 Script(source: "/assets/js/task-discussion/create-response.js")
             }
         }
-        
+
         var body: HTML {
             Modal(title: "Svar", id: "response") {
 
@@ -57,9 +56,7 @@ extension TaskDiscussion.Templates {
                 }
                 .id("disc-username")
 
-
                 Div().id("disc-responses").display(.none)
-
 
                 FormGroup(label: "Skriv en respons") {
                     MarkdownEditor(id: "create-discussion-response")
@@ -85,7 +82,7 @@ extension TaskDiscussion.Templates {
 
     public struct DiscussionCard: HTMLTemplate {
 
-        public typealias Context = [TaskDiscussion.Details]
+        public typealias Context = [TaskDiscussion]
 
         public var scripts: HTML {
             htmlBody.scripts
@@ -104,7 +101,7 @@ extension TaskDiscussion.Templates {
                             Text { "Det finnes ingen diskusjoner ennå! Om det er noe du lurer på er det bare å spørre!" }
                         }
                         .else {
-                            ForEach(in: context) { (discussion: TemplateValue<TaskDiscussion.Details>) in
+                            ForEach(in: context) { (discussion: TemplateValue<TaskDiscussion>) in
                                 Div {
                                     Button {
                                         MaterialDesignIcon(.arrowRight)

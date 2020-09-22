@@ -7,15 +7,14 @@
 // swiftlint:disable line_length nesting
 
 import BootstrapKit
-import KognitaCore
 
 extension Subject.Details {
     var makeActiveCall: String {
-        "markAsActive(\(subject.id ?? 0))"
+        "markAsActive(\(subject.id))"
     }
 
     var makeInactiveCall: String {
-        "markAsInactive(\(subject.id ?? 0))"
+        "markAsInactive(\(subject.id))"
     }
 
     var topicIDsJSList: String {
@@ -24,9 +23,9 @@ extension Subject.Details {
 
     var canCreateTasks: Bool { isModerator || canPractice }
 
-    var createContentUri: String { "/creator/subjects/\(subject.id ?? 0)/overview" }
-    var compendiumUri: String { "/subjects/\(subject.id ?? 0)/compendium" }
-    var startPracticeSessionCall: String { "startPracticeSessionWithTopicIDs(\(topicIDsJSList), \(subject.id ?? 0))" }
+    var createContentUri: String { "/creator/subjects/\(subject.id)/overview" }
+    var compendiumUri: String { "/subjects/\(subject.id)/compendium" }
+    var startPracticeSessionCall: String { "startPracticeSessionWithTopicIDs(\(topicIDsJSList), \(subject.id))" }
 }
 
 extension Subject.Templates {
@@ -54,6 +53,7 @@ extension Subject.Templates {
         ]
 
         public var body: HTML {
+
             ContentBaseTemplate(
                 userContext: context.user,
                 baseContext: context.base
@@ -128,7 +128,7 @@ extension Subject.Templates {
 
         struct SubjectCardContext {
             let subject: Subject
-            let level: User.SubjectLevel
+            let level: Subject.UserLevel
         }
 
         struct SubjectCard: HTMLComponent {
@@ -275,7 +275,7 @@ extension Subject.Templates {
 
         struct SubjectTestSignifier: HTMLComponent {
 
-            @TemplateValue(Subject.ID?.self)
+            @TemplateValue(Subject.ID.self)
             var subjectID
 
             var body: HTML {
@@ -286,12 +286,10 @@ extension Subject.Templates {
                     .style(.heading3)
                     .text(color: .dark)
 
-                    Anchor {
-                        "Se alle prøver"
-                    }
-                    .href(subjectID + "/subject-tests")
-                    .button(style: .light)
-                    .class("btn-rounded")
+                    Anchor { "Se alle prøver" }
+                        .href(subjectID + "/subject-tests")
+                        .button(style: .light)
+                        .class("btn-rounded")
                 }
             }
         }

@@ -1,5 +1,4 @@
 import BootstrapKit
-import KognitaCore
 import Foundation
 
 extension SubjectTest.Templates {

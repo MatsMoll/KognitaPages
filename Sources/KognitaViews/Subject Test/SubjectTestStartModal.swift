@@ -1,11 +1,10 @@
-import KognitaCore
 import BootstrapKit
 
 extension SubjectTest {
     public enum Templates {}
 }
 
-extension SubjectTest.OverviewResponse {
+extension SubjectTest.UserOverview {
     var enterUri: String {
         return "/subject-tests/\(id)/enter"
     }
@@ -14,7 +13,7 @@ extension SubjectTest.OverviewResponse {
 extension SubjectTest.Templates {
     struct StartModal: HTMLComponent {
 
-        let test: TemplateValue<SubjectTest.OverviewResponse>
+        let test: TemplateValue<SubjectTest.UserOverview>
         let wasIncorrectPassword: TemplateValue<Bool>
 
         var body: HTML {

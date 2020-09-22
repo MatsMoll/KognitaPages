@@ -1,8 +1,7 @@
 import BootstrapKit
-import KognitaCore
 import Foundation
 
-extension TaskSession {
+extension Sessions {
     public enum Templates {}
 }
 
@@ -16,7 +15,7 @@ public protocol SessionRepresentable: Codable {
     var isTest: Bool { get }
 }
 
-extension PracticeSession.HighOverview: SessionRepresentable {
+extension PracticeSession.Overview: SessionRepresentable {
 
     public var title: String { "Øving i \(subjectName)" }
     public var sessionUri: String { "/practice-sessions/\(id)/result" }
@@ -25,16 +24,18 @@ extension PracticeSession.HighOverview: SessionRepresentable {
     public var isTest: Bool { false }
 }
 
-extension TestSession.HighOverview: SessionRepresentable {
+extension TestSession.CompletedOverview: SessionRepresentable {
+    public var title: String { self.testTitle }
 
-    public var title: String { testTitle }
     public var sessionUri: String { "/test-sessions/\(id)/results" }
-    public var executionDate: Date { createdAt }
-    public var duration: TimeInterval { endedAt.timeIntervalSince(executionDate) }
+
+    public var executionDate: Date { self.createdAt }
+
+    public var duration: TimeInterval { self.endedAt.timeIntervalSince(executionDate) }
     public var isTest: Bool { true }
 }
 
-extension TaskSession.Templates {
+extension Sessions.Templates {
     struct Histogram: HTMLComponent, AttributeNode {
 
         var scripts: HTML { Script(source: "/assets/js/practice-session-histogram.js") }
@@ -53,7 +54,7 @@ extension TaskSession.Templates {
             .add(attributes: attributes)
         }
 
-        func copy(with attributes: [HTMLAttribute]) -> TaskSession.Templates.Histogram {
+        func copy(with attributes: [HTMLAttribute]) -> Sessions.Templates.Histogram {
             .init(attributes: attributes)
         }
     }
@@ -89,7 +90,7 @@ extension TaskSession.Templates {
                 }
             }
 
-            public init(user: User, sessions: TaskSession.HistoryList) {
+            public init(user: User, sessions: Sessions.HistoryList) {
                 var sessionRepresentables: [SessionRepresentable] = []
                 sessionRepresentables.append(contentsOf: sessions.practiceSessions)
                 sessionRepresentables.append(contentsOf: sessions.testSessions)
@@ -132,9 +133,8 @@ extension TaskSession.Templates {
                     }
                     .column(width: .four, for: .large)
                 }
-                Row {
-                    SessionSection(sessions: context.sessions)
-                }
+
+                SessionSection(sessions: context.sessions)
             }
             .scripts {
                 Script().source("/assets/js/vendor/Chart.bundle.min.js")
@@ -143,30 +143,33 @@ extension TaskSession.Templates {
     }
 }
 
-extension TaskSession.Templates.History {
+extension Sessions.Templates.History {
 
     struct SessionSection: HTMLComponent {
 
         let sessions: TemplateValue<[SessionRepresentable]>
 
         var body: HTML {
-            Div {
-                Text { "Aktiviteter" }
-                    .style(.heading3)
+            Row {
+                Div {
+                    Text { "Aktiviteter" }
+                        .style(.heading3)
+                }
+                .column(width: .twelve)
 
                 IF(sessions.count > 1) {
                     ForEach(in: sessions) { session in
-                        SessionCard(session: session)
+                        Div {
+                            SessionCard(session: session)
+                        }
+                        .column(width: .six)
                     }
                 }
                 .else {
-                    Text {
-                        "Du har ikke fullført noen øvinger ennå. Gå inn på et fag for å starte! 🔥"
-                    }
-                    .style(.lead)
+                    Text { "Du har ikke fullført noen øvinger ennå. Gå inn på et fag for å starte! 🔥" }
+                        .style(.lead)
                 }
             }
-            .column(width: .twelve)
         }
     }
 

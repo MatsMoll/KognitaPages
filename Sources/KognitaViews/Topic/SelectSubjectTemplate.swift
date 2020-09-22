@@ -8,7 +8,6 @@
 
 import Foundation
 import BootstrapKit
-import KognitaCore
 
 extension Subject.Templates {
     public struct SelectRedirect: HTMLTemplate {
@@ -80,25 +79,20 @@ extension Subject.Templates {
                     Anchor {
                         Div {
                             Div {
-                                H3 {
-                                    subject.name
-                                }
-                                Small {
-                                    subject.category
-                                }
-                                .class("badge badge-light")
+                                H3 { subject.name }
+                                Small { subject.category }
+                                    .class("badge badge-light")
                             }
-                            .class("card-header text-white bg-" + subject.colorClass.rawValue)
+                            .class("card-header text-white")
 
                             Div {
                                 P {
                                     subject.description
                                         .escaping(.unsafeNone)
                                 }
-                                Button {
-                                    "Lag tema"
-                                }
-                                .class("btn btn-" + subject.colorClass.rawValue + " btn-rounded")
+                                Button { "Lag tema" }
+                                    .button(style: .primary)
+                                    .isRounded()
                             }
                             .class("card-body position-relative")
                         }

@@ -1,5 +1,4 @@
 import BootstrapKit
-import KognitaCore
 
 struct ContentBaseTemplateContent {
     let base: BaseTemplateContent
@@ -118,9 +117,7 @@ struct ContentBaseTemplate: HTMLComponent {
                 .class("topnav")
 
                 Div {
-                    Container {
-                        content
-                    }
+                    Container { content }
                 }
                 .class("content")
 
@@ -130,12 +127,8 @@ struct ContentBaseTemplate: HTMLComponent {
 
             modals
         }
-        .header {
-            header
-        }
-        .scripts {
-            scripts
-        }
+        .header { header }
+        .scripts { scripts }
         .scrollSpy(scrollSpy)
     }
 

@@ -6,7 +6,6 @@
 //
 
 import BootstrapKit
-import KognitaCore
 
 extension Topic {
     public struct Templates {}
@@ -14,7 +13,7 @@ extension Topic {
 
 extension Subject {
     var subjectUri: String {
-        "/subjects/\(id ?? 0)"
+        "/subjects/\(id)"
     }
 }
 
@@ -75,9 +74,7 @@ extension Topic.Templates {
                                 .value(Unwrap(context.topicInfo) { $0.name })
                         }
                         .description {
-                            Small {
-                                "Kun tillatt med bokstaver, tall og mellomrom"
-                            }
+                            Small { "Kun tillatt med bokstaver, tall og mellomrom" }
                         }
 
                         FormGroup(label: "Kapittel") {

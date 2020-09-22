@@ -1,5 +1,4 @@
 import BootstrapKit
-import KognitaCore
 
 extension User.Templates.ResetPassword {
     public struct Start: HTMLTemplate {

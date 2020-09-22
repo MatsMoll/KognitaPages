@@ -6,12 +6,12 @@ struct MarkdownEditor: HTMLComponent, AttributeNode, PlaceholderAttribute, FormI
     var content: HTML
     private var onChange: ((String) -> String)?
 
-    public init(id: String) {
+    public init(id: HTML) {
         attributes = [HTMLAttribute(attribute: "id", value: id)]
         content = ""
     }
 
-    public init(id: String, @HTMLBuilder content: () -> HTML) {
+    public init(id: HTML, @HTMLBuilder content: () -> HTML) {
         attributes = [HTMLAttribute(attribute: "id", value: id)]
         self.content = content()
     }

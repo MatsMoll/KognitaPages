@@ -6,17 +6,14 @@
 //
 import Foundation
 import BootstrapKit
-import KognitaCore
 
-extension TaskDiscussion.Pivot.Response.Details {
+extension TaskDiscussionResponse {
     var fetchAResponseCall: String { "fetchADiscussionResponse(this)" }
 }
 
-
 struct DiscussionResponse: HTMLComponent {
 
-    let response: TemplateValue<TaskDiscussion.Pivot.Response.Details>
-
+    let response: TemplateValue<TaskDiscussionResponse>
 
     public var body: HTML {
         Div {
@@ -41,7 +38,7 @@ struct DiscussionResponse: HTMLComponent {
                     }
                     .style(.heading5)
                     .margin(.zero, for: .top)
-                    
+
                     Text {
                         response.response
                             .escaping(.unsafeNone)
