@@ -40,12 +40,17 @@ $("body").css("padding-bottom", $("#\(id)").height());
                     .style(.lead)
                     .text(color: .dark)
 
-                Button { "Jeg godtar" }
+                Button {
+                    "Jeg godtar"
+                    MaterialDesignIcon(.check)
+                        .margin(.one, for: .left)
+                }
                     .on(click: "cookiesConfirmed()")
                     .button(style: .primary)
                     .float(.right)
+                    .margin(.two, for: .left)
 
-                Text { "For å bruke denne siden trenger vi å bruke cookies så du kan vise din egen data. Heldigvis bruker vi ikke cookien din til noe annet. Derfor godtar du bruken av cookies ved å logge inn." }
+                Text { "For å se din personlig data på Kognita må vi bruke cookies. Heldigvis blir cookien din privat hos oss. Ved å trykke på \"Jeg godtar\" eller ved å logge inn, så godtar du denne bruken." }
             }
             .padding(.one, for: .top)
         }
