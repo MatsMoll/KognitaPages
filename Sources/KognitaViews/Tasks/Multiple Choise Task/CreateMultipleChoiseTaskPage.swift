@@ -81,7 +81,7 @@ extension MultipleChoiceTask.Templates {
 
             return ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Lag oppgave", description: "Lag oppgave"))
+                baseContext: .constant(.init(title: "Lag oppgave", description: "Lag oppgave", showCookieMessage: false))
             ) {
 
                 PageTitle(title: "Lag flervalgsoppgave", breadcrumbs: breadcrumbs)

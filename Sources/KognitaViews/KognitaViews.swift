@@ -31,7 +31,6 @@ public struct KognitaViews {
         // Main User pages
         try renderer.add(view: Subject.Templates.ListOverview())
         try renderer.add(view: Subject.Templates.Details())
-        try renderer.add(view: Subject.Templates.SelectRedirect())
         try renderer.add(view: Subject.Templates.TaskList())
         try renderer.add(view: Subject.Templates.Compendium())
 

@@ -4,8 +4,8 @@ struct ContentBaseTemplateContent {
     let base: BaseTemplateContent
     let user: User
 
-    init(user: User, title: String, description: String = "") {
-        self.base = .init(title: title, description: description)
+    init(user: User, title: String, description: String = "", showCookieMessage: Bool) {
+        self.base = .init(title: title, description: description, showCookieMessage: showCookieMessage)
         self.user = user
     }
 }

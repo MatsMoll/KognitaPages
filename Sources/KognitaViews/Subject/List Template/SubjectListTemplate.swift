@@ -58,7 +58,7 @@ extension Subject.Templates {
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Temaliste", description: "Temaliste"))
+                baseContext: .constant(.init(title: "Temaliste", description: "Temaliste", showCookieMessage: false))
             ) {
 
                 PageTitle(title: Strings.subjectsTitle.localized())

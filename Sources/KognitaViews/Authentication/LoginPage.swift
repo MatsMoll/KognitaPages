@@ -13,8 +13,8 @@ public struct LoginPage: HTMLTemplate {
         let errorMessage: String?
         let base: BaseTemplateContent
 
-        public init(errorMessage: String? = nil) {
-            self.base = BaseTemplateContent(title: "Logg inn", description: "Logg inn")
+        public init(showCookieMessage: Bool, errorMessage: String? = nil) {
+            self.base = BaseTemplateContent(title: "Logg inn", description: "Logg inn", showCookieMessage: showCookieMessage)
             self.errorMessage = errorMessage
         }
     }

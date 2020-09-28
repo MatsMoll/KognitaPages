@@ -132,7 +132,7 @@ extension TypingTask.Templates {
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Lag oppgave", description: "Lag oppgave"))
+                baseContext: .constant(.init(title: "Lag oppgave", description: "Lag oppgave", showCookieMessage: false))
             ) {
                 PageTitle(title: "Lag tekstoppgave", breadcrumbs: breadcrumbs)
                 IF(context.wasUpdated) {

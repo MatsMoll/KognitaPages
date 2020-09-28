@@ -14,7 +14,7 @@ extension Pages {
         public init() {}
 
         public var body: HTML {
-            BaseTemplate(context: .init(title: "Oi, en feil oppstod!", description: "Oi, en feil oppstod!")) {
+            BaseTemplate(context: .init(title: "Oi, en feil oppstod!", description: "Oi, en feil oppstod!", showCookieMessage: false)) {
                 Div {
                     Container {
                         Row {

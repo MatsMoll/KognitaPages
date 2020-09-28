@@ -2,7 +2,7 @@ import BootstrapKit
 
 extension Pages {
 
-    public struct TermsOfService: HTMLPage {
+    public struct TermsOfService: HTMLTemplate {
 
         struct UsageSection: HTMLComponent {
 
@@ -31,13 +31,22 @@ extension Pages {
             }
         }
 
+        public struct Context {
+            let showCookieMessage: Bool
+            var baseContext: BaseTemplateContent {
+                .init(title: "Brukervilkår", description: "Brukervilkår", showCookieMessage: showCookieMessage)
+            }
+
+            public init(showCookieMessage: Bool) {
+                self.showCookieMessage = showCookieMessage
+            }
+        }
+
         public init() {}
 
         public var body: HTML {
 
-            BaseTemplate(
-                context: .init(title: "Brukervilkår", description: "Brukervilkår")
-            ) {
+            BaseTemplate(context: context.baseContext) {
                 KognitaNavigationBar()
                 Container {
                     Card {
