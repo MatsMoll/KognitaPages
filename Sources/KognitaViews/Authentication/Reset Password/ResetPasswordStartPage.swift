@@ -11,19 +11,21 @@ extension User.Templates.ResetPassword {
                 case start
             }
 
-            public init(state: States = .start) {
+            public init(state: States = .start, showCookieMessage: Bool) {
                 switch state {
                 case .success:
                     base = .init(
                         title: "Gjenopprett passord",
                         description: "Gjenopprett passord",
                         alertMessage: "Du skal snart få en mail med en link for å gjenopprette passordet ditt",
-                        alertStyle: .success
+                        alertStyle: .success,
+                        showCookieMessage: showCookieMessage
                     )
                 case .start:
                     base = .init(
                         title: "Gjenopprett passord",
-                        description: "Gjenopprett passord"
+                        description: "Gjenopprett passord",
+                        showCookieMessage: showCookieMessage
                     )
                 }
             }

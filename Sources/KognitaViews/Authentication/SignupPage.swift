@@ -15,11 +15,12 @@ extension User.Templates {
             let base: User.Templates.AuthenticateBaseContext
             let submittedForm: User.Create.Data?
 
-            public init(errorMessage: String? = nil, submittedForm: User.Create.Data? = nil) {
+            public init(showCookieMessage: Bool, errorMessage: String? = nil, submittedForm: User.Create.Data? = nil) {
                 self.base = User.Templates.AuthenticateBaseContext(
                     title: "Registrer",
                     description: "Registrer",
-                    errorMessage: errorMessage
+                    errorMessage: errorMessage,
+                    showCookieMessage: showCookieMessage
                 )
                 self.submittedForm = submittedForm
             }

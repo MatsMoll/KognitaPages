@@ -41,7 +41,7 @@ extension Subject.Templates {
                 details: Subject.Details
             ) {
                 self.user = user
-                self.base = .init(title: details.subject.name, description: details.subject.name)
+                self.base = .init(title: details.subject.name, description: details.subject.name, showCookieMessage: false)
                 self.details = details
             }
         }

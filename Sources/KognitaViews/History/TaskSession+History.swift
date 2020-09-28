@@ -102,7 +102,7 @@ extension Sessions.Templates {
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "History", description: "History"))
+                baseContext: .constant(.init(title: "History", description: "History", showCookieMessage: false))
             ) {
                 PageTitle(Strings.historyTitle)
 

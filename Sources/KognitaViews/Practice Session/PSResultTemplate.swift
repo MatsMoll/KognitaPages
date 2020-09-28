@@ -192,7 +192,7 @@ extension PracticeSession.Templates {
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Resultat | Øving ", description: "Resultat | Øving "))
+                baseContext: .constant(.init(title: "Resultat | Øving ", description: "Resultat | Øving ", showCookieMessage: false))
             ) {
                 PageTitle(
                     title: context.title,

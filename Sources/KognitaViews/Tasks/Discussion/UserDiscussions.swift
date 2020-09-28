@@ -34,7 +34,7 @@ extension TaskDiscussion.Templates {
 
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Diskusjoner", description: "Diskusjoner en bruker har laget"))
+                baseContext: .constant(.init(title: "Diskusjoner", description: "Diskusjoner en bruker har laget", showCookieMessage: false))
             ) {
 
                 Text { "Dine diskusjoner" }

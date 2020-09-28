@@ -30,7 +30,7 @@ extension Topic.Templates {
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Temaer", description: "Rediger temaene"))
+                baseContext: .constant(.init(title: "Temaer", description: "Rediger temaene", showCookieMessage: false))
             ) {
                 PageTitle(title: "Rediger temaer", breadcrumbs: breadcrumbs)
 

@@ -37,7 +37,7 @@ extension Subject.Templates {
 
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Kompendium", description: ""))
+                baseContext: .constant(.init(title: "Kompendium", description: "", showCookieMessage: false))
             ) {
                 PageTitle(title: "Kompendium", breadcrumbs: breadcrumbItems)
                 Container {
