@@ -53,7 +53,6 @@ extension TypingTask.Templates {
 
                 Input()
                     .type(.hidden)
-                    .value(UUID())
                     .id("note-session")
 
                 ContentStructure {
