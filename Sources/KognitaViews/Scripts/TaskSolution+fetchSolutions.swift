@@ -103,7 +103,29 @@ function sessionID() {
 }
 """
 
+    static let recapSessionIDFromUri = """
+function sessionID() {
+    let path = window.location.pathname;
+    let splitURI = "lecture-note-recap/"
+    return parseInt(path.substring(
+        path.indexOf(splitURI) + splitURI.length,
+        path.lastIndexOf("/tasks")
+    ));
+}
+"""
+
     static let practiceSessionTaskIndexFromUri = """
+function taskIndex() {
+    let path = window.location.pathname;
+    let splitURI = "tasks/";
+    return parseInt(path.substring(
+        path.indexOf(splitURI) + splitURI.length,
+        path.length
+    ));
+}
+"""
+
+    static let recapSessionTaskIndexFromUri = """
 function taskIndex() {
     let path = window.location.pathname;
     let splitURI = "tasks/";

@@ -26,6 +26,8 @@ struct TaskDiscussionCard: HTMLComponent {
 
 struct TaskSolutionCard: HTMLComponent {
 
+    /// The url to fetch the solutions for a given task.
+    /// This url should return a html response
     let fetchUrl: String
     var extraScripts: String = ""
 
