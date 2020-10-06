@@ -45,10 +45,10 @@ $("body").css("padding-bottom", $("#\(id)").height());
                     MaterialDesignIcon(.check)
                         .margin(.one, for: .left)
                 }
-                    .on(click: "cookiesConfirmed()")
-                    .button(style: .primary)
-                    .float(.right)
-                    .margin(.two, for: .left)
+                .on(click: "cookiesConfirmed()")
+                .button(style: .primary)
+                .float(.right)
+                .margin(.two, for: .left)
 
                 Text { "For å se din personlig data på Kognita må vi bruke cookies. Heldigvis blir cookien din privat hos oss. Ved å trykke på \"Jeg godtar\" eller ved å logge inn, så godtar du denne bruken." }
             }

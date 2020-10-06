@@ -53,7 +53,6 @@ extension TypingTask.Templates {
 
                 Input()
                     .type(.hidden)
-                    .value(UUID())
                     .id("note-session")
 
                 ContentStructure {
@@ -61,7 +60,7 @@ extension TypingTask.Templates {
                 }
                 .secondary {
                     Card {
-                        Text { "Handlinger" }.style(.heading3)
+                        Text { "Lag nytt notat" }.style(.heading3)
 
                         Button {
                             "Nytt notat"
@@ -70,6 +69,18 @@ extension TypingTask.Templates {
                         }
                         .button(style: .success)
                         .toggle(modal: .id(LectureNoteModal.identifier))
+                    }
+
+                    Card {
+                        Text { "Repiter notater" }.style(.heading3)
+
+                        Button {
+                            "Start repitisjons"
+                            MaterialDesignIcon(.testTube)
+                                .margin(.one, for: .left)
+                        }
+                        .button(style: .primary)
+                        .on(click: "startRecapSession()")
                     }
                 }
 
@@ -89,6 +100,7 @@ extension TypingTask.Templates {
                 Script(source: "/assets/js/dismissable-error.js")
                 Script(source: "/assets/js/delete-task.js")
                 Script(source: "/assets/js/flash-card/draft/json-data.js")
+                Script(source: "/assets/js/lecture-note-recap-session/create.js")
                 IF(context.isEditingTask) {
                     Script(source: "/assets/js/flash-card/edit.js")
                 }.else {
