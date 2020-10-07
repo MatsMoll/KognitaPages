@@ -17,7 +17,8 @@ extension User.Templates {
                 self.authBase = .init(
                     title: "Verifiser eposten din | Kognita",
                     description: "Verifiser eposten din og få tilgang til alle våre funksjoner",
-                    errorMessage: nil
+                    errorMessage: nil,
+                    showCookieMessage: false
                 )
                 self.token = token
             }

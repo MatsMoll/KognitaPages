@@ -32,7 +32,7 @@ extension TestSession.Templates {
 
         public var body: HTML {
             BaseTemplate(
-                context: .constant(BaseTemplateContent(title: "Oversikt", description: "Oversikt"))
+                context: .constant(BaseTemplateContent(title: "Oversikt", description: "Oversikt", showCookieMessage: false))
             ) {
                 Container {
                     PageTitle(title: context.overview.test.title)

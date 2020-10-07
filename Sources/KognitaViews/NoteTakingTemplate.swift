@@ -17,7 +17,7 @@ struct NoteTakingTemplate: HTMLTemplate {
 
         ContentBaseTemplate(
             userContext: context.user,
-            baseContext: .constant(.init(title: "Notater", description: "Ta notater"))
+            baseContext: .constant(.init(title: "Notater", description: "Ta notater", showCookieMessage: false))
         ) {
             PageTitle(title: "Ta notater")
 

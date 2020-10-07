@@ -20,8 +20,8 @@ extension User.Templates {
         let base: BaseTemplateContent
         let alertMessage: AlertMessage?
 
-        init(title: String, description: String, errorMessage: String?) {
-            self.base = .init(title: title, description: description)
+        init(title: String, description: String, errorMessage: String?, showCookieMessage: Bool) {
+            self.base = .init(title: title, description: description, showCookieMessage: showCookieMessage)
             if let errorMessage = errorMessage {
                 self.alertMessage = AlertMessage(message: errorMessage, style: .danger)
             } else {
@@ -29,13 +29,13 @@ extension User.Templates {
             }
         }
 
-        init(title: String, description: String) {
-            self.base = .init(title: title, description: description)
+        init(title: String, description: String, showCookieMessage: Bool) {
+            self.base = .init(title: title, description: description, showCookieMessage: showCookieMessage)
             self.alertMessage = nil
         }
 
-        init(title: String, description: String, alertMessage: String, alertStyle: BootstrapStyle) {
-            self.base = .init(title: title, description: description)
+        init(title: String, description: String, alertMessage: String, alertStyle: BootstrapStyle, showCookieMessage: Bool) {
+            self.base = .init(title: title, description: description, showCookieMessage: showCookieMessage)
             self.alertMessage = AlertMessage(message: alertMessage, style: alertStyle)
         }
     }

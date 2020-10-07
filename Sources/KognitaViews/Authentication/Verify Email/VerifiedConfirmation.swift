@@ -9,7 +9,8 @@ extension User.Templates {
             BaseTemplate(
                 context: .init(
                     title: "Epost verifisert",
-                    description: "Eposten din er nå verifisert"
+                    description: "Eposten din er nå verifisert",
+                    showCookieMessage: false
                 )
             ) {
                 KognitaNavigationBar()

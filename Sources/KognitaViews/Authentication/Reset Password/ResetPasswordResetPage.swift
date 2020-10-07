@@ -13,20 +13,20 @@ extension User.Templates.ResetPassword {
 
         public struct Context {
             let token: String
+            let showCookieMessage: Bool
 
-            public init(token: String, alertMessage: (message: String, colorClass: String)? = nil) {
+            var authContext: User.Templates.AuthenticateBaseContext {
+                .init(title: "Gjenopprett passord", description: "Gjenopprett passord", showCookieMessage: showCookieMessage)
+            }
+
+            public init(token: String, showCookieMessage: Bool, alertMessage: (message: String, colorClass: String)? = nil) {
                 self.token = token
+                self.showCookieMessage = showCookieMessage
             }
         }
 
         public var body: HTML {
-            User.Templates.AuthenticateBase(
-                context: TemplateValue<User.Templates.AuthenticateBaseContext>.constant(
-                    .init(
-                        title: "Gjenopprett passord",
-                        description: "Gjenopprett passord"
-                    )
-            )) {
+            User.Templates.AuthenticateBase(context: context.authContext) {
 
                 Div {
                     Text(Strings.resetPasswordTitle)

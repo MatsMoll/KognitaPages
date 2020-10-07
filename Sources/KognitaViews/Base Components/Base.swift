@@ -11,10 +11,12 @@ import BootstrapKit
 struct BaseTemplateContent {
     let title: String
     let description: String
+    let showCookieMessage: Bool
 
-    init(title: String, description: String) {
+    init(title: String, description: String, showCookieMessage: Bool) {
         self.title = title
         self.description = description
+        self.showCookieMessage = showCookieMessage
     }
 }
 
@@ -114,7 +116,7 @@ struct BaseTemplate: HTMLComponent {
 //                HotjarScript()
             }
             Body {
-                content
+                htmlContent
             }
             .padding(.zero, for: .bottom)
             .modify(unwrap: .constant(scrollSpy)) { (spy, body) in
@@ -126,10 +128,19 @@ struct BaseTemplate: HTMLComponent {
 
             Script(source: "/assets/js/app.min.js")
             customScripts
-            content.scripts
+            htmlContent.scripts
         }
         .lang("nb")
         .enviroment(locale: "nb")
+    }
+
+    // Seperated in order to make the JS beeing added automaticaly
+    @HTMLBuilder
+    var htmlContent: HTML {
+        content
+        IF(context.showCookieMessage) {
+            CookieMessage()
+        }
     }
 }
 

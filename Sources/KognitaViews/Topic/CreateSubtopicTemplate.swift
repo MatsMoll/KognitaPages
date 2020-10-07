@@ -36,7 +36,8 @@ extension Subtopic.Templates {
             var baseContent: BaseTemplateContent {
                 .init(
                     title: title,
-                    description: title
+                    description: title,
+                    showCookieMessage: false
                 )
             }
             var title: String {

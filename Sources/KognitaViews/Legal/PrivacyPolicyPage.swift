@@ -1,7 +1,7 @@
 import BootstrapKit
 
 extension Pages {
-    public struct PrivacyPolicy: HTMLPage {
+    public struct PrivacyPolicy: HTMLTemplate {
 
         struct PolicySection: HTMLComponent {
 
@@ -30,13 +30,23 @@ extension Pages {
             }
         }
 
+        public struct Context {
+            let showCookieMessage: Bool
+
+            var baseContext: BaseTemplateContent {
+                .init(title: "Personvern", description: "Personvern", showCookieMessage: showCookieMessage)
+            }
+
+            public init(showCookieMessage: Bool) {
+                self.showCookieMessage = showCookieMessage
+            }
+        }
+
         public init() {}
 
         public var body: HTML {
 
-            BaseTemplate(
-                context: .init(title: "Personvern", description: "Personvern")
-            ) {
+            BaseTemplate(context: context.baseContext) {
                 KognitaNavigationBar()
                 Container {
                     Card {

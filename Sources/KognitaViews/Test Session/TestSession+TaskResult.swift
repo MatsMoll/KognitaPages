@@ -26,6 +26,8 @@ struct TaskDiscussionCard: HTMLComponent {
 
 struct TaskSolutionCard: HTMLComponent {
 
+    /// The url to fetch the solutions for a given task.
+    /// This url should return a html response
     let fetchUrl: String
     var extraScripts: String = ""
 
@@ -184,7 +186,7 @@ extension TestSession.Templates {
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Resultat", description: "Resultat"))
+                baseContext: .constant(.init(title: "Resultat", description: "Resultat", showCookieMessage: false))
             ) {
                 PageTitle(title: "Resultat", breadcrumbs: breadcrumbs)
 

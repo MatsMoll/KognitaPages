@@ -48,7 +48,7 @@ extension SubjectTest.Templates {
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Lag prøve", description: "Lag prøve"))
+                baseContext: .constant(.init(title: "Lag prøve", description: "Lag prøve", showCookieMessage: false))
             ) {
                 PageTitle(
                     title: "Lag en prøve",

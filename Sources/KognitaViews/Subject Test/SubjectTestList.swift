@@ -57,7 +57,7 @@ extension SubjectTest.Templates {
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Prøver", description: "Prøver"))
+                baseContext: .constant(.init(title: "Prøver", description: "Prøver", showCookieMessage: false))
             ) {
                 PageTitle(title: "Prøver", breadcrumbs: breadcrumbs)
 

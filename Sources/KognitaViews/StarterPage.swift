@@ -20,7 +20,7 @@ extension AttributeNode {
 public struct Pages {}
 
 extension Pages {
-    public struct Landing: HTMLPage {
+    public struct Landing: HTMLTemplate {
 
         private let info: [FeatureView.Info] = [
             .init(
@@ -40,13 +40,22 @@ extension Pages {
             )
         ]
 
+        public struct Context {
+            let showCookieMessage: Bool
+
+            var baseContext: BaseTemplateContent {
+                .init(title: "Kognita", description: "Kognita", showCookieMessage: showCookieMessage)
+            }
+
+            public init(showCookieMessage: Bool) {
+                self.showCookieMessage = showCookieMessage
+            }
+        }
+
         public init() {}
 
         public var body: HTML {
-            BaseTemplate(context: .init(
-                    title: "Kognita",
-                    description: "Kognita"
-            )) {
+            BaseTemplate(context: context.baseContext) {
                 Div {
                     Container {
                         NavigationBar {

@@ -52,7 +52,7 @@ extension User.Templates {
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Brukerprofil", description: "Brukerprofil"))
+                baseContext: .constant(.init(title: "Brukerprofil", description: "Brukerprofil", showCookieMessage: false))
 
             ) {
                 PageTitle(title: "Brukerprofil")

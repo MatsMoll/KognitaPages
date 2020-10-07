@@ -89,7 +89,7 @@ public struct MultipleChoiseTaskTestMode: HTMLTemplate {
     public struct Context {
         let user: User
         let task: SubjectTest.MultipleChoiseTaskContent
-        var baseContext: BaseTemplateContent { .init(title: "", description: "") }
+        var baseContext: BaseTemplateContent { .init(title: "", description: "", showCookieMessage: false) }
         var renderedAt: Date { .now }
 
         public init(user: User, task: SubjectTest.MultipleChoiseTaskContent) {

@@ -112,8 +112,9 @@ extension Subject.Templates {
                 userContext: context.user,
                 baseContext: .constant(.init(
                     title: "Innholdsoversikt",
-                    description: "Innholdsoversikt")
-                )
+                    description: "Innholdsoversikt",
+                    showCookieMessage: false
+                ))
             ) {
                 PageTitle(title: "Innholdsoversikt", breadcrumbs: breadcrumbs)
                 Row {

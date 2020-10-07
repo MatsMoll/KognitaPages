@@ -121,8 +121,8 @@ struct KognitaFooter: HTMLComponent, AttributeNode {
     }
 
     let itemLinks: [ListItemLink.Context] = [
-        .init(title: "Om oss", url: "#"),
-        .init(title: "Hjelp", url: "#"),
+//        .init(title: "Om oss", url: "#"),
+//        .init(title: "Hjelp", url: "#"),
         .init(title: "Brukervilkår", url: "/terms-of-service"),
         .init(title: "Personvern", url: "/privacy-policy"),
         .init(title: "Kontakt oss", url: "mailto:kontakt@kognita.no")
