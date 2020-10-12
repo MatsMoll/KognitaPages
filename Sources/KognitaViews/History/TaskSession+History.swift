@@ -159,10 +159,8 @@ extension Sessions.Templates.History {
 
                 IF(sessions.count > 1) {
                     ForEach(in: sessions) { session in
-                        Div {
-                            SessionCard(session: session)
-                        }
-                        .column(width: .six)
+                        Div { SessionCard(session: session) }
+                            .column(width: .six, for: .large)
                     }
                 }
                 .else {
