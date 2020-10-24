@@ -66,6 +66,7 @@ extension Subject.Templates.Details {
                     .button(style: .light)
                     .margin(.one, for: .vertical)
                     .isDisabled(canPractice == false)
+                    .on(click: "startPracticeSessionWithTopicIDs([" + topic.id + "], " + subjectID + ")")
                 }
                 .footer {
                     Competence(competence: topic.userLevel)
@@ -77,7 +78,6 @@ extension Subject.Templates.Details {
             }
             .column(width: .six, for: .medium)
             .column(width: .twelve)
-            .on(click: "startPracticeSessionWithTopicIDs([" + topic.id + "], " + subjectID + ")")
         }
     }
 
