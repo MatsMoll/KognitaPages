@@ -37,7 +37,8 @@ extension TypingTask.Templates {
                 practiceProgress: Int,
                 sessionID: PracticeSession.ID,
                 lastResult: TaskResult? = nil,
-                prevAnswer: TypingTask.Answer?
+                prevAnswer: TypingTask.Answer?,
+                numberOfTaskGoal: Int
             ) {
                 self.taskPreview = .init(
                     task: taskPreview,
@@ -47,7 +48,7 @@ extension TypingTask.Templates {
                     taskPath: "flash-card",
                     currentTaskIndex: currentTaskIndex,
                     lastResult: lastResult,
-                    numberOfTaskGoal: 0
+                    numberOfTaskGoal: numberOfTaskGoal
                 )
                 self.prevAnswer = prevAnswer
             }

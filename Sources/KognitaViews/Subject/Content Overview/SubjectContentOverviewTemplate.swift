@@ -144,6 +144,10 @@ extension Subject.Templates {
                             }
                             .href(context.subject.createDraftUri)
                             .button(style: .info)
+                            .margin(.one, for: .bottom)
+
+                            Break()
+                                .display(.none, breakpoint: .large)
 
                             Anchor {
                                 "Lag flervalgsoppgave "
@@ -151,7 +155,12 @@ extension Subject.Templates {
                             }
                             .href(context.subject.createMultipleTaskUri)
                             .button(style: .success)
-                            .margin(.two, for: .left)
+                            .margin(.two, for: .left, sizeClass: .large)
+                            .margin(.one, for: .bottom)
+
+                            Break()
+                                .display(.none, breakpoint: .medium)
+                                .margin(.one, for: .bottom)
 
                             Anchor {
                                 "Lag innskrivingsoppgave "
@@ -159,13 +168,19 @@ extension Subject.Templates {
                             }
                             .href(context.subject.createFlashCardTaskUri)
                             .button(style: .success)
-                            .margin(.two, for: .left)
+                            .margin(.two, for: .left, sizeClass: .medium)
+                            .margin(.one, for: .bottom)
 
                             IF(context.isModerator) {
+
+                                Break()
+                                    .display(.none, breakpoint: .large)
+
                                 Anchor { "Rediger temaer" }
                                     .href(context.subject.createTopicUri)
                                     .button(style: .primary)
-                                    .margin(.two, for: .left)
+                                    .margin(.two, for: .left, sizeClass: .large)
+                                    .margin(.one, for: .bottom)
                             }
 
 //                            QTIImportButton()

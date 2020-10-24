@@ -117,13 +117,15 @@ private struct TableOfContent: HTMLComponent {
                         .href("#" + topic.nameID)
                         .class("list-group-item list-group-item-action")
 
-                    Div {
-                        ForEach(in: topic.subtopics) { subtopic in
-                            Subtopics(subtopic: subtopic)
+                    IF(topic.subtopics.count > 1) {
+                        Div {
+                            ForEach(in: topic.subtopics) { subtopic in
+                                Subtopics(subtopic: subtopic)
+                            }
                         }
+                        .class("nav")
+                        .padding(.three, for: .left)
                     }
-                    .class("nav")
-                    .padding(.three, for: .left)
                 }
             }
             .class("list-group")

@@ -46,7 +46,7 @@ extension Subject.Templates {
                             task: task
                         )
                     }
-                    .column(width: .six)
+                    .column(width: .six, for: .large)
                 }
             }
         }
