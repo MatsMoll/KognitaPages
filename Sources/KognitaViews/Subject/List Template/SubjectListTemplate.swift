@@ -68,6 +68,9 @@ extension Subject.Templates {
                         IF(context.user.isEmailVerified == false) {
                             VerifyEmailSignifier()
                         }
+                        Unwrap(context.list.recommendedRecap) { recap in
+                            RecommendedRecapCard(recap: recap)
+                        }
                         SubjectTestList(test: context.list.openedTest)
                         Subject.Templates.ActiveSubjects(subjects: context.list.activeSubjects)
 
@@ -89,7 +92,6 @@ extension Subject.Templates {
                 }
             }
             .scripts {
-                Script().source("/assets/js/practice-session-create.js")
                 Script().source("/assets/js/vendor/Chart.bundle.min.js")
                 Script().source("/assets/js/practice-session-histogram.js")
                 Script().source("https://cdn.jsdelivr.net/npm/marked/marked.min.js")
