@@ -157,13 +157,16 @@ extension Subject.Templates {
                     .type(.button)
                     .isRounded()
                     .button(style: .primary)
-                    .margin(.three, for: .bottom)
+                    .margin(.three, for: .bottom, sizeClass: .medium)
+                    .margin(.two, for: .bottom)
                     .on(click: details.startPracticeSessionCall)
                     .isDisabled(details.canPractice == false)
 
+                    Break().display(.none, breakpoint: .medium)
+
                     Anchor { "Les kompendiet vårt" }
                         .button(style: .light)
-                        .margin(.two, for: .left)
+                        .margin(.two, for: .left, sizeClass: .medium)
                         .margin(.three, for: .bottom)
                         .href(details.compendiumUri)
                         .isRounded()

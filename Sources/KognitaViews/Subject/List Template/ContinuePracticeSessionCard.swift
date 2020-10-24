@@ -1,6 +1,58 @@
 import BootstrapKit
 
+extension RecommendedRecap {
+    var recapCall: String { "startPracticeSessionWithTopicIDs([\(topicID)],\(subjectID))" }
+}
+
 extension Subject.Templates.ListOverview {
+
+    struct RecommendedRecapCard: HTMLComponent {
+
+        let recap: TemplateValue<RecommendedRecap>
+
+        var body: HTML {
+            Card {
+
+                Text {
+                    "Basert på aktiviteten din anbefaler vi å repitere "
+                    recap.topicName
+                    " innen "
+                    recap.revisitAt.style(date: .short, time: .none)
+                }
+                .text(color: .dark)
+
+                Button {
+                    MaterialDesignIcon(.loop)
+                        .margin(.one, for: .right)
+                    "Repiter nå"
+                }
+                .button(style: .primary)
+                .on(click: recap.recapCall)
+                .isRounded()
+            }
+            .header {
+                Text {
+                    MaterialDesignIcon(.loop)
+                        .margin(.one, for: .right)
+                    "Repiter "
+                    recap.topicName
+                }
+                .style(.heading3)
+                .text(color: .white)
+
+                Badge { recap.subjectName }
+                    .background(color: .light)
+            }
+            .modifyHeader { $0.background(color: .primary) }
+        }
+
+        var scripts: HTML {
+            NodeList {
+                body.scripts
+                Script().source("/assets/js/practice-session-create.js")
+            }
+        }
+    }
 
     struct ContinuePracticeSessionCard: HTMLComponent {
 
