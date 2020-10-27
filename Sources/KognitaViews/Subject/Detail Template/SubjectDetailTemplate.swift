@@ -100,11 +100,12 @@ extension Subject.Templates {
                     }
                     .column(width: .four, for: .large)
                 }
+
+                PracticeSession.Templates.CreateModal()
             }
             .scripts {
                 Script().source("/assets/js/vendor/Chart.bundle.min.js")
                 Script().source("/assets/js/results/weekly-histogram.js")
-                Script().source("/assets/js/practice-session-create.js")
                 Script().source("/assets/js/subject/mark-as-active.js")
                 Script().source("/assets/js/subject/mark-as-inactive.js")
                 Script().source("https://cdn.jsdelivr.net/npm/marked/marked.min.js")
@@ -149,7 +150,11 @@ extension Subject.Templates {
                         Text { "Du har dessverre ikke tilgang til øvingsmodus helt enda." }
                     }
 
-                    Button {
+                    PracticeSession.Templates.CreateModal.button(
+                        subjectID: details.subject.id,
+                        topicID: details.topicIDsJSList,
+                        topicDescription: details.subject.name
+                    ) {
                         Italic().class("mdi mdi-book-open-variant")
                         " "
                         Strings.subjectStartSession.localized()
@@ -159,7 +164,6 @@ extension Subject.Templates {
                     .button(style: .primary)
                     .margin(.three, for: .bottom, sizeClass: .medium)
                     .margin(.two, for: .bottom)
-                    .on(click: details.startPracticeSessionCall)
                     .isDisabled(details.canPractice == false)
 
                     Break().display(.none, breakpoint: .medium)
