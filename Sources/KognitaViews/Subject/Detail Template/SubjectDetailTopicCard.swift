@@ -52,11 +52,34 @@ extension Subject.Templates.Details {
 
                     Small {
                         "Antall oppgaver: "
-                        topic.numberOfTasks
+
+                        Break()
+
+                        Badge {
+                            topic.multipleChoiceTaskCount
+                            MaterialDesignIcon(.formatListBulleted)
+                                .margin(.one, for: .left)
+                            " Flervalg"
+                        }
+                        .background(color: .light)
+
+                        Badge {
+                            topic.typingTaskCount
+                            MaterialDesignIcon(.messageReplyText)
+                                .margin(.one, for: .left)
+                            " Innskriving"
+                        }
+                        .background(color: .light)
+                        .margin(.two, for: .left)
                     }
                     .display(.block)
+                    .margin(.one, for: .bottom)
 
-                    Button {
+                    PracticeSession.Templates.CreateModal.button(
+                        subjectID: subjectID,
+                        topicID: topic.id,
+                        topicDescription: topic.name
+                    ) {
                         Italic().class("mdi mdi-book-open-variant")
                         " "
                         Strings.subjectStartSession.localized()
@@ -66,7 +89,6 @@ extension Subject.Templates.Details {
                     .button(style: .light)
                     .margin(.one, for: .vertical)
                     .isDisabled(canPractice == false)
-                    .on(click: "startPracticeSessionWithTopicIDs([" + topic.id + "], " + subjectID + ")")
                 }
                 .footer {
                     Competence(competence: topic.userLevel)
