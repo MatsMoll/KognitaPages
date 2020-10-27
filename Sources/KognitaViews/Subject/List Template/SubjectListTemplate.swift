@@ -70,6 +70,7 @@ extension Subject.Templates {
                         }
                         Unwrap(context.list.recommendedRecap) { recap in
                             RecommendedRecapCard(recap: recap)
+                            PracticeSession.Templates.CreateModal()
                         }
                         SubjectTestList(test: context.list.openedTest)
                         Subject.Templates.ActiveSubjects(subjects: context.list.activeSubjects)

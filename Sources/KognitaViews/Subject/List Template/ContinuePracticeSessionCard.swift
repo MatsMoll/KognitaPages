@@ -1,9 +1,5 @@
 import BootstrapKit
 
-extension RecommendedRecap {
-    var recapCall: String { "startPracticeSessionWithTopicIDs([\(topicID)],\(subjectID))" }
-}
-
 extension Subject.Templates.ListOverview {
 
     struct RecommendedRecapCard: HTMLComponent {
@@ -21,13 +17,16 @@ extension Subject.Templates.ListOverview {
                 }
                 .text(color: .dark)
 
-                Button {
+                PracticeSession.Templates.CreateModal.button(
+                    subjectID: recap.subjectID,
+                    topicID: recap.topicID,
+                    topicDescription: recap.topicName
+                ) {
                     MaterialDesignIcon(.loop)
                         .margin(.one, for: .right)
                     "Repiter nå"
                 }
                 .button(style: .primary)
-                .on(click: recap.recapCall)
                 .isRounded()
             }
             .header {
@@ -44,13 +43,6 @@ extension Subject.Templates.ListOverview {
                     .background(color: .light)
             }
             .modifyHeader { $0.background(color: .primary) }
-        }
-
-        var scripts: HTML {
-            NodeList {
-                body.scripts
-                Script().source("/assets/js/practice-session-create.js")
-            }
         }
     }
 
