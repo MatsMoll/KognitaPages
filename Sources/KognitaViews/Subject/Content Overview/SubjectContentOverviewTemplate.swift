@@ -373,7 +373,7 @@ struct SearchCard: HTMLComponent {
                     }
                 }
                 .id("task-search-form")
-                .fetch(url: "search", queryFormID: "task-search-form", resultTagID: "search-result")
+                .fetch(url: "search", resultTagID: "search-result")
             }
         }
         .column(width: .twelve)
@@ -381,8 +381,11 @@ struct SearchCard: HTMLComponent {
 }
 
 extension Form {
-    func fetch(url: String, queryFormID formID: String, resultTagID: String) -> SearchFetch {
-        SearchFetch(request: .init(url: url, formID: formID, resultID: resultTagID), form: self)
+    func fetch(url: String, resultTagID: String) -> SearchFetch {
+        guard let id = self.value(of: "id") as? String else {
+            fatalError("Missing Form id")
+        }
+        return SearchFetch(request: .init(url: url, formID: id, resultID: resultTagID), form: self)
     }
 }
 

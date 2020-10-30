@@ -76,7 +76,7 @@ extension TypingTask.Templates {
                     .margin(.two, for: .bottom)
 
                     Button {
-                        Italic().class("mdi mdi-send")
+                        MaterialDesignIcon(.send)
                             .margin(.one, for: .right)
 
                         Strings.exerciseAnswerButton
@@ -87,6 +87,14 @@ extension TypingTask.Templates {
                     .button(style: .success)
                     .margin(.one, for: .right)
                     .on(click: "revealSolution();")
+
+                    Button {
+                        MaterialDesignIcon(.commentQuestion)
+                            .margin(.one, for: .right)
+                        "Få et hint"
+                    }
+                    .on(click: "loadHints()")
+                    .button(style: .info)
                 }
             }
             .overSolutionCard {
