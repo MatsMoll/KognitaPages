@@ -120,12 +120,8 @@ extension PracticeSession.Templates {
                 Script {
 """
 function createSession() {
-var topicIDs = $("#\(CreateModal.sessionTopicID)").val()
-if (isNaN(parseInt(topicIDs))) {
-    topicIDs = topicIDs.replaceAll("[", "").replaceAll("]", "").split(",").map(num => parseInt(num))
-} else {
-    topicIDs = [parseInt(topicIDs)]
-}
+var topicIDs = $("#\(CreateModal.sessionTopicID)").val().split(",").map(num => parseInt(num))
+console.log(topicIDs);
 let subjectID = $("#\(CreateModal.sessionSubjectID)").val()
 let numberOfTasksGoal = parseInt($("#\(CreateModal.numberOfTasksGoalID)").val())
 let useTypingTasks = document.getElementById("\(CreateModal.useTypingTasksID)").checked
