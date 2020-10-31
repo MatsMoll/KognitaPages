@@ -44,6 +44,8 @@ struct MaterialDesignIcon: HTMLComponent, AttributeNode {
         case reload
         case backupRestore = "backup-restore"
         case loop
+        case send
+        case commentQuestion = "comment-question"
     }
 
     let icon: TemplateValue<Icons>

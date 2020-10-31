@@ -11,8 +11,10 @@ extension Subject.Templates.ListOverview {
 
                 Text {
                     "Basert på aktiviteten din anbefaler vi å repitere "
-                    recap.topicName
+                    Italic { recap.topicName }
                     " innen "
+                    Italic { recap.subjectName }
+                    " før "
                     recap.revisitAt.style(date: .short, time: .none)
                 }
                 .text(color: .dark)
@@ -38,11 +40,24 @@ extension Subject.Templates.ListOverview {
                 }
                 .style(.heading3)
                 .text(color: .white)
-
-                Badge { recap.subjectName }
-                    .background(color: .light)
             }
             .modifyHeader { $0.background(color: .primary) }
+            .footer {
+                Div {
+                    Text {
+                        recap.resultScore.timesHundred.twoDecimals
+                        "%"
+                        Small { recap.topicName }
+                            .margin(.one, for: .left)
+                    }
+                    .style(.paragraph)
+                    .font(style: .bold)
+                    .margin(.two, for: .bottom)
+
+                    KognitaProgressBar(value: recap.resultScore.timesHundred)
+                }
+                .margin(.two, for: .vertical)
+            }
         }
     }
 

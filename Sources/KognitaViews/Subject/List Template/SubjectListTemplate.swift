@@ -45,6 +45,8 @@ extension Subject.Templates {
             let wasIncorrectPassword: Bool
             let recentlyActiveDiscussions: Bool
 
+            var listComponentContext: ListComponent.Context { .init(activeSubjects: list.activeSubjects, inactiveSubjects: list.inactiveSubjects) }
+
             public init(user: User, list: Dashboard, wasIncorrectPassword: Bool, recentlyActiveDiscussions: Bool) {
                 self.user = user
                 self.list = list
@@ -73,12 +75,14 @@ extension Subject.Templates {
                             PracticeSession.Templates.CreateModal()
                         }
                         SubjectTestList(test: context.list.openedTest)
-                        Subject.Templates.ActiveSubjects(subjects: context.list.activeSubjects)
 
                         //                        ContinuePracticeSessionCard(
                         //                            ongoingSessionPath: context.
                         //                        )
-                        SubjectListSection(subjects: context.list.inactiveSubjects)
+
+                        Text { "Emner" }.style(.heading4)
+                        SearchCard()
+                        ListComponent(context: context.listComponentContext)
                     }
                     .column(width: .eight, for: .large)
                     Div {
@@ -113,29 +117,6 @@ $("#start-subject-test-modal").modal('show');
                         test: test,
                         wasIncorrectPassword: context.wasIncorrectPassword
                     )
-                }
-            }
-        }
-
-        struct SubjectListSection: HTMLComponent {
-
-            @TemplateValue([Subject.ListOverview].self)
-            var subjects
-
-            var body: HTML {
-                NodeList {
-                    Text { "Andre emner" }
-                        .style(.heading3)
-                    IF(subjects.isEmpty) {
-                        Text { "Det finnes ingen andre emner" }
-                            .style(.heading4)
-                    }.else {
-                        Row {
-                            ForEach(in: subjects) { subject in
-                                SubjectCard(subject: subject)
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -192,6 +173,32 @@ $("#start-subject-test-modal").modal('show');
 //                .class("col-md-6 col-lg-4")
 //            }
 //        }
+
+        struct SearchCard: HTMLComponent {
+
+            var body: HTML {
+                Card {
+                    Form {
+                        Label { "Søk på et emne" }
+                            .for("name")
+                        InputGroup {
+                            Input()
+                                .type(.text)
+                                .placeholder("Søk..")
+                                .id("name")
+                                .name("name")
+                        }
+                        .append {
+                            Button { "Søk" }
+                                .button(style: .primary)
+                                .type(.submit)
+                        }
+                    }
+                    .id("subject-list-search-form")
+                    .fetch(url: "/subjects/search", resultTagID: ListComponent.subjectListID)
+                }
+            }
+        }
 
         struct StatisticsCard: HTMLComponent {
 
