@@ -80,6 +80,7 @@ extension Subject.Templates {
                         //                            ongoingSessionPath: context.
                         //                        )
 
+                        Text { "Emner" }.style(.heading4)
                         SearchCard()
                         ListComponent(context: context.listComponentContext)
                     }
