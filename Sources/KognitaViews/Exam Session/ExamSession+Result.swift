@@ -1,89 +1,13 @@
 //
-//  PSResultTemplate.swift
-//  App
+//  ExamSession+Result.swift
+//  KognitaCore
 //
-//  Created by Mats Mollestad on 06/03/2019.
+//  Created by Mats Mollestad on 07/11/2020.
 //
 
-import BootstrapKit
 import Foundation
 
-extension TimeInterval {
-    var timeString: String {
-        let sec = self.truncatingRemainder(dividingBy: 60)
-        let min = (self / 60).truncatingRemainder(dividingBy: 60).rounded(.down)
-        let hour = (self / 3600).rounded(.down)
-
-        var timeString = ""
-        if hour > 0 {
-            timeString += "\(Int(hour)) t, "
-        }
-        if min > 0 {
-            timeString += "\(Int(min)) min, "
-        }
-        return timeString + "\(Int(sec)) sek"
-    }
-}
-
-extension Subject.Overview {
-    var subjectDetailUri: String {
-        "/subjects/\(id)"
-    }
-}
-
-struct TopicResultContext {
-    let topicId: Topic.ID
-    let topicName: String
-    let topicScore: Double
-    let tasks: [TaskResultable]
-}
-
-struct BreadcrumbItem {
-    let link: ViewWrapper?
-    let title: ViewWrapper
-}
-
-extension PracticeSession {
-    public enum Templates {}
-}
-
-extension Date {
-    static var now: Date { Date() }
-}
-
-extension Comparable {
-    public func clamped(to limits: ClosedRange<Self>) -> Self {
-        return min(max(self, limits.lowerBound), limits.upperBound)
-    }
-}
-
-extension Strideable where Stride: SignedInteger {
-    public func clamped(to limits: CountableClosedRange<Self>) -> Self {
-        return min(max(self, limits.lowerBound), limits.upperBound)
-    }
-}
-
-extension Sequence {
-
-    public func group<P>(by path: KeyPath<Element, P>) -> [P: [Element]] where P: Hashable {
-        return Dictionary(grouping: self) { $0[keyPath: path] }
-    }
-
-    public func count<T>(equal path: KeyPath<Element, T>) -> [T: Int] where T: Hashable {
-        var counts = [T: Int]()
-        for object in self {
-            let value = object[keyPath: path]
-            if let count = counts[value] {
-                counts[value] = count + 1
-            } else {
-                counts[value] = 1
-            }
-        }
-        return counts
-    }
-}
-
-extension PracticeSession.Templates {
+extension ExamSession.Templates {
     public struct Result: HTMLTemplate {
 
         public struct Context {
@@ -115,6 +39,9 @@ extension PracticeSession.Templates {
             }
 
             var timeUsedString: String { return timeUsed.timeString }
+
+            var startPracticeSessionCall: String { "startPracticeSessionWithTopicIDs([\(Set(tasks.map { $0.topicID }))], \(subject.id))" }
+            var compendiumURI: String { "/subjects/\(subject.id)/compendium" }
 
             var averageTimePerTaskString: String? {
                 guard tasks.isEmpty == false else { return nil }
@@ -187,12 +114,12 @@ extension PracticeSession.Templates {
 
         public init() {}
 
-        let breadcrumbItems: [BreadcrumbItem] = [.init(link: "../history", title: .init(view: Localized(key: Strings.historyTitle)))]
+        let breadcrumbItems: [BreadcrumbItem] = [.init(link: "/practice-sessions/history", title: .init(view: Localized(key: Strings.historyTitle)))]
 
         public var body: HTML {
             ContentBaseTemplate(
                 userContext: context.user,
-                baseContext: .constant(.init(title: "Resultat | Øving ", description: "Resultat | Øving ", showCookieMessage: false))
+                baseContext: .constant(.init(title: "Resultat | Eksamen ", description: "Resultat | Øving ", showCookieMessage: false))
             ) {
                 PageTitle(
                     title: context.title,
@@ -221,9 +148,9 @@ extension PracticeSession.Templates {
                 }
                 .secondary {
                     PractiseSessionResultActionPanel(
-                        startSessionCall: context.startPractiseSessionCall,
+                        startSessionCall: context.startPracticeSessionCall,
                         toSubjectURI: context.subject.subjectDetailUri,
-                        toCompendiumURI: context.goToCompendium
+                        toCompendiumURI: context.compendiumURI
                     )
                 }
 
@@ -275,7 +202,7 @@ extension PracticeSession.Templates {
     }
 }
 
-extension PracticeSession.Templates.Result.Context {
+extension ExamSession.Templates.Result.Context {
     var numberOfTasks: String {
         let taskCount = tasks.count
         var taskCountString = "\(taskCount)"

@@ -1,23 +1,19 @@
 //
-//  FlashCardTaskTemplate.swift
-//  App
+//  ExamSession+ExecuteTypingTask.swift
+//  KognitaCore
 //
-//  Created by Mats Mollestad on 31/03/2019.
+//  Created by Mats Mollestad on 07/11/2020.
 //
 
 import BootstrapKit
 
-extension TypingTask {
-    public struct Templates {}
-}
-
-extension TypingTask.Templates {
-    public struct Execute: HTMLTemplate {
+extension ExamSession.Templates {
+    public struct ExecuteTypingTask: HTMLTemplate {
 
         public struct Context {
             let taskPreview: TaskPreviewTemplateContext
 
-            var sessionID: PracticeSession.ID { taskPreview.sessionID }
+            var sessionID: Sessions.ID { taskPreview.sessionID }
             var task: Task { return taskPreview.task }
             var topic: Topic { return taskPreview.topic }
             var hasBeenCompleted: Bool { return taskPreview.lastResult?.sessionID == sessionID }
@@ -33,22 +29,16 @@ extension TypingTask.Templates {
             public init(
                 taskPreview: TaskPreviewContent,
                 user: User,
-                currentTaskIndex: Int,
-                practiceProgress: Int,
-                sessionID: PracticeSession.ID,
                 lastResult: TaskResult? = nil,
                 prevAnswer: TypingTask.Answer?,
-                numberOfTaskGoal: Int
+                progressState: Sessions.ProgressState
             ) {
                 self.taskPreview = .init(
                     task: taskPreview,
+                    progressState: progressState,
                     user: user,
-                    practiceProgress: practiceProgress,
-                    sessionID: sessionID,
-                    taskPath: "flash-card",
-                    currentTaskIndex: currentTaskIndex,
-                    lastResult: lastResult,
-                    numberOfTaskGoal: numberOfTaskGoal
+                    taskPath: "typing-task",
+                    lastResult: lastResult
                 )
                 self.prevAnswer = prevAnswer
             }
@@ -59,11 +49,9 @@ extension TypingTask.Templates {
         public let context: TemplateValue<Context> = .root()
 
         public var body: HTML {
-            TaskPreviewTemplate(context: context.taskPreview) {
+            TaskPreviewTemplate(context: context.taskPreview, sessionType: .exam) {
                 Card {
-                    Label {
-                        "Skriv svaret her"
-                    }
+                    Label { "Skriv svaret her" }
                     InputGroup {
                         TextArea {
                             Unwrap(context.prevAnswer) { (answer: TemplateValue<TypingTask.Answer>) in
@@ -148,7 +136,7 @@ extension TypingTask.Templates {
                     .noGutters()
 
                     Row {
-                        ScoreButtons(score: context.score)
+                        TypingTask.Templates.ScoreButtons(score: context.score)
                     }
                     .noGutters()
                     .text(alignment: .center)
@@ -163,65 +151,10 @@ extension TypingTask.Templates {
                 }
             }
         }
-
-        private struct ScoreButton: HTMLComponent {
-
-            let score: Int
-
-            var body: HTML {
-                Button { score + 1 }
-                    .on(click: "registerScore(\(score))")
-                    .id(score)
-                    .button(style: .light)
-            }
-        }
-
-        private struct ScoreButtons: HTMLComponent {
-
-            let score: TemplateValue<Double?>
-
-            var body: HTML {
-                NodeList {
-                    Div { ScoreButton(score: 0) }
-                        .column(width: .two)
-                        .offset(width: .one, for: .all)
-
-                    Div { ScoreButton(score: 1) }
-                        .column(width: .two)
-
-                    Div { ScoreButton(score: 2) }
-                        .column(width: .two)
-
-                    Div { ScoreButton(score: 3) }
-                        .column(width: .two)
-
-                    Div { ScoreButton(score: 4) }
-                        .column(width: .two)
-                }
-            }
-        }
-
-        struct LevelColumn: HTMLComponent {
-
-            let icon: HTML
-            let description: HTML
-            let textAlignment: Text.Alignment
-
-            var body: HTML {
-                Text {
-                    icon
-                    Break()
-                    description
-                }
-                .column(width: .four)
-                .text(alignment: textAlignment)
-                .style(.heading5)
-            }
-        }
     }
 }
 
-extension TypingTask.Templates.Execute.Context {
+extension ExamSession.Templates.ExecuteTypingTask.Context {
     fileprivate var knowledgeScoreScript: String {
         if let score = score {
             return "knowledgeScore=\(score)"
@@ -232,13 +165,5 @@ extension TypingTask.Templates.Execute.Context {
 
     fileprivate var hasCompletedScript: String {
         "\(knowledgeScoreScript);window.onload = presentControlls;"
-    }
-}
-
-extension TemplateValue where Value == String {
-    var asScript: Script {
-        Script {
-            self
-        }
     }
 }

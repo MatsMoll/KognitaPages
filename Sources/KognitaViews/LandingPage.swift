@@ -114,12 +114,17 @@ extension Pages {
                                 Text { "Få mer ut av notatene dine og bruk mindre tid på pensum ved å bruke effektive læringsteknikker som er vitenskapelig bevist. I tillegg er Kognita designet for å gjøre øvingen mer motiverende ved å gjøre opplevelsen mer spill-aktig." }
                                     .class("text-white-50")
 
-                                Anchor(Strings.starterPageMoreButton)
-                                    .href("/signup")
-                                    .class("rounded-pill")
-                                    .button(style: .success)
-                                    .button(size: .extraLarge)
-                                    .margin(.five, for: .top)
+                                Div {
+                                    Anchor(Strings.starterPageMoreButton)
+                                        .href("/signup")
+                                        .class("rounded-pill")
+                                        .button(style: .success)
+                                        .button(size: .extraLarge)
+                                        .margin(.two, for: .right)
+
+                                    LinkiOSApp()
+                                }
+                                .margin(.five, for: .top)
                             }
                             .column(width: .five, for: .medium)
                             .margin(.four, for: .top, sizeClass: .medium)
@@ -229,6 +234,59 @@ extension Pages {
                 Section {
                     Container {
                         Row {
+
+                            Div {
+                                Div {
+                                    Text { "Last ned iOS appen" }
+                                        .style(.heading2)
+                                }
+                                .text(alignment: .center)
+                            }
+                            .column(width: .twelve, for: .large)
+
+                        }
+                        .padding(.four, for: .vertical)
+
+                        Row {
+                            Div {
+                                Img(source: "/assets/images/ios/MultipleChoice.png").style(css: "max-width: 100%;")
+                            }
+                            .column(width: .six, for: .small)
+                            .column(width: .three, for: .large)
+                            Div {
+                                Img(source: "/assets/images/ios/Goal.png").style(css: "max-width: 100%;")
+                            }
+                            .column(width: .six, for: .small)
+                            .column(width: .three, for: .large)
+                            Div {
+                                Img(source: "/assets/images/ios/Results.png").style(css: "max-width: 100%;")
+                            }
+                            .column(width: .six, for: .small)
+                            .column(width: .three, for: .large)
+                            Div {
+                                Img(source: "/assets/images/ios/Widget.png").style(css: "max-width: 100%;")
+                            }
+                            .column(width: .six, for: .small)
+                            .column(width: .three, for: .large)
+                        }
+                        Row {
+                            Div {
+                                LinkiOSApp()
+                                    .style(css: "max-width: 120px;")
+                                    .margin(.auto, for: .horizontal)
+                                    .display(.block)
+                                    .margin(.one, for: .top)
+                            }
+                            .column(width: .twelve)
+                        }
+                    }
+                }
+                .padding(.five, for: .vertical)
+                .class("border-top border-light")
+
+                Section {
+                    Container {
+                        Row {
                             Div {
                                 Div {
                                     Text { "Kontakt oss" }
@@ -282,7 +340,6 @@ extension Pages {
                     }
                 }
                 .padding(.five, for: .vertical)
-                .class("border-top border-light")
 
                 KognitaFooter(isDark: false)
             }

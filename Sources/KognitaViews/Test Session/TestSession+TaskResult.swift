@@ -68,8 +68,8 @@ extension TaskSolutionCard {
                     type: .checkbox,
                     id: "present-user"
                 )
-                    .isChecked(true)
-                    .margin(.two, for: .bottom)
+                .isChecked(true)
+                .margin(.two, for: .bottom)
 
                 FormGroup(label: "Løsningsforslag") {
                     MarkdownEditor(id: "suggested-solution")
@@ -151,9 +151,9 @@ extension TaskSolutionCard {
 
 extension TestSession.DetailedTaskResult {
 
-    var choiseContext: [MultipleChoiceTask.Templates.Execute.ChoiseContext] {
+    var choiseContext: [MultipleChoiceTask.Templates.ChoiceContext] {
         choises.map {
-            .init(choise: $0, selectedChoises: selectedChoises)
+            .init(choice: $0, selectedChoises: selectedChoises)
         }
     }
 }
@@ -195,6 +195,7 @@ extension TestSession.Templates {
                 Row {
                     Div {
                         TaskPreviewTemplate.QuestionCard(
+                            exam: .constant(nil),
                             description: context.result.description,
                             question: context.result.question
                         )
@@ -205,11 +206,11 @@ extension TestSession.Templates {
                                 .style(.heading5)
                                 .margin(.zero, for: .top)
 
-                            ForEach(in: context.result.choiseContext) { (choise: TemplateValue<MultipleChoiceTask.Templates.Execute.ChoiseContext>) in
-                                MultipleChoiceTask.Templates.Execute.ChoiseOption(
+                            ForEach(in: context.result.choiseContext) { (choice: TemplateValue<MultipleChoiceTask.Templates.ChoiceContext>) in
+                                MultipleChoiceTask.Templates.ChoiceOption(
                                     hasBeenAnswered: true,
                                     canSelectMultiple: context.result.isMultipleSelect,
-                                    choise: choise
+                                    choice: choice
                                 )
                             }
                         }

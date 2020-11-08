@@ -23,7 +23,7 @@ extension TestSession.Results {
     }
 
     var startPracticeCall: String {
-        "startPracticeSession(\(topicResults.map { $0.id }), \(subjectID));"
+        "startPracticeSessionWithTopicIDs(\(topicResults.map { $0.id }), \(subjectID));"
     }
 
     var timeUsed: TimeInterval { endedAt.timeIntervalSince(executedAt) }

@@ -7,15 +7,34 @@
 
 import BootstrapKit
 
+extension Sessions {
+    public struct ProgressState: Codable {
+
+        public let progress: Int
+        public let numberOfTaskGoal: Int
+        public let currentTaskIndex: Int
+        public let sessionID: Sessions.ID
+
+        public init(progress: Int, numberOfTaskGoal: Int, currentTaskIndex: Int, sessionID: Sessions.ID) {
+            self.progress = progress
+            self.numberOfTaskGoal = numberOfTaskGoal
+            self.currentTaskIndex = currentTaskIndex
+            self.sessionID = sessionID
+        }
+    }
+}
+
 struct TaskPreviewTemplateContext {
-    let practiceProgress: Int
-    let sessionID: PracticeSession.ID
-    let numberOfTaskGoal: Int
     let taskContent: TaskPreviewContent
+    let progressState: Sessions.ProgressState
     let lastResult: TaskResult?
     let user: User
     let taskPath: String
-    let currentTaskIndex: Int
+
+    var practiceProgress: Int { progressState.progress }
+    var sessionID: Sessions.ID { progressState.sessionID }
+    var numberOfTaskGoal: Int { progressState.numberOfTaskGoal }
+    var currentTaskIndex: Int { progressState.currentTaskIndex }
 
     var subject: Subject { return taskContent.subject }
     var topic: Topic { return taskContent.topic }
@@ -37,23 +56,22 @@ struct TaskPreviewTemplateContext {
 
     public init(
         task: TaskPreviewContent,
+        progressState: Sessions.ProgressState,
         user: User,
-        practiceProgress: Int,
-        sessionID: PracticeSession.ID,
         taskPath: String,
-        currentTaskIndex: Int,
-        lastResult: TaskResult?,
-        numberOfTaskGoal: Int
+        lastResult: TaskResult?
     ) {
-        self.practiceProgress = practiceProgress
-        self.sessionID = sessionID
         self.taskContent = task
         self.user = user
         self.taskPath = taskPath
-        self.currentTaskIndex = currentTaskIndex
         self.lastResult = lastResult
-        self.numberOfTaskGoal = numberOfTaskGoal
+        self.progressState = progressState
     }
+}
+
+enum ExtendSessionTypes: String {
+    case exam
+    case practice
 }
 
 extension Script {
@@ -64,10 +82,10 @@ let hrefs = new Set(Array.from(htmlDoc.getElementsByTagName("a")).map(x => x.get
 """
     }
 
-    static func extendSession() -> String {
+    static func extend(session: ExtendSessionTypes) -> String {
 """
 function extendSession() {
-    let url = "/api/practice-sessions/" + sessionID() + "/extend"
+    let url = "/api/\(session.rawValue)-sessions/" + sessionID() + "/extend"
     fetch(url, {
         method: "POST",
         headers: {
@@ -100,32 +118,34 @@ public struct TaskPreviewTemplate: HTMLComponent {
     var underSolutionCard: HTML = ""
     private var overSolutionCard: HTML = ""
     var customScripts: HTML = ""
+    let sessionType: ExtendSessionTypes
 
-    init(context: TemplateValue<TaskPreviewTemplateContext>, @HTMLBuilder actionCard: () -> HTML) {
+    init(context: TemplateValue<TaskPreviewTemplateContext>, sessionType: ExtendSessionTypes, @HTMLBuilder actionCard: () -> HTML) {
         self.context = context
         self.actionCard = actionCard()
         self.underSolutionCard = ""
-        self.customScripts = ""
+        self.sessionType = sessionType
     }
 
-    init(context: TemplateValue<TaskPreviewTemplateContext>, actionCard: HTML, overSolutionCard: HTML, underSolutionCard: HTML, customScripts: HTML) {
+    init(context: TemplateValue<TaskPreviewTemplateContext>, actionCard: HTML, overSolutionCard: HTML, underSolutionCard: HTML, customScripts: HTML, sessionType: ExtendSessionTypes) {
         self.context = context
         self.actionCard = actionCard
         self.overSolutionCard = overSolutionCard
         self.underSolutionCard = underSolutionCard
         self.customScripts = customScripts
+        self.sessionType = sessionType
     }
 
     func underSolutionCard(@HTMLBuilder _ card: () -> HTML) -> TaskPreviewTemplate {
-        TaskPreviewTemplate(context: context, actionCard: actionCard, overSolutionCard: overSolutionCard, underSolutionCard: card(), customScripts: customScripts)
+        TaskPreviewTemplate(context: context, actionCard: actionCard, overSolutionCard: overSolutionCard, underSolutionCard: card(), customScripts: customScripts, sessionType: sessionType)
     }
 
     func overSolutionCard(@HTMLBuilder _ card: () -> HTML) -> TaskPreviewTemplate {
-        TaskPreviewTemplate(context: context, actionCard: actionCard, overSolutionCard: card(), underSolutionCard: underSolutionCard, customScripts: customScripts)
+        TaskPreviewTemplate(context: context, actionCard: actionCard, overSolutionCard: card(), underSolutionCard: underSolutionCard, customScripts: customScripts, sessionType: sessionType)
     }
 
     func scripts(@HTMLBuilder _ scripts: () -> HTML) -> TaskPreviewTemplate {
-        TaskPreviewTemplate(context: context, actionCard: actionCard, overSolutionCard: overSolutionCard, underSolutionCard: underSolutionCard, customScripts: scripts())
+        TaskPreviewTemplate(context: context, actionCard: actionCard, overSolutionCard: overSolutionCard, underSolutionCard: underSolutionCard, customScripts: scripts(), sessionType: sessionType)
     }
 
     public var body: HTML {
@@ -144,11 +164,10 @@ public struct TaskPreviewTemplate: HTMLComponent {
                     .value(context.task.id)
                     .id("task-id")
 
-//                ExamBadge(task: context.task)
-
                 Row {
                     Div {
                         QuestionCard(
+                            exam: context.task.exam,
                             description: context.taskContent.task.description,
                             question: context.taskContent.task.question
                         )
@@ -171,7 +190,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
                 .id("main-task-content")
 
                 Row {
-                    Div { NavigationCard(context: context) }
+                    Div { NavigationCard(context: context, sessionType: sessionType) }
                         .column(width: .twelve)
                 }
                 .class("fixed-bottom")
@@ -216,38 +235,15 @@ public struct TaskPreviewTemplate: HTMLComponent {
 $("#main-task-content").css("padding-bottom", $("#nav-card").height() + 20);
 """
             }
-            Script { Script.extendSession() }
             Script { Script.autoResizeTextAreas }
+            Script { Script.extend(session: sessionType) }
             customScripts
         }
     }
 
-//    struct ExamBadge: HTMLComponent {
-//
-//        let task: TemplateValue<Task>
-//
-//        var body: HTML {
-//            Row {
-//                Div {
-//                    Unwrap(task.examPaperSemester) { (exam: TemplateValue<Task.ExamSemester>) in
-//                        Badge {
-//                            Strings.exerciseExam.localized()
-//                            ": "
-//                            exam.norwegianDescription
-//                            " "
-//                            task.examPaperYear
-//                        }
-//                        .margin(.three, for: .bottom)
-//                        .background(color: .primary)
-//                    }
-//                }
-//                .column(width: .twelve)
-//            }
-//        }
-//    }
-
     struct QuestionCard: HTMLComponent {
 
+        let exam: TemplateValue<Exam.Compact?>
         let description: TemplateValue<String?>
         let question: TemplateValue<String>
 
@@ -255,6 +251,7 @@ $("#main-task-content").css("padding-bottom", $("#nav-card").height() + 20);
             Row {
                 Div {
                     Card {
+                        ExamBadge(exam: exam)
                         IF(description.isDefined) {
                             Text { description.escaping(.unsafeNone) }
                                 .style(.paragraph)
@@ -275,6 +272,7 @@ $("#main-task-content").css("padding-bottom", $("#nav-card").height() + 20);
     struct NavigationCard: HTMLComponent {
 
         let context: TemplateValue<TaskPreviewTemplateContext>
+        let sessionType: ExtendSessionTypes
 
         var body: HTML {
             Card {
@@ -312,7 +310,7 @@ $("#main-task-content").css("padding-bottom", $("#nav-card").height() + 20);
                         }
                         .text(alignment: .center)
                     }
-                    .action("/practice-sessions/" + context.sessionID + "/end")
+                    .action("/\(sessionType.rawValue)-sessions/" + context.sessionID + "/end")
                     .method(.post)
                     .id("end-session-form")
                 }
@@ -378,6 +376,21 @@ private struct PracticeSessionProgressBar: HTMLComponent {
                 }
             }
             .column(width: .twelve)
+        }
+    }
+}
+
+struct ExamBadge: HTMLComponent {
+
+    let exam: TemplateValue<Exam.Compact?>
+
+    var body: HTML {
+        Unwrap(exam) { exam in
+            Badge {
+                "Oppgave på eksamen "
+                exam.description
+            }
+            .background(color: .primary)
         }
     }
 }
