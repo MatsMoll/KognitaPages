@@ -71,6 +71,12 @@ extension Subject.Templates {
                         SubjectTestList(test: context.details.openTest)
                         SubjectCard(details: context.details)
                         Row {
+                            Div {
+                                Text { "Temaer" }
+                                    .style(.heading2)
+                            }
+                            .column(width: .twelve)
+
                             IF(context.details.topics.isEmpty) {
                                 Div {
                                     Text(Strings.subjectsNoTopics)
@@ -84,6 +90,29 @@ extension Subject.Templates {
                                     subjectID: context.details.subject.id,
                                     canPractice: context.details.canPractice
                                 )
+                            }
+                        }
+                        Row {
+                            Div {
+                                Text { "Eksamener" }
+                                    .style(.heading2)
+                            }
+                            .column(width: .twelve)
+
+                            IF(context.details.exams.isEmpty) {
+                                Div {
+                                    Text { "Det finnes ingen oppgaver som er koblet opp til en eksamen enda" }
+                                        .style(.heading5)
+                                }
+                                .column(width: .twelve)
+                            }.else {
+                                ForEach(in: context.details.exams) { exam in
+                                    Div {
+                                        ExamCard(exam: exam)
+                                    }
+                                    .column(width: .six, for: .large)
+                                    .column(width: .twelve)
+                                }
                             }
                         }
                     }
@@ -110,6 +139,7 @@ extension Subject.Templates {
                 Script().source("/assets/js/subject/mark-as-inactive.js")
                 Script().source("https://cdn.jsdelivr.net/npm/marked/marked.min.js")
                 Script().source("/assets/js/markdown-renderer.js")
+                Script(source: "/assets/js/exam/start.js")
             }
             .modals {
                 IF(context.details.canCreateTasks) {
@@ -218,7 +248,7 @@ extension Subject.Templates {
 
             var body: HTML {
                 Card {
-                    Text { "Gå gjennom innholdet" }
+                    Text { "Lag og se eksisterend innhold" }
                         .style(.heading3)
                         .text(color: .dark)
 

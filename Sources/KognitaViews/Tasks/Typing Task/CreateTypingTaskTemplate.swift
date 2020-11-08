@@ -235,40 +235,37 @@ extension TypingTask.Templates {
                     .style(.heading3)
                     .text(color: .dark)
 
-                    FormRow {
+                    Div {
                         FormGroup(label: "Eksamensett semester") {
                             Select {
-                                Unwrap(context.content.task) { taskInfo in
-                                    Unwrap(taskInfo.examType) { exam in
-                                        Option {
-                                            exam.rawValue
-                                        }
-                                        .value(exam.rawValue)
-                                    }
-                                }
                                 Option { "Ikke eksamensoppgave" }
-                                    .value("")
-                                Option { "Høst" }
-                                    .value("fall")
-                                Option { "Vår" }
-                                    .value("spring")
+
+                                ForEach(in: context.content.exams) { exam in
+                                    Option { exam.description }
+                                        .value(exam.id)
+                                }
                             }
-                            .id("card-exam-semester")
-                            .class("select2")
+                            .id("card-exam-id")
+                            .class("select2 form-control select2")
                             .data(for: "toggle", value: "select2")
                             .data(for: "placeholder", value: "Velg ...")
                         }
-                        .column(width: .six, for: .medium)
+                        .column(width: .nine, for: .medium)
 
-                        FormGroup(label: "År") {
-                            Input()
-                                .type(.number)
-                                .id("card-exam-year")
-                                .placeholder("2019")
-                                .value(Unwrap(context.content.task) { $0.examYear })
+                        Div {
+                            Label { "Finner ikke riktig eksamen?" }
+                            Button { "Registrer eksamen" }
+                                .toggle(modal: .id(Exam.Templates.CreateNewModal.identifier))
+                                .button(style: .info)
+                                .type(.button)
+
+                            Exam.Templates.CreateNewModal(
+                                selectorID: "card-exam-id",
+                                subjectID: context.content.subject.id
+                            )
                         }
-                        .column(width: .six, for: .medium)
-                    }
+                        .column(width: .three, for: .medium)
+                    }.class("form-row")
 
                     DismissableError()
 

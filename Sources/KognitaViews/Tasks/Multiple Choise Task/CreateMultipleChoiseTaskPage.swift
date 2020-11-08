@@ -7,6 +7,10 @@
 
 import BootstrapKit
 
+extension MultipleChoiceTask {
+    public enum Templates {}
+}
+
 extension MultipleChoiceTask.Templates.Create.Context {
     var modalTitle: String { content.subject.name + " | Lag flervalgsoppgave"}
     var subjectUri: String { "/subjects/\(content.subject.id)" }
@@ -189,7 +193,6 @@ extension MultipleChoiceTask.Templates {
                             }
                             .type(.button)
                             .background(color: .success)
-                            .isRounded()
                             .on(click: "addChoise();")
                             .text(alignment: .center)
                             .text(color: .white)
@@ -225,11 +228,9 @@ extension MultipleChoiceTask.Templates {
                         solutionForm()
                     }
 
-                    Text {
-                        "Velg tema"
-                    }
-                    .style(.heading3)
-                    .text(color: .dark)
+                    Text { "Velg tema" }
+                        .style(.heading3)
+                        .text(color: .dark)
 
                     Unwrap(context.content.task) { task in
                         SubtopicPicker(
@@ -248,46 +249,78 @@ extension MultipleChoiceTask.Templates {
                     }
 
                     Text { "Eksamensoppgave?" }
-                    .style(.heading3)
-                    .text(color: .dark)
+                        .style(.heading3)
+                        .text(color: .dark)
 
                     Div {
                         FormGroup(label: "Eksamensett semester") {
                             Select {
-                                Option {
-                                    "Ikke eksamensoppgave"
-                                }
-                                .value("")
+                                Option { "Ikke eksamensoppgave" }
 
-                                Option {
-                                    "Høst"
+                                ForEach(in: context.content.exams) { exam in
+                                    Option { exam.description }
+                                        .value(exam.id)
                                 }
-                                .value("fall")
-
-                                Option {
-                                    "Vår"
-                                }
-                                .value("spring")
                             }
-                            .id("create-multiple-exam-semester")
+                            .id("card-exam-id")
                             .class("select2 form-control select2")
                             .data(for: "toggle", value: "select2")
                             .data(for: "placeholder", value: "Velg ...")
                         }
-                        .column(width: .six, for: .medium)
+                        .column(width: .nine, for: .medium)
 
-                        FormGroup(label: "År") {
-                            Input()
-                                .type(.number)
-                                .class("form-control")
-                                .id("create-multiple-exam-year")
-                                .placeholder("2019")
-                                .value(Unwrap(context.content.task) { $0.examYear })
-                                .required()
+                        Div {
+                            Label { "Finner ikke riktig eksamen?" }
+                            Button { "Registrer eksamen" }
+                                .toggle(modal: .id(Exam.Templates.CreateNewModal.identifier))
+                                .button(style: .info)
+                                .type(.button)
+
+                            Exam.Templates.CreateNewModal(
+                                selectorID: "card-exam-id",
+                                subjectID: context.content.subject.id
+                            )
                         }
-                        .column(width: .six, for: .medium)
-                    }
-                    .class("form-row")
+                        .column(width: .three, for: .medium)
+                    }.class("form-row")
+
+//                    Div {
+//                        FormGroup(label: "Eksamensett semester") {
+//                            Select {
+//                                Option {
+//                                    "Ikke eksamensoppgave"
+//                                }
+//                                .value("")
+//
+//                                Option {
+//                                    "Høst"
+//                                }
+//                                .value("fall")
+//
+//                                Option {
+//                                    "Vår"
+//                                }
+//                                .value("spring")
+//                            }
+//                            .id("create-multiple-exam-semester")
+//                            .class("select2 form-control select2")
+//                            .data(for: "toggle", value: "select2")
+//                            .data(for: "placeholder", value: "Velg ...")
+//                        }
+//                        .column(width: .six, for: .medium)
+//
+//                        FormGroup(label: "År") {
+//                            Input()
+//                                .type(.number)
+//                                .class("form-control")
+//                                .id("create-multiple-exam-year")
+//                                .placeholder("2019")
+//                                .value(Unwrap(context.content.task) { $0.examYear })
+//                                .required()
+//                        }
+//                        .column(width: .six, for: .medium)
+//                    }
+//                    .class("form-row")
 
                     IF(context.isModerator) {
                         Text {

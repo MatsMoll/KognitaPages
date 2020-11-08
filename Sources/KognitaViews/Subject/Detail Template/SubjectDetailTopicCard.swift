@@ -80,7 +80,7 @@ extension Subject.Templates.Details {
                         topicID: topic.id,
                         topicDescription: topic.name
                     ) {
-                        Italic().class("mdi mdi-book-open-variant")
+                        MaterialDesignIcon(.openBook)
                         " "
                         Strings.subjectStartSession.localized()
                     }

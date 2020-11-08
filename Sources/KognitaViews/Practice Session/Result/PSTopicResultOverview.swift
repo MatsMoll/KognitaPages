@@ -1,6 +1,10 @@
 import BootstrapKit
 
-extension PracticeSession.Templates.Result {
+extension Sessions.Templates {
+    enum Result {}
+}
+
+extension Sessions.Templates.Result {
 
     struct TopicOverview: HTMLComponent, AttributeNode {
 
@@ -64,11 +68,11 @@ extension PracticeSession.Templates.Result {
             .add(attributes: attributes)
         }
 
-        func copy(with attributes: [HTMLAttribute]) -> PracticeSession.Templates.Result.TopicOverview {
+        func copy(with attributes: [HTMLAttribute]) -> Sessions.Templates.Result.TopicOverview {
             .init(topicId: topicId, topicName: topicName, topicLevel: topicLevel, topicTaskResults: topicTaskResults, isShownValue: isShownValue, attributes: attributes)
         }
 
-        func isShown(_ condition: Conditionable) -> PracticeSession.Templates.Result.TopicOverview {
+        func isShown(_ condition: Conditionable) -> Sessions.Templates.Result.TopicOverview {
             .init(topicId: topicId, topicName: topicName, topicLevel: topicLevel, topicTaskResults: topicTaskResults, isShownValue: condition, attributes: attributes)
         }
     }

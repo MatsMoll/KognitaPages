@@ -2,53 +2,43 @@ import BootstrapKit
 
 public struct PractiseSessionResultActionPanel: HTMLComponent {
 
-    let context: TemplateValue<PracticeSession.Templates.Result.Context>
+    let startSessionCall: HTML
+    let toSubjectURI: HTML
+    let toCompendiumURI: HTML
 
     public var body: HTML {
         NodeList {
             Card {
-                Text {
-                    "Vil du øve mer på dette?"
-                }
-                .style(.cardTitle)
+                Text { "Vil du øve mer på dette?" }
+                    .style(.cardTitle)
 
-                Button {
-                    "Start ny øving"
-                }
-                .isRounded()
-                .on(click: context.startPractiseSessionCall)
-                .button(style: .primary)
-                .margin(.two, for: .bottom)
+                Button { "Start ny øving" }
+                    .isRounded()
+                    .on(click: startSessionCall)
+                    .button(style: .primary)
+                    .margin(.two, for: .bottom)
             }
 
             Card {
-                Text {
-                    "Vil du gjøre noe annet i emnet?"
-                }
-                .style(.cardTitle)
+                Text { "Vil du gjøre noe annet i emnet?" }
+                    .style(.cardTitle)
 
-                Anchor {
-                    "Gå tilbake til faget"
-                }
-                .isRounded()
-                .href(context.subject.subjectDetailUri)
-                .button(style: .light)
-                .margin(.two, for: .bottom)
+                Anchor { "Gå tilbake til faget" }
+                    .isRounded()
+                    .href(toSubjectURI)
+                    .button(style: .light)
+                    .margin(.two, for: .bottom)
             }
 
             Card {
-                Text {
-                    "Trenger du lesestoff?"
-                }
-                .style(.cardTitle)
+                Text { "Trenger du lesestoff?" }
+                    .style(.cardTitle)
 
-                Anchor {
-                    "Gå til kompendiumet"
-                }
-                .isRounded()
-                .href(context.goToCompendium)
-                .button(style: .light)
-                .margin(.two, for: .bottom)
+                Anchor { "Gå til kompendiumet" }
+                    .isRounded()
+                    .href(toCompendiumURI)
+                    .button(style: .light)
+                    .margin(.two, for: .bottom)
             }
         }
     }

@@ -41,6 +41,7 @@ extension LectureNote.RecapSession.Templates {
                     Row {
                         Div {
                             TaskPreviewTemplate.QuestionCard(
+                                exam: .constant(nil),
                                 description: .constant(nil),
                                 question: context.task.question
                             )
