@@ -19,7 +19,7 @@ check-doc-coverage:
           inputs: "Sources"
           output: "dcov.json"
       - name: Check Documentation Percent
-        run: sudo bash CI/check-percentage.sh dcov.json 1
+        run: sudo bash CI/check-percentage.sh dcov.json 0
           
   bionic-tests:
     needs: check-doc-coverage
