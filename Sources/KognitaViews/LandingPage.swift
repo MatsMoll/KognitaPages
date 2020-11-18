@@ -26,7 +26,7 @@ extension Pages {
             .init(
                 icon: .teach,
                 title: "Flerbruk",
-                description: "Gjør notatene dine til et kompendie, samtidig det blir til oppgaver å øve på"
+                description: "Få mer ut av notatene dine. Gjør dem til oppgaver og få et kompendium"
             ),
             .init(
                 icon: .emoticonExcited,
@@ -130,10 +130,10 @@ extension Pages {
                             .margin(.four, for: .top, sizeClass: .medium)
                             Div {
                                 Div {
-                                    Img(source: "/assets/images/startup.svg")
-                                        .class("img-fluid")
+                                    Img(source: "/assets/images/ios/MultipleChoice.png")
+                                        .style(css: "max-width: 100%; max-height: 650px")
                                 }
-                                .text(alignment: .right)
+                                .text(alignment: .left)
                                 .margin(.three, for: .top)
                                 .margin(.zero, for: .top, sizeClass: .medium)
                             }
