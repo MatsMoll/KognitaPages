@@ -9,7 +9,7 @@ on:
       - develop
 
 jobs:
-check-doc-coverage:
+  check-doc-coverage:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1.2.0
