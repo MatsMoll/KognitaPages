@@ -3,50 +3,30 @@ name: Swift Tests
 on:
   pull_request:
     branches:
-      - master
       - develop
   push:
     branches:
-      - master
       - develop
-      - rc/*
-      - 1.*
 
 jobs:
-  bionic-test:
-    container:
-      image: swift:5.3-bionic
-    runs-on: ubuntu-18.04
+check-doc-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1.2.0
+      - name: Calculate Documentation Coverage
+        uses: MatsMoll/swift-doc@master
+        with:
+          inputs: "Sources"
+          output: "dcov.json"
+      - name: Check Documentation Percent
+        run: sudo bash CI/check-percentage.sh dcov.json 1
+          
+  bionic-tests:
+    needs: check-doc-coverage
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1.2.0
     - name: Run unit tests
-      if: github.ref != 'refs/heads/master'
+      run: swift test --enable-test-discovery
       env:
         BUILD_TYPE: DEV
-      run: |
-        apt-get -qq update && apt-get install -y \
-          libssl-dev zlib1g-dev \
-          && rm -r /var/lib/apt/lists/*
-        swift test
-    - name: Run unit tests master
-      if: github.ref == 'refs/heads/master'
-      run: |
-        apt-get -qq update && apt-get install -y \
-          libssl-dev zlib1g-dev \
-          && rm -r /var/lib/apt/lists/*
-        swift test
-    - name: Build library in release mode
-      run: |
-        apt-get -qq update && apt-get install -y \
-        libssl-dev zlib1g-dev \
-        && rm -r /var/lib/apt/lists/*
-        swift build -c release
-      if: github.ref == 'refs/heads/master'
-    - name: Release new version
-      run: |
-        apt-get -qq update && apt-get install -y jq curl
-        bash ./CI/install-finch.sh
-        bash ./CI/release-version.sh
-      if: github.ref == 'refs/heads/master'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
