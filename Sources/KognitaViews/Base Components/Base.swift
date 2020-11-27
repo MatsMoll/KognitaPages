@@ -54,6 +54,25 @@ struct ScrollSpy {
     var htmlID: String { "#\(targetID)" }
 }
 
+struct NoScript: ContentNode {
+
+    var attributes: [HTMLAttribute]
+
+    let name: String = "noscript"
+
+    let content: HTML
+
+    init(@HTMLBuilder content: () -> HTML) {
+        self.content = content()
+        self.attributes = []
+    }
+
+    init(attributes: [HTMLAttribute], content: HTML) {
+        self.attributes = attributes
+        self.content = content
+    }
+}
+
 struct BaseTemplate: HTMLComponent {
 
     let context: TemplateValue<BaseTemplateContent>
@@ -116,6 +135,19 @@ struct BaseTemplate: HTMLComponent {
 //                HotjarScript()
             }
             Body {
+                NoScript {
+                    Container {
+                        Alert {
+                            Text { "Viktig info!" }
+                                .style(.heading3)
+                            "Denne siden trenger JavaScript for å fungere riktig, og det ser ut som du ikke støtter eller har skrudd av JavaScript."
+                        }
+                        .background(color: .light)
+                        .text(color: .dark)
+                        .margin(.two, for: .top)
+                        .isDismissable(false)
+                    }
+                }
                 htmlContent
             }
             .padding(.zero, for: .bottom)
