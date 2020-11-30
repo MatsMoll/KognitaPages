@@ -96,11 +96,9 @@ extension TaskSolution.Templates {
                             .background(color: .success)
                             .margin(.two, for: .left)
                         }.else {
-                            Badge {
-                                "Ikke verifisert ennå"
-                            }
-                            .background(color: .warning)
-                            .margin(.two, for: .left)
+                            Badge { "Ikke verifisert enda" }
+                                .background(color: .warning)
+                                .margin(.two, for: .left)
                         }
                     }
                 }

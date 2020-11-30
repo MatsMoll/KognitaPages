@@ -10,7 +10,7 @@ extension Subject.Templates.ListOverview {
             Card {
 
                 Text {
-                    "Basert på aktiviteten din anbefaler vi å repitere "
+                    "Basert på aktiviteten din anbefaler vi å repetere "
                     Italic { recap.topicName }
                     " innen "
                     Italic { recap.subjectName }
@@ -26,7 +26,7 @@ extension Subject.Templates.ListOverview {
                 ) {
                     MaterialDesignIcon(.loop)
                         .margin(.one, for: .right)
-                    "Repiter nå"
+                    "Repeter nå"
                 }
                 .button(style: .primary)
                 .isRounded()
@@ -35,7 +35,7 @@ extension Subject.Templates.ListOverview {
                 Text {
                     MaterialDesignIcon(.loop)
                         .margin(.one, for: .right)
-                    "Repiter "
+                    "Repeter "
                     recap.topicName
                 }
                 .style(.heading3)

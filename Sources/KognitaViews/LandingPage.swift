@@ -17,17 +17,15 @@ extension AttributeNode {
     }
 }
 
+/// A Structure to group different pages
 public struct Pages {}
 
 extension Pages {
+    
+    /// A page giving an overview for the users landing on the website
     public struct Landing: HTMLTemplate {
 
         private let info: [FeatureView.Info] = [
-            .init(
-                icon: .teach,
-                title: "Flerbruk",
-                description: "Få mer ut av notatene dine. Gjør dem til oppgaver og få et kompendium"
-            ),
             .init(
                 icon: .emoticonExcited,
                 title: "Finn roen",
@@ -36,7 +34,12 @@ extension Pages {
             .init(
                 icon: .trophyOutline,
                 title: "Motiverende",
-                description: "Øk motivasjonen med å se progrisjon over tid"
+                description: "Øk motivasjonen med å se progresjon over tid"
+            ),
+            .init(
+                icon: .teach,
+                title: "Flerbruk",
+                description: "Få mer ut av notatene dine og gjør dem til oppgaver samtidig som du får et kompendium"
             )
         ]
 

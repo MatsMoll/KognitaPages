@@ -13,8 +13,10 @@ extension Subject {
 }
 
 extension Subject.Templates {
+    /// A component displaying the active subjects
     struct ActiveSubjects: HTMLComponent {
-
+        
+        /// The subjects that are active
         let subjects: TemplateValue<[Subject.ListOverview]>
 
         var body: HTML {
@@ -37,8 +39,12 @@ extension Subject.Templates {
 }
 
 extension Subject.Templates {
+    /// A template displaying a list of all subjects
+    /// Should probably be renamed to a Dashboard as it is getting more functions
+    /// And are a landing page for logged inn users
     public struct ListOverview: HTMLTemplate {
-
+        
+        /// The context needed to render the template
         public struct Context {
             let user: User
             let list: Dashboard
