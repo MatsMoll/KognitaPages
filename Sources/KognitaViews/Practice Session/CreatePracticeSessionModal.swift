@@ -8,7 +8,8 @@
 import Foundation
 
 extension PracticeSession.Templates {
-
+    
+    /// A modal used to create practice sessions
     struct CreateModal: HTMLComponent {
 
         static let modalID = "practice-session-create-modal"

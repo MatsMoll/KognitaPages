@@ -17,9 +17,12 @@ extension AttributeNode {
     }
 }
 
+/// A Structure to group different pages
 public struct Pages {}
 
 extension Pages {
+    
+    /// A page giving an overview for the users landing on the website
     public struct Landing: HTMLTemplate {
 
         private let info: [FeatureView.Info] = [
