@@ -110,6 +110,15 @@ public class Strings {
     static let resultSummaryQuestionColumn = "result.summary.review.question"
     static let resultSummaryResultColumn = "result.summary.review.result"
     static let resultSummaryRepeatColumn = "result.summary.review.repeat"
+    
+    
+    
+    
+    // Unlocalized
+    
+    static let notLoggedIn = "Du har bare mulighet til å se hvilke fag som finnes. Logg inn eller registrer deg for å få større tilgang."
+    
+    
 }
 
 extension String {

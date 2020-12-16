@@ -10,6 +10,10 @@ struct ContentBaseTemplateContent {
     }
 }
 
+protocol ActivePathSelectable: HTML {
+    func active(path: TemplateValue<String>) -> Self
+}
+
 struct ContentBaseTemplate: HTMLComponent {
 
     struct TabContent {
@@ -18,32 +22,42 @@ struct ContentBaseTemplate: HTMLComponent {
         let title: ViewWrapper
     }
 
-    let activePath: TemplateValue<String>
-    let userContext: TemplateValue<User>
     let baseContext: TemplateValue<BaseTemplateContent>
     let scrollSpy: ScrollSpy?
 
+    let navigationBar: ActivePathSelectable
     let content: HTML
     let header: HTML
     let scripts: HTML
     let modals: HTML
 
     init(userContext: TemplateValue<User>, baseContext: TemplateValue<BaseTemplateContent>, @HTMLBuilder content: () -> HTML) {
-        self.userContext = userContext
         self.baseContext = baseContext
         self.content = content()
-        self.activePath = ""
         self.header = ""
         self.scripts = ""
         self.modals = ""
         self.scrollSpy = nil
+        self.navigationBar = KognitaNavigationBar(
+            activePath: .constant(""),
+            customTabs: KognitaNavigationBar.LogoutItem()
+        )
+    }
+    
+    init(baseContext: TemplateValue<BaseTemplateContent>, @HTMLBuilder content: () -> HTML) {
+        self.baseContext = baseContext
+        self.content = content()
+        self.header = ""
+        self.scripts = ""
+        self.modals = ""
+        self.scrollSpy = nil
+        self.navigationBar = KognitaNavigationBar(activePath: .constant(""), logoPath: Paths.landingPage)
     }
 
-    private init(base: ContentBaseTemplate, activePath: TemplateValue<String>, header: HTML, scripts: HTML, modals: HTML, scrollSpy: ScrollSpy?) {
-        self.userContext = base.userContext
+    private init(base: ContentBaseTemplate, navigationBar: ActivePathSelectable, header: HTML, scripts: HTML, modals: HTML, scrollSpy: ScrollSpy?) {
+        self.navigationBar = navigationBar
         self.baseContext = base.baseContext
         self.content = base.content
-        self.activePath = activePath
         self.header = header
         self.scripts = scripts
         self.modals = modals
@@ -54,12 +68,7 @@ struct ContentBaseTemplate: HTMLComponent {
         BaseTemplate(context: baseContext) {
             Div {
                 Div {
-                    Container {
-                        KognitaNavigationBar(
-                            userContext: userContext,
-                            activePath: activePath
-                        )
-                    }
+                    Container { navigationBar }
                 }
                 .class("topnav")
 
@@ -80,52 +89,51 @@ struct ContentBaseTemplate: HTMLComponent {
     }
 
     func active(path: TemplateValue<String>) -> ContentBaseTemplate {
-        ContentBaseTemplate(base: self, activePath: path, header: header, scripts: scripts, modals: modals, scrollSpy: scrollSpy)
+        ContentBaseTemplate(base: self, navigationBar: navigationBar.active(path: path), header: header, scripts: scripts, modals: modals, scrollSpy: scrollSpy)
     }
 
     func header(@HTMLBuilder _ header: () -> HTML) -> ContentBaseTemplate {
-        ContentBaseTemplate(base: self, activePath: activePath, header: header(), scripts: scripts, modals: modals, scrollSpy: scrollSpy)
+        ContentBaseTemplate(base: self, navigationBar: navigationBar, header: header(), scripts: scripts, modals: modals, scrollSpy: scrollSpy)
     }
 
     func scripts(@HTMLBuilder _ scripts: () -> HTML) -> ContentBaseTemplate {
-        ContentBaseTemplate(base: self, activePath: activePath, header: header, scripts: scripts(), modals: modals, scrollSpy: scrollSpy)
+        ContentBaseTemplate(base: self, navigationBar: navigationBar, header: header, scripts: scripts(), modals: modals, scrollSpy: scrollSpy)
     }
 
     func modals(@HTMLBuilder _ modals: () -> HTML) -> ContentBaseTemplate {
-        ContentBaseTemplate(base: self, activePath: activePath, header: header, scripts: scripts, modals: modals(), scrollSpy: scrollSpy)
+        ContentBaseTemplate(base: self, navigationBar: navigationBar, header: header, scripts: scripts, modals: modals(), scrollSpy: scrollSpy)
     }
 
     func scrollSpy(targetID: String, offset: Int = 0) -> ContentBaseTemplate {
-        ContentBaseTemplate(base: self, activePath: activePath, header: header, scripts: scripts, modals: modals, scrollSpy: ScrollSpy(targetID: targetID, offset: offset))
+        ContentBaseTemplate(base: self, navigationBar: navigationBar, header: header, scripts: scripts, modals: modals, scrollSpy: ScrollSpy(targetID: targetID, offset: offset))
     }
 
-    struct KognitaNavigationBar: HTMLComponent {
+    struct KognitaNavigationBar: HTMLComponent, ActivePathSelectable {
 
-        let userContext: TemplateValue<User>
         let activePath: TemplateValue<String>
+        var customTabs: HTML = ""
+        var logoPath: String = Paths.subjects
 
         private let tabs: [TabContent] = [
             .init(
-                link: "/subjects",
+                link: Paths.subjects,
                 icon: .formatListBulleted,
                 title: ViewWrapper(view: Strings.menuSubjectList.localized())
             ),
             .init(
-                link: "/practice-sessions/history",
+                link: Paths.history,
                 icon: .history,
                 title: ViewWrapper(view: Strings.menuPracticeHistory.localized())
             )
         ]
-
-        private let creatorTab = TabContent(
-            link: "/creator/dashboard",
-            icon: .accountCircle,
-            title: "Lag innhold"
-        )
+        
+        func active(path: TemplateValue<String>) -> Self {
+            Self(activePath: path, customTabs: customTabs, logoPath: logoPath)
+        }
 
         var body: HTML {
             NavigationBar {
-                NavigationBar.Brand(link: "/subjects") {
+                NavigationBar.Brand(link: logoPath) {
                     Span {
                         LogoImage()
                     }.class("logo-lg")
@@ -139,16 +147,7 @@ struct ContentBaseTemplate: HTMLComponent {
                     ForEach(in: tabs) { tab in
                         self.tab(with: tab)
                     }
-                    ListItem {
-                        Form {
-                            Anchor { Strings.menuLogout.localized() }
-                                .class("nav-link")
-                                .href("#")
-                                .on(click: "this.closest(\"form\").submit()")
-                        }
-                        .action("/logout")
-                        .method(.post)
-                    }
+                    customTabs
                 }
                 .button {
                     HyperHamburgerMenu()
@@ -173,6 +172,21 @@ struct ContentBaseTemplate: HTMLComponent {
             .class("nav-item")
             .modify(if: tab.link == activePath) {
                 $0.class("active")
+            }
+        }
+        
+        struct LogoutItem: HTMLComponent {
+            var body: HTML {
+                ListItem {
+                    Form {
+                        Anchor { Strings.menuLogout.localized() }
+                            .class("nav-link")
+                            .href("#")
+                            .on(click: "this.closest(\"form\").submit()")
+                    }
+                    .action(Paths.logout)
+                    .method(.post)
+                }
             }
         }
     }

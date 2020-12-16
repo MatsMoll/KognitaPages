@@ -34,6 +34,36 @@ extension User.Templates {
             }
         }
     }
+    
+    struct CreateUserCard: HTMLComponent {
+        
+        var body: HTML {
+            Card {
+                Text { MaterialDesignIcon(.accountCircle) }
+                    .style(.display1)
+                    .text(alignment: .center)
+
+                Text { Strings.notLoggedIn }
+                
+                Anchor {
+                    MaterialDesignIcon(.login)
+                        .margin(.one, for: .right)
+                    Strings.loginButton.localized()
+                }
+                .button(style: .light)
+                .href(Paths.login)
+                
+                Anchor {
+                    MaterialDesignIcon(.accountPlus)
+                        .margin(.one, for: .right)
+                    Strings.registerTitle.localized()
+                }
+                .button(style: .primary)
+                .href(Paths.signup)
+                .margin(.two, for: .left)
+            }
+        }
+    }
 }
 
 extension User.Templates {
