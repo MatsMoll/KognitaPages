@@ -65,7 +65,7 @@ extension Sessions.Templates {
             let user: User
             let sessions: [SessionRepresentable]
 
-            var timeUsed: Double { sessions.reduce(0) { $0 + $1.duration } }
+            var timeUsed: Double { sessions.reduce(0) { $0 + abs($1.duration) } }
             var totalTimeString: String {
                 if timeUsed > 86_400 {
                     return timeUsed.timeString + " 🔥"

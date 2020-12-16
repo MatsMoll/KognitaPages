@@ -13,7 +13,7 @@ extension Subject.Compendium.SubtopicData {
 }
 
 extension Subject.Templates {
-    
+
     /// Presenting an compendum for in a given subject
     public struct Compendium: HTMLTemplate {
 

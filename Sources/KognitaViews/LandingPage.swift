@@ -21,7 +21,7 @@ extension AttributeNode {
 public struct Pages {}
 
 extension Pages {
-    
+
     /// A page giving an overview for the users landing on the website
     public struct Landing: HTMLTemplate {
 
@@ -62,7 +62,7 @@ extension Pages {
                 Div {
                     Container {
                         NavigationBar {
-                            NavigationBar.Brand(link: "/") {
+                            NavigationBar.Brand(link: Paths.landingPage) {
                                 Span {
                                     LogoImage()
                                 }.class("logo-lg")
@@ -75,21 +75,25 @@ extension Pages {
                             NavigationBar.Collapse {
                                 ListItem {
                                     Anchor {
-                                        Span {
-                                            Text(Strings.menuRegister)
-                                        }
+                                        Span { Text(Strings.menuRegister) }
                                     }
-                                    .href("/signup")
+                                    .href(Paths.signup)
                                     .class("nav-link")
                                 }
                                 .class("nav-item")
                                 ListItem {
                                     Anchor {
-                                        Span {
-                                            Text(Strings.loginTitle)
-                                        }
+                                        Span { Text(Strings.loginTitle) }
                                     }
-                                    .href("/login")
+                                    .href(Paths.login)
+                                    .class("nav-link")
+                                }
+                                .class("nav-item")
+                                ListItem {
+                                    Anchor {
+                                        Span { Text(Strings.menuSubjectList) }
+                                    }
+                                    .href(Paths.subjects)
                                     .class("nav-link")
                                 }
                                 .class("nav-item")
@@ -118,11 +122,10 @@ extension Pages {
                                     .class("text-white-50")
 
                                 Div {
-                                    Anchor(Strings.starterPageMoreButton)
-                                        .href("/signup")
+                                    Anchor(Strings.menuSubjectList)
+                                        .href(Paths.subjects)
                                         .class("rounded-pill")
-                                        .button(style: .success)
-                                        .button(size: .extraLarge)
+                                        .button(style: .light)
                                         .margin(.two, for: .right)
 
                                     LinkiOSApp()
@@ -335,7 +338,6 @@ extension Pages {
                                     .type(.submit)
                                 }
                                 .action("mailto:kontakt@kognita.no")
-                                .method(.get)
                                 .encodeType(.plain)
                             }
                             .column(width: .eight, for: .medium)

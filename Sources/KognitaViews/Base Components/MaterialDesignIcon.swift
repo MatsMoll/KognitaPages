@@ -47,6 +47,8 @@ struct MaterialDesignIcon: HTMLComponent, AttributeNode {
         case send
         case commentQuestion = "comment-question"
         case openBook = "book-open-variant"
+        case login
+        case accountPlus = "account-plus"
     }
 
     let icon: TemplateValue<Icons>

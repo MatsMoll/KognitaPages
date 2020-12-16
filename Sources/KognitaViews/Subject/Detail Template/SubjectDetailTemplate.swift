@@ -49,7 +49,7 @@ extension Subject.Templates {
         public init() {}
 
         let breadcrumbs: [BreadcrumbItem] = [
-            BreadcrumbItem(link: "../subjects", title: .init(view: Strings.subjectTitle.localized()))
+            BreadcrumbItem(link: ViewWrapper(stringLiteral: Paths.subjects), title: .init(view: Strings.subjectTitle.localized()))
         ]
 
         public var body: HTML {
@@ -352,6 +352,99 @@ extension Subject.Templates {
                         .on(click: details.makeInactiveCall)
                     }
                 }
+            }
+        }
+    }
+}
+
+extension Subject.Templates.Details {
+    public struct Unauthenticated: HTMLTemplate {
+        
+        public struct Context {
+            let base: BaseTemplateContent
+            let details: Subject.Details
+
+            public init(details: Subject.Details, showCookieMessage: Bool) {
+                self.base = .init(title: details.subject.name, description: details.subject.name, showCookieMessage: showCookieMessage)
+                self.details = details
+            }
+        }
+
+        public init() {}
+
+        let breadcrumbs: [BreadcrumbItem] = [
+            BreadcrumbItem(link: ViewWrapper(stringLiteral: Paths.subjects), title: .init(view: Strings.subjectTitle.localized()))
+        ]
+
+        public var body: HTML {
+
+            ContentBaseTemplate(
+                baseContext: context.base
+            ) {
+                PageTitle(
+                    title: context.details.subject.name,
+                    breadcrumbs: breadcrumbs
+                )
+                Row {
+                    Div {
+                        SubjectCard(details: context.details)
+                        Row {
+                            Div {
+                                Text { "Temaer" }
+                                    .style(.heading2)
+                            }
+                            .column(width: .twelve)
+
+                            IF(context.details.topics.isEmpty) {
+                                Div {
+                                    Text(Strings.subjectsNoTopics)
+                                        .class("page-title")
+                                        .style(.heading3)
+                                }
+                                .class("page-title-box")
+                            }.else {
+                                TopicList(
+                                    topics: context.details.topics,
+                                    subjectID: context.details.subject.id,
+                                    canPractice: context.details.canPractice
+                                )
+                            }
+                        }
+                        Row {
+                            Div {
+                                Text { "Eksamener" }
+                                    .style(.heading2)
+                            }
+                            .column(width: .twelve)
+
+                            IF(context.details.exams.isEmpty) {
+                                Div {
+                                    Text { "Det finnes ingen oppgaver som er koblet opp til en eksamen enda" }
+                                        .style(.heading5)
+                                }
+                                .column(width: .twelve)
+                            }.else {
+                                ForEach(in: context.details.exams) { exam in
+                                    Div {
+                                        Subject.Templates.ExamCard(exam: exam)
+                                    }
+                                    .column(width: .six, for: .large)
+                                    .column(width: .twelve)
+                                }
+                            }
+                        }
+                    }
+                    .column(width: .eight, for: .large)
+                    Div {
+                        User.Templates.CreateUserCard()
+                    }
+                    .column(width: .four, for: .large)
+                }
+            }
+            .scripts {
+                Script().source("/assets/js/subject/mark-as-active.js")
+                Script().source("https://cdn.jsdelivr.net/npm/marked/marked.min.js")
+                Script().source("/assets/js/markdown-renderer.js")
             }
         }
     }
