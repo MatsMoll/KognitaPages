@@ -75,6 +75,14 @@ extension Pages {
                             NavigationBar.Collapse {
                                 ListItem {
                                     Anchor {
+                                        Span { Text(Strings.menuSubjectList) }
+                                    }
+                                    .href(Paths.subjects)
+                                    .class("nav-link")
+                                }
+                                .class("nav-item")
+                                ListItem {
+                                    Anchor {
                                         Span { Text(Strings.menuRegister) }
                                     }
                                     .href(Paths.signup)
@@ -86,14 +94,6 @@ extension Pages {
                                         Span { Text(Strings.loginTitle) }
                                     }
                                     .href(Paths.login)
-                                    .class("nav-link")
-                                }
-                                .class("nav-item")
-                                ListItem {
-                                    Anchor {
-                                        Span { Text(Strings.menuSubjectList) }
-                                    }
-                                    .href(Paths.subjects)
                                     .class("nav-link")
                                 }
                                 .class("nav-item")

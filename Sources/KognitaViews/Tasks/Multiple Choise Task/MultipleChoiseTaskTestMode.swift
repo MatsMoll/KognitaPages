@@ -221,34 +221,26 @@ public struct MultipleChoiseTaskTestMode: HTMLTemplate {
                 .display(.block)
 
                 Unwrap(task.prevTask) { task in
-                    Anchor {
-                        "Forrige"
-                    }
-                    .button(style: .light)
-                    .href(task.url)
-                    .margin(.one, for: .right)
+                    Anchor { "Forrige" }
+                        .button(style: .light)
+                        .href(task.url)
+                        .margin(.one, for: .right)
                 }
                 .else {
-                    Anchor {
-                        "Forrige"
-                    }
-                    .button(style: .light)
-                    .margin(.one, for: .right)
+                    Anchor { "Forrige" }
+                        .button(style: .light)
+                        .margin(.one, for: .right)
                 }
 
                 Unwrap(task.nextTask) { task in
-                    Anchor {
-                        "Neste"
-                    }
-                    .button(style: .primary)
-                    .href(task.url)
+                    Anchor { "Neste" }
+                        .button(style: .primary)
+                        .href(task.url)
                 }
                 .else {
-                    Anchor {
-                        "Oversikt"
-                    }
-                    .button(style: .primary)
-                    .href("overview")
+                    Anchor { "Oversikt" }
+                        .button(style: .primary)
+                        .href("overview")
                 }
             }
         }

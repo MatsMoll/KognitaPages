@@ -38,6 +38,57 @@ private struct HotjarScript: HTMLComponent {
     }
 }
 
+struct HTMLPageDescription: HTMLComponent {
+    
+    struct Locale: ExpressibleByStringLiteral {
+        let locale: String
+        
+        init(stringLiteral value: String) {
+            self.locale = value
+        }
+        
+        static let norwegian: Locale = "nb"
+        static let usEnglish: Locale = "en_US"
+    }
+    
+    struct OpenGraphType: ExpressibleByStringLiteral {
+        let type: String
+        
+        init(stringLiteral value: String) {
+            self.type = value
+        }
+        
+        static let website: OpenGraphType = "website"
+    }
+    
+    let locale: TemplateValue<Locale>
+    let url: TemplateValue<String>
+    let siteName: TemplateValue<String>
+    let type: TemplateValue<OpenGraphType>
+    let title: HTML
+    let description: HTML
+    
+    init(locale: TemplateValue<Locale>, url: TemplateValue<String>, siteName: TemplateValue<String>, type: TemplateValue<OpenGraphType> = .constant(.website), @HTMLBuilder title: () -> HTML, @HTMLBuilder description: () -> HTML) {
+        self.locale = locale
+        self.url = url
+        self.siteName = siteName
+        self.type = type
+        self.title = title()
+        self.description = description()
+    }
+    
+    var body: HTML {
+        NodeList {
+            Title { title }
+            Description { description }
+            Meta().property("og:locale").content(locale.locale)
+            Meta().property("og:type").content(type.type)
+            Meta().property("og:url").content(url)
+            Meta().property("og:site name").content(siteName)
+        }
+    }
+}
+
 struct Manifest: HTMLComponent {
 
     let uri: String
@@ -82,14 +133,15 @@ struct BaseTemplate: HTMLComponent {
     private var customScripts: HTML = ""
     private let scrollSpy: ScrollSpy?
 
-    private var stylesheetUrl: String { rootUrl + "/assets/css/app.min.css" }
-    private var iconsUrl: String { rootUrl + "/assets/css/icons.min.css" }
-    private var faviconUrl: String { rootUrl + "/assets/images/favicon.ico" }
+    private var stylesheetUrl: String { "/assets/css/app.min.css" }
+    private var iconsUrl: String { "/assets/css/icons.min.css" }
+    private var faviconUrl: String { "/assets/images/favicon.ico" }
 
     init(context: TemplateValue<BaseTemplateContent>, @HTMLBuilder content: () -> HTML) {
         self.context = context
         self.content = content()
         self.scrollSpy = nil
+        self.rootUrl = "https://kognita.no"
     }
 
     init(context: TemplateValue<BaseTemplateContent>, content: HTML, customHeader: HTML, rootUrl: String, scripts: HTML, scrollSpy: ScrollSpy?) {
@@ -121,9 +173,15 @@ struct BaseTemplate: HTMLComponent {
         Document(type: .html5) {
             Head {
                 Viewport(mode: .acordingToDevice)
-
-                Title { context.title + " | Kognita" }
-                Description { context.description }
+                
+                HTMLPageDescription(
+                    locale: .constant(.norwegian),
+                    url: .constant(rootUrl),
+                    siteName: .constant("Kognita"),
+                    title: { context.title + " | Kognita" },
+                    description: { context.description }
+                )
+                
                 Author { "Kognita" }
                 Manifest(uri: "/manifest.webmanifest")
 

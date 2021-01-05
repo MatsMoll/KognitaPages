@@ -43,40 +43,36 @@ extension Subject.Templates {
             ContentBaseTemplate(
                 userContext: context.user,
                 baseContext: context.baseContent
-//                .constant(.init(title: "Lag et fag", description: "Lag et fag"))
             ) {
+                
+                PageTitle(title: context.title)
+                
                 Row {
                     Div {
-                        DismissableError()
-                        Div {
+                        Card {
                             Div {
-                                H4 {
-                                    context.baseContent.title
-//                                    "Lag et nytt fag"
-                                }
+                                CreateForm(
+                                    context: context.subjectInfo
+                                )
+                                DismissableError()
+                                ActionButtons(
+                                    subject: context.subjectInfo
+                                )
+                            }
+                            .padding(.two)
+                        }
+                        .header {
+                            Text { context.baseContent.title }
+                                .style(.heading4)
                                 .class("modal-title")
                                 .id("create-modal-label")
-                            }
-                            .class("modal-header")
-                            .background(color: .primary)
-                            .text(color: .white)
-
-                            Div {
-                                Div {
-                                    CreateForm(
-                                        context: context.subjectInfo
-                                    )
-                                    ActionButtons(
-                                        subject: context.subjectInfo
-                                    )
-                                }
-                                .class("p-2")
-                            }
-                            .class("modal-body")
                         }
-                        .class("card")
+                        .modifyHeader {
+                            $0.background(color: .primary)
+                                .text(color: .white)
+                        }
                     }
-                    .class("col-12 pt-5")
+                    .column(width: .twelve)
                 }
             }
             .header {
@@ -86,9 +82,10 @@ extension Subject.Templates {
                 Script().source("/assets/js/vendor/simplemde.min.js")
                 Script(source: "/assets/js/markdown-renderer.js")
                 Script(source: "/assets/js/markdown-editor.js")
+                Script(source: "/assets/js/subject/json-data.js")
                 IF(context.subjectInfo.isDefined) {
                     Script().source("/assets/js/subject/edit.js")
-//                    Script().source("/assets/js/subject/delete.js") // Might add later
+                    Script().source("/assets/js/subject/delete.js")
                 }.else {
                     Script().source("/assets/js/subject/create.js")
                 }
@@ -142,7 +139,7 @@ struct CreateForm: HTMLComponent {
             FormGroup(label: "Navn") {
                 Input()
                     .type(.text)
-                    .id("create-subject-name")
+                    .id("subject-name")
                     .placeholder("Matematikk 1")
                     .value(Unwrap(context) { $0.name })
                     .required()
@@ -152,21 +149,32 @@ struct CreateForm: HTMLComponent {
             }
 
             FormGroup(label: "Beskrivelse") {
-                TextArea {
+                MarkdownEditor(id: "subject-description") {
                     Unwrap(context) { $0.description }
                 }
-                .id("create-subject-description")
             }
+            
+            Row {
+                FormGroup(label: "Emnekode") {
+                    Input()
+                        .type(.text)
+                        .id("subject-code")
+                        .placeholder("TDT4120")
+                        .value(Unwrap(context) { $0.code })
+                        .required()
+                }
+                .column(width: .six, for: .medium)
 
-            FormGroup(label: "Kategori") {
-                Input()
-                    .type(.text)
-                    .id("create-subject-category")
-                    .placeholder("Teknologi")
-                    .value(Unwrap(context) { $0.category })
-                    .required()
+                FormGroup(label: "Kategori") {
+                    Input()
+                        .type(.text)
+                        .id("subject-category")
+                        .placeholder("Teknologi")
+                        .value(Unwrap(context) { $0.category })
+                        .required()
+                }
+                .column(width: .six, for: .medium)
             }
-
         }
     }
 }

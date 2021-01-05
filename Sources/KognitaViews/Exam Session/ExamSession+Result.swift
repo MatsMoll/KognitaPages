@@ -96,8 +96,14 @@ extension ExamSession.Templates {
                 self.timeUsed = tasks.map(\.timeUsed).reduce(0, +)
                 self.maxScore = maxScore
                 self.achievedScore = achievedScore
-                self.subject = Subject.Overview(id: result.subject.id, name: result.subject.name, description: result.subject.description, category: result.subject.category, topics: [])
-//                self.subject = result.subject
+                self.subject = Subject.Overview(
+                    id: result.subject.id,
+                    code: result.subject.code,
+                    name: result.subject.name,
+                    description: result.subject.description,
+                    category: result.subject.category,
+                    topics: []
+                )
 
                 let grouped = tasks.group(by: \.topicName)
                 topicResults = grouped.map { name, tasks in

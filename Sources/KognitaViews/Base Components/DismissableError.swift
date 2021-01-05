@@ -39,3 +39,36 @@ struct DismissableError: HTMLComponent, AttributeNode {
         .init(attributes: attributes, messageID: messageID)
     }
 }
+
+struct ErrorMessageAlert: HTMLComponent, AttributeNode {
+
+    var attributes: [HTMLAttribute]
+    let messageClass: String
+
+    init(divID: String, messageClass: String = "er-msg") {
+        self.messageClass = messageClass
+        self.attributes = [HTMLAttribute(attribute: "id", value: divID)]
+    }
+
+    private init(attributes: [HTMLAttribute], messageClass: String) {
+        self.attributes = attributes
+        self.messageClass = messageClass
+    }
+
+    var body: HTML {
+        Alert {
+            Bold { "Ups! En feil oppstod" }
+            Break()
+            Span().class(messageClass)
+        }
+        .isDismissable(false)
+        .background(color: .danger)
+        .text(color: .white)
+        .display(.none)
+        .add(attributes: attributes)
+    }
+
+    func copy(with attributes: [HTMLAttribute]) -> ErrorMessageAlert {
+        .init(attributes: attributes, messageClass: messageClass)
+    }
+}

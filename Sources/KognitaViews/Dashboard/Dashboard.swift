@@ -41,14 +41,16 @@ extension Pages {
 
                 Row {
                     Div {
+                        SubjectTestList(test: context.list.openedTest)
+                        
                         IF(context.user.isEmailVerified == false) {
                             VerifyEmailSignifier()
                         }
+                        
                         Unwrap(context.list.recommendedRecap) { recap in
                             RecommendedRecapCard(recap: recap)
                             PracticeSession.Templates.CreateModal()
                         }
-                        SubjectTestList(test: context.list.openedTest)
 
                         Text { "Emner" }.style(.heading4)
                         SearchCard()
@@ -78,6 +80,11 @@ $("#start-subject-test-modal").modal('show');
 """
                     }
                 }
+                IF(context.list.potensialSubjects.isEmpty == false) {
+                    Script {
+                        ##"$("#\##(PotensialRelevantSubjectModal.modalID)").modal('show');"##
+                    }
+                }
 
             }
             .active(path: "/subjects")
@@ -86,6 +93,13 @@ $("#start-subject-test-modal").modal('show');
                     SubjectTest.Templates.StartModal(
                         test: test,
                         wasIncorrectPassword: context.wasIncorrectPassword
+                    )
+                }
+                
+                IF(context.list.potensialSubjects.isEmpty == false) {
+                    PotensialRelevantSubjectModal(
+                        activeSubjects: context.list.potensialActiveSubjects,
+                        inactiveSubjects: context.list.potensialInactiveSubjects
                     )
                 }
             }

@@ -57,7 +57,7 @@ extension Subject.Templates {
                     }.else {
                         Row {
                             ForEach(in: subjects) { subject in
-                                SubjectCard(subject: subject)
+                                Pages.SubjectCard(subject: subject)
                             }
                         }
                     }

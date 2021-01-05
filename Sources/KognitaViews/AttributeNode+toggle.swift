@@ -7,3 +7,15 @@ extension AttributeNode {
             .data(for: "target", value: id)
     }
 }
+
+extension Input {
+    func autofocus() -> Self {
+        self.add(.init(attribute: "autofocus", value: nil))
+    }
+}
+
+extension TextArea {
+    func autofocus() -> Self {
+        self.add(.init(attribute: "autofocus", value: nil))
+    }
+}

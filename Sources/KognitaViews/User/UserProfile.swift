@@ -14,9 +14,20 @@ extension User.Templates {
 
         var body: HTML {
             Card {
-                Text { MaterialDesignIcon(.accountCircle) }
-                    .style(.display1)
+                Unwrap(user.pictureUrl) { pictureUrl in
+                    Div {
+                        Img()
+                            .class("rounded")
+                            .alt("profile picture")
+                            .style(css: "width: 80px; height: 80px;")
+                            .source(pictureUrl)
+                    }
                     .text(alignment: .center)
+                }.else {
+                    Text { MaterialDesignIcon(.accountCircle) }
+                        .style(.display1)
+                        .text(alignment: .center)
+                }
 
                 Text { "Brukernavn: " }
                     .margin(.three, for: .top)
@@ -53,6 +64,11 @@ extension User.Templates {
                 .button(style: .light)
                 .href(Paths.login)
                 
+                FeideLoginButton()
+                    .margin(.one, for: .left)
+                
+                Break()
+                
                 Anchor {
                     MaterialDesignIcon(.accountPlus)
                         .margin(.one, for: .right)
@@ -60,7 +76,7 @@ extension User.Templates {
                 }
                 .button(style: .primary)
                 .href(Paths.signup)
-                .margin(.two, for: .left)
+                .margin(.one, for: .top)
             }
         }
     }
@@ -134,7 +150,7 @@ extension User.Templates {
 
                         Row {
                             ForEach(in: context.subjects) { subject in
-                                Subject.Templates.SubjectCard(subject: subject)
+                                Pages.SubjectCard(subject: subject)
                             }
                         }
                     }
