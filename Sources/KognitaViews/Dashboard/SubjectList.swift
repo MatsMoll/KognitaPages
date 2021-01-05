@@ -76,13 +76,13 @@ extension Pages {
                     Div {
                         Div {
                             H3 { subject.name }
+                            
+                            Badge { subject.code }
+                                .background(color: .light)
+                                .margin(.one, for: .right)
+                            
                             Badge { subject.category }
                                 .background(color: .light)
-                            IF(subject.isActive) {
-                                Badge { "Aktivt" }
-                                    .background(color: .light)
-                                    .margin(.one, for: .left)
-                            }
                         }
                         .class("card-header")
                         .text(color: .white)
@@ -296,6 +296,8 @@ extension Pages {
     }
     
     struct SearchCard: HTMLComponent {
+        
+        let errorID = "subject-search-error"
 
         var body: HTML {
             Card {
@@ -305,9 +307,10 @@ extension Pages {
                     InputGroup {
                         Input()
                             .type(.text)
-                            .placeholder("Søk..")
+                            .placeholder("Søk.. TDT4138, Artificial Intelligence")
                             .id("name")
                             .name("name")
+                            .autofocus()
                     }
                     .append {
                         Button { "Søk" }
@@ -316,7 +319,11 @@ extension Pages {
                     }
                 }
                 .id("subject-list-search-form")
-                .fetch(url: "/subjects/search", resultTagID: DashboardSubjectList.subjectListID)
+                .fetch(url: "/subjects/search", resultTagID: DashboardSubjectList.subjectListID, errorID: errorID)
+                
+                ErrorMessageAlert(divID: errorID)
+                    .margin(.zero, for: .bottom)
+                    .margin(.two, for: .top)
             }
         }
     }

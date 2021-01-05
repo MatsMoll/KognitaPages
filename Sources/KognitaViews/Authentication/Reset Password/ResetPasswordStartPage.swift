@@ -64,6 +64,7 @@ extension User.Templates.ResetPassword {
                             .type(.email)
                             .placeholder(localized: Strings.mailPlaceholder)
                             .required()
+                            .autofocus()
                     }
                     Div {
                         Button {

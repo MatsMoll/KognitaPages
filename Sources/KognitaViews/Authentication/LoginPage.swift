@@ -7,6 +7,29 @@
 
 import BootstrapKit
 
+struct FeideLoginButton: HTMLComponent, AttributeNode {
+    
+    var attributes: [HTMLAttribute] = []
+    
+    func copy(with attributes: [HTMLAttribute]) -> FeideLoginButton {
+        FeideLoginButton.init(attributes: attributes)
+    }
+    
+    var body: HTML {
+        Anchor {
+            Img()
+                .source("https://www.feide.no/sites/feide.no/files/upload/symbol_digital_symbol-blaa_feide.png")
+                .margin(.one, for: .right)
+                .style(css: "height: 19px")
+            
+            "Logg inn med Feide"
+        }
+        .button(style: .light)
+        .href(Paths.loginWithFeide)
+        .add(attributes: attributes)
+    }
+}
+
 public struct LoginPage: HTMLTemplate {
 
     public struct Context {
@@ -46,7 +69,7 @@ public struct LoginPage: HTMLTemplate {
                                         Span {
                                             LogoImage()
                                         }
-                                    }.href("index.html")
+                                    }.href(Paths.landingPage)
                                 }.class("card-header pt-4 pb-4 text-center bg-primary")
                                 Div {
                                     Div {
@@ -62,13 +85,14 @@ public struct LoginPage: HTMLTemplate {
                                                 .id("email")
                                                 .placeholder(localized: Strings.mailPlaceholder)
                                                 .required()
+                                                .autofocus()
                                         }
 
                                         Div {
                                             Anchor {
                                                 Small(Strings.forgottenPassword)
                                             }
-                                            .href("/start-reset-password")
+                                            .href(Paths.startResetPassword)
                                             .float(.right)
                                             .text(color: .muted)
 
@@ -87,9 +111,12 @@ public struct LoginPage: HTMLTemplate {
                                                 .id("submit-button")
                                                 .button(style: .primary)
                                                 .type(.submit)
+                                            
+                                            FeideLoginButton()
+                                                .margin(.one, for: .left)
                                         }.class("form-group mb-0 text-center")
                                     }
-                                    .action("/login")
+                                    .action(Paths.login)
                                     .method(.post)
                                 }
                                 .class("card-body p-4")
@@ -103,7 +130,7 @@ public struct LoginPage: HTMLTemplate {
                                     Anchor {
                                         Bold(Strings.loginNoUserLink)
                                     }
-                                    .href("/signup")
+                                    .href(Paths.signup)
                                     .class("ml-1")
                                     .text(color: .dark)
                                 }

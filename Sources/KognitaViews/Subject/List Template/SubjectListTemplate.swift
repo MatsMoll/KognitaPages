@@ -29,7 +29,7 @@ extension Subject.Templates {
                     .style(.heading3)
                 Row {
                     ForEach(in: subjects) { subject in
-                        SubjectCard(subject: subject)
+                        Pages.SubjectCard(subject: subject)
                     }
                 }
                 .margin(.four, for: .bottom)
@@ -181,6 +181,8 @@ $("#start-subject-test-modal").modal('show');
 //        }
 
         struct SearchCard: HTMLComponent {
+            
+            let errorID = "subject-search-error"
 
             var body: HTML {
                 Card {
@@ -201,7 +203,11 @@ $("#start-subject-test-modal").modal('show');
                         }
                     }
                     .id("subject-list-search-form")
-                    .fetch(url: "/subjects/search", resultTagID: ListComponent.subjectListID)
+                    .fetch(url: "/subjects/search", resultTagID: ListComponent.subjectListID, errorID: errorID)
+                    
+                    ErrorMessageAlert(divID: errorID)
+                        .margin(.zero, for: .bottom)
+                        .margin(.two, for: .top)
                 }
             }
         }
@@ -244,61 +250,6 @@ $("#start-subject-test-modal").modal('show');
 }
 
 extension Subject.Templates {
-
-    struct SubjectCard: HTMLComponent {
-
-        let subject: TemplateValue<Subject.ListOverview>
-
-        var body: HTML {
-            Div {
-                Anchor {
-                    Div {
-                        Div {
-                            H3 { subject.name }
-                            Badge { subject.category }
-                                .background(color: .light)
-                            IF(subject.isActive) {
-                                Badge { "Aktivt" }
-                                    .background(color: .light)
-                                    .margin(.one, for: .left)
-                            }
-                        }
-                        .class("card-header")
-                        .text(color: .white)
-                        .modify(if: subject.isActive) { card in
-                            card.background(color: .primary)
-                        }
-                        .modify(if: subject.isActive == false) { card in
-                            card.background(color: .success)
-                        }
-
-                        Div {
-                            P {
-                                subject.description
-                                    .escaping(.unsafeNone)
-                            }
-                            .class("render-markdown")
-
-                            Button(Strings.subjectExploreButton)
-                                .isRounded()
-                                .modify(if: subject.isActive) { card in
-                                    card.button(style: .primary)
-                                }
-                                .modify(if: subject.isActive == false) { card in
-                                    card.button(style: .success)
-                                }
-                        }
-                        .class("card-body position-relative")
-                    }
-                    .class("card")
-                    .display(.block)
-                }
-                .href("subjects/" + subject.id)
-                .text(color: .dark)
-            }
-            .class("col-lg-6")
-        }
-    }
 
     struct VerifyEmailSignifier: HTMLComponent {
 

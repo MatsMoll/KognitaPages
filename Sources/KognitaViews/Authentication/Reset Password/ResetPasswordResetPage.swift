@@ -58,6 +58,7 @@ extension User.Templates.ResetPassword {
                             .placeholder(localized: Strings.passwordPlaceholder)
                             .minLength(6)
                             .required()
+                            .autofocus()
                     }
                     FormGroup(label: Strings.registerConfirmPasswordTitle.localized()) {
                         Input()

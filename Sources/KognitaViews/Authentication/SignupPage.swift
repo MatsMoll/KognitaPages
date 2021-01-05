@@ -61,6 +61,7 @@ extension User.Templates {
                             .maxLength(20)
                             .pattern(regex: "[A-Za-z0-9]+")
                             .required()
+                            .autofocus()
                             .value(Unwrap(context.submittedForm) { $0.username })
                     }
                     .invalidFeedback {

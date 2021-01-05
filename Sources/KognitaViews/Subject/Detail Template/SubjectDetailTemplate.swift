@@ -169,8 +169,14 @@ extension Subject.Templates {
 
             var body: HTML {
                 Card {
-//                    KognitaProgressBadge(value: userLevel.correctProsentage)
-
+                    IF(details.isModerator) {
+                        Anchor { "Rediger" }
+                            .button(style: .light)
+                            .float(.right)
+                            .href(details.editUri)
+                            .isRounded()
+                    }
+                    
                     Text { details.subject.name }
                         .text(color: .dark)
                         .margin(.zero, for: .top)
@@ -448,4 +454,9 @@ extension Subject.Templates.Details {
             }
         }
     }
+}
+
+
+extension Subject.Details {
+    var editUri: String { "/subjects/\(subject.id)/edit"}
 }

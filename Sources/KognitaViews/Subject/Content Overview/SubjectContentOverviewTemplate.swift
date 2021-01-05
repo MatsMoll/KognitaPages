@@ -373,7 +373,11 @@ struct SearchCard: HTMLComponent {
                     }
                 }
                 .id("task-search-form")
-                .fetch(url: "search", resultTagID: "search-result")
+                .fetch(url: "search", resultTagID: "search-result", errorID: "task-search-error")
+                
+                ErrorMessageAlert(divID: "task-search-error")
+                    .margin(.zero, for: .bottom)
+                    .margin(.two, for: .top)
             }
         }
         .column(width: .twelve)
@@ -381,20 +385,31 @@ struct SearchCard: HTMLComponent {
 }
 
 extension Form {
-    func fetch(url: String, resultTagID: String) -> SearchFetch {
+    func fetch(url: String, resultTagID: String, errorID: String, delay: Int = 200) -> SearchFetch {
         guard let id = self.value(of: "id") as? String else {
             fatalError("Missing Form id")
         }
-        return SearchFetch(request: .init(url: url, formID: id, resultID: resultTagID), form: self)
+        return SearchFetch(request: .init(url: url, formID: id, resultID: resultTagID, errorID: errorID, delay: delay), form: self)
     }
 }
 
 struct SearchFetch: HTMLComponent {
 
     struct Request {
+        /// The url to fetch the results form
         let url: String
+        
+        /// The id of the form containing the request
         let formID: String
+        
+        /// The id of the html tag displaying the result
         let resultID: String
+        
+        /// The id fo the html tag to display an error message in
+        let errorID: String
+        
+        /// The amount of delay added for each request
+        let delay: Int
     }
 
     let request: Request
@@ -409,28 +424,41 @@ struct SearchFetch: HTMLComponent {
     var scripts: HTML {
         let script =
         """
-        var lastFetch = new Date();
+        var \(functionName)Job;
         function \(functionName)() {
-          if (Math.abs(lastFetch - new Date()) < 100) { return; }
-          lastFetch = new Date(); let query = $("#\(request.formID)").serializeArray().reduce(function (r, v) { return r + v.name + "=" + encodeURI(v.value) + "&"; }, "").slice(0, -1)
-          fetch("\(request.url)?" + query, {
-              method: "GET",
-              headers: {
-                  "Accept": "application/html, text/plain, */*",
-              }
-          })
-          .then(function (response) {
-              if (response.ok) {
-                  return response.text();
-              } else {
-                  throw new Error(response.statusText);
-              }
-          })
-          .then(function (html) {
-            $("#\(request.resultID)").html(html);
-          });
+          clearTimeout(\(functionName)Job)
+          \(functionName)Job = setTimeout(function () {
+            let query = $("#\(request.formID)").serializeArray().reduce(function (r, v) { return r + v.name + "=" + encodeURI(v.value) + "&"; }, "").slice(0, -1)
+            fetch("\(request.url)?" + query, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/html, text/plain, */*",
+                }
+            })
+            .then(function (response) {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error(response.statusText);
+                }
+            })
+            .then(function (html) {
+              $("#\(request.resultID)").html(html);
+              $("#\(request.errorID)").addClass("d-none");
+            })
+            .catch(function (error) {
+                $("#\(request.errorID) .er-msg").text(error.message);
+                if ($("#\(request.errorID)").css("display") == "block") {
+                    $("#\(request.errorID)").shake();
+                } else {
+                    $("#\(request.errorID)").fadeIn();
+                    $("#\(request.errorID)").removeClass("d-none");
+                }
+            });
+          }, \(request.delay))
         }
         $(document).ready(function () { $('#\(request.formID) input[type=checkbox]').change(function () { \(functionName)() }); });
+        $(document).ready(function () { $('#\(request.formID) input[type=text]').on('input', function (e) { \(functionName)() }); });
         """
         return NodeList {
 //            form.scripts
