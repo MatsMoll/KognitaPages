@@ -1,7 +1,7 @@
 import BootstrapKit
 
-struct MaterialDesignIcon: HTMLComponent, AttributeNode {
-    enum Icons: String {
+public struct MaterialDesignIcon: HTMLComponent, AttributeNode {
+    public enum Icons: String {
         case infinity
         case note
         case multipleNotes = "note-multiple"
@@ -49,10 +49,12 @@ struct MaterialDesignIcon: HTMLComponent, AttributeNode {
         case openBook = "book-open-variant"
         case login
         case accountPlus = "account-plus"
+        case fileDocument = "file-document"
+        case video
     }
 
     let icon: TemplateValue<Icons>
-    var attributes: [HTMLAttribute]
+    public var attributes: [HTMLAttribute]
 
     init(icon: Icons) {
         self.icon = .constant(icon)
@@ -79,11 +81,11 @@ struct MaterialDesignIcon: HTMLComponent, AttributeNode {
         self.attributes = attributes
     }
 
-    func copy(with attributes: [HTMLAttribute]) -> MaterialDesignIcon {
+    public func copy(with attributes: [HTMLAttribute]) -> MaterialDesignIcon {
         .init(icon: icon, attributes: attributes)
     }
 
-    var body: HTML {
+    public var body: HTML {
         Italic().class("mdi mdi-" + icon.rawValue).add(attributes: attributes)
     }
 }

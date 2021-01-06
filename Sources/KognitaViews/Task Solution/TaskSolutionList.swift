@@ -50,6 +50,41 @@ extension TaskSolution.Response {
     var voteID: String { "solution-\(id)" }
 }
 
+extension Resource {
+    var viewModel: ResourceViewModel {
+        switch self {
+        case .article(let article):
+            return ResourceViewModel(
+                icon: .fileDocument,
+                url: .init(url: article.url, callToAction: "Les artikkel"),
+                title: article.title,
+                secondaryTitle: article.author
+            )
+        case .book(let book):
+            return ResourceViewModel(
+                icon: .openBook,
+                url: nil,
+                title: book.title,
+                secondaryTitle: "Side \(book.startPageNumber)-\(book.endPageNumber)",
+                tetriaryTitle: book.bookTitle,
+                quartileTitle: book.author
+            )
+        case .video(let video):
+            var durationString: String? = nil
+            if let duration = video.duration {
+                durationString = "\(duration) sek"
+            }
+            return ResourceViewModel(
+                icon: .video,
+                url: .init(url: video.url, callToAction: "Se video"),
+                title: video.title,
+                secondaryTitle: video.creator,
+                tetriaryTitle: durationString
+            )
+        }
+    }
+}
+
 extension TaskSolution.Templates {
 
     public struct List: HTMLTemplate {
@@ -57,94 +92,102 @@ extension TaskSolution.Templates {
         public struct Context {
             let user: User
             let solutions: [TaskSolution.Response]
+            let resources: [ResourceViewModel]
 
             var userID: User.ID { user.id }
 
-            public init(user: User, solutions: [TaskSolution.Response]) {
+            public init(user: User, solutionResources: TaskSolution.Resources) {
                 self.user = user
-                self.solutions = solutions
+                self.solutions = solutionResources.solutions
+                self.resources = solutionResources.resources.map { $0.viewModel }
             }
         }
 
         public var body: HTML {
-            Accordions(values: context.solutions, title: { (solution: TemplateValue<TaskSolution.Response>, _: TemplateValue<Int>) in
+            NodeList {
+                Accordions(values: context.solutions, title: { (solution: TemplateValue<TaskSolution.Response>, _: TemplateValue<Int>) in
 
-                Text {
-                    "Løsningsforslag av "
-                    solution.creatorUsername
+                    Text {
+                        "Løsningsforslag av "
+                        solution.creatorUsername
 
-                    Span {
-                        MaterialDesignIcon(.chevronDown)
-                            .class("accordion-arrow")
+                        Span {
+                            MaterialDesignIcon(.chevronDown)
+                                .class("accordion-arrow")
+                        }
+                        .float(.right)
                     }
-                    .float(.right)
-                }
-                .style(.heading4)
+                    .style(.heading4)
 
-                Text {
-                    "Nytting for "
-                    Span { solution.numberOfVotes }
-                        .id(solution.voteID)
-                    " personer"
+                    Text {
+                        "Nytting for "
+                        Span { solution.numberOfVotes }
+                            .id(solution.voteID)
+                        " personer"
 
-                    Small {
-                        Unwrap(solution.approvedBy) { _ in
-                            Badge {
-                                "Verifisert"
-                                MaterialDesignIcon(icon: .check)
-                            }
-                            .background(color: .success)
-                            .margin(.two, for: .left)
-                        }.else {
-                            Badge { "Ikke verifisert enda" }
-                                .background(color: .warning)
+                        Small {
+                            Unwrap(solution.approvedBy) { _ in
+                                Badge {
+                                    "Verifisert"
+                                    MaterialDesignIcon(icon: .check)
+                                }
+                                .background(color: .success)
                                 .margin(.two, for: .left)
+                            }.else {
+                                Badge { "Ikke verifisert enda" }
+                                    .background(color: .warning)
+                                    .margin(.two, for: .left)
+                            }
                         }
                     }
-                }
-            }) { (solution: TemplateValue<TaskSolution.Response>, _: TemplateValue<Int>) in
+                }) { (solution: TemplateValue<TaskSolution.Response>, _: TemplateValue<Int>) in
 
-                IF(self.context.userID == solution.creatorID) {
-                    MoreDropdown {
-                        Anchor { "Rediger" }
-                            .toggle(modal: .id("edit-solution"))
-                            .data("markdown", value: solution.solution.escaping(.unsafeNone))
-                            .data("solutionID", value: solution.id)
-                        Anchor { "Slett" }
-                            .toggle(modal: .id("delete-solution"))
-                            .data("solutionID", value: solution.id)
-                    }
-                    .float(.right)
-                }
-
-                Div {
-                    solution.solution
-                        .escaping(.unsafeNone)
-                }
-                .class("solutions")
-                Small {
-                    "Var løsningsforslaget nyttig?"
-                    Button {
-                        IF(solution.userHasVoted) {
-                            MaterialDesignIcon(.heart)
-                                .class("vote-button")
-                                .text(color: .danger)
-                        }.else {
-                            MaterialDesignIcon(.heartOutline)
-                                .class("vote-button")
+                    IF(self.context.userID == solution.creatorID) {
+                        MoreDropdown {
+                            Anchor { "Rediger" }
+                                .toggle(modal: .id("edit-solution"))
+                                .data("markdown", value: solution.solution.escaping(.unsafeNone))
+                                .data("solutionID", value: solution.id)
+                            Anchor { "Slett" }
+                                .toggle(modal: .id("delete-solution"))
+                                .data("solutionID", value: solution.id)
                         }
+                        .float(.right)
                     }
-                    .on(click: solution.voteCall)
-                    .button(style: .light)
-                    .margin(.two, for: .left)
-                }
-            }
-            .footer {
-                Text { "Vil du skrive ditt eget løsningsforslag?" }
 
-                Button { "Foreslå et løsningsforslag" }
-                    .toggle(modal: .id("create-alternative-solution"))
-                    .button(style: .light)
+                    Div {
+                        solution.solution
+                            .escaping(.unsafeNone)
+                    }
+                    .class("solutions")
+                    Small {
+                        "Var løsningsforslaget nyttig?"
+                        Button {
+                            IF(solution.userHasVoted) {
+                                MaterialDesignIcon(.heart)
+                                    .class("vote-button")
+                                    .text(color: .danger)
+                            }.else {
+                                MaterialDesignIcon(.heartOutline)
+                                    .class("vote-button")
+                            }
+                        }
+                        .on(click: solution.voteCall)
+                        .button(style: .light)
+                        .margin(.two, for: .left)
+                    }
+                }
+                .footer {
+                    Text { "Vil du skrive ditt eget løsningsforslag?" }
+
+                    Button { "Foreslå et løsningsforslag" }
+                        .toggle(modal: .id("create-alternative-solution"))
+                        .button(style: .light)
+                }
+                
+                IF(context.resources.isEmpty == false) {
+                    ResourceList(resources: context.resources)
+                }
             }
         }
 

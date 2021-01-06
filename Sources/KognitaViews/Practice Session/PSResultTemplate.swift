@@ -98,6 +98,8 @@ extension PracticeSession.Templates {
             let achievedScore: Double
 
             let subject: Subject.Overview
+            
+            let resources: [ResourceViewModel]
 
             var startedAt: Date {
                 guard let now = tasks.first?.date else {
@@ -188,6 +190,24 @@ extension PracticeSession.Templates {
                     )
                 }
                 .sorted(by: { $0.topicScore > $1.topicScore })
+                
+                let allResources = result.resources.map { $0.viewModel }
+                var hosts = Set<String>()
+                self.resources = allResources.filter { resource in
+                    guard
+                        let rawUrl = resource.url,
+                        let components = URLComponents(string: rawUrl.url),
+                        let host = components.host
+                    else { return true }
+                    
+                    let basePath = host + components.path + (components.query ?? "")
+                    if hosts.contains(basePath) {
+                        return false
+                    } else {
+                        hosts.insert(basePath)
+                        return true
+                    }
+                }
             }
         }
 
@@ -240,42 +260,57 @@ extension PracticeSession.Templates {
                     }
                     .column(width: .twelve)
                 }
-                IF(context.topicResults.count > 1) {
-                    Row {
-                        ForEach(in: context.topicResults) { result in
-                            Div {
-                                Sessions.Templates.Result.TopicOverview(
-                                    topicId: result.topicId,
-                                    topicName: result.topicName,
-                                    topicLevel: result.topicScore,
-                                    topicTaskResults: result.tasks
-                                )
-                                .isShown(true)
-                            }
-                            .column(width: .four, for: .medium)
-                        }
-                    }
-                }
-                .elseIf(context.topicResults.count == 1) {
-                    Unwrap(context.topicResults.first) { result in
-                        Sessions.Templates.Result.TopicOverview(
-                            topicId: result.topicId,
-                            topicName: result.topicName,
-                            topicLevel: result.topicScore,
-                            topicTaskResults: result.tasks
-                        )
-                        .isShown(true)
-                    }
+                
+                IF(context.resources.isEmpty) {
+                    resultBody(cardWidth: .four)
                 }
                 .else {
-                    Text { "Vi klarte ikke å finne noen oppgaver i dette øvingssettet" }
-                        .style(.lead)
+                    ContentStructure {
+                        resultBody(cardWidth: .six)
+                    }
+                    .secondary {
+                        ResourceList(resources: context.resources)
+                    }
                 }
             }
             .scripts {
                 Script().source("/assets/js/vendor/Chart.bundle.min.js")
                 Script().source("/assets/js/practice-session-histogram.js")
                 Script().source("/assets/js/practice-session-create.js")
+            }
+        }
+        
+        func resultBody(cardWidth: ColumnWidth) -> HTML {
+            IF(context.topicResults.count > 1) {
+                Row {
+                    ForEach(in: context.topicResults) { result in
+                        Div {
+                            Sessions.Templates.Result.TopicOverview(
+                                topicId: result.topicId,
+                                topicName: result.topicName,
+                                topicLevel: result.topicScore,
+                                topicTaskResults: result.tasks
+                            )
+                            .isShown(true)
+                        }
+                        .column(width: cardWidth, for: .medium)
+                    }
+                }
+            }
+            .elseIf(context.topicResults.count == 1) {
+                Unwrap(context.topicResults.first) { result in
+                    Sessions.Templates.Result.TopicOverview(
+                        topicId: result.topicId,
+                        topicName: result.topicName,
+                        topicLevel: result.topicScore,
+                        topicTaskResults: result.tasks
+                    )
+                    .isShown(true)
+                }
+            }
+            .else {
+                Text { "Vi klarte ikke å finne noen oppgaver i dette øvingssettet" }
+                    .style(.lead)
             }
         }
     }
