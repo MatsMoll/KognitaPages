@@ -52,49 +52,52 @@ struct ResourceRow: HTMLComponent {
     
     var body: HTML {
         Row {
-            Row {
-                Text { MaterialDesignIcon(resource.icon) }
-                    .style(.display4)
-                    .display(.inlineBlock)
-                
-                Div {
-                    Text { resource.title }
-                        .style(.cardTitle)
-                        .text(color: .dark)
-                    
-                    Text { resource.secondaryTitle }
-                        .style(.cardSubtitle)
-                        .text(color: .dark)
-
-                    
-                    Unwrap(resource.tetriaryTitle) { title in
-                        Text { title }
-                            .style(.cardText)
-                            .text(color: .dark)
-                    }
-                    
-                    Unwrap(resource.quartileTitle) { title in
-                        Text { title }
-                            .style(.cardText)
-                            .text(color: .secondary)
-                    }
-                }
-                .display(.inlineBlock)
-                .text(break: .break)
-            }
-            .margin(.zero, for: .horizontal)
-            .alignment(.itemsCenter)
-            
             Unwrap(resource.url) { url in
-                Anchor { url.callToAction }
-                    .button(style: .light)
-                    .href(url.url)
-                    .openInNewTab()
-                    .margin(.two, for: .vertical)
+                Anchor {
+                    resourceText
+                }
+                .href(url.url)
+                .openInNewTab()
+                .margin(.two, for: .vertical)
+            }.else {
+                resourceText
             }
         }
         .margin(.zero, for: .horizontal)
         .alignment(.itemsCenter)
-        .horizontal(alignment: .between)
+    }
+    
+    var resourceText: HTML {
+        NodeList {
+            Text { MaterialDesignIcon(resource.icon) }
+                .style(.display4)
+                .display(.inlineBlock)
+                .text(color: .dark)
+            
+            Div {
+                Text { resource.title }
+                    .style(.cardTitle)
+                    .text(color: .dark)
+                
+                Text { resource.secondaryTitle }
+                    .style(.cardSubtitle)
+                    .text(color: .dark)
+
+                
+                Unwrap(resource.tetriaryTitle) { title in
+                    Text { title }
+                        .style(.cardText)
+                        .text(color: .dark)
+                }
+                
+                Unwrap(resource.quartileTitle) { title in
+                    Text { title }
+                        .style(.cardText)
+                        .text(color: .secondary)
+                }
+            }
+            .display(.inlineBlock)
+            .text(break: .break)
+        }
     }
 }

@@ -35,39 +35,34 @@ extension PracticeSession.Templates {
 
                 Row {
                     Div {
-                        Div {
-                            Input()
-                                .type(.checkbox)
-                                .class("custom-control-input")
-                                .name(CreateModal.useMultipleChoiceTasksID)
-                                .id(CreateModal.useMultipleChoiceTasksID)
-                                .isChecked(true)
-
-                            Label { "Bruk flervalgsoppgaver" }
-                                .class("custom-control-label")
-                                .for(CreateModal.useMultipleChoiceTasksID)
-                        }
-                        .class("custom-control custom-checkbox")
+                        Label { "Flervalgsoppgaver" }
+                            .for(CreateModal.useMultipleChoiceTasksID)
+                            .display(.inlineBlock)
+                        Switch(
+                            id: CreateModal.useMultipleChoiceTasksID,
+                            isChecked: true,
+                            onText: "På",
+                            offText: "Av"
+                        )
                     }
                     .column(width: .six, for: .large)
+                    .alignment(.itemsCenter)
 
                     Div {
-                        Div {
-                            Input()
-                                .type(.checkbox)
-                                .class("custom-control-input")
-                                .name(CreateModal.useTypingTasksID)
-                                .id(CreateModal.useTypingTasksID)
-                                .isChecked(true)
-
-                            Label { "Bruk innskrivningsoppgaver" }
-                                .class("custom-control-label")
-                                .for(CreateModal.useTypingTasksID)
-                        }
-                        .class("custom-control custom-checkbox")
+                        Label { "Innskrivningsoppgaver" }
+                            .for(CreateModal.useTypingTasksID)
+                            .display(.inlineBlock)
+                        Switch(
+                            id: CreateModal.useTypingTasksID,
+                            isChecked: true,
+                            onText: "På",
+                            offText: "Av"
+                        )
                     }
                     .column(width: .six, for: .large)
+                    .alignment(.itemsCenter)
                 }
+                .margin(.three, for: .top)
 
                 FormGroup {
                     Input()

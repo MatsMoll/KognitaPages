@@ -228,6 +228,7 @@ private struct QuestionSection: HTMLComponent {
         NodeList {
             Text { question.question }
                 .style(.heading4)
+                .class("render-markdown")
 
             Div { question.solution.renderMarkdown() }
                 .margin(.four, for: .bottom)
