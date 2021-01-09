@@ -261,6 +261,7 @@ $("#main-task-content").css("padding-bottom", $("#nav-card").height() + 20);
                         }
                         Text { question }
                             .style(.heading4)
+                            .class("render-markdown")
                     }
                     .display(.block)
                 }
