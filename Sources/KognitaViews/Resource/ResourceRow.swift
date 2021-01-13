@@ -58,7 +58,6 @@ struct ResourceRow: HTMLComponent {
                 }
                 .href(url.url)
                 .openInNewTab()
-                .margin(.two, for: .vertical)
             }.else {
                 resourceText
             }

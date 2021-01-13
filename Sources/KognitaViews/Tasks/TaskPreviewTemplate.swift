@@ -183,7 +183,7 @@ public struct TaskPreviewTemplate: HTMLComponent {
                         )
                         DismissableError()
                         underSolutionCard
-                        TaskDiscussionCard()
+//                        TaskDiscussionCard()
                     }
                     .column(width: .five, for: .large)
                 }
