@@ -70,14 +70,23 @@ extension Subject.Templates {
                     .offset(width: .four, for: .large)
                     .id("compendium-content")
                 }
+                
+                TermDetail()
+                TermCreateModal()
+                ResourceCreateModal()
             }
             .header {
                 Stylesheet(url: "/assets/css/vendor/katex.min.css")
+                Stylesheet(url: "/assets/css/vendor/simplemde.min.css")
             }
             .scripts {
                 Script(source: "/assets/js/vendor/marked.min.js")
                 Script(source: "/assets/js/vendor/katex.min.js")
                 Script(source: "/assets/js/markdown-renderer.js")
+                Script(source: "/assets/js/vendor/simplemde.min.js")
+                Script(source: "/assets/js/markdown-renderer.js")
+                Script(source: "/assets/js/markdown-editor.js")
+                
                 Script(source: "/assets/js/practice-session-create.js")
                 Script {
 """
@@ -159,7 +168,7 @@ private struct TopicSection: HTMLComponent {
             }
             .style(.heading2)
             .text(color: .dark)
-            .margin(.four, for: .vertical)
+            .margin(.four, for: .top)
             .id(topic.nameID)
 
             ForEach(in: topic.subtopics) { subtopic in
@@ -174,19 +183,410 @@ private struct SubtopicSection: HTMLComponent {
     let subtopic: TemplateValue<Subject.Compendium.SubtopicData>
 
     var body: HTML {
-        NodeList {
+        Div {
+            
+            Text {
+                "Begreper innen "
+                subtopic.name
+            }
+            .style(.heading3)
+            .text(color: .dark)
+            
+            Row {
+                ForEach(in: subtopic.terms) { term in
+                    Div {
+                        TermCard(term: term)
+                    }
+                    .column(width: .six, for: .large)
+                }
+                
+                Div {
+                    Card {
+                        Text { "Vil du legge til et nytt begrep?" }
+                            .style(.lead)
+                        
+                        TermCreateModal.button(subtopicID: subtopic.subtopicID)
+                    }
+                    .class("border border-light")
+                }
+                .column(width: .six, for: .large)
+            }
+            
+            
             Text { subtopic.name }
                 .style(.heading3)
                 .text(color: .dark)
                 .margin(.three, for: .vertical)
-                .id(subtopic.hrefID)
 
             ForEach(in: subtopic.questions) { question in
                 QuestionSection(question: question)
             }
 
-            PracticeCard(subtopic: subtopic)
+//            PracticeCard(subtopic: subtopic)
         }
+        .id(subtopic.hrefID)
+        .padding(.four, for: .top)
+    }
+}
+
+struct TermCard: HTMLComponent {
+    
+    let term: TemplateValue<Term.Compact>
+    
+    var body: HTML {
+        Card {
+            Anchor {
+                Text {
+                    term.term
+                    MaterialDesignIcon(.arrowRight)
+                        .margin(.one, for: .left)
+                }
+                .style(.heading4)
+                .text(color: .dark)
+            }
+            .toggle(modal: .id("term-detail"))
+            .data("meaning", value: term.meaning)
+            .data("term", value: term.term)
+            .data("id", value: term.id)
+        }
+        .class("border border-light")
+    }
+}
+
+struct TermDetail: HTMLComponent {
+    
+    var body: HTML {
+        Modal(title: "Detail", id: "term-detail") {
+            
+            Button {
+                "Slett"
+                MaterialDesignIcon(.delete)
+            }
+            .on(click: "deleteTerm()")
+            .button(style: .danger)
+            .float(.right)
+            
+            Text { "" }
+                .style(.heading2)
+                .id("term-title")
+                .text(color: .dark)
+            
+            Text { "" }
+                .style(.lead)
+                .id("term-meaning")
+                .margin(.three, for: .top)
+                .text(color: .dark)
+                .class("render-markdown")
+            
+            Text { "Les mer via" }
+                .style(.heading5)
+                .margin(.three, for: .top)
+            
+            Input().type(.hidden).id("term-id")
+            
+            // Update on load
+            Div().id("term-resources")
+            
+            ResourceCreateModal
+                .button(connectionType: .term, connectionID: "")
+                .dismissModal()
+                .id("term-resource-btn")
+        }
+        .set(data: "term", type: .node, to: "term-title")
+        .set(data: "id", type: .input, to: "term-id")
+    }
+    
+    var scripts: HTML {
+        NodeList {
+            body.scripts
+            Script {
+                """
+                $('#term-detail').on('show.bs.modal', function (event) {
+                  let button = $(event.relatedTarget);
+                  let id = button.data('id');
+                  fetchResources(id)
+                  fetchTerm(id)
+                  document.getElementById("term-resource-btn").setAttribute("data-con-id", id);
+                })
+                """
+            }
+            Script(source: "/assets/js/resources/fetch-html.js")
+            Script(source: "/assets/js/term/delete.js")
+        }
+    }
+}
+
+public struct ResourceCardList: HTMLTemplate {
+    
+    public init() {}
+    
+    public struct Context {
+        let resources: [ResourceViewModel]
+        
+        public init(resources: [Resource]) {
+            self.resources = resources.map { $0.viewModel }
+        }
+    }
+    
+    public var body: HTML {
+        Row {
+            ForEach(in: context.resources) { resource in
+                Div {
+                    Card { ResourceRow(resource: resource) }
+                        .class("border border-light")
+                }
+                .column(width: .six, for: .large)
+            }
+        }
+    }
+}
+
+public struct TermCreateModal: HTMLComponent {
+    
+    static func button(subtopicID: HTML) -> Button {
+        Button {
+            "Lag begrep"
+            MaterialDesignIcon(.fileDocument)
+        }
+        .button(style: .success)
+        .toggle(modal: .id(TermCreateModal.modalID))
+        .data("subtopic-id", value: subtopicID)
+    }
+    
+    static let modalID = "create-term"
+    
+    public var body: HTML {
+        Modal(title: "Lag et begrep", id: TermCreateModal.modalID) {
+            FormGroup(label: "Begrep") {
+                Input().type(.text).id("new-term")
+                    .placeholder("SQL, Logical address")
+            }
+            
+            Label { "Definisjon" }.for("new-term-meaning")
+            MarkdownEditor(id: "new-term-meaning")
+                .placeholder("En eller annen definisjon")
+            
+            Input().type(.hidden).id("new-term-subtopic-id")
+            
+            Button {
+                "Lagre"
+                MaterialDesignIcon(.check)
+                    .margin(.one, for: .left)
+            }
+            .button(style: .success)
+            .on(click: "createTerm()")
+        }
+        .set(data: "subtopic-id", type: .input, to: "new-term-subtopic-id")
+    }
+    
+    public var scripts: HTML {
+        NodeList {
+            body.scripts
+            Script(source: "/assets/js/term/create.js")
+        }
+    }
+}
+
+struct ResourceCreateModal: HTMLComponent {
+    
+    static let modalID = "create-resource-modal"
+    
+    enum ConnectionType: String {
+        case subtopic
+        case term
+    }
+    
+    static func button(connectionType: ConnectionType, connectionID: HTML) -> Button {
+        Button {
+            "Legg til en ressurs"
+            MaterialDesignIcon(.multipleNotes)
+                .margin(.one, for: .left)
+        }
+        .button(style: .light)
+        .toggle(modal: .id(ResourceCreateModal.modalID))
+        .data("con-type", value: connectionType.rawValue)
+        .data("con-id", value: connectionID)
+    }
+    
+    var body: HTML {
+        Modal(title: "Registrer en ressurs", id: ResourceCreateModal.modalID) {
+            
+            FormGroup(label: "Tittel") {
+                Input().type(.text).id("resource-title")
+                    .placeholder("SQL, Logical address")
+            }
+            
+            Input().type(.hidden).id("resource-connect-id")
+            Input().type(.hidden).id("resource-connect-type")
+            
+            Tabs()
+                .selected(id: "article-rec")
+                .add(tabID: "article-rec", icon: .fileDocument, label: "Article") {
+                    FormGroup(label: "URL") {
+                        Input()
+                            .type(.url)
+                            .id("article-url")
+                            .placeholder("https://web.dev/why-https-matters/")
+                    }
+                    
+                    FormGroup(label: "Forfatter") {
+                        Input()
+                            .type(.text)
+                            .id("article-author")
+                            .placeholder("Kayce Basques")
+                    }
+                }
+                .add(tabID: "video-rec", icon: .video, label: "Video") {
+                    FormGroup(label: "URL") {
+                        Input()
+                            .type(.url)
+                            .id("video-url")
+                            .placeholder("https://www.youtube.com/watch?v=spUNpyF58BY")
+                    }
+                    
+                    FormGroup(label: "Produsent") {
+                        Input()
+                            .type(.text)
+                            .id("video-creator")
+                            .placeholder("3Blue1Brown")
+                    }
+                    
+                    FormGroup(label: "Lengde") {
+                        Input()
+                            .type(.number)
+                            .id("video-duration")
+                            .placeholder("19:31")
+                    }
+                }
+                .add(tabID: "book-rec", icon: .openBook, label: "Bok") {
+                    FormGroup(label: "Bok tittel") {
+                        Input()
+                            .type(.text)
+                            .id("book-title")
+                            .placeholder("Cryptography, An Introduction : Third Edition")
+                    }
+                    
+                    FormGroup(label: "Forfatter") {
+                        Input()
+                            .type(.text)
+                            .id("book-author")
+                            .placeholder("Springer International Publishing")
+                    }
+                    
+                    Row {
+                        Div {
+                            FormGroup(label: "Start page") {
+                                Input()
+                                    .type(.number)
+                                    .id("book-start-page")
+                                    .placeholder("33")
+                            }
+                        }
+                        .column(width: .six, for: .large)
+                        
+                        Div {
+                            FormGroup(label: "End page") {
+                                Input()
+                                    .type(.number)
+                                    .id("book-end-page")
+                                    .placeholder("40")
+                            }
+                        }
+                        .column(width: .six, for: .large)
+                    }
+                }
+            
+            Button {
+                "Lagre"
+                MaterialDesignIcon(.check)
+                    .margin(.one, for: .left)
+            }
+            .button(style: .success)
+            .on(click: "createResource()")
+            .dismissModal()
+        }
+        .set(data: "con-type", type: .input, to: "resource-connect-type")
+        .set(data: "con-id", type: .input, to: "resource-connect-id")
+    }
+    
+    var scripts: HTML {
+        NodeList {
+            body.scripts
+            Script(source: "/assets/js/resources/create.js")
+        }
+    }
+}
+
+struct Tabs: HTMLComponent {
+    
+    struct Header {
+        let smallIcon: MaterialDesignIcon.Icons
+        let largeLabel: HTML
+        let id: String
+    }
+    
+    struct Definition {
+        let header: Header
+        let body: HTML
+    }
+    
+    let content: [Definition]
+    let selectedID: String
+    
+    init() {
+        self.content = []
+        self.selectedID = ""
+    }
+    
+    private init(content: [Definition], selectedID: String) {
+        self.content = content
+        self.selectedID = selectedID
+    }
+    
+    var body: HTML {
+        NodeList {
+            UnorderedList {
+                content.map { (tab) -> HTML in
+                    ListItem {
+                        Anchor {
+                            MaterialDesignIcon(tab.header.smallIcon)
+                                .display(.none, breakpoint: .medium)
+                                .display(.block)
+                            
+                            Span { tab.header.largeLabel }
+                                .display(.block, breakpoint: .medium)
+                                .display(.none)
+                        }
+                        .href("#\(tab.header.id)")
+                        .class("nav-link\(tab.header.id == selectedID ? " active" : "")")
+                        .data("toggle", value: "tab")
+                        .aria("expanded", value: tab.header.id == selectedID)
+                    }
+                    .class("nav-item")
+                }
+            }
+            .class("nav nav-tabs nav-bordered nav-justified mb-3")
+            
+            Div {
+                content.map { (tab) -> HTML in
+                    Div {
+                        tab.body
+                    }
+                    .id(tab.header.id)
+                    .class("tab-pane\(tab.header.id == selectedID ? " show active" : "")")
+                }
+            }
+            .class("tab-content")
+        }
+    }
+    
+    
+    func add(tabID: String, icon: MaterialDesignIcon.Icons, label: HTML, @HTMLBuilder body: () -> HTML) -> Self {
+        .init(content: content + [Definition(header: .init(smallIcon: icon, largeLabel: label, id: tabID), body: body())], selectedID: selectedID)
+    }
+    
+    func selected(id: String) -> Self {
+        .init(content: content, selectedID: id)
     }
 }
 

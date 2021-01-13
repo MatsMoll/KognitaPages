@@ -182,7 +182,7 @@ struct BaseTemplate: HTMLComponent {
                     description: { context.description }
                 )
                 
-                Author { "Kognita" }
+                Author { "Kognita - Mats Eikeland Mollestad" }
                 Manifest(uri: "/manifest.webmanifest")
 
                 Stylesheet(url: stylesheetUrl)
