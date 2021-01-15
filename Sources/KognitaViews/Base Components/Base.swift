@@ -135,7 +135,8 @@ struct BaseTemplate: HTMLComponent {
 
     private var stylesheetUrl: String { "/assets/css/app.min.css" }
     private var iconsUrl: String { "/assets/css/icons.min.css" }
-    private var faviconUrl: String { "/assets/images/favicon.ico" }
+    private var faviconUrlDark: String { "/assets/images/favicon-dark.ico" }
+    private var faviconUrlLight: String { "/assets/images/favicon.ico" }
 
     init(context: TemplateValue<BaseTemplateContent>, @HTMLBuilder content: () -> HTML) {
         self.context = context
@@ -187,7 +188,8 @@ struct BaseTemplate: HTMLComponent {
 
                 Stylesheet(url: stylesheetUrl)
                 Stylesheet(url: iconsUrl)
-                FavIcon(url: faviconUrl)
+                Link().relationship(.shortcutIcon).href(faviconUrlDark).id("favicon-dark")
+                Link().relationship(.shortcutIcon).href(faviconUrlLight).id("favicon-light")
 
                 customHeader
 //                HotjarScript()
@@ -217,6 +219,24 @@ struct BaseTemplate: HTMLComponent {
             }
 
             Script(source: "/assets/js/app.min.js")
+            Script {
+"""
+matcher = window.matchMedia('(prefers-color-scheme: dark)');
+lightSchemeIcon = document.querySelector('link#favicon-light');
+darkSchemeIcon = document.querySelector('link#favicon-dark');
+function updateFacicon() {
+  if (matcher.matches) {
+    lightSchemeIcon.remove();
+    document.head.append(darkSchemeIcon);
+  } else {
+    document.head.append(lightSchemeIcon);
+    darkSchemeIcon.remove();
+  }
+}
+matcher.addListener(updateFacicon);
+updateFacicon();
+"""
+            }
             customScripts
             htmlContent.scripts
         }

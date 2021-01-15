@@ -80,15 +80,23 @@ extension Subject.Templates.Details {
                         topicID: topic.id,
                         topicDescription: topic.name
                     ) {
-                        MaterialDesignIcon(.openBook)
-                        " "
+                        MaterialDesignIcon(.trophy)
+                            .margin(.one, for: .right)
                         Strings.subjectStartSession.localized()
                     }
                     .type(.button)
                     .isRounded()
                     .button(style: .light)
                     .margin(.one, for: .vertical)
+                    .margin(.one, for: .right)
                     .isDisabled(canPractice == false)
+                    
+                    
+                    ResourceListModal.button(
+                        topicID: topic.id,
+                        topicName: topic.name
+                    )
+                    .type(.button)
                 }
                 .footer {
                     Competence(competence: topic.userLevel)

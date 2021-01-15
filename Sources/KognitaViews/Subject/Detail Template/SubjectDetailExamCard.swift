@@ -32,7 +32,7 @@ extension Subject.Templates {
                 Break()
 
                 Button {
-                    MaterialDesignIcon(.openBook)
+                    MaterialDesignIcon(.trophy)
                         .margin(.one, for: .right)
                     "Gjennomfør eksamen"
                 }
