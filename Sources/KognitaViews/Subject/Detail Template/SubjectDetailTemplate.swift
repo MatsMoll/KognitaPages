@@ -131,6 +131,7 @@ extension Subject.Templates {
                 }
 
                 PracticeSession.Templates.CreateModal()
+                ResourceListModal()
             }
             .scripts {
                 Script().source("/assets/js/vendor/Chart.bundle.min.js")
@@ -191,8 +192,8 @@ extension Subject.Templates {
                         topicID: details.topicIDsJSList,
                         topicDescription: details.subject.name
                     ) {
-                        Italic().class("mdi mdi-book-open-variant")
-                        " "
+                        MaterialDesignIcon(.trophy)
+                            .margin(.one, for: .right)
                         Strings.subjectStartSession.localized()
                     }
                     .type(.button)
@@ -204,12 +205,16 @@ extension Subject.Templates {
 
                     Break().display(.none, breakpoint: .medium)
 
-                    Anchor { "Les kompendiet vårt" }
-                        .button(style: .light)
-                        .margin(.two, for: .left, sizeClass: .medium)
-                        .margin(.three, for: .bottom)
-                        .href(details.compendiumUri)
-                        .isRounded()
+                    Anchor {
+                        MaterialDesignIcon(.openBook)
+                            .margin(.one, for: .right)
+                        "Les kompendiet"
+                    }
+                    .button(style: .light)
+                    .margin(.one, for: .left, sizeClass: .medium)
+                    .margin(.three, for: .bottom)
+                    .href(details.compendiumUri)
+                    .isRounded()
 
                     Text {
                         details.subject.description
@@ -456,6 +461,97 @@ extension Subject.Templates.Details {
     }
 }
 
+
+struct ResourceListModal: HTMLComponent {
+    
+    static let modalID = "resource-list-modal"
+    static let resultID = "resoruces-list"
+    
+    static func button(topicID: HTML, topicName: HTML) -> Button {
+        Button {
+            MaterialDesignIcon(.openBook)
+                .margin(.one, for: .right)
+            "Se ressurser"
+        }
+        .button(style: .light)
+        .data("topic-id", value: topicID)
+        .data("topic-name", value: topicName)
+        .isRounded()
+        .toggle(modal: .id(ResourceListModal.modalID))
+    }
+    
+    var body: HTML {
+        Modal(title: "Ressurser", id: ResourceListModal.modalID) {
+            
+            Text {
+                "Ressurser innen "
+                Span().id("topic-name")
+            }
+            .style(.heading3)
+            .text(color: .dark)
+            
+            Div()
+                .id(ResourceListModal.resultID)
+                .margin(.three, for: .top)
+            
+            Button {
+                "Lukk"
+                MaterialDesignIcon(.close)
+                    .margin(.one, for: .left)
+            }
+            .dismissModal()
+            .button(style: .light)
+        }
+        .set(data: "topic-name", type: .node, to: "topic-name")
+    }
+    
+    var scripts: HTML {
+        NodeList {
+            body.scripts
+            Script {
+                """
+                $('#\(ResourceListModal.modalID)').on('show.bs.modal', function (event) {
+                  let button = $(event.relatedTarget);
+                  let topicID = button.data('topic-id');
+                  \(Script.fetchHTML(resultNodeID: ResourceListModal.resultID, url: #""/topics/" + topicID + "/resources";"#))
+                })
+                """
+            }
+            Script(source: "/assets/js/resources/fetch-html.js")
+            Script(source: "/assets/js/term/delete.js")
+        }
+    }
+}
+
+extension Script {
+    static func fetchHTML(resultNodeID: String, url: String) -> String {
+        """
+        let url = \(url)
+        let resultID = "\(resultNodeID)"
+        $("#" + resultID).html('<div class="d-flex justify-content-center"><div class="spinner-border" role="status"></div></div>');
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Accept": "application/html, text/plain, */*",
+            }
+        })
+        .then(function (response) {
+            if (response.ok) {
+                return response.text();
+            } else {
+                throw new Error(response.statusText);
+            }
+        })
+        .then(function (html) {
+            $("#" + resultID).html(html);
+            renderMarkdownNodesIn($("#" + resultID));
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+        """
+    }
+}
 
 extension Subject.Details {
     var editUri: String { "/subjects/\(subject.id)/edit"}

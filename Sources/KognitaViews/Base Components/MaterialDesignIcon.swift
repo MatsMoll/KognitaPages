@@ -10,6 +10,7 @@ public struct MaterialDesignIcon: HTMLComponent, AttributeNode {
         case checkAll = "check-all"
         case minus
         case eye
+        case emojiSadOutline = "emoticon-sad-outline"
         case close
         case delete
         case avTime = "av-time"
