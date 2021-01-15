@@ -88,7 +88,8 @@ extension Subject.Templates {
                                 TopicList(
                                     topics: context.details.topics,
                                     subjectID: context.details.subject.id,
-                                    canPractice: context.details.canPractice
+                                    canPractice: context.details.canPractice,
+                                    canViewResources: .constant(true)
                                 )
                             }
                         }
@@ -417,7 +418,8 @@ extension Subject.Templates.Details {
                                 TopicList(
                                     topics: context.details.topics,
                                     subjectID: context.details.subject.id,
-                                    canPractice: context.details.canPractice
+                                    canPractice: context.details.canPractice,
+                                    canViewResources: .constant(false)
                                 )
                             }
                         }
