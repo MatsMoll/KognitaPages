@@ -111,27 +111,19 @@ extension User.Templates {
                             .style(.display1)
                             .text(alignment: .center)
 
-                            Text {
-                                "Brukernavn: "
-                            }
-                            .margin(.three, for: .top)
-                            .margin(.one, for: .bottom)
+                            Text { "Brukernavn: " }
+                                .margin(.three, for: .top)
+                                .margin(.one, for: .bottom)
 
-                            Text {
-                                context.user.username
-                            }
-                            .style(.heading4)
+                            Text { context.user.username }
+                                .style(.heading4)
 
-                            Text {
-                                "Email: "
-                            }
-                            .margin(.three, for: .top)
-                            .margin(.one, for: .bottom)
+                            Text { "Email: " }
+                                .margin(.three, for: .top)
+                                .margin(.one, for: .bottom)
 
-                            Text {
-                                context.user.email
-                            }
-                            .style(.heading4)
+                            Text { context.user.email }
+                                .style(.heading4)
 
                         }
                     }

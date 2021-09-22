@@ -294,6 +294,8 @@ extension TypingTask.Templates {
                         }
                     }
                 }
+                
+                ResourceCreateModal(mode: .uncreated)
             }
             .header {
                 Stylesheet(url: "/assets/css/vendor/simplemde.min.css")
