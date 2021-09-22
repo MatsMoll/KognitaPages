@@ -18,13 +18,13 @@ case "LOCAL":
 case "DEV":
     let branch = ProcessInfo.processInfo.environment["KOGNITA_MODELS"] ?? "develop"
     dependencies.append(contentsOf: [
-        .package(name: "KognitaModels", url: "https://Kognita:dyjdov-bupgev-goffY8@github.com/MatsMoll/KognitaModels", .branch(branch)),
+        .package(name: "KognitaModels", url: "https://github.com/MatsMoll/KognitaModels", .branch(branch)),
         ]
     )
 default:
     let version = ProcessInfo.processInfo.environment["KOGNITA_MODELS"] ?? "1.0.3"
     dependencies.append(contentsOf: [
-        .package(name: "KognitaModels", url: "https://Kognita:dyjdov-bupgev-goffY8@github.com/MatsMoll/KognitaModels", from: .init(stringLiteral: version)),
+        .package(name: "KognitaModels", url: "https://github.com/MatsMoll/KognitaModels", from: .init(stringLiteral: version)),
         ]
     )
 }
