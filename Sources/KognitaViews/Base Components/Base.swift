@@ -241,7 +241,7 @@ updateFacicon();
             htmlContent.scripts
         }
         .lang("nb")
-        .enviroment(locale: "nb")
+        .environment(locale: "nb")
     }
 
     // Seperated in order to make the JS beeing added automaticaly

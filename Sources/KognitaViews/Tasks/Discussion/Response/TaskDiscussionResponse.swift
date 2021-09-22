@@ -60,6 +60,6 @@ struct DiscussionResponse: HTMLComponent {
             .margin(.two, for: .top)
         }
         .class("border-bottom border-light")
-        .enviroment(locale: "nb_NO")
+        .environment(locale: "nb")
     }
 }
