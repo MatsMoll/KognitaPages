@@ -72,9 +72,6 @@ extension User.Templates {
                             .required()
                             .value(Unwrap(context.submittedForm) { $0.email })
                     }
-                    .description {
-                        "Må være en NTNU mail"
-                    }
 
                     FormGroup(label: Strings.passwordTitle.localized()) {
                         Input()
