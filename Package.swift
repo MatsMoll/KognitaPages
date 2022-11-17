@@ -6,7 +6,8 @@ import Foundation
 
 var dependencies: [Package.Dependency] = [
     // 💧 A server-side Swift web framework.
-    .package(url: "https://github.com/MatsMoll/BootstrapKit.git", from: "1.0.2")
+    .package(url: "https://github.com/MatsMoll/BootstrapKit.git", from: "1.0.2"),
+    .package(url: "https://github.com/vapor-community/HTMLKit", from: "2.1.1")
 ]
 
 switch ProcessInfo.processInfo.environment["BUILD_TYPE"] {
@@ -46,7 +47,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "KognitaViews",
-            dependencies: ["BootstrapKit", "KognitaModels"]),
+            dependencies: ["BootstrapKit", "HTMLKit", "KognitaModels"]),
         .testTarget(
             name: "KognitaViewsTests",
             dependencies: ["KognitaViews"]),
