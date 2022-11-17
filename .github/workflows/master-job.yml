@@ -5,24 +5,14 @@ on:
     branches:
       - master
 
-jobs:
-  check-doc-coverage:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1.2.0
-      - name: Calculate Documentation Coverage
-        uses: MatsMoll/swift-doc@master
-        with:
-          inputs: "Sources"
-          output: "dcov.json"
-      - name: Check Documentation Percent
-        run: sudo bash CI/check-percentage.sh dcov.json 0
-        
+jobs:   
   bionic-tests:
-    needs: check-doc-coverage
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1.2.0
+    - uses: swift-actions/setup-swift@v1
+        with:
+          swift-version: "5.3.0"
     - name: Run unit tests master
       run: swift test --enable-test-discovery
         
@@ -31,6 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1.2.0
+      - uses: swift-actions/setup-swift@v1
+        with:
+          swift-version: "5.3.0"
       - name: Generate Documentation
         uses: SwiftDocOrg/swift-doc@master
         with:
@@ -49,6 +42,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1.2.0
+      - uses: swift-actions/setup-swift@v1
+        with:
+          swift-version: "5.3.0"
       - name: Release new version
         uses: MatsMoll/action-finch@master
         env:
