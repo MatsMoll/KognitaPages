@@ -33,20 +33,16 @@ extension User.Templates {
                 context: context.base
             ) {
                 Div {
-                    Text {
-                        Strings.registerTitle.localized()
-                    }
-                    .class("text-dark-50")
-                    .text(alignment: .center)
-                    .margin(.zero, for: .top)
-                    .font(style: .bold)
-                    .style(.heading4)
+                    Text { Strings.registerTitle.localized() }
+                        .class("text-dark-50")
+                        .text(alignment: .center)
+                        .margin(.zero, for: .top)
+                        .font(style: .bold)
+                        .style(.heading4)
 
-                    Text {
-                        Strings.registerSubtilte.localized()
-                    }
-                    .text(color: .muted)
-                    .margin(.four, for: .bottom)
+                    Text { Strings.registerSubtilte.localized() }
+                        .text(color: .muted)
+                        .margin(.four, for: .bottom)
                 }
                 .class("w-75 m-auto")
                 .text(alignment: .center)
@@ -72,13 +68,9 @@ extension User.Templates {
                         Input()
                             .type(.email)
                             .id("email")
-                            .placeholder("kognita@stud.ntnu.no")
-                            .pattern(regex: ".*@.*ntnu.no")
+                            .placeholder("ola@nordmann.no")
                             .required()
                             .value(Unwrap(context.submittedForm) { $0.email })
-                    }
-                    .description {
-                        "Må være en NTNU mail"
                     }
 
                     FormGroup(label: Strings.passwordTitle.localized()) {

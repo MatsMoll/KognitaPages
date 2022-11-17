@@ -82,29 +82,55 @@ extension Subject.Templates.Details {
                     .display(.block)
                     .margin(.one, for: .bottom)
 
-                    PracticeSession.Templates.CreateModal.button(
-                        subjectID: subjectID,
-                        topicID: topic.id,
-                        topicDescription: topic.name
-                    ) {
-                        MaterialDesignIcon(.trophy)
-                            .margin(.one, for: .right)
-                        Strings.subjectStartSession.localized()
+                    IF(canPractice) {
+                        PracticeSession.Templates.CreateModal.button(
+                            subjectID: subjectID,
+                            topicID: topic.id,
+                            topicDescription: topic.name
+                        ) {
+                            MaterialDesignIcon(.trophy)
+                                .margin(.one, for: .right)
+                            Strings.subjectStartSession.localized()
+                        }
+                        .type(.button)
+                        .isRounded()
+                        .button(style: .light)
+                        .margin(.one, for: .vertical)
+                        .margin(.one, for: .right)
+                        
+                        ResourceListModal.button(
+                            topicID: topic.id,
+                            topicName: topic.name
+                        )
+                        .type(.button)
+                        .isDisabled(canViewResources == false)
+                    }.else {
+                        Anchor {
+                            MaterialDesignIcon(.trophy)
+                                .margin(.one, for: .right)
+                            Strings.subjectStartSession.localized()
+                        }
+                        .isRounded()
+                        .button(style: .light)
+                        .margin(.one, for: .vertical)
+                        .margin(.one, for: .right)
+                        .href("/login")
+                        
+                        ResourceListModal.button(
+                            topicID: topic.id,
+                            topicName: topic.name
+                        )
+                        
+                        Anchor {
+                            MaterialDesignIcon(.openBook)
+                                .margin(.one, for: .right)
+                            "Se ressurser"
+                        }
+                        .button(style: .light)
+                        .isRounded()
+                        .href("/login")
                     }
-                    .type(.button)
-                    .isRounded()
-                    .button(style: .light)
-                    .margin(.one, for: .vertical)
-                    .margin(.one, for: .right)
-                    .isDisabled(canPractice == false)
                     
-                    
-                    ResourceListModal.button(
-                        topicID: topic.id,
-                        topicName: topic.name
-                    )
-                    .type(.button)
-                    .isDisabled(canViewResources == false)
                 }
                 .footer {
                     Competence(competence: topic.userLevel)

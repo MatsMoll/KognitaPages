@@ -18,7 +18,10 @@ extension Subject.Templates {
     struct ExamCard: HTMLComponent {
 
         let exam: TemplateValue<Exam.WithCompletion>
-
+        
+        @TemplateValue(Bool.self)
+        var canPractice
+        
         var body: HTML {
             Card {
                 Text { exam.description }
@@ -31,15 +34,28 @@ extension Subject.Templates {
 
                 Break()
 
-                Button {
-                    MaterialDesignIcon(.trophy)
-                        .margin(.one, for: .right)
-                    "Gjennomfør eksamen"
+                IF(canPractice) {
+                    Button {
+                        MaterialDesignIcon(.trophy)
+                            .margin(.one, for: .right)
+                        "Gjennomfør eksamen"
+                    }
+                    .button(style: .light)
+                    .on(click: exam.startExamCall)
+                    .isRounded()
+                    .margin(.two, for: .top)
+                }.else {
+                    
+                    Anchor {
+                        MaterialDesignIcon(.trophy)
+                            .margin(.one, for: .right)
+                        "Gjennomfør eksamen"
+                    }
+                    .button(style: .light)
+                    .isRounded()
+                    .margin(.two, for: .top)
                 }
-                .button(style: .light)
-                .on(click: exam.startExamCall)
-                .isRounded()
-                .margin(.two, for: .top)
+                
             }
             .footer {
                 Div {

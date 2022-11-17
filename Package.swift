@@ -6,7 +6,8 @@ import Foundation
 
 var dependencies: [Package.Dependency] = [
     // 💧 A server-side Swift web framework.
-    .package(url: "https://github.com/MatsMoll/BootstrapKit.git", from: "1.0.2")
+    .package(url: "https://github.com/MatsMoll/BootstrapKit.git", from: "1.0.2"),
+    .package(url: "https://github.com/vapor-community/HTMLKit", .exact("2.1.1"))
 ]
 
 switch ProcessInfo.processInfo.environment["BUILD_TYPE"] {
@@ -18,13 +19,13 @@ case "LOCAL":
 case "DEV":
     let branch = ProcessInfo.processInfo.environment["KOGNITA_MODELS"] ?? "develop"
     dependencies.append(contentsOf: [
-        .package(name: "KognitaModels", url: "https://Kognita:dyjdov-bupgev-goffY8@github.com/MatsMoll/KognitaModels", .branch(branch)),
+        .package(name: "KognitaModels", url: "https://github.com/MatsMoll/KognitaModels", .branch(branch)),
         ]
     )
 default:
     let version = ProcessInfo.processInfo.environment["KOGNITA_MODELS"] ?? "1.0.3"
     dependencies.append(contentsOf: [
-        .package(name: "KognitaModels", url: "https://Kognita:dyjdov-bupgev-goffY8@github.com/MatsMoll/KognitaModels", from: .init(stringLiteral: version)),
+        .package(name: "KognitaModels", url: "https://github.com/MatsMoll/KognitaModels", from: .init(stringLiteral: version)),
         ]
     )
 }
@@ -46,7 +47,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "KognitaViews",
-            dependencies: ["BootstrapKit", "KognitaModels"]),
+            dependencies: ["BootstrapKit", "HTMLKit", "KognitaModels"]),
         .testTarget(
             name: "KognitaViewsTests",
             dependencies: ["KognitaViews"]),

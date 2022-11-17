@@ -73,7 +73,7 @@ extension Subject.Templates {
                 
                 TermDetail()
                 TermCreateModal()
-                ResourceCreateModal()
+                ResourceCreateModal(mode: .connection)
             }
             .header {
                 Stylesheet(url: "/assets/css/vendor/katex.min.css")

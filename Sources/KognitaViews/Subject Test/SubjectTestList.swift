@@ -77,7 +77,7 @@ extension SubjectTest.Templates {
             }.scripts {
                 Script().source("/assets/js/subject-test/open.js").type("text/javascript")
             }
-            .enviroment(locale: "nb")
+            .environment(locale: "nb")
         }
     }
 
