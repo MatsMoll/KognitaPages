@@ -72,6 +72,29 @@ extension Subject.Templates {
                         SubjectCard(details: context.details)
                         Row {
                             Div {
+                                Text { "Eksamener" }
+                                    .style(.heading2)
+                            }
+                            .column(width: .twelve)
+
+                            IF(context.details.exams.isEmpty) {
+                                Div {
+                                    Text { "Det finnes ingen oppgaver som er koblet opp til en eksamen enda" }
+                                        .style(.heading5)
+                                }
+                                .column(width: .twelve)
+                            }.else {
+                                ForEach(in: context.details.exams) { exam in
+                                    Div {
+                                        ExamCard(exam: exam, canPractice: .constant(true))
+                                    }
+                                    .column(width: .six, for: .large)
+                                    .column(width: .twelve)
+                                }
+                            }
+                        }
+                        Row {
+                            Div {
                                 Text { "Temaer" }
                                     .style(.heading2)
                             }
@@ -91,29 +114,6 @@ extension Subject.Templates {
                                     canPractice: context.details.canPractice,
                                     canViewResources: .constant(true)
                                 )
-                            }
-                        }
-                        Row {
-                            Div {
-                                Text { "Eksamener" }
-                                    .style(.heading2)
-                            }
-                            .column(width: .twelve)
-
-                            IF(context.details.exams.isEmpty) {
-                                Div {
-                                    Text { "Det finnes ingen oppgaver som er koblet opp til en eksamen enda" }
-                                        .style(.heading5)
-                                }
-                                .column(width: .twelve)
-                            }.else {
-                                ForEach(in: context.details.exams) { exam in
-                                    Div {
-                                        ExamCard(exam: exam)
-                                    }
-                                    .column(width: .six, for: .large)
-                                    .column(width: .twelve)
-                                }
                             }
                         }
                     }
@@ -400,6 +400,33 @@ extension Subject.Templates.Details {
                 Row {
                     Div {
                         SubjectCard(details: context.details)
+                        
+                        Row {
+                            Div {
+                                Text { "Eksamener" }
+                                    .style(.heading2)
+                            }
+                            .column(width: .twelve)
+
+                            IF(context.details.exams.isEmpty) {
+                                Div {
+                                    Text { "Det finnes ingen oppgaver som er koblet opp til en eksamen enda" }
+                                        .style(.heading5)
+                                }
+                                .column(width: .twelve)
+                            }.else {
+                                ForEach(in: context.details.exams) { exam in
+                                    Div {
+                                        Subject.Templates.ExamCard(
+                                            exam: exam,
+                                            canPractice: .constant(false)
+                                        )
+                                    }
+                                    .column(width: .six, for: .large)
+                                    .column(width: .twelve)
+                                }
+                            }
+                        }
                         Row {
                             Div {
                                 Text { "Temaer" }
@@ -421,29 +448,6 @@ extension Subject.Templates.Details {
                                     canPractice: context.details.canPractice,
                                     canViewResources: .constant(false)
                                 )
-                            }
-                        }
-                        Row {
-                            Div {
-                                Text { "Eksamener" }
-                                    .style(.heading2)
-                            }
-                            .column(width: .twelve)
-
-                            IF(context.details.exams.isEmpty) {
-                                Div {
-                                    Text { "Det finnes ingen oppgaver som er koblet opp til en eksamen enda" }
-                                        .style(.heading5)
-                                }
-                                .column(width: .twelve)
-                            }.else {
-                                ForEach(in: context.details.exams) { exam in
-                                    Div {
-                                        Subject.Templates.ExamCard(exam: exam)
-                                    }
-                                    .column(width: .six, for: .large)
-                                    .column(width: .twelve)
-                                }
                             }
                         }
                     }

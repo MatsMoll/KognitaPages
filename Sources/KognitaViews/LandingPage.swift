@@ -6,6 +6,7 @@
 //
 // swiftlint:disable line_length nesting
 
+import Foundation
 import BootstrapKit
 
 extension AttributeNode {
@@ -45,13 +46,28 @@ extension Pages {
 
         public struct Context {
             let showCookieMessage: Bool
+            let numberOfCompletedTasks: Int
+            let numberOfUsers: Int
+            let formatter: NumberFormatter
+            
+            var formattedNumberOfCompletedTasks: String {
+                return formatter.string(from: .init(integerLiteral: numberOfCompletedTasks)) ?? "\(numberOfCompletedTasks)"
+            }
+            
+            var formattedNumberOfUsers: String {
+                return formatter.string(from: .init(integerLiteral: numberOfUsers)) ?? "\(numberOfUsers)"
+            }
 
             var baseContext: BaseTemplateContent {
                 .init(title: "Kognita", description: "Kognita", showCookieMessage: showCookieMessage)
             }
 
-            public init(showCookieMessage: Bool) {
+            public init(showCookieMessage: Bool, numberOfCompletedTasks: Int, numberOfUsers: Int) {
                 self.showCookieMessage = showCookieMessage
+                self.numberOfCompletedTasks = numberOfCompletedTasks
+                self.numberOfUsers = numberOfUsers
+                self.formatter = NumberFormatter()
+                formatter.numberStyle = .decimal
             }
         }
 
@@ -112,15 +128,31 @@ extension Pages {
                     Container {
                         Row {
                             Div {
-                                Text { "Få bedre kontroll på pensum" }
+                                Text { "Få kontroll på pensum" }
                                     .class("hero-title")
                                     .text(color: .white)
                                     .style(.heading1)
                                     .font(style: .regular)
 
-                                Text { "Få mer ut av notatene dine og bruk mindre tid på pensum ved å bruke effektive læringsteknikker som er vitenskapelig bevist. I tillegg er Kognita designet for å gjøre øvingen mer motiverende ved å gjøre opplevelsen mer spill-aktig." }
+                                Text { "Se hvordan du gjør det på tidligere ekamensoppgaver, og dekk dine kunnskapshull fortere. Kognita gjør det lettere å finne hull med å bruke AI i interaktive flash-cards, og flervalgsoppgaver." }
                                     .class("text-white-50")
-
+                                
+                                Row {
+                                    Div {
+                                        SingleStatisticCard(
+                                            title: "Antall oppgaver gjort 🚀", mainContent: context.formattedNumberOfCompletedTasks, moreDetails: .constant(nil)
+                                        ).margin(.four, for: .top)
+                                    }
+                                    .column(width: .six, for: .small)
+                                    
+                                    Div {
+                                        SingleStatisticCard(
+                                            title: "Antall bruker 👨‍👩‍👧‍👦", mainContent: context.formattedNumberOfUsers, moreDetails: .constant(nil)
+                                        ).margin(.four, for: .top)
+                                    }
+                                    .column(width: .six, for: .small)
+                                }
+                                
                                 Div {
                                     Anchor(Strings.menuSubjectList)
                                         .href(Paths.subjects)
@@ -128,9 +160,9 @@ extension Pages {
                                         .button(style: .light)
                                         .margin(.two, for: .right)
 
-                                    LinkiOSApp()
                                 }
                                 .margin(.five, for: .top)
+
                             }
                             .column(width: .five, for: .medium)
                             .margin(.four, for: .top, sizeClass: .medium)
@@ -149,14 +181,14 @@ extension Pages {
                     }
                 }
                 .class("hero-section")
-
+                
                 Section {
                     Container {
                         Row {
 
                             Div {
                                 Div {
-                                    Text { "Hva tilbyr Kognita?" }
+                                    Text { "Hvordan fungerer Kognita?" }
                                         .style(.heading2)
                                 }
                                 .text(alignment: .center)
@@ -167,12 +199,38 @@ extension Pages {
                         .padding(.four, for: .vertical)
 
                         Row {
-                            ForEach(in: info) { info in
-                                Div {
-                                    FeatureView(info: info)
+                            Div {
+                                Img(source: "/assets/images/ios/MultipleChoice.png").style(css: "max-width: 100%;")
+                                Text {
+                                    "Flervalgsoppgaver med rask tilbakemelding"
                                 }
-                                .column(width: .four, for: .large)
+                                .text(alignment: .center)
                             }
+                            .column(width: .four, for: .medium)
+                            Div {
+                                Img(source: "/assets/images/ios/Goal.png").style(css: "max-width: 100%;")
+                                Text {
+                                    "Sett øvingsmål og stop når det er nok"
+                                }
+                                .text(alignment: .center)
+                            }
+                            .column(width: .four, for: .medium)
+                            Div {
+                                Img(source: "/assets/images/ios/Results.png").style(css: "max-width: 100%;")
+                                Text {
+                                    "Få en tydelig oversikt over pensum"
+                                }
+                                .text(alignment: .center)
+                            }
+                            .column(width: .four, for: .medium)
+                        }
+                        
+                        Row {
+                            Anchor(Strings.menuSubjectList)
+                                .href(Paths.subjects)
+                                .class("rounded-pill")
+                                .button(style: .primary)
+                                .margin(.auto)
                         }
                     }
                 }
@@ -236,14 +294,14 @@ extension Pages {
                 .padding(.five, for: .vertical)
                 .background(color: .white)
                 .class("border-top border-light")
-
+                
                 Section {
                     Container {
                         Row {
 
                             Div {
                                 Div {
-                                    Text { "Last ned iOS appen" }
+                                    Text { "Hva tilbyr Kognita?" }
                                         .style(.heading2)
                                 }
                                 .text(alignment: .center)
@@ -254,97 +312,17 @@ extension Pages {
                         .padding(.four, for: .vertical)
 
                         Row {
-                            Div {
-                                Img(source: "/assets/images/ios/MultipleChoice.png").style(css: "max-width: 100%;")
+                            ForEach(in: info) { info in
+                                Div {
+                                    FeatureView(info: info)
+                                }
+                                .column(width: .four, for: .large)
                             }
-                            .column(width: .six, for: .small)
-                            .column(width: .three, for: .large)
-                            Div {
-                                Img(source: "/assets/images/ios/Goal.png").style(css: "max-width: 100%;")
-                            }
-                            .column(width: .six, for: .small)
-                            .column(width: .three, for: .large)
-                            Div {
-                                Img(source: "/assets/images/ios/Results.png").style(css: "max-width: 100%;")
-                            }
-                            .column(width: .six, for: .small)
-                            .column(width: .three, for: .large)
-                            Div {
-                                Img(source: "/assets/images/ios/Widget.png").style(css: "max-width: 100%;")
-                            }
-                            .column(width: .six, for: .small)
-                            .column(width: .three, for: .large)
-                        }
-                        Row {
-                            Div {
-                                LinkiOSApp()
-                                    .style(css: "max-width: 120px;")
-                                    .margin(.auto, for: .horizontal)
-                                    .display(.block)
-                                    .margin(.one, for: .top)
-                            }
-                            .column(width: .twelve)
                         }
                     }
                 }
                 .padding(.five, for: .vertical)
                 .class("border-top border-light")
-
-                Section {
-                    Container {
-                        Row {
-                            Div {
-                                Div {
-                                    Text { "Kontakt oss" }
-                                        .style(.heading2)
-                                }
-                                .text(alignment: .center)
-                            }
-                            .column(width: .twelve, for: .large)
-
-                        }
-                        .padding(.four, for: .vertical)
-
-                        Row {
-                            Div {
-                                Text { "E-post addresse" }.font(style: .bold)
-                                Text { "kontakt@kognita.no" }
-                            }
-                            .column(width: .four, for: .medium)
-
-                            Div {
-                                Form {
-                                    FormGroup(label: "Tema") {
-                                        Input()
-                                            .type(.text)
-                                            .id("subject")
-                                            .placeholder("Skriv hva det handler om har")
-                                            .class("form-control-light")
-                                    }
-
-                                    FormGroup(label: "Melding") {
-                                        TextArea()
-                                            .id("body")
-                                            .placeholder("Skriv din melding her")
-                                            .class("form-control-light")
-                                    }
-
-                                    Button {
-                                        "Send e-post"
-                                        MaterialDesignIcon(.email)
-                                            .margin(.one, for: .left)
-                                    }
-                                    .button(style: .info)
-                                    .type(.submit)
-                                }
-                                .action("mailto:kontakt@kognita.no")
-                                .encodeType(.plain)
-                            }
-                            .column(width: .eight, for: .medium)
-                        }
-                    }
-                }
-                .padding(.five, for: .vertical)
 
                 KognitaFooter(isDark: false)
             }

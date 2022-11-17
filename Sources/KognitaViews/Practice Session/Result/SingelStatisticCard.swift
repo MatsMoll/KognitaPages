@@ -17,7 +17,7 @@ struct SingleStatisticCard: HTMLComponent, AttributeNode {
     var body: HTML {
         Card {
             Text { title }
-                .text(color: .muted)
+                .text(color: .secondary)
 
             Text { mainContent }
                 .text(color: .dark)
